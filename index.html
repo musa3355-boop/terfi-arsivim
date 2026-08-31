@@ -1,0 +1,608 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Terfi Arşivim</title>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<style>
+*{box-sizing:border-box}
+body{
+ margin:0;background:#f3f4f6;color:#111827;
+ font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif
+}
+.container{max-width:900px;margin:auto;padding:18px}
+.hero{
+ background:#111827;color:white;border-radius:28px;
+ padding:30px;margin-bottom:18px
+}
+.hero h1{margin:0 0 8px;font-size:34px}
+.hero p{margin:0;color:#d1d5db}
+input,textarea{
+ width:100%;padding:13px;border:1px solid #d1d5db;
+ border-radius:12px;font-size:16px;background:white
+}
+textarea{min-height:100px}
+button{
+ border:0;border-radius:12px;padding:12px 18px;
+ font-size:15px;font-weight:700;cursor:pointer
+}
+.primary{background:#2563eb;color:white}
+.secondary{background:#e5e7eb;color:#111827}
+.danger{background:#fee2e2;color:#b91c1c}
+.search{margin-bottom:15px}
+.card{
+ background:white;border:1px solid #e5e7eb;
+ border-radius:20px;padding:20px;margin:12px 0;
+ box-shadow:0 1px 3px #0001
+}
+.card:hover{background:#f9fafb}
+.card h2{margin:0 0 5px;color:#2563eb}
+.grid{
+ display:grid;grid-template-columns:1fr 1fr;gap:12px
+}
+.field{margin-bottom:12px}
+.field label{
+ display:block;font-weight:700;margin-bottom:6px
+}
+.actions{display:flex;gap:10px;flex-wrap:wrap}
+.tabs{
+ display:flex;gap:8px;overflow:auto;margin:15px 0
+}
+.tabs button{white-space:nowrap}
+.item{
+ border-top:1px solid #eee;padding:15px 0
+}
+.item:first-child{border-top:0}
+.muted{color:#6b7280}
+.count{font-size:14px;color:#6b7280}
+.empty{
+ text-align:center;padding:30px;color:#6b7280
+}
+.message{
+ padding:12px;margin-top:12px;border-radius:10px;
+ background:#eff6ff;color:#1d4ed8
+}
+@media(max-width:650px){
+ .grid{grid-template-columns:1fr}
+ .container{padding:12px}
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+<div class="hero">
+<h1>Terfi Arşivim</h1>
+<p>Terfi istasyonu teknik kayıt sistemi</p>
+</div>
+
+<div id="app"></div>
+</div>
+
+<script>
+
+const SUPABASE_URL =
+"https://vthjqdlsijdvvlegpqrg.supabase.co";
+
+const SUPABASE_KEY =
+"sb_publishable_pJrgD6-8p-SOxTu8bP02Ag_Cv5InPtB";
+
+const db = supabase.createClient(
+SUPABASE_URL,
+SUPABASE_KEY
+);
+
+let terfiler=[];
+let current=null;
+let activeTab="genel";
+
+async function loadTerfiler(){
+
+ const {data,error}=await db
+ .from("terfiler")
+ .select("*")
+ .order("terfi_no");
+
+ if(error){
+   document.getElementById("app").innerHTML=
+   `<div class="card">
+   <b>Veritabanı bağlantı hatası</b>
+   <p>${error.message}</p>
+   </div>`;
+   return;
+ }
+
+ terfiler=data||[];
+ showList();
+}
+
+function showList(){
+
+ document.getElementById("app").innerHTML=`
+
+ <input
+   class="search"
+   id="search"
+   placeholder="Terfi ara..."
+ >
+
+ <button class="primary" onclick="newTerfi()">
+ + Yeni Terfi
+ </button>
+
+ <p class="count">${terfiler.length} terfi</p>
+
+ <div id="list"></div>
+ `;
+
+ document.getElementById("search").oninput=e=>{
+   drawList(e.target.value);
+ };
+
+ drawList("");
+}
+
+function drawList(q){
+
+ const list=document.getElementById("list");
+
+ const rows=terfiler.filter(t=>
+   (t.ad+" "+t.terfi_no+" "+t.adres)
+   .toLowerCase()
+   .includes(q.toLowerCase())
+ );
+
+ if(!rows.length){
+   list.innerHTML=
+   `<div class="card empty">Kayıt bulunamadı.</div>`;
+   return;
+ }
+
+ list.innerHTML=rows.map(t=>`
+
+ <div class="card" onclick="openTerfi('${t.id}')">
+
+   <h2>${t.ad}</h2>
+
+   <div class="muted">
+   ${t.terfi_no}
+   </div>
+
+   <div>
+   ${t.adres||"Adres girilmedi"}
+   </div>
+
+ </div>
+
+ `).join("");
+}
+
+function newTerfi(){
+
+ current={
+   id:null,
+   terfi_no:"T"+String(terfiler.length+1).padStart(3,"0"),
+   ad:"",
+   adres:"",
+   aciklama:""
+ };
+
+ activeTab="genel";
+ showDetail();
+}
+
+async function openTerfi(id){
+
+ current=terfiler.find(x=>x.id===id);
+ activeTab="genel";
+ showDetail();
+}
+
+function showDetail(){
+
+ document.getElementById("app").innerHTML=`
+
+ <button class="secondary"
+ onclick="loadTerfiler()">
+ ← Tüm terfilere dön
+ </button>
+
+ <div class="hero" style="margin-top:15px">
+ <h1>${current.ad||"Yeni Terfi"}</h1>
+ <p>${current.terfi_no}</p>
+ </div>
+
+ <div class="card">
+
+ <div class="grid">
+
+ <div class="field">
+ <label>Terfi No</label>
+ <input id="terfi_no"
+ value="${current.terfi_no}">
+ </div>
+
+ <div class="field">
+ <label>Terfi Adı</label>
+ <input id="ad"
+ value="${current.ad}">
+ </div>
+
+ </div>
+
+ <div class="field">
+ <label>Adres</label>
+ <input id="adres"
+ value="${current.adres||""}">
+ </div>
+
+ <div class="field">
+ <label>Açıklama</label>
+ <textarea id="aciklama">${current.aciklama||""}</textarea>
+ </div>
+
+ <div class="actions">
+
+ <button class="primary"
+ onclick="saveTerfi()">
+ Kaydet
+ </button>
+
+ ${current.id?
+ `<button class="danger"
+ onclick="deleteTerfi()">
+ Terfiyi Sil
+ </button>`:""}
+
+ </div>
+
+ <div id="message"></div>
+
+ </div>
+
+ ${current.id?`
+
+ <div class="tabs">
+
+ <button class="${activeTab=="genel"?"primary":"secondary"}"
+ onclick="changeTab('genel')">
+ Genel
+ </button>
+
+ <button class="${activeTab=="motor"?"primary":"secondary"}"
+ onclick="changeTab('motor')">
+ Motorlar
+ </button>
+
+ <button class="${activeTab=="pompa"?"primary":"secondary"}"
+ onclick="changeTab('pompa')">
+ Pompalar
+ </button>
+
+ <button class="${activeTab=="surucu"?"primary":"secondary"}"
+ onclick="changeTab('surucu')">
+ Sürücüler
+ </button>
+
+ <button class="${activeTab=="olcum"?"primary":"secondary"}"
+ onclick="changeTab('olcum')">
+ Ölçümler
+ </button>
+
+ </div>
+
+ <div id="tab"></div>
+
+ `:""}
+
+ `;
+
+ if(current.id && activeTab!="genel")
+ loadTab();
+}
+
+function changeTab(tab){
+
+ activeTab=tab;
+ showDetail();
+
+}
+
+async function saveTerfi(){
+
+ const payload={
+   terfi_no:document.getElementById("terfi_no").value.trim(),
+   ad:document.getElementById("ad").value.trim(),
+   adres:document.getElementById("adres").value.trim(),
+   aciklama:document.getElementById("aciklama").value.trim()
+ };
+
+ if(!payload.terfi_no || !payload.ad){
+   alert("Terfi No ve Terfi Adı zorunludur.");
+   return;
+ }
+
+ let result;
+
+ if(current.id){
+
+   result=await db
+   .from("terfiler")
+   .update(payload)
+   .eq("id",current.id)
+   .select()
+   .single();
+
+ }else{
+
+   result=await db
+   .from("terfiler")
+   .insert(payload)
+   .select()
+   .single();
+
+ }
+
+ if(result.error){
+
+   document.getElementById("message").innerHTML=
+   `<div class="message">${result.error.message}</div>`;
+
+   return;
+ }
+
+ current=result.data;
+
+ document.getElementById("message").innerHTML=
+ `<div class="message">Kayıt başarıyla kaydedildi ✓</div>`;
+
+ await loadTerfilerData();
+
+}
+
+async function loadTerfilerData(){
+
+ const {data}=await db
+ .from("terfiler")
+ .select("*")
+ .order("terfi_no");
+
+ terfiler=data||[];
+
+}
+
+async function deleteTerfi(){
+
+ if(!confirm("Bu terfi silinsin mi?"))return;
+
+ const {error}=await db
+ .from("terfiler")
+ .delete()
+ .eq("id",current.id);
+
+ if(error){
+   alert(error.message);
+   return;
+ }
+
+ loadTerfiler();
+
+}
+
+const definitions={
+
+ motor:{
+  table:"motorlar",
+  title:"Motor",
+  fields:[
+   ["ad","Motor Adı"],
+   ["marka_model","Marka / Model"],
+   ["guc","Güç"],
+   ["gerilim","Gerilim"],
+   ["akim","Akım"],
+   ["devir","Devir"],
+   ["seri_no","Seri No"],
+   ["notlar","Notlar"]
+  ]
+ },
+
+ pompa:{
+  table:"pompalar",
+  title:"Pompa",
+  fields:[
+   ["ad","Pompa Adı"],
+   ["marka_model","Marka / Model"],
+   ["debi","Debi"],
+   ["basma_yuksekligi","Basma Yüksekliği"],
+   ["guc","Güç"],
+   ["notlar","Notlar"]
+  ]
+ },
+
+ surucu:{
+  table:"suruculer",
+  title:"Sürücü",
+  fields:[
+   ["ad","Sürücü Adı"],
+   ["marka","Marka"],
+   ["model","Model"],
+   ["guc","Güç"],
+   ["gerilim","Gerilim"],
+   ["parametreler","Parametreler"],
+   ["ariza_kayitlari","Arıza Kayıtları"],
+   ["notlar","Notlar"]
+  ]
+ },
+
+ olcum:{
+  table:"olcumler",
+  title:"Ölçüm",
+  fields:[
+   ["tur","Ölçüm Türü"],
+   ["deger","Değer"],
+   ["birim","Birim"],
+   ["aciklama","Açıklama"]
+  ]
+ }
+
+};
+
+async function loadTab(){
+
+ const d=definitions[activeTab];
+
+ const {data,error}=await db
+ .from(d.table)
+ .select("*")
+ .eq("terfi_id",current.id)
+ .order("created_at",{ascending:false});
+
+ const tab=document.getElementById("tab");
+
+ if(error){
+   tab.innerHTML=
+   `<div class="card">${error.message}</div>`;
+   return;
+ }
+
+ tab.innerHTML=`
+
+ <div class="card">
+
+ <h2 style="color:#111827">
+ Yeni ${d.title}
+ </h2>
+
+ ${d.fields.map(f=>`
+
+ <div class="field">
+
+ <label>${f[1]}</label>
+
+ ${
+ ["notlar","parametreler","ariza_kayitlari","aciklama"]
+ .includes(f[0])
+
+ ?
+
+ `<textarea id="field_${f[0]}"></textarea>`
+
+ :
+
+ `<input id="field_${f[0]}">`
+ }
+
+ </div>
+
+ `).join("")}
+
+ <button class="primary"
+ onclick="addRecord()">
+ ${d.title} Kaydet
+ </button>
+
+ </div>
+
+ <div class="card">
+
+ <h2 style="color:#111827">
+ ${d.title} Kayıtları (${data.length})
+ </h2>
+
+ ${
+ data.length?
+
+ data.map(x=>`
+
+ <div class="item">
+
+ <b>
+ ${x.ad||x.tur||"Ölçüm"}
+ </b>
+
+ <div class="muted">
+ ${x.marka_model||x.model||x.deger||""}
+ </div>
+
+ <br>
+
+ <button class="danger"
+ onclick="removeRecord('${x.id}')">
+ Sil
+ </button>
+
+ </div>
+
+ `).join("")
+
+ :
+
+ `<div class="empty">Kayıt yok</div>`
+ }
+
+ </div>
+
+ `;
+
+}
+
+async function addRecord(){
+
+ const d=definitions[activeTab];
+
+ const record={
+   terfi_id:current.id
+ };
+
+ d.fields.forEach(f=>{
+   record[f[0]]=
+   document.getElementById("field_"+f[0]).value.trim();
+ });
+
+ if(activeTab==="olcum"){
+   record.tarih=new Date().toISOString();
+ }
+
+ const {error}=await db
+ .from(d.table)
+ .insert(record);
+
+ if(error){
+   alert(error.message);
+   return;
+ }
+
+ loadTab();
+
+}
+
+async function removeRecord(id){
+
+ if(!confirm("Bu kayıt silinsin mi?"))return;
+
+ const d=definitions[activeTab];
+
+ const {error}=await db
+ .from(d.table)
+ .delete()
+ .eq("id",id);
+
+ if(error){
+   alert(error.message);
+   return;
+ }
+
+ loadTab();
+
+}
+
+loadTerfiler();
+
+</script>
+
+</body>
+</html>
