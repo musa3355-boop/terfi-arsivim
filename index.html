@@ -2,1163 +2,980 @@
 <html lang="tr">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-<meta name="theme-color" content="#06172b">
-<title>MESKİ Terfi Arşivim</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MESKİ - Terfi Arşivim</title>
 
 <style>
-:root{
-  --bg:#041224;
-  --bg2:#071b32;
-  --panel:#081f38;
-  --panel2:#0b2744;
-  --line:#16466d;
-  --line2:#1c6095;
-  --blue:#168cff;
-  --blue2:#42a9ff;
-  --text:#edf6ff;
-  --muted:#9db5ca;
-  --green:#27d47d;
-  --red:#ff5b67;
-  --yellow:#ffc94a;
-  --shadow:0 18px 50px rgba(0,0,0,.35);
-}
-
 *{
-  box-sizing:border-box;
-  -webkit-tap-highlight-color:transparent;
+    box-sizing:border-box;
+    margin:0;
+    padding:0;
 }
 
-html,body{
-  margin:0;
-  padding:0;
-  min-height:100%;
-  background:
-    radial-gradient(circle at 80% 15%,rgba(18,103,170,.18),transparent 30%),
-    radial-gradient(circle at 20% 90%,rgba(0,83,145,.13),transparent 35%),
-    var(--bg);
-  color:var(--text);
-  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
+:root{
+    --bg:#03101f;
+    --bg2:#06182b;
+    --panel:#071d31;
+    --panel2:#09243b;
+    --border:#164a73;
+    --blue:#1594ff;
+    --blue2:#0876d8;
+    --text:#edf6ff;
+    --muted:#9bb4ca;
+    --success:#27d17f;
+    --danger:#ff5268;
+    --warning:#ffbd45;
 }
 
-button,input,textarea,select{
-  font:inherit;
+body{
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;
+    background:
+        radial-gradient(circle at 80% 20%,rgba(0,120,255,.09),transparent 35%),
+        radial-gradient(circle at 20% 80%,rgba(0,80,160,.07),transparent 35%),
+        var(--bg);
+    color:var(--text);
+    min-height:100vh;
+}
+
+body:before{
+    content:"MESKİ";
+    position:fixed;
+    right:5%;
+    top:25%;
+    font-size:150px;
+    font-weight:900;
+    color:rgba(40,130,210,.025);
+    transform:rotate(-12deg);
+    pointer-events:none;
+    z-index:-1;
+}
+
+button,
+input,
+textarea,
+select{
+    font:inherit;
 }
 
 button{
-  cursor:pointer;
+    cursor:pointer;
 }
 
-.hidden{
-  display:none!important;
+.app{
+    min-height:100vh;
 }
 
-/* LOGO / WATERMARK */
+/* HEADER */
 
-body:before{
-  content:"MESKİ";
-  position:fixed;
-  z-index:0;
-  right:-30px;
-  top:180px;
-  font-size:180px;
-  font-weight:900;
-  letter-spacing:8px;
-  color:rgba(61,145,219,.035);
-  transform:rotate(-8deg);
-  pointer-events:none;
-}
-
-/* LOGIN */
-
-.login-wrap{
-  min-height:100vh;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  padding:25px;
-  position:relative;
-  z-index:1;
-}
-
-.login-card{
-  width:min(620px,100%);
-  background:rgba(7,28,49,.92);
-  border:1px solid #1d527e;
-  border-radius:26px;
-  box-shadow:var(--shadow);
-  padding:34px;
-  backdrop-filter:blur(15px);
+.header{
+    height:82px;
+    border-bottom:1px solid rgba(43,128,190,.3);
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:0 28px;
+    background:rgba(2,15,28,.82);
+    backdrop-filter:blur(12px);
+    position:sticky;
+    top:0;
+    z-index:50;
 }
 
 .brand{
-  display:flex;
-  align-items:center;
-  gap:16px;
-  margin-bottom:24px;
+    display:flex;
+    align-items:center;
+    gap:15px;
 }
 
 .brand-mark{
-  width:68px;
-  height:68px;
-  border-radius:18px;
-  display:grid;
-  place-items:center;
-  background:linear-gradient(135deg,#0877e8,#32bfe1);
-  font-size:35px;
-  box-shadow:0 8px 30px rgba(0,140,255,.3);
+    width:52px;
+    height:52px;
+    border-radius:14px;
+    border:1px solid #1e79bd;
+    background:linear-gradient(145deg,#073660,#0b82d9);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:25px;
+    box-shadow:0 0 25px rgba(0,140,255,.18);
 }
 
-.brand h1{
-  margin:0;
-  font-size:27px;
+.brand-title{
+    font-size:24px;
+    font-weight:800;
 }
 
-.brand p{
-  margin:4px 0 0;
-  color:var(--muted);
+.brand-sub{
+    font-size:12px;
+    color:var(--muted);
+    margin-top:2px;
 }
 
-.login-title{
-  font-size:28px;
-  font-weight:800;
-  margin:10px 0 20px;
+.header-right{
+    display:flex;
+    gap:10px;
+    align-items:center;
 }
 
-.login-info{
-  border:1px dashed #28628c;
-  background:rgba(12,49,79,.45);
-  padding:18px;
-  border-radius:17px;
-  color:#bfd4e6;
-  line-height:1.6;
-  margin-bottom:22px;
+.mode{
+    padding:9px 14px;
+    border:1px solid var(--border);
+    border-radius:10px;
+    background:#07192b;
+    color:var(--muted);
+    font-size:13px;
 }
 
-.login-info strong{
-  color:white;
+.mode.edit{
+    color:#fff;
+    border-color:#168cff;
+    background:rgba(15,127,228,.14);
 }
 
-label{
-  display:block;
-  font-weight:700;
-  color:#afc5d9;
-  margin:15px 0 7px;
-}
+/* LAYOUT */
 
-input,textarea,select{
-  width:100%;
-  background:#061a2e;
-  color:#edf6ff;
-  border:1px solid #1b557f;
-  border-radius:12px;
-  padding:13px 14px;
-  outline:none;
-  transition:.2s;
-}
-
-input:focus,textarea:focus,select:focus{
-  border-color:var(--blue2);
-  box-shadow:0 0 0 3px rgba(38,153,255,.12);
-}
-
-textarea{
-  min-height:110px;
-  resize:vertical;
-}
-
-.btn{
-  border:1px solid #23618f;
-  border-radius:12px;
-  padding:12px 17px;
-  color:white;
-  background:#0c2945;
-  font-weight:700;
-}
-
-.btn:hover{
-  filter:brightness(1.12);
-}
-
-.btn-primary{
-  background:linear-gradient(135deg,#087fec,#249dff);
-  border-color:#2ca3ff;
-}
-
-.btn-success{
-  background:#0d6744;
-  border-color:#1f9e6a;
-}
-
-.btn-danger{
-  background:#65242b;
-  border-color:#a63d49;
-}
-
-.btn-warning{
-  background:#624d16;
-  border-color:#9b7b25;
-}
-
-.btn-ghost{
-  background:transparent;
-}
-
-.btn-big{
-  width:100%;
-  padding:15px;
-  font-size:17px;
-}
-
-.login-actions{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:12px;
-  margin-top:18px;
-}
-
-.small-note{
-  color:#8099af;
-  font-size:13px;
-  line-height:1.5;
-  margin-top:16px;
-}
-
-/* APP */
-
-.app{
-  min-height:100vh;
-  display:none;
-  position:relative;
-  z-index:1;
+.layout{
+    display:flex;
+    min-height:calc(100vh - 82px);
 }
 
 .sidebar{
-  position:fixed;
-  left:0;
-  top:0;
-  bottom:0;
-  width:245px;
-  padding:20px 15px;
-  border-right:1px solid #143a5c;
-  background:rgba(5,22,39,.93);
-  backdrop-filter:blur(15px);
-  z-index:20;
-}
-
-.logo-area{
-  padding:7px 8px 20px;
-  border-bottom:1px solid #143b5d;
-  margin-bottom:15px;
-}
-
-.logo-area .meski{
-  color:white;
-  font-size:28px;
-  font-weight:900;
-}
-
-.logo-area .archive{
-  color:#34a4ff;
-  font-weight:800;
-  font-size:17px;
-}
-
-.logo-area small{
-  display:block;
-  color:#9bb0c2;
-  margin-top:4px;
+    width:225px;
+    border-right:1px solid rgba(35,105,157,.35);
+    padding:18px 12px;
+    background:rgba(3,18,33,.82);
+    position:sticky;
+    top:82px;
+    height:calc(100vh - 82px);
 }
 
 .nav{
-  display:flex;
-  flex-direction:column;
-  gap:5px;
+    display:flex;
+    flex-direction:column;
+    gap:5px;
 }
 
 .nav button{
-  text-align:left;
-  background:transparent;
-  border:1px solid transparent;
-  color:#d6e5f2;
-  padding:12px 13px;
-  border-radius:10px;
+    border:0;
+    color:#b9cde0;
+    background:transparent;
+    border-radius:9px;
+    padding:13px 14px;
+    text-align:left;
+    display:flex;
+    gap:12px;
+    align-items:center;
+    transition:.2s;
 }
 
-.nav button:hover,
+.nav button:hover{
+    background:#0a2943;
+    color:#fff;
+}
+
 .nav button.active{
-  background:linear-gradient(90deg,#086dcb,#0d57a0);
-  border-color:#2187da;
-  color:white;
+    background:linear-gradient(90deg,#086dca,#0b82e5);
+    color:#fff;
+    box-shadow:0 5px 18px rgba(0,115,225,.2);
 }
 
-.nav-sep{
-  height:1px;
-  background:#173b5a;
-  margin:10px 0;
+.nav-icon{
+    width:25px;
+    text-align:center;
+}
+
+.nav-separator{
+    height:1px;
+    background:#133a58;
+    margin:12px 8px;
 }
 
 .main{
-  margin-left:245px;
-  padding:24px;
-  min-height:100vh;
-  max-width:1500px;
-}
-
-.topbar{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  gap:15px;
-  margin-bottom:20px;
-}
-
-.page-title h2{
-  margin:0;
-  font-size:28px;
-}
-
-.page-title p{
-  margin:5px 0 0;
-  color:var(--muted);
-}
-
-.top-actions{
-  display:flex;
-  gap:8px;
-  flex-wrap:wrap;
+    flex:1;
+    padding:25px;
+    max-width:1500px;
+    margin:auto;
+    width:100%;
 }
 
 /* CARDS */
 
 .card{
-  background:rgba(7,30,51,.88);
-  border:1px solid #153f62;
-  border-radius:17px;
-  box-shadow:0 8px 30px rgba(0,0,0,.16);
+    background:linear-gradient(145deg,rgba(7,29,49,.96),rgba(4,22,38,.96));
+    border:1px solid rgba(31,101,151,.55);
+    border-radius:15px;
+    box-shadow:0 10px 35px rgba(0,0,0,.16);
 }
 
-.card-pad{
-  padding:20px;
+.card-header{
+    padding:18px 20px;
+    border-bottom:1px solid rgba(38,102,150,.4);
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
 }
+
+.card-title{
+    font-size:18px;
+    font-weight:750;
+}
+
+.card-body{
+    padding:20px;
+}
+
+/* HOME */
 
 .hero{
-  padding:26px;
-  margin-bottom:18px;
-  border:1px solid #174a73;
-  background:
-    linear-gradient(120deg,rgba(10,55,91,.65),rgba(5,24,43,.82));
+    padding:28px;
+    min-height:225px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    overflow:hidden;
+    position:relative;
 }
 
-.hero-row{
-  display:flex;
-  align-items:center;
-  gap:18px;
+.hero:after{
+    content:"";
+    position:absolute;
+    width:360px;
+    height:360px;
+    right:-80px;
+    top:-110px;
+    border-radius:50%;
+    border:35px solid rgba(15,121,211,.045);
 }
 
-.hero-icon{
-  width:68px;
-  height:68px;
-  border-radius:50%;
-  border:3px solid #3c9cff;
-  display:grid;
-  place-items:center;
-  font-size:31px;
-  box-shadow:0 0 25px rgba(39,145,255,.25);
+.hero-left{
+    position:relative;
+    z-index:2;
 }
 
-.hero h2{
-  margin:0;
+.hero-title{
+    font-size:31px;
+    margin-bottom:8px;
 }
 
-.hero p{
-  margin:5px 0 0;
-  color:#a9c0d5;
+.hero-sub{
+    color:var(--muted);
+    margin-bottom:22px;
 }
+
+.search{
+    display:flex;
+    gap:10px;
+    max-width:720px;
+}
+
+.search input{
+    flex:1;
+    min-width:0;
+}
+
+input,
+textarea,
+select{
+    width:100%;
+    border:1px solid #19527b;
+    background:#061a2d;
+    color:#edf6ff;
+    border-radius:10px;
+    padding:13px 15px;
+    outline:none;
+}
+
+input:focus,
+textarea:focus,
+select:focus{
+    border-color:#198ef0;
+    box-shadow:0 0 0 3px rgba(25,142,240,.08);
+}
+
+textarea{
+    min-height:110px;
+    resize:vertical;
+}
+
+input:disabled,
+textarea:disabled,
+select:disabled{
+    opacity:.72;
+    cursor:not-allowed;
+}
+
+/* BUTTONS */
+
+.btn{
+    border:1px solid #1b5b87;
+    background:#0a2740;
+    color:#dcecff;
+    padding:12px 17px;
+    border-radius:9px;
+    transition:.2s;
+}
+
+.btn:hover{
+    transform:translateY(-1px);
+    border-color:#2497ed;
+}
+
+.btn-primary{
+    background:linear-gradient(135deg,#0789f4,#126fd1);
+    border-color:#2499f7;
+    color:#fff;
+}
+
+.btn-success{
+    background:linear-gradient(135deg,#13a963,#168c5a);
+    border-color:#29c77e;
+}
+
+.btn-danger{
+    background:#481c29;
+    border-color:#913242;
+}
+
+.btn-small{
+    padding:8px 11px;
+    font-size:13px;
+}
+
+/* STATS */
 
 .stats{
-  display:grid;
-  grid-template-columns:repeat(5,1fr);
-  gap:12px;
-  margin-bottom:18px;
+    display:grid;
+    grid-template-columns:repeat(5,1fr);
+    gap:13px;
+    margin-top:18px;
 }
 
 .stat{
-  padding:19px;
-  min-height:125px;
+    padding:18px;
+    min-height:115px;
 }
 
-.stat .ico{
-  font-size:27px;
-  color:#35a1ff;
+.stat-icon{
+    font-size:25px;
+    margin-bottom:10px;
 }
 
-.stat .name{
-  margin-top:10px;
-  color:#d1e1ed;
+.stat-label{
+    color:#aac1d5;
+    font-size:13px;
 }
 
-.stat .num{
-  font-size:29px;
-  font-weight:800;
-  margin-top:5px;
+.stat-value{
+    font-size:28px;
+    font-weight:800;
+    margin-top:3px;
 }
 
 /* TABLE */
 
 .table-card{
-  overflow:hidden;
-}
-
-.table-head{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  gap:10px;
-  padding:17px;
-  border-bottom:1px solid #173f60;
-}
-
-.search{
-  max-width:350px;
+    margin-top:18px;
+    overflow:hidden;
 }
 
 .table-wrap{
-  overflow:auto;
+    overflow:auto;
 }
 
 table{
-  width:100%;
-  border-collapse:collapse;
-  min-width:850px;
+    width:100%;
+    border-collapse:collapse;
+    min-width:850px;
 }
 
 th{
-  text-align:left;
-  color:#6fb5ec;
-  font-size:12px;
-  padding:13px;
-  background:#071d34;
-  white-space:nowrap;
+    text-align:left;
+    color:#79b8eb;
+    font-size:12px;
+    padding:13px 14px;
+    border-bottom:1px solid #164361;
+    white-space:nowrap;
 }
 
 td{
-  padding:13px;
-  border-top:1px solid #123552;
-  font-size:14px;
+    padding:13px 14px;
+    border-bottom:1px solid rgba(25,74,105,.5);
+    color:#dce9f5;
+    font-size:13px;
 }
 
 tr:hover td{
-  background:rgba(22,115,183,.08);
+    background:rgba(13,91,150,.08);
 }
 
-/* SECTIONS */
+/* PAGE */
 
-.section-grid{
-  display:grid;
-  grid-template-columns:repeat(2,1fr);
-  gap:16px;
+.page-title{
+    margin-bottom:20px;
 }
 
-.section-card{
-  padding:20px;
+.page-title h1{
+    font-size:27px;
 }
 
-.section-title{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  gap:10px;
-  border-bottom:1px solid #194462;
-  padding-bottom:12px;
-  margin-bottom:15px;
+.page-title p{
+    color:var(--muted);
+    margin-top:5px;
 }
 
-.section-title h3{
-  margin:0;
+/* FORM */
+
+.form-grid{
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:17px;
 }
 
-.muted{
-  color:var(--muted);
-}
-
-.grid-2{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:13px;
-}
-
-.grid-3{
-  display:grid;
-  grid-template-columns:repeat(3,1fr);
-  gap:13px;
+.form-grid.three{
+    grid-template-columns:repeat(3,1fr);
 }
 
 .field{
-  margin-bottom:5px;
+    display:flex;
+    flex-direction:column;
+    gap:7px;
+}
+
+.field.full{
+    grid-column:1/-1;
 }
 
 .field label{
-  margin-top:0;
+    color:#a9bfd3;
+    font-size:13px;
+    font-weight:650;
 }
 
-.field-view{
-  min-height:45px;
-  display:flex;
-  align-items:center;
-  background:#061a2e;
-  border:1px solid #173f60;
-  border-radius:11px;
-  padding:10px 12px;
-  color:white;
+.section{
+    margin-bottom:18px;
 }
 
-.field-view.empty{
-  color:#668197;
+.section-title{
+    font-size:20px;
+    font-weight:800;
+    margin-bottom:13px;
+    display:flex;
+    align-items:center;
+    gap:9px;
 }
 
-.read-only .editable-input{
-  pointer-events:none;
-  opacity:.88;
+.section-title span{
+    color:#2097f7;
 }
 
 /* DETAIL */
 
-.detail-head{
-  display:flex;
-  justify-content:space-between;
-  align-items:flex-start;
-  gap:15px;
-  padding:20px;
-  margin-bottom:16px;
+.detail-top{
+    display:grid;
+    grid-template-columns:1.5fr 1fr;
+    gap:17px;
 }
 
-.detail-actions{
-  display:flex;
-  gap:8px;
-  flex-wrap:wrap;
+.station-name{
+    font-size:28px;
+    font-weight:850;
 }
+
+.station-meta{
+    color:var(--muted);
+    margin-top:6px;
+}
+
+.badges{
+    display:flex;
+    gap:7px;
+    flex-wrap:wrap;
+    margin-top:15px;
+}
+
+.badge{
+    border:1px solid #1b557c;
+    padding:6px 9px;
+    border-radius:7px;
+    background:#09253b;
+    color:#afd4f2;
+    font-size:12px;
+}
+
+.readonly-box{
+    padding:17px;
+    border:1px solid #184e74;
+    border-radius:11px;
+    background:#061a2c;
+}
+
+.value-big{
+    font-size:24px;
+    font-weight:800;
+    margin-top:4px;
+}
+
+/* TABS */
 
 .tabs{
-  display:flex;
-  gap:6px;
-  overflow:auto;
-  padding:5px;
-  margin-bottom:16px;
+    display:flex;
+    gap:7px;
+    overflow:auto;
+    padding-bottom:4px;
+    margin-bottom:15px;
 }
 
-.tabs button{
-  white-space:nowrap;
-  background:#09213a;
-  border:1px solid #194b70;
-  color:#b6cbe0;
-  padding:11px 15px;
-  border-radius:10px;
+.tab{
+    white-space:nowrap;
+    padding:10px 15px;
+    border-radius:8px;
+    background:#08233a;
+    border:1px solid #164a6e;
+    color:#a9c2d8;
 }
 
-.tabs button.active{
-  background:#087bd9;
-  color:white;
-  border-color:#2b9cff;
+.tab.active{
+    background:#0b7fe2;
+    color:#fff;
+    border-color:#249cf7;
+}
+
+/* LABEL PLATE */
+
+.nameplate{
+    border:2px solid #8e99a5;
+    background:#e9edf0;
+    color:#111;
+    text-align:center;
+    padding:17px;
+    border-radius:3px;
+    margin-bottom:20px;
+}
+
+.nameplate strong{
+    display:block;
+    font-size:25px;
+    letter-spacing:.5px;
+}
+
+.nameplate small{
+    display:block;
+    margin-top:4px;
+    font-size:14px;
+}
+
+/* MOTOR / PUMP TAG */
+
+.tag{
+    background:linear-gradient(145deg,#dfe3e6,#aeb6bc);
+    color:#111;
+    border-radius:7px;
+    padding:20px;
+    border:1px solid #8b969e;
+    box-shadow:inset 0 0 25px rgba(255,255,255,.3);
+}
+
+.tag-title{
+    font-size:25px;
+    font-weight:900;
+    margin-bottom:4px;
+}
+
+.tag-subtitle{
+    font-size:17px;
+    font-weight:700;
+    margin-bottom:15px;
+}
+
+.tag-table{
+    width:100%;
+    min-width:0;
+    border-collapse:collapse;
+}
+
+.tag-table th,
+.tag-table td{
+    color:#111;
+    border:1px solid #7f8a91;
+    padding:8px;
+    background:rgba(255,255,255,.35);
+}
+
+.tag-table th{
+    font-size:12px;
+}
+
+.tag-table td{
+    font-size:13px;
+}
+
+/* RUNNING */
+
+.compare{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:15px;
+}
+
+.change{
+    border-left:3px solid var(--warning);
+    padding-left:12px;
+}
+
+.good{
+    border-left:3px solid var(--success);
+}
+
+.alert{
+    border-left:3px solid var(--danger);
 }
 
 /* HMI */
 
-.hmi-shell{
-  background:#171c1f;
-  border:8px solid #101214;
-  border-radius:18px;
-  padding:16px;
-  box-shadow:inset 0 0 0 1px #444,0 15px 45px rgba(0,0,0,.45);
-}
-
-.hmi-screen{
-  background:
-    radial-gradient(circle at 50% 0%,rgba(255,255,255,.07),transparent 35%),
-    #101417;
-  border:1px solid #5b6266;
-  padding:20px;
-  min-height:420px;
-  color:#f5f5f5;
-}
-
-.hmi-title{
-  text-align:center;
-  font-weight:800;
-  font-size:20px;
-  margin-bottom:20px;
-  letter-spacing:.4px;
+.hmi-page{
+    background:#02070c;
+    border:2px solid #27333e;
+    border-radius:9px;
+    padding:22px;
+    min-height:320px;
 }
 
 .hmi-grid{
-  display:grid;
-  grid-template-columns:1fr 1fr 1fr;
-  gap:14px 18px;
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:13px;
 }
 
-.hmi-item{
-  display:grid;
-  grid-template-columns:minmax(0,1fr) 90px;
-  gap:8px;
-  align-items:center;
+.hmi-field{
+    display:grid;
+    grid-template-columns:1fr 100px;
+    gap:8px;
+    align-items:center;
 }
 
-.hmi-item label{
-  color:#f1f1f1;
-  font-weight:600;
-  font-size:13px;
-  margin:0;
+.hmi-field label{
+    color:#f0f4f7;
+    font-size:13px;
 }
 
-.hmi-item input{
-  background:#e9eef2;
-  color:#4d6d87;
-  border:1px solid #ccd7df;
-  border-radius:2px;
-  padding:8px;
-  text-align:center;
-  font-weight:700;
+.hmi-field input{
+    background:#e9edf0;
+    color:#345d83;
+    border:0;
+    border-radius:2px;
+    padding:8px;
+    text-align:center;
 }
 
-.hmi-nav{
-  display:flex;
-  justify-content:center;
-  gap:15px;
-  margin-top:20px;
+/* PHOTO */
+
+.photo-box{
+    border:1px dashed #24638d;
+    border-radius:11px;
+    padding:16px;
+    text-align:center;
+    background:#061a2b;
 }
 
-.hmi-btn{
-  background:#e9b500;
-  color:white;
-  border:2px solid #ffe068;
-  min-width:55px;
-  padding:10px 18px;
-  font-size:22px;
-  border-radius:3px;
-}
-
-.hmi-save{
-  background:#16a650;
-  color:white;
-  border:0;
-  border-radius:50%;
-  width:62px;
-  height:62px;
-  font-size:24px;
-}
-
-.hmi-footer{
-  display:flex;
-  justify-content:space-between;
-  align-items:end;
-  margin-top:20px;
-}
-
-/* LABELS */
-
-.real-label{
-  background:#f5f1e8;
-  color:#171717;
-  border:2px solid #8d8d8d;
-  border-radius:5px;
-  padding:22px;
-  font-family:Arial,sans-serif;
-  box-shadow:0 8px 25px rgba(0,0,0,.25);
-}
-
-.motor-label{
-  max-width:850px;
-  margin:auto;
-}
-
-.motor-brand{
-  text-align:center;
-  font-size:30px;
-  font-weight:900;
-  letter-spacing:2px;
-}
-
-.motor-sub{
-  text-align:center;
-  font-weight:700;
-  margin:5px 0 18px;
-}
-
-.spec-table{
-  width:100%;
-  border-collapse:collapse;
-  color:#111;
-  min-width:0;
-}
-
-.spec-table th,
-.spec-table td{
-  border:1px solid #555;
-  color:#111;
-  background:#f5f1e8;
-  padding:8px;
-  text-align:center;
-}
-
-.spec-table th{
-  font-weight:800;
-}
-
-.label-fields{
-  margin-top:18px;
-  display:grid;
-  grid-template-columns:repeat(2,1fr);
-  gap:10px;
-}
-
-.label-field{
-  display:grid;
-  grid-template-columns:1fr 150px;
-  align-items:center;
-  gap:8px;
-  border-bottom:1px solid #aaa;
-  padding:4px;
-}
-
-.label-field input{
-  background:#fff;
-  color:#111;
-  border:1px solid #999;
-  border-radius:4px;
-}
-
-/* RECORDS */
-
-.record-list{
-  display:flex;
-  flex-direction:column;
-  gap:9px;
-}
-
-.record{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  gap:12px;
-  padding:13px;
-  border:1px solid #173e5e;
-  background:#071d32;
-  border-radius:10px;
-}
-
-.record strong{
-  display:block;
-}
-
-.record small{
-  color:#829bb0;
+.photo-preview{
+    max-width:100%;
+    max-height:280px;
+    border-radius:8px;
+    margin-top:12px;
 }
 
 /* MODAL */
 
 .modal{
-  position:fixed;
-  inset:0;
-  background:rgba(0,0,0,.72);
-  backdrop-filter:blur(7px);
-  z-index:100;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  padding:18px;
+    position:fixed;
+    inset:0;
+    background:rgba(0,5,12,.82);
+    backdrop-filter:blur(7px);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:20px;
+    z-index:100;
+}
+
+.modal.hidden{
+    display:none;
 }
 
 .modal-box{
-  width:min(760px,100%);
-  max-height:90vh;
-  overflow:auto;
-  background:#071d33;
-  border:1px solid #1e5d88;
-  border-radius:20px;
-  box-shadow:var(--shadow);
+    width:min(540px,100%);
+    background:#071d31;
+    border:1px solid #23628e;
+    border-radius:17px;
+    padding:25px;
+    box-shadow:0 25px 80px rgba(0,0,0,.5);
 }
 
-.modal-head{
-  padding:20px;
-  display:flex;
-  justify-content:space-between;
-  border-bottom:1px solid #194663;
+.modal-title{
+    font-size:23px;
+    font-weight:800;
+    margin-bottom:8px;
 }
 
-.modal-body{
-  padding:20px;
+.modal-text{
+    color:#a9bfd2;
+    line-height:1.5;
+    margin-bottom:20px;
 }
 
-.modal-foot{
-  padding:16px 20px;
-  border-top:1px solid #194663;
-  display:flex;
-  justify-content:flex-end;
-  gap:8px;
+.modal-actions{
+    display:flex;
+    gap:10px;
+    margin-top:15px;
+}
+
+.error{
+    color:#ff7385;
+    margin-top:10px;
+    display:none;
 }
 
 /* TOAST */
 
 .toast{
-  position:fixed;
-  right:20px;
-  bottom:20px;
-  z-index:500;
-  background:#0b3150;
-  border:1px solid #2b7eb4;
-  color:white;
-  padding:14px 18px;
-  border-radius:12px;
-  box-shadow:var(--shadow);
-  transform:translateY(120px);
-  opacity:0;
-  transition:.3s;
+    position:fixed;
+    bottom:25px;
+    right:25px;
+    background:#09263d;
+    border:1px solid #2573a8;
+    color:#fff;
+    padding:13px 17px;
+    border-radius:9px;
+    opacity:0;
+    transform:translateY(20px);
+    pointer-events:none;
+    transition:.25s;
+    z-index:200;
 }
 
 .toast.show{
-  transform:translateY(0);
-  opacity:1;
+    opacity:1;
+    transform:translateY(0);
 }
 
-/* MOBILE */
+/* RESPONSIVE */
 
-@media(max-width:900px){
+@media(max-width:1100px){
+    .stats{
+        grid-template-columns:repeat(3,1fr);
+    }
 
-  .sidebar{
-    width:75px;
-    padding:12px 8px;
-  }
+    .detail-top{
+        grid-template-columns:1fr;
+    }
 
-  .logo-area .meski,
-  .logo-area .archive,
-  .logo-area small{
-    display:none;
-  }
+    .hmi-grid{
+        grid-template-columns:repeat(2,1fr);
+    }
 
-  .logo-area{
-    text-align:center;
-  }
-
-  .nav button{
-    text-align:center;
-    font-size:0;
-    padding:13px 5px;
-  }
-
-  .nav button:first-letter{
-    font-size:21px;
-  }
-
-  .main{
-    margin-left:75px;
-    padding:15px;
-  }
-
-  .stats{
-    grid-template-columns:repeat(2,1fr);
-  }
-
-  .section-grid{
-    grid-template-columns:1fr;
-  }
-
-  .grid-3{
-    grid-template-columns:1fr 1fr;
-  }
-
-  .hmi-grid{
-    grid-template-columns:1fr 1fr;
-  }
+    .form-grid.three{
+        grid-template-columns:repeat(2,1fr);
+    }
 }
 
-@media(max-width:600px){
+@media(max-width:800px){
+    .header{
+        padding:0 14px;
+    }
 
-  .login-card{
-    padding:22px;
-  }
+    .brand-title{
+        font-size:18px;
+    }
 
-  .login-actions{
-    grid-template-columns:1fr;
-  }
+    .brand-sub{
+        display:none;
+    }
 
-  .main{
-    padding:10px;
-  }
+    .sidebar{
+        width:66px;
+        padding:12px 7px;
+    }
 
-  .topbar{
-    align-items:flex-start;
-    flex-direction:column;
-  }
+    .nav button{
+        justify-content:center;
+        padding:13px 4px;
+    }
 
-  .stats{
-    grid-template-columns:1fr 1fr;
-  }
+    .nav button span:not(.nav-icon){
+        display:none;
+    }
 
-  .stat{
-    min-height:105px;
-    padding:13px;
-  }
+    .main{
+        padding:14px;
+    }
 
-  .stat .num{
-    font-size:24px;
-  }
+    .stats{
+        grid-template-columns:repeat(2,1fr);
+    }
 
-  .grid-2,
-  .grid-3{
-    grid-template-columns:1fr;
-  }
+    .form-grid,
+    .form-grid.three,
+    .compare{
+        grid-template-columns:1fr;
+    }
 
-  .detail-head{
-    flex-direction:column;
-  }
+    .hmi-grid{
+        grid-template-columns:1fr;
+    }
 
-  .hmi-shell{
-    padding:7px;
-    border-width:5px;
-  }
+    .hero{
+        padding:20px;
+    }
 
-  .hmi-screen{
-    padding:10px;
-  }
-
-  .hmi-grid{
-    grid-template-columns:1fr;
-    gap:8px;
-  }
-
-  .hmi-item{
-    grid-template-columns:1fr 82px;
-  }
-
-  .label-fields{
-    grid-template-columns:1fr;
-  }
-
-  .label-field{
-    grid-template-columns:1fr 130px;
-  }
-
-  .brand-mark{
-    width:55px;
-    height:55px;
-  }
+    .hero-title{
+        font-size:24px;
+    }
 }
 
-/* PRINT / PDF */
+@media(max-width:500px){
+    .header-right .mode{
+        display:none;
+    }
 
-@media print{
+    .stats{
+        grid-template-columns:1fr;
+    }
 
-  body{
-    background:white!important;
-    color:#111!important;
-  }
-
-  body:before,
-  .sidebar,
-  .topbar,
-  .tabs,
-  .detail-actions,
-  .btn,
-  .toast{
-    display:none!important;
-  }
-
-  .main{
-    margin:0;
-    padding:0;
-    max-width:none;
-  }
-
-  .card,
-  .hmi-shell,
-  .real-label{
-    box-shadow:none!important;
-    break-inside:avoid;
-  }
-
-  .card{
-    background:white!important;
-    color:#111!important;
-    border:1px solid #999!important;
-  }
-
-  .field-view{
-    color:#111!important;
-    background:white!important;
-    border-color:#aaa!important;
-  }
-
-  .print-only{
-    display:block!important;
-  }
-}
-
-.print-only{
-  display:none;
+    .modal-actions{
+        flex-direction:column;
+    }
 }
 </style>
 </head>
 
 <body>
 
-<!-- LOGIN -->
+<div class="app">
 
-<div id="loginScreen" class="login-wrap">
-
-  <div class="login-card">
+<header class="header">
 
     <div class="brand">
-      <div class="brand-mark">〽</div>
-      <div>
-        <h1>MESKİ</h1>
-        <p>TERFİ ARŞİVİM</p>
-      </div>
+        <div class="brand-mark">〽</div>
+
+        <div>
+            <div class="brand-title">MESKİ</div>
+            <div class="brand-sub">TERFİ ARŞİVİM · MERKEZİ SAHA TEKNİK ARŞİVİ</div>
+        </div>
     </div>
 
-    <div class="login-title">Merkezi Saha Teknik Arşivi</div>
-
-    <div class="login-info">
-      <strong>Arşivi görüntülemek için</strong><br>
-      Ziyaretçi olarak devam edebilirsiniz.<br><br>
-
-      <strong>Düzenleme yapmak için</strong><br>
-      Yetkili şifre gereklidir.
+    <div class="header-right">
+        <div id="modeBadge" class="mode">Ziyaretçi Modu</div>
+        <button class="btn btn-small" onclick="openPassword()">🔐 Düzenleme</button>
     </div>
 
-    <label>Yetkili Şifre</label>
-    <input
-      id="loginPassword"
-      type="password"
-      inputmode="numeric"
-      placeholder="Düzenleme şifresini girin"
-      autocomplete="off"
-    >
+</header>
 
-    <div class="login-actions">
-      <button class="btn btn-primary btn-big" onclick="loginEdit()">
-        🔒 Düzenleme Moduna Gir
-      </button>
 
-      <button class="btn btn-big" onclick="loginVisitor()">
-        👁️ Ziyaretçi Olarak Devam Et
-      </button>
-    </div>
+<div class="layout">
 
-    <div class="small-note">
-      Ziyaretçiler kayıtları görüntüleyebilir. Kayıt ekleme,
-      değiştirme ve silme işlemleri yalnızca yetkili modda yapılabilir.
-    </div>
+<aside class="sidebar">
 
-  </div>
+<nav class="nav">
 
+<button class="active" onclick="showPage('home',this)">
+<span class="nav-icon">⌂</span>
+<span>Ana Sayfa</span>
+</button>
+
+<button onclick="showPage('stations',this)">
+<span class="nav-icon">▣</span>
+<span>Terfiler</span>
+</button>
+
+<button onclick="showPage('motors',this)">
+<span class="nav-icon">⚙</span>
+<span>Motorlar</span>
+</button>
+
+<button onclick="showPage('pumps',this)">
+<span class="nav-icon">≋</span>
+<span>Pompalar</span>
+</button>
+
+<button onclick="showPage('hmi',this)">
+<span class="nav-icon">▤</span>
+<span>HMI / PLC</span>
+</button>
+
+<button onclick="showPage('measurements',this)">
+<span class="nav-icon">⌁</span>
+<span>Ölçümler</span>
+</button>
+
+<button onclick="showPage('faults',this)">
+<span class="nav-icon">⚠</span>
+<span>Arızalar</span>
+</button>
+
+<button onclick="showPage('maintenance',this)">
+<span class="nav-icon">🔧</span>
+<span>Bakım</span>
+</button>
+
+<button onclick="showPage('notes',this)">
+<span class="nav-icon">📝</span>
+<span>Notlar</span>
+</button>
+
+<div class="nav-separator"></div>
+
+<button onclick="showPage('archive',this)">
+<span class="nav-icon">▧</span>
+<span>Arşiv & Dışa Aktar</span>
+</button>
+
+</nav>
+
+</aside>
+
+
+<main class="main" id="main"></main>
+
+</div>
 </div>
 
 
-<!-- APP -->
+<!-- PASSWORD MODAL -->
 
-<div id="app" class="app">
+<div id="passwordModal" class="modal hidden">
 
-  <aside class="sidebar">
+<div class="modal-box">
 
-    <div class="logo-area">
-      <div class="meski">〽 MESKİ</div>
-      <div class="archive">TERFİ ARŞİVİM</div>
-      <small>MERKEZİ SAHA TEKNİK ARŞİVİ</small>
-    </div>
+<div class="modal-title">🔐 Düzenleme Modu</div>
 
-    <nav class="nav">
+<div class="modal-text">
+Kayıt eklemek, değiştirmek veya silmek için düzenleme şifresini girin.
+</div>
 
-      <button onclick="showPage('dashboard')" class="active">
-        🏠 Ana Sayfa
-      </button>
+<div class="field">
+<label>Şifre</label>
+<input id="passwordInput" type="password" inputmode="numeric"
+placeholder="Şifreyi girin"
+onkeydown="if(event.key==='Enter')checkPassword()">
+</div>
 
-      <button onclick="showPage('stations')">
-        🏭 İstasyonlar
-      </button>
+<div id="passwordError" class="error">
+Şifre hatalı.
+</div>
 
-      <button onclick="quickSection('motor')">
-        ⚙️ Motorlar
-      </button>
+<div class="modal-actions">
 
-      <button onclick="quickSection('pump')">
-        💧 Pompalar
-      </button>
+<button class="btn btn-primary" onclick="checkPassword()">
+Düzenleme Moduna Gir
+</button>
 
-      <button onclick="quickSection('drive')">
-        🔌 Sürücüler
-      </button>
-
-      <button onclick="quickSection('hmi')">
-        🖥️ HMI / PLC
-      </button>
-
-      <button onclick="quickSection('measure')">
-        📈 Ölçümler
-      </button>
-
-      <button onclick="quickSection('fault')">
-        ⚠️ Arızalar
-      </button>
-
-      <button onclick="quickSection('maintenance')">
-        🔧 Bakım
-      </button>
-
-      <button onclick="quickSection('note')">
-        📝 Notlar
-      </button>
-
-      <div class="nav-sep"></div>
-
-      <button onclick="showPage('archive')">
-        📦 Arşiv & Dışa Aktar
-      </button>
-
-      <button onclick="showPage('users')">
-        👥 Kullanıcılar
-      </button>
-
-      <button onclick="showPage('settings')">
-        ⚙️ Ayarlar
-      </button>
-
-      <div class="nav-sep"></div>
-
-      <button onclick="visitorMode()">
-        👁️ Ziyaretçi Modu
-      </button>
-
-    </nav>
-
-  </aside>
-
-
-  <main class="main">
-
-    <div id="content"></div>
-
-  </main>
+<button class="btn" onclick="continueVisitor()">
+Ziyaretçi Olarak Devam Et
+</button>
 
 </div>
 
-
-<!-- MODAL -->
-
-<div id="modal" class="modal hidden">
-
-  <div class="modal-box">
-
-    <div class="modal-head">
-      <h3 id="modalTitle">İşlem</h3>
-      <button class="btn" onclick="closeModal()">✕</button>
-    </div>
-
-    <div id="modalBody" class="modal-body"></div>
-
-    <div id="modalFoot" class="modal-foot"></div>
-
-  </div>
-
+</div>
 </div>
 
 
@@ -1167,3435 +984,2873 @@ tr:hover td{
 
 <script>
 
-/* ============================================================
-   MESKİ TERFİ ARŞİVİM
-   TEK DOSYA SÜRÜMÜ
-   ============================================================ */
+/* =========================================================
+   TERFİ ARŞİVİM
+   TEK DOSYA UYGULAMA
+   ========================================================= */
 
-const PASSWORD = "6872";
+/* ---------------------------------------------------------
+   AYARLAR
+--------------------------------------------------------- */
 
-let mode = "visitor";
-let currentStationId = null;
-let currentTab = "overview";
-let currentHmiPage = 1;
+const EDIT_PASSWORD = "6872";
 
-const STORAGE_KEY = "MESKI_TERFI_ARSIV_V6";
+/*
+ Supabase kullanacaksan buraya bilgileri koyacağız.
 
-let db = loadDB();
+ Şimdilik uygulama localStorage ile çalışır.
+ Böylece ekranların tamamını güvenli şekilde test ederiz.
+
+ Daha sonra:
+
+ SUPABASE_URL = "https://....supabase.co"
+ SUPABASE_KEY = "...."
+
+ yapılabilir.
+*/
+
+const SUPABASE_URL = "";
+const SUPABASE_KEY = "";
 
 
-/* ============================================================
-   VERİ YAPISI
-   ============================================================ */
+/* ---------------------------------------------------------
+   HMI SAYFALARINDAKİ GERÇEK BAŞLIKLAR
+--------------------------------------------------------- */
 
-function blankHmi(){
+const HMI_PAGES = [
 
-  return {
+{
+    name:"HMI Sayfa 1",
+    fields:[
+        ["Motor Termik Kontrol","motor_termik_kontrol"],
+        ["Oto. Reset Sayısı","oto_reset_sayisi"],
+        ["Top. Reset Süresi [Saniye]","top_reset_suresi"],
+        ["Reset Gecikme Süresi","reset_gecikme_suresi"],
+        ["Sensör Hata","sensor_hata"],
+        ["[AI1] Min. Sensör Kalibrasyon","ai1_min_kalibrasyon"],
+        ["[AI1] Max. Sensör Kalibrasyon","ai1_max_kalibrasyon"],
 
-    page1:{
-      minFrekans:"40.0",
-      maxFrekans:"42.0",
-      minFrekans1:"25.0",
-      maxFrekans1:"42.0",
-      minFrekans2:"25.0",
-      maxFrekans2:"42.0",
-      minFrekans3:"25.0",
-      maxFrekans3:"42.0",
-      minFrekansPlus1:"0.0",
-      tolerans:"0.0",
-      toplamMotor:"2",
-      yardimciMotor:"1",
-      uyanma:"0.50",
-      maxBekleme:"5.0",
-      yardimciStop:"3.0",
-      uykuIptal:"0",
-      uykuZamani:"60.0"
-    },
+        ["Motor Gürültü Seviyesi","motor_gurultu_seviyesi"],
+        ["Panel Hata","panel_hata"],
+        ["Aşırı Gerilim","asiri_gerilim"],
+        ["Düşük Gerilim","dusuk_gerilim"],
+        ["Sensör Tipi","sensor_tipi"],
 
-    page2:{
-      motorVoltaj:"400",
-      motorAkim:"41.7",
-      motorGuc:"18.5",
-      motorFrekans:"50.0",
-      motorDevir:"2875",
-      sensorAI1Min:"20.0",
-      nominalAkim:"30.0",
-      minSensorRange:"0.0",
-      maxSensorRange:"100.0",
-      sensorAI2Min:"1.0",
-      sensorAI2Max:"100.0",
-      hizlanma:"5.0",
-      yavaslama:"5.0",
-      pid:"1.0",
-      osilasyon:"60.0",
-      tersDuz:"0",
-      sensorAI1Max:"100.0"
-    },
+        ["Sensör Giriş Port","sensor_giris_port"],
+        ["Sensör Giriş Hata","sensor_giris_hata"],
+        ["Aşırı Akım","asiri_akim"],
+        ["Toprak Hata","toprak_hata"],
+        ["Set Değer Seçimi","set_deger_secimi"],
+        ["[AI2] Min. Sensör Kalibrasyonu","ai2_min_kalibrasyon"],
+        ["[AI2] Max. Sensör Kalibrasyonu","ai2_max_kalibrasyon"]
+    ]
+},
 
-    page3:{
-      role1:"2",
-      role2:"0",
-      role3:"0",
-      role4:"0",
-      digitalRole:"0",
-      kilitleme:"3",
-      calismaSuresi:"9681",
-      otomatikDegisim:"0.0",
-      otoDegisimSeviyesi:"50.0"
-    },
+{
+    name:"HMI Sayfa 2",
+    fields:[
+        ["Motor Voltajı [V]","motor_voltaji"],
+        ["Motor Akımı [A]","motor_akimi"],
+        ["Motor Güç [kW]","motor_gucu"],
+        ["Motor Frekans [Hz]","motor_frekansi"],
+        ["Motor Devir [RPM]","motor_devir"],
+        ["Sensör [AI1] Min.","sensor_ai1_min"],
 
-    page4:{
-      motorTermik:"0",
-      otoReset:"0",
-      toplamReset:"30.0",
-      resetGecikme:"0.0",
-      sensorHata:"0",
-      ai1MinKal:"0",
-      ai1MaxKal:"100",
-      motorGurultu:"4",
-      panelHata:"1",
-      asiriGerilim:"0",
-      dusukGerilim:"0",
-      sensorTipi:"1",
-      sensorPort:"2",
-      sensorGirisHata:"2",
-      asiriAkim:"0",
-      toprakHata:"0",
-      setDegerSecimi:"1",
-      ai2MinKal:"0",
-      ai2MaxKal:"100"
-    },
+        ["Nominal Akım [A] x1.5","nominal_akim"],
+        ["Min. Sensör Range","min_sensor_range"],
+        ["Max. Sensör Range","max_sensor_range"],
+        ["Sensör [AI2] Min.","sensor_ai2_min"],
+        ["Sensör [AI2] Maks.","sensor_ai2_max"],
 
-    page5:{
-      setAyari:"40.0",
-      calismaAyari:"0.0",
-      ai1Durum:"****",
-      ai2Durum:"100.0",
-      invAO1:"17.4"
-    }
+        ["Hızlanma Rampası [sn]","hizlanma_rampasi"],
+        ["Yavaşlama Rampası [sn]","yavaslama_rampasi"],
+        ["PID Kazanç","pid_kazanc"],
+        ["Osilasyon","osilasyon"],
+        ["Ters / Düz Çalıştırma","ters_duz"],
+        ["Sensör [AI1] Maks.","sensor_ai1_max"]
+    ]
+},
 
-  };
+{
+    name:"HMI Sayfa 3",
+    fields:[
+        ["Minimum Frekans","minimum_frekans"],
+        ["Minimum Frekans 1","minimum_frekans_1"],
+        ["Minimum Frekans 2","minimum_frekans_2"],
+        ["Minimum Frekans 3","minimum_frekans_3"],
+        ["Minimum frekans +1","minimum_frekans_plus1"],
+        ["Top. Motor Sayısı","top_motor_sayisi"],
+
+        ["Maksimum Frekans","maksimum_frekans"],
+        ["Maksimum Frekans -1","maksimum_frekans_1"],
+        ["Maksimum Frekans -1 / 2","maksimum_frekans_2"],
+        ["Maksimum Frekans -1 / 3","maksimum_frekans_3"],
+        ["Tolerans [bar.]","tolerans_bar"],
+
+        ["Uyanma süresi [Sn.]","uyanma_suresi"],
+        ["Maks. Frekans Bekleme süresi [Sn]","maks_frekans_bekleme"],
+        ["Yard. motor Stop zamanı [sn]","yard_motor_stop"],
+        ["Uyku İptal","uyku_iptal"],
+        ["Uyku Zamanı","uyku_zamani"],
+        ["Yard. Motor Sayısı","yard_motor_sayisi"]
+    ]
+},
+
+{
+    name:"HMI Sayfa 4",
+    fields:[
+        ["Röle 1 Yapılandırma","role_1"],
+        ["Röle 2 Yapılandırma","role_2"],
+        ["Röle 3 Yapılandırma","role_3"],
+        ["Röle 4 Yapılandırma","role_4"],
+        ["Dijital Röle","dijital_role"],
+
+        ["Kilitleme [DI1-DI5]","kilitleme"],
+        ["Çalışma Süresi [h]","calisma_suresi"],
+        ["Otomatik Değişim Aralığı","otomatik_degisim_araligi"],
+        ["Oto Değişim Seviyesi (%)","oto_degisim_seviyesi"]
+    ]
+},
+
+{
+    name:"HMI Sayfa 5",
+    fields:[
+        ["Set Ayarı","set_ayari"],
+        ["Çalışma Ayarı","calisma_ayari"],
+        ["AI 1 Durum (%)","ai1_durum"],
+        ["AI 2 Durum (%)","ai2_durum"],
+        ["INV AO1 (mA)","inv_ao1"]
+    ]
 }
+];
 
 
-function blankMotor(){
+/* ---------------------------------------------------------
+   MOTOR ETİKETİ
+--------------------------------------------------------- */
 
-  return {
+const MOTOR_TAG_FIELDS = [
 
-    marka:"",
-    tip:"",
-    model:"",
-    seriNo:"",
-    gucHp:"",
-    gucKw:"",
-    frekans:"",
-    gerilim380:"",
-    akim380:"",
-    devir380:"",
-    cos380:"",
-    gerilim400:"",
-    akim400:"",
-    devir400:"",
-    cos400:"",
-    gerilim415:"",
-    akim415:"",
-    devir415:"",
-    cos415:"",
-    ip:"",
-    eksenelYuk:"",
-    maksSicaklik:"",
-    kalkisSaat:"",
-    sogutma:"",
-    uretimTarihi:"",
-    not:""
-
-  };
-}
+["Üretici","manufacturer"],
+["Model / Tip","model"],
+["Seri No","serial_no"],
+["Güç","power"],
+["Güç Birimi","power_unit"],
+["Gerilim 1","voltage_1"],
+["Akım 1","current_1"],
+["Devir 1","rpm_1"],
+["cosφ 1","cosphi_1"],
+["Gerilim 2","voltage_2"],
+["Akım 2","current_2"],
+["Devir 2","rpm_2"],
+["cosφ 2","cosphi_2"],
+["Gerilim 3","voltage_3"],
+["Akım 3","current_3"],
+["Devir 3","rpm_3"],
+["cosφ 3","cosphi_3"],
+["Maksimum Eksenel Yük","axial_load"],
+["Maksimum Kalkış / Saat","starts_per_hour"],
+["Koruma Sınıfı","ip_class"],
+["Frekans","frequency"],
+["Yıl","year"],
+["Not","note"]
+];
 
 
-function blankPump(){
+/* ---------------------------------------------------------
+   POMPA ETİKETİ
+--------------------------------------------------------- */
 
-  return {
+const PUMP_TAG_FIELDS = [
 
-    marka:"",
-    model:"",
-    seriNo:"",
-    tarih:"",
-    urunNo:"",
-    pn:"",
-    q:"",
-    h:"",
-    hmin:"",
-    hmax:"",
-    basinc:"",
-    sicaklik:"",
-    voltaj:"",
-    faz:"",
-    guc:"",
-    frekans:"",
-    akim:"",
-    sinif:"",
-    ip:"",
-    panelIp:"",
-    kapasite:"",
-    agirlik:"",
-    devamliCalisma:"",
-    not:""
-
-  };
-}
+["Üretici","manufacturer"],
+["Model","model"],
+["Seri No","serial_no"],
+["Ürün No","product_no"],
+["Tarih","date"],
+["Q Min","q_min"],
+["Q Max","q_max"],
+["H Min","h_min"],
+["H Max","h_max"],
+["Basınç Maks.","max_pressure"],
+["Sıcaklık Maks.","max_temperature"],
+["Gerilim","voltage"],
+["Frekans","frequency"],
+["Nominal Güç","nominal_power"],
+["Nominal Akım","nominal_current"],
+["Koruma Sınıfı","ip_class"],
+["Yalıtım Sınıfı","insulation_class"],
+["Ağırlık","weight"],
+["Devamlı Çalışma","continuous"],
+["Not","note"]
+];
 
 
-function blankStation(){
+/* ---------------------------------------------------------
+   MOTOR ÇALIŞMA DEĞERLERİ
+--------------------------------------------------------- */
 
-  return {
+const RUNNING_FIELDS = [
 
-    id:"",
-    name:"",
-    region:"",
-    address:"",
-    description:"",
-    created:new Date().toISOString(),
-    updated:new Date().toISOString(),
+["Ölçüm Tarihi","date"],
+["Ölçüm Saati","time"],
 
-    hmi:blankHmi(),
-    motor:blankMotor(),
-    pump:blankPump(),
+["Frekans","frequency"],
+["Motor Akımı","current"],
+["Motor Devri","rpm"],
+["Motor Gücü","power"],
+["Motor Gerilimi","voltage"],
 
-    drives:[],
-    measurements:[],
+["L1 Akımı","l1"],
+["L2 Akımı","l2"],
+["L3 Akımı","l3"],
+
+["L1-L2 Gerilimi","v12"],
+["L2-L3 Gerilimi","v23"],
+["L3-L1 Gerilimi","v31"],
+
+["Sürücü Sıcaklığı","drive_temperature"],
+["Çalışma Basıncı","working_pressure"],
+["Set Basıncı","set_pressure"],
+
+["Tasarruf / Enerji","energy_saving"],
+["Çalışma Durumu","status"],
+
+["Not","note"]
+];
+
+
+/* ---------------------------------------------------------
+   VERİ
+--------------------------------------------------------- */
+
+let state = {
+    editMode:false,
+    currentStation:null,
+    stations:[]
+};
+
+
+/* ---------------------------------------------------------
+   DEMO VERİLER
+--------------------------------------------------------- */
+
+function demoData(){
+
+return [
+
+{
+    id:"T001",
+    name:"DALGIÇ 3",
+    region:"Mezitli",
+    address:"Şebeke - Yenimahalle",
+    description:"Şebeke suyu terfi istasyonu",
+    updated:"31.05.2026 21:15",
+
+    motorCount:2,
+    pumpCount:2,
+
+    motorTag:{
+        manufacturer:"IMPO",
+        model:"TR 6” K 25 HP",
+        serial_no:"26H6003006941",
+        power:"18.5",
+        power_unit:"kW",
+        voltage_1:"380 V",
+        current_1:"41.2 A",
+        rpm_1:"2865",
+        cosphi_1:"0.85",
+        voltage_2:"400 V",
+        current_2:"41.7 A",
+        rpm_2:"2875",
+        cosphi_2:"0.81",
+        voltage_3:"415 V",
+        current_3:"42.3 A",
+        rpm_3:"2881",
+        cosphi_3:"0.77",
+        axial_load:"26 kN",
+        starts_per_hour:"10",
+        ip_class:"IP68",
+        frequency:"50 Hz",
+        year:"2026"
+    },
+
+    pumpTag:{
+        manufacturer:"Franklin Electric / E-Tech",
+        model:"VN9/09 I030 T5Y",
+        serial_no:"26F70 29-0075A",
+        product_no:"IMP10590595",
+        date:"29/06/2026",
+        q_min:"83 l/min",
+        q_max:"233 l/min",
+        h_min:"27 m",
+        h_max:"105 m",
+        max_pressure:"1.5 MPa / 15 bar",
+        max_temperature:"40 °C",
+        voltage:"380-415 V 3~",
+        frequency:"50 Hz",
+        nominal_power:"3.91 kW",
+        nominal_current:"6.8 A",
+        ip_class:"IPX8",
+        insulation_class:"F",
+        weight:"24.7 kg",
+        continuous:"17 m"
+    },
+
+    running:{
+        date:"31.05.2026",
+        time:"21:10",
+        frequency:"42.0 Hz",
+        current:"26.4 A",
+        rpm:"2354 RPM",
+        power:"9.1 kW",
+        voltage:"400 V",
+        l1:"26.3 A",
+        l2:"26.5 A",
+        l3:"26.4 A",
+        v12:"399 V",
+        v23:"401 V",
+        v31:"400 V",
+        drive_temperature:"56.3 °C",
+        working_pressure:"0.0 bar",
+        set_pressure:"40.0 bar",
+        energy_saving:"469.3 kWh",
+        status:"Çalışıyor",
+        note:"Periyodik saha kontrolü"
+    },
+
+    hmi:buildDefaultHmi(),
+
     faults:[],
     maintenance:[],
-    notes:[],
+    notes:[]
+},
 
-    photos:[]
+{
+    id:"T002",
+    name:"DALGIÇ 4",
+    region:"Mezitli",
+    address:"Üç Ocak",
+    description:"Dalgıç pompa terfi istasyonu",
+    updated:"30.05.2026 18:42",
+    motorCount:2,
+    pumpCount:2,
+    motorTag:{},
+    pumpTag:{},
+    running:{},
+    hmi:buildDefaultHmi(),
+    faults:[],
+    maintenance:[],
+    notes:[]
+},
 
-  };
+{
+    id:"T003",
+    name:"Aydınlıkevler",
+    region:"Yenişehir",
+    address:"Aydınlıkevler Mah.",
+    description:"Terfi istasyonu",
+    updated:"29.05.2026 16:30",
+    motorCount:1,
+    pumpCount:1,
+    motorTag:{},
+    pumpTag:{},
+    running:{},
+    hmi:buildDefaultHmi(),
+    faults:[],
+    maintenance:[],
+    notes:[]
+},
+
+{
+    id:"T004",
+    name:"Huzurkent",
+    region:"Toroslar",
+    address:"Huzurkent Mah.",
+    description:"Terfi istasyonu",
+    updated:"28.05.2026 14:05",
+    motorCount:1,
+    pumpCount:1,
+    motorTag:{},
+    pumpTag:{},
+    running:{},
+    hmi:buildDefaultHmi(),
+    faults:[],
+    maintenance:[],
+    notes:[]
+},
+
+{
+    id:"T005",
+    name:"Kuyuluk",
+    region:"Akdeniz",
+    address:"Kuyuluk Mah.",
+    description:"Terfi istasyonu",
+    updated:"27.05.2026 12:18",
+    motorCount:2,
+    pumpCount:2,
+    motorTag:{},
+    pumpTag:{},
+    running:{},
+    hmi:buildDefaultHmi(),
+    faults:[],
+    maintenance:[],
+    notes:[]
 }
 
-
-function initialDB(){
-
-  const s=blankStation();
-
-  s.id="T001";
-  s.name="DALGIÇ 3";
-  s.region="Mezitli";
-  s.address="Şebeke - Yenimahalle";
-  s.description="Örnek saha kaydı";
-
-  s.motor.marka="ULUSU";
-  s.motor.tip="10\" Dalgıç Motor";
-  s.motor.gucHp="180";
-  s.motor.gucKw="134";
-  s.motor.frekans="50";
-  s.motor.gerilim380="380";
-  s.motor.akim380="248";
-  s.motor.devir380="2910";
-  s.motor.cos380="0.91";
-  s.motor.gerilim400="400";
-  s.motor.akim400="238";
-  s.motor.devir400="2925";
-  s.motor.cos400="0.89";
-  s.motor.gerilim415="415";
-  s.motor.akim415="232";
-  s.motor.devir415="2935";
-  s.motor.cos415="0.88";
-  s.motor.ip="IP68";
-  s.motor.eksenelYuk="75 kN";
-  s.motor.maksSicaklik="60 °C";
-  s.motor.kalkisSaat="10";
-
-  s.pump.marka="Franklin Electric";
-  s.pump.model="VN9/09 I030 T5Y";
-  s.pump.seriNo="26F70 29-0075A";
-  s.pump.tarih="29/06/2026";
-  s.pump.urunNo="IMP10590595";
-  s.pump.pn="4 hp";
-  s.pump.q="83-233 l/min";
-  s.pump.h="91-27 m";
-  s.pump.hmin="27 m";
-  s.pump.hmax="105 m";
-  s.pump.basinc="1.5 MPa / 15 bar";
-  s.pump.sicaklik="40 °C";
-  s.pump.voltaj="380-415 V 3~";
-  s.pump.guc="3.91 kW";
-  s.pump.frekans="50 Hz";
-  s.pump.akim="6.8 A";
-  s.pump.sinif="F";
-  s.pump.ip="X8";
-  s.pump.agirlik="24.7 kg";
-
-  return {
-    version:6,
-    stations:[s],
-    users:[
-      {
-        username:"Musa",
-        role:"Yönetici",
-        active:true
-      }
-    ],
-    logs:[]
-  };
-}
-
-
-function loadDB(){
-
-  try{
-
-    const raw=localStorage.getItem(STORAGE_KEY);
-
-    if(!raw){
-      const fresh=initialDB();
-      localStorage.setItem(STORAGE_KEY,JSON.stringify(fresh));
-      return fresh;
-    }
-
-    return JSON.parse(raw);
-
-  }catch(e){
-
-    return initialDB();
-
-  }
-}
-
-
-function saveDB(){
-
-  localStorage.setItem(STORAGE_KEY,JSON.stringify(db));
+];
 
 }
 
 
-/* ============================================================
-   GİRİŞ
-   ============================================================ */
+/* ---------------------------------------------------------
+   HMI DEFAULT
+--------------------------------------------------------- */
 
-function loginEdit(){
+function buildDefaultHmi(){
 
-  const p=document.getElementById("loginPassword").value;
+let result={};
 
-  if(p!==PASSWORD){
+HMI_PAGES.forEach((page,index)=>{
 
-    toast("Şifre hatalı.");
+    result[index]={};
 
-    return;
-  }
+    page.fields.forEach(([label,key])=>{
+        result[index][key]="";
+    });
 
-  mode="edit";
+});
 
-  openApp();
-
-  toast("Düzenleme modu aktif.");
-
-}
-
-
-function loginVisitor(){
-
-  mode="visitor";
-
-  openApp();
+return result;
 
 }
 
 
-function visitorMode(){
+/* ---------------------------------------------------------
+   LOCAL STORAGE
+--------------------------------------------------------- */
 
-  mode="visitor";
+function loadData(){
 
-  toast("Ziyaretçi moduna geçildi.");
+const saved=localStorage.getItem("meski_terfi_arsiv");
 
-  showPage("dashboard");
+if(saved){
+
+    try{
+        state.stations=JSON.parse(saved);
+        return;
+    }catch(e){}
+}
+
+state.stations=demoData();
+
+saveData();
 
 }
 
 
-function openApp(){
+function saveData(){
 
-  document.getElementById("loginScreen").style.display="none";
-  document.getElementById("app").style.display="block";
-
-  showPage("dashboard");
-
-}
-
-
-function canEdit(){
-
-  return mode==="edit";
+localStorage.setItem(
+    "meski_terfi_arsiv",
+    JSON.stringify(state.stations)
+);
 
 }
 
 
-/* ============================================================
-   NAVİGASYON
-   ============================================================ */
+/* ---------------------------------------------------------
+   TOAST
+--------------------------------------------------------- */
 
-function showPage(page){
+function toast(text){
 
-  document.querySelectorAll(".nav button").forEach(x=>{
+const el=document.getElementById("toast");
+
+el.textContent=text;
+el.classList.add("show");
+
+setTimeout(()=>{
+    el.classList.remove("show");
+},2200);
+
+}
+
+
+/* ---------------------------------------------------------
+   PASSWORD
+--------------------------------------------------------- */
+
+function openPassword(){
+
+document.getElementById("passwordModal").classList.remove("hidden");
+
+document.getElementById("passwordInput").value="";
+
+document.getElementById("passwordError").style.display="none";
+
+setTimeout(()=>{
+    document.getElementById("passwordInput").focus();
+},100);
+
+}
+
+
+function checkPassword(){
+
+const value=document.getElementById("passwordInput").value;
+
+if(value===EDIT_PASSWORD){
+
+    state.editMode=true;
+
+    document.getElementById("passwordModal").classList.add("hidden");
+
+    updateMode();
+
+    toast("Düzenleme modu açıldı.");
+
+    renderCurrent();
+
+}else{
+
+    document.getElementById("passwordError").style.display="block";
+
+}
+
+}
+
+
+function continueVisitor(){
+
+state.editMode=false;
+
+document.getElementById("passwordModal").classList.add("hidden");
+
+updateMode();
+
+toast("Ziyaretçi modu aktif.");
+
+renderCurrent();
+
+}
+
+
+function updateMode(){
+
+const badge=document.getElementById("modeBadge");
+
+if(state.editMode){
+
+    badge.textContent="✎ Düzenleme Modu";
+    badge.classList.add("edit");
+
+}else{
+
+    badge.textContent="◉ Ziyaretçi Modu";
+    badge.classList.remove("edit");
+
+}
+
+}
+
+
+/* ---------------------------------------------------------
+   NAVIGATION
+--------------------------------------------------------- */
+
+function showPage(page,button){
+
+document.querySelectorAll(".nav button").forEach(x=>{
     x.classList.remove("active");
-  });
+});
 
-  if(page==="dashboard"){
+if(button){
+    button.classList.add("active");
+}
 
-    renderDashboard();
-
-  }else if(page==="stations"){
-
-    renderStations();
-
-  }else if(page==="archive"){
-
-    renderArchive();
-
-  }else if(page==="users"){
-
-    renderUsers();
-
-  }else if(page==="settings"){
-
-    renderSettings();
-
-  }
+if(page==="home") renderHome();
+if(page==="stations") renderStations();
+if(page==="motors") renderMotors();
+if(page==="pumps") renderPumps();
+if(page==="hmi") renderHmiList();
+if(page==="measurements") renderMeasurements();
+if(page==="faults") renderFaults();
+if(page==="maintenance") renderMaintenance();
+if(page==="notes") renderNotes();
+if(page==="archive") renderArchive();
 
 }
 
 
-function quickSection(section){
+/* ---------------------------------------------------------
+   HOME
+--------------------------------------------------------- */
 
-  if(db.stations.length===0){
+function renderHome(){
 
-    toast("Henüz terfi kaydı yok.");
+const main=document.getElementById("main");
 
-    return;
-  }
+main.innerHTML=`
 
-  openStation(db.stations[0].id,section);
+<div class="hero card">
 
-}
+<div class="hero-left">
 
+<div class="hero-title">
+TERFİ ARŞİVİM
+</div>
 
-/* ============================================================
-   DASHBOARD
-   ============================================================ */
+<div class="hero-sub">
+Merkezi saha teknik arşivi
+</div>
 
-function renderDashboard(){
+<div class="search">
 
-  const total=db.stations.length;
+<input id="homeSearch"
+placeholder="Terfi no, istasyon, bölge veya adres ara..."
+oninput="searchStations(this.value)">
 
-  const motors=db.stations.reduce((a,s)=>{
-    return a + (s.hmi?.page1?.toplamMotor ? Number(s.hmi.page1.toplamMotor):0);
-  },0);
+<button class="btn btn-primary"
+onclick="renderStations()">
+🔎 Ara
+</button>
 
-  const pumps=db.stations.length;
+</div>
 
-  const measurements=db.stations.reduce((a,s)=>{
-    return a+(s.measurements?.length||0);
-  },0);
+</div>
 
-  const faults=db.stations.reduce((a,s)=>{
-    return a+(s.faults?.length||0);
-  },0);
+<div style="font-size:80px;opacity:.12">
+⚡
+</div>
 
-  document.getElementById("content").innerHTML=`
-
-    <div class="topbar">
-
-      <div class="page-title">
-        <h2>Ana Sayfa</h2>
-        <p>MESKİ merkezi saha teknik arşivi</p>
-      </div>
-
-      <div class="top-actions">
-
-        <span class="btn ${mode==="edit"?"btn-success":""}">
-          ${mode==="edit"?"🔓 Düzenleme":"👁️ Ziyaretçi"}
-        </span>
-
-        ${canEdit()?`
-        <button class="btn btn-primary" onclick="newStation()">
-          ＋ Yeni Terfi
-        </button>`:""}
-
-      </div>
-
-    </div>
+</div>
 
 
-    <div class="hero card">
+<div class="stats">
 
-      <div class="hero-row">
+<div class="card stat">
+<div class="stat-icon">📍</div>
+<div class="stat-label">Toplam Terfi</div>
+<div class="stat-value">${state.stations.length}</div>
+</div>
 
-        <div class="hero-icon">🔒</div>
+<div class="card stat">
+<div class="stat-icon">⚡</div>
+<div class="stat-label">Motor</div>
+<div class="stat-value">${state.stations.reduce((a,b)=>a+(Number(b.motorCount)||0),0)}</div>
+</div>
 
-        <div>
+<div class="card stat">
+<div class="stat-icon">💧</div>
+<div class="stat-label">Pompa</div>
+<div class="stat-value">${state.stations.reduce((a,b)=>a+(Number(b.pumpCount)||0),0)}</div>
+</div>
 
-          <h2>TERFİ ARŞİVİM</h2>
+<div class="card stat">
+<div class="stat-icon">▣</div>
+<div class="stat-label">HMI Kaydı</div>
+<div class="stat-value">${state.stations.length}</div>
+</div>
 
-          <p>
-            ${mode==="edit"
-              ?"Düzenleme yetkiniz aktif."
-              :"Arşiv görüntüleme modu aktif."}
-          </p>
+<div class="card stat">
+<div class="stat-icon">📊</div>
+<div class="stat-label">Çalışma Ölçümü</div>
+<div class="stat-value">${state.stations.filter(x=>Object.keys(x.running||{}).length).length}</div>
+</div>
 
-        </div>
-
-      </div>
-
-    </div>
-
-
-    <div class="stats">
-
-      <div class="card stat">
-        <div class="ico">📍</div>
-        <div class="name">Toplam Terfi</div>
-        <div class="num">${total}</div>
-      </div>
-
-      <div class="card stat">
-        <div class="ico">⚡</div>
-        <div class="name">Motor</div>
-        <div class="num">${motors}</div>
-      </div>
-
-      <div class="card stat">
-        <div class="ico">💧</div>
-        <div class="name">Pompa</div>
-        <div class="num">${pumps}</div>
-      </div>
-
-      <div class="card stat">
-        <div class="ico">📈</div>
-        <div class="name">Ölçüm Kaydı</div>
-        <div class="num">${measurements}</div>
-      </div>
-
-      <div class="card stat">
-        <div class="ico">⚠️</div>
-        <div class="name">Arıza</div>
-        <div class="num">${faults}</div>
-      </div>
-
-    </div>
+</div>
 
 
-    <div class="card table-card">
+<div class="card table-card">
 
-      <div class="table-head">
+<div class="card-header">
 
-        <strong>TERFİLER</strong>
+<div class="card-title">
+TERFİLER
+</div>
 
-        <input
-          class="search"
-          placeholder="Terfi, istasyon, bölge veya adres ara..."
-          oninput="filterStations(this.value)"
-        >
+${state.editMode ? `
+<button class="btn btn-primary btn-small"
+onclick="newStation()">
+＋ Yeni Terfi
+</button>
+`:""}
 
-      </div>
+</div>
 
-      <div id="dashboardTable"></div>
+<div class="table-wrap">
 
-    </div>
+<table>
 
-  `;
+<thead>
+<tr>
+<th>TERFİ NO</th>
+<th>İSTASYON</th>
+<th>BÖLGE</th>
+<th>ADRES</th>
+<th>MOTOR</th>
+<th>POMPA</th>
+<th>GÜNCELLEME</th>
+<th></th>
+</tr>
+</thead>
 
-  renderStationTable("dashboardTable");
+<tbody>
+
+${state.stations.map(s=>stationRow(s)).join("")}
+
+</tbody>
+
+</table>
+
+</div>
+
+</div>
+
+`;
 
 }
 
 
-function filterStations(q){
+function stationRow(s){
 
-  renderStationTable("dashboardTable",q);
+return `
+
+<tr>
+
+<td><b>${esc(s.id)}</b></td>
+
+<td>${esc(s.name)}</td>
+
+<td>${esc(s.region)}</td>
+
+<td>${esc(s.address)}</td>
+
+<td>${s.motorCount||0}</td>
+
+<td>${s.pumpCount||0}</td>
+
+<td>${esc(s.updated||"-")}</td>
+
+<td>
+<button class="btn btn-primary btn-small"
+onclick="openStation('${s.id}')">
+Görüntüle
+</button>
+</td>
+
+</tr>
+
+`;
 
 }
 
 
-/* ============================================================
-   İSTASYONLAR
-   ============================================================ */
+/* ---------------------------------------------------------
+   SEARCH
+--------------------------------------------------------- */
+
+function searchStations(q){
+
+q=(q||"").toLowerCase().trim();
+
+const rows=state.stations.filter(s=>
+
+(s.id||"").toLowerCase().includes(q) ||
+(s.name||"").toLowerCase().includes(q) ||
+(s.region||"").toLowerCase().includes(q) ||
+(s.address||"").toLowerCase().includes(q)
+
+);
+
+const tbody=document.querySelector(".table-card tbody");
+
+if(!tbody)return;
+
+tbody.innerHTML=rows.map(s=>stationRow(s)).join("");
+
+}
+
+
+/* ---------------------------------------------------------
+   STATIONS
+--------------------------------------------------------- */
 
 function renderStations(){
 
-  document.getElementById("content").innerHTML=`
+const main=document.getElementById("main");
 
-    <div class="topbar">
+main.innerHTML=`
 
-      <div class="page-title">
-        <h2>Terfiler / İstasyonlar</h2>
-        <p>Tüm saha kayıtları</p>
-      </div>
+<div class="page-title">
 
-      ${canEdit()?`
-      <button class="btn btn-primary" onclick="newStation()">
-        ＋ Yeni Terfi
-      </button>`:""}
+<h1>Terfiler</h1>
 
-    </div>
+<p>
+Sahadaki tüm terfi istasyonlarını buradan görüntüleyebilirsiniz.
+</p>
 
-    <div class="card table-card">
+</div>
 
-      <div class="table-head">
+<div class="card">
 
-        <strong>TERFİ ARŞİVİ</strong>
+<div class="card-header">
 
-        <input
-          id="stationSearch"
-          class="search"
-          placeholder="Ara..."
-          oninput="renderStationTable('stationTable',this.value)"
-        >
+<div class="card-title">
+${state.stations.length} Terfi Kaydı
+</div>
 
-      </div>
+${state.editMode ? `
+<button class="btn btn-primary"
+onclick="newStation()">
+＋ Yeni Terfi
+</button>
+`:""}
 
-      <div id="stationTable"></div>
+</div>
 
-    </div>
-  `;
+<div class="card-body">
 
-  renderStationTable("stationTable");
+<div class="search" style="max-width:none">
 
-}
+<input placeholder="Terfi no, istasyon, bölge veya adres ara..."
+oninput="filterStationTable(this.value)">
 
+</div>
 
-function renderStationTable(target,q=""){
+</div>
 
-  const el=document.getElementById(target);
+<div class="table-wrap">
 
-  if(!el)return;
+<table id="stationsTable">
 
-  q=q.toLowerCase();
+<thead>
+<tr>
+<th>TERFİ NO</th>
+<th>İSTASYON ADI</th>
+<th>BÖLGE</th>
+<th>ADRES</th>
+<th>MOTOR</th>
+<th>POMPA</th>
+<th>SON GÜNCELLEME</th>
+<th>İŞLEM</th>
+</tr>
+</thead>
 
-  const rows=db.stations.filter(s=>{
+<tbody>
 
-    const text=[
-      s.id,
-      s.name,
-      s.region,
-      s.address
-    ].join(" ").toLowerCase();
+${state.stations.map(s=>stationRow(s)).join("")}
 
-    return text.includes(q);
+</tbody>
 
-  });
+</table>
 
-  if(rows.length===0){
+</div>
 
-    el.innerHTML=`
-      <div class="card-pad muted">
-        Kayıt bulunamadı.
-      </div>
-    `;
+</div>
 
-    return;
-  }
-
-  el.innerHTML=`
-
-    <div class="table-wrap">
-
-      <table>
-
-        <thead>
-          <tr>
-            <th>TERFİ NO</th>
-            <th>İSTASYON</th>
-            <th>BÖLGE</th>
-            <th>ADRES</th>
-            <th>MOTOR</th>
-            <th>POMPA</th>
-            <th>ÖLÇÜM</th>
-            <th>SON GÜNCELLEME</th>
-            <th>İŞLEM</th>
-          </tr>
-        </thead>
-
-        <tbody>
-
-          ${rows.map(s=>`
-
-            <tr>
-
-              <td><strong>${esc(s.id)}</strong></td>
-              <td>${esc(s.name||"-")}</td>
-              <td>${esc(s.region||"-")}</td>
-              <td>${esc(s.address||"-")}</td>
-
-              <td>
-                ${esc(s.hmi?.page1?.toplamMotor||"0")}
-              </td>
-
-              <td>1</td>
-
-              <td>${s.measurements?.length||0}</td>
-
-              <td>${formatDate(s.updated)}</td>
-
-              <td>
-                <button
-                  class="btn btn-primary"
-                  onclick="openStation('${escAttr(s.id)}')">
-                  Görüntüle
-                </button>
-              </td>
-
-            </tr>
-
-          `).join("")}
-
-        </tbody>
-
-      </table>
-
-    </div>
-
-  `;
+`;
 
 }
 
 
-/* ============================================================
-   YENİ TERFİ
-   ============================================================ */
+function filterStationTable(q){
+
+q=q.toLowerCase();
+
+document.querySelectorAll("#stationsTable tbody tr")
+.forEach(row=>{
+
+row.style.display=
+row.innerText.toLowerCase().includes(q)
+?"":"none";
+
+});
+
+}
+
+
+/* ---------------------------------------------------------
+   NEW STATION
+--------------------------------------------------------- */
 
 function newStation(){
 
-  if(!canEdit()){
+if(!state.editMode){
 
-    toast("Düzenleme yetkisi gerekli.");
-
+    openPassword();
     return;
-  }
 
-  const s=blankStation();
+}
 
-  s.id=nextStationNo();
+const id="T"+String(state.stations.length+1).padStart(3,"0");
 
-  db.stations.push(s);
+const station={
 
-  db.logs.unshift({
-    date:new Date().toISOString(),
-    text:s.id+" yeni terfi oluşturuldu."
-  });
+id:id,
+name:"",
+region:"",
+address:"",
+description:"",
+updated:new Date().toLocaleString("tr-TR"),
 
-  saveDB();
+motorCount:1,
+pumpCount:1,
 
-  openStation(s.id);
+motorTag:{},
+pumpTag:{},
+running:{},
+hmi:buildDefaultHmi(),
+faults:[],
+maintenance:[],
+notes:[]
+
+};
+
+state.stations.push(station);
+
+saveData();
+
+openStation(id);
 
 }
 
 
-function nextStationNo(){
+/* ---------------------------------------------------------
+   STATION DETAIL
+--------------------------------------------------------- */
 
-  let n=1;
+function openStation(id){
 
-  while(db.stations.some(s=>s.id==="T"+String(n).padStart(3,"0"))){
-    n++;
-  }
+const station=state.stations.find(x=>x.id===id);
 
-  return "T"+String(n).padStart(3,"0");
+if(!station)return;
 
-}
+state.currentStation=id;
 
-
-/* ============================================================
-   TERFİ DETAY
-   ============================================================ */
-
-function openStation(id,tab="overview"){
-
-  currentStationId=id;
-  currentTab=tab;
-
-  const s=db.stations.find(x=>x.id===id);
-
-  if(!s)return;
-
-  document.getElementById("content").innerHTML=`
-
-    <div class="detail-head card">
-
-      <div>
-
-        <div class="muted">${esc(s.id)}</div>
-
-        <h2 style="margin:5px 0">
-          ${esc(s.name||"Yeni Terfi")}
-        </h2>
-
-        <div class="muted">
-          ${esc(s.region||"")} · ${esc(s.address||"")}
-        </div>
-
-      </div>
-
-      <div class="detail-actions">
-
-        ${canEdit()?`
-        <button class="btn btn-primary" onclick="editStationInfo()">
-          ✏️ Terfi Bilgileri
-        </button>
-
-        <button class="btn btn-danger" onclick="deleteStation()">
-          🗑️ Sil
-        </button>
-        `:""}
-
-        <button class="btn" onclick="printStation()">
-          🖨️ PDF
-        </button>
-
-      </div>
-
-    </div>
-
-
-    <div class="tabs">
-
-      ${tabButton("overview","📋 Genel")}
-      ${tabButton("hmi","🖥️ HMI")}
-      ${tabButton("motor","⚡ Motor Etiketi")}
-      ${tabButton("pump","💧 Pompa Etiketi")}
-      ${tabButton("drive","🔌 Sürücü")}
-      ${tabButton("measure","📈 Ölçümler")}
-      ${tabButton("fault","⚠️ Arızalar")}
-      ${tabButton("maintenance","🔧 Bakım")}
-      ${tabButton("note","📝 Notlar")}
-
-    </div>
-
-    <div id="stationContent"></div>
-
-  `;
-
-  renderStationTab();
+renderStationDetail(station);
 
 }
 
 
-function tabButton(key,label){
+function renderStationDetail(s){
 
-  return `
-    <button
-      class="${currentTab===key?"active":""}"
-      onclick="changeStationTab('${key}')">
-      ${label}
-    </button>
-  `;
+const main=document.getElementById("main");
 
-}
+main.innerHTML=`
 
+<div class="page-title">
 
-function changeStationTab(tab){
+<h1>${esc(s.id)} · ${esc(s.name||"Yeni Terfi")}</h1>
 
-  currentTab=tab;
+<p>
+Önce mevcut kayıtları görüntüleyin. Değişiklik yapmak için Düzenle'ye basın.
+</p>
 
-  openStation(currentStationId,tab);
-
-}
+</div>
 
 
-function renderStationTab(){
+<div class="detail-top">
 
-  const s=db.stations.find(x=>x.id===currentStationId);
+<div class="card">
 
-  if(!s)return;
+<div class="card-body">
 
-  const el=document.getElementById("stationContent");
+<div class="station-name">
+${esc(s.name||"İstasyon adı girilmemiş")}
+</div>
 
-  if(currentTab==="overview") renderOverview(el,s);
-  if(currentTab==="hmi") renderHMI(el,s);
-  if(currentTab==="motor") renderMotor(el,s);
-  if(currentTab==="pump") renderPump(el,s);
-  if(currentTab==="drive") renderDrive(el,s);
-  if(currentTab==="measure") renderMeasurements(el,s);
-  if(currentTab==="fault") renderFaults(el,s);
-  if(currentTab==="maintenance") renderMaintenance(el,s);
-  if(currentTab==="note") renderNotes(el,s);
+<div class="station-meta">
+${esc(s.region||"-")} · ${esc(s.address||"-")}
+</div>
 
-}
+<div class="badges">
 
+<div class="badge">
+⚙ ${s.motorCount||0} Motor
+</div>
 
-/* ============================================================
-   GENEL
-   ============================================================ */
+<div class="badge">
+💧 ${s.pumpCount||0} Pompa
+</div>
 
-function renderOverview(el,s){
+<div class="badge">
+▣ HMI Arşivi
+</div>
 
-  el.innerHTML=`
+</div>
 
-    <div class="section-grid">
+</div>
 
-      <div class="card section-card">
-
-        <div class="section-title">
-          <h3>📍 Terfi Bilgileri</h3>
-
-          ${canEdit()?`
-          <button class="btn" onclick="editStationInfo()">✏️ Düzenle</button>
-          `:""}
-
-        </div>
-
-        <div class="grid-2">
-
-          ${viewField("Terfi No",s.id)}
-          ${viewField("İstasyon Adı",s.name)}
-          ${viewField("Bölge",s.region)}
-          ${viewField("Adres",s.address)}
-
-        </div>
-
-        ${viewField("Açıklama",s.description)}
-
-      </div>
+</div>
 
 
-      <div class="card section-card">
+<div class="card">
 
-        <div class="section-title">
-          <h3>📌 Hızlı Teknik Özet</h3>
-        </div>
+<div class="card-body">
 
-        <div class="grid-2">
+<div class="field">
 
-          ${viewField("Motor Gücü",s.motor.gucKw ? s.motor.gucKw+" kW":"-")}
-          ${viewField("Motor Akımı",s.motor.akim400 ? s.motor.akim400+" A":"-")}
-          ${viewField("Motor Devri",s.motor.devir400 ? s.motor.devir400+" RPM":"-")}
-          ${viewField("Motor Gerilimi",s.motor.gerilim400 ? s.motor.gerilim400+" V":"-")}
+<label>Son Güncelleme</label>
 
-        </div>
+<div class="readonly-box">
+${esc(s.updated||"-")}
+</div>
 
-      </div>
+</div>
 
+</div>
 
-      <div class="card section-card">
+</div>
 
-        <div class="section-title">
-          <h3>🖥️ HMI</h3>
-
-          ${canEdit()?`
-          <button class="btn btn-primary" onclick="changeStationTab('hmi')">
-            Aç
-          </button>`:""}
-
-        </div>
-
-        <p class="muted">
-          Sahadaki Weintek ekranındaki ayarlar sayfa sayfa
-          arşivlenir.
-        </p>
-
-        <button class="btn" onclick="changeStationTab('hmi')">
-          HMI Ayarlarını Görüntüle →
-        </button>
-
-      </div>
+</div>
 
 
-      <div class="card section-card">
+<div style="margin-top:18px">
 
-        <div class="section-title">
-          <h3>🏷️ Etiketler</h3>
-        </div>
+${renderStationTabs(s)}
 
-        <div class="detail-actions">
+</div>
 
-          <button class="btn" onclick="changeStationTab('motor')">
-            ⚡ Motor Etiketi
-          </button>
-
-          <button class="btn" onclick="changeStationTab('pump')">
-            💧 Pompa Etiketi
-          </button>
-
-        </div>
-
-      </div>
-
-    </div>
-
-  `;
+`;
 
 }
 
 
-function viewField(label,value){
+function renderStationTabs(s){
 
-  const empty=value===undefined||value===null||value==="";
+return `
 
-  return `
-    <div class="field">
-      <label>${esc(label)}</label>
-      <div class="field-view ${empty?"empty":""}">
-        ${empty?"—":esc(value)}
-      </div>
-    </div>
-  `;
+<div class="card">
+
+<div class="card-header">
+
+<div class="tabs" style="margin:0">
+
+<button class="tab active"
+onclick="stationTab('overview',this)">
+Genel Bilgi
+</button>
+
+<button class="tab"
+onclick="stationTab('motorTag',this)">
+⚙ Motor Etiketi
+</button>
+
+<button class="tab"
+onclick="stationTab('pumpTag',this)">
+💧 Pompa Etiketi
+</button>
+
+<button class="tab"
+onclick="stationTab('running',this)">
+📊 Motor Çalışma
+</button>
+
+<button class="tab"
+onclick="stationTab('hmi',this)">
+▣ HMI Sayfaları
+</button>
+
+<button class="tab"
+onclick="stationTab('faults',this)">
+⚠ Arızalar
+</button>
+
+<button class="tab"
+onclick="stationTab('maintenance',this)">
+🔧 Bakım
+</button>
+
+<button class="tab"
+onclick="stationTab('notes',this)">
+📝 Notlar
+</button>
+
+</div>
+
+</div>
+
+<div id="stationTabContent" class="card-body">
+
+${renderOverview(s)}
+
+</div>
+
+</div>
+
+`;
 
 }
 
 
-/* ============================================================
-   TERFİ BİLGİLERİ
-   ============================================================ */
+/* ---------------------------------------------------------
+   TABS
+--------------------------------------------------------- */
 
-function editStationInfo(){
+function stationTab(tab,button){
 
-  if(!canEdit())return;
+document.querySelectorAll(".tab").forEach(x=>{
+    x.classList.remove("active");
+});
 
-  const s=db.stations.find(x=>x.id===currentStationId);
+button.classList.add("active");
 
-  openModal(
-    "Terfi Bilgilerini Düzenle",
-    `
+const s=state.stations.find(x=>x.id===state.currentStation);
 
-      <div class="grid-2">
+if(!s)return;
 
-        <div>
-          <label>Terfi No</label>
-          <input id="f_id" value="${escAttr(s.id)}" readonly>
-        </div>
+const c=document.getElementById("stationTabContent");
 
-        <div>
-          <label>İstasyon Adı</label>
-          <input id="f_name" value="${escAttr(s.name)}">
-        </div>
+if(tab==="overview")c.innerHTML=renderOverview(s);
+if(tab==="motorTag")c.innerHTML=renderMotorTag(s);
+if(tab==="pumpTag")c.innerHTML=renderPumpTag(s);
+if(tab==="running")c.innerHTML=renderRunning(s);
+if(tab==="hmi")c.innerHTML=renderStationHmi(s);
+if(tab==="faults")c.innerHTML=renderStationFaults(s);
+if(tab==="maintenance")c.innerHTML=renderStationMaintenance(s);
+if(tab==="notes")c.innerHTML=renderStationNotes(s);
 
-        <div>
-          <label>Bölge</label>
-          <input id="f_region" value="${escAttr(s.region)}">
-        </div>
+}
 
-        <div>
-          <label>Adres</label>
-          <input id="f_address" value="${escAttr(s.address)}">
-        </div>
 
-      </div>
+/* ---------------------------------------------------------
+   OVERVIEW
+--------------------------------------------------------- */
 
-      <label>Açıklama</label>
-      <textarea id="f_description">${esc(s.description)}</textarea>
+function renderOverview(s){
 
-    `,
-    `
-      <button class="btn" onclick="closeModal()">Vazgeç</button>
-      <button class="btn btn-primary" onclick="saveStationInfo()">Kaydet</button>
-    `
-  );
+return `
+
+<div class="section">
+
+<div class="section-title">
+<span>📍</span>
+İstasyon Bilgileri
+</div>
+
+${state.editMode ?
+
+`
+
+<div class="form-grid">
+
+<div class="field">
+<label>Terfi No</label>
+<input id="station_id" value="${attr(s.id)}" disabled>
+</div>
+
+<div class="field">
+<label>İstasyon Adı</label>
+<input id="station_name" value="${attr(s.name)}">
+</div>
+
+<div class="field">
+<label>Bölge</label>
+<input id="station_region" value="${attr(s.region)}">
+</div>
+
+<div class="field">
+<label>Adres</label>
+<input id="station_address" value="${attr(s.address)}">
+</div>
+
+<div class="field">
+<label>Motor Sayısı</label>
+<input id="station_motor_count" type="number" value="${s.motorCount||0}">
+</div>
+
+<div class="field">
+<label>Pompa Sayısı</label>
+<input id="station_pump_count" type="number" value="${s.pumpCount||0}">
+</div>
+
+<div class="field full">
+<label>Açıklama</label>
+<textarea id="station_description">${esc(s.description||"")}</textarea>
+</div>
+
+</div>
+
+<div style="margin-top:17px">
+
+<button class="btn btn-success"
+onclick="saveStationInfo()">
+💾 İstasyon Bilgilerini Kaydet
+</button>
+
+</div>
+
+`
+
+:
+
+`
+
+<div class="form-grid">
+
+<div class="readonly-box">
+<label>Terfi No</label>
+<div class="value-big">${esc(s.id)}</div>
+</div>
+
+<div class="readonly-box">
+<label>İstasyon</label>
+<div class="value-big">${esc(s.name||"-")}</div>
+</div>
+
+<div class="readonly-box">
+<label>Bölge</label>
+<div class="value-big">${esc(s.region||"-")}</div>
+</div>
+
+<div class="readonly-box">
+<label>Adres</label>
+<div class="value-big">${esc(s.address||"-")}</div>
+</div>
+
+<div class="readonly-box">
+<label>Motor</label>
+<div class="value-big">${s.motorCount||0}</div>
+</div>
+
+<div class="readonly-box">
+<label>Pompa</label>
+<div class="value-big">${s.pumpCount||0}</div>
+</div>
+
+</div>
+
+<div class="readonly-box" style="margin-top:15px">
+<label>Açıklama</label>
+<div style="margin-top:7px;color:#c7d8e8">
+${esc(s.description||"Açıklama bulunmuyor.")}
+</div>
+</div>
+
+`
+
+}
+
+</div>
+
+
+<div class="section">
+
+<div class="section-title">
+<span>📌</span>
+Hızlı Durum
+</div>
+
+<div class="compare">
+
+<div class="readonly-box">
+<div class="stat-label">Motor Çalışma Durumu</div>
+<div class="value-big">
+${s.running?.status||"Kayıt yok"}
+</div>
+</div>
+
+<div class="readonly-box">
+<div class="stat-label">Son Motor Akımı</div>
+<div class="value-big">
+${s.running?.current||"-"}
+</div>
+</div>
+
+</div>
+
+</div>
+
+`;
 
 }
 
 
 function saveStationInfo(){
 
-  const s=db.stations.find(x=>x.id===currentStationId);
+if(!state.editMode){
+    openPassword();
+    return;
+}
 
-  s.name=document.getElementById("f_name").value.trim();
-  s.region=document.getElementById("f_region").value.trim();
-  s.address=document.getElementById("f_address").value.trim();
-  s.description=document.getElementById("f_description").value.trim();
-  s.updated=new Date().toISOString();
+const s=state.stations.find(x=>x.id===state.currentStation);
 
-  saveDB();
-  closeModal();
+s.name=document.getElementById("station_name").value;
+s.region=document.getElementById("station_region").value;
+s.address=document.getElementById("station_address").value;
+s.motorCount=Number(document.getElementById("station_motor_count").value)||0;
+s.pumpCount=Number(document.getElementById("station_pump_count").value)||0;
+s.description=document.getElementById("station_description").value;
 
-  openStation(s.id,currentTab);
+s.updated=new Date().toLocaleString("tr-TR");
 
-  toast("Terfi bilgileri kaydedildi.");
+saveData();
+
+toast("İstasyon bilgileri kaydedildi.");
+
+renderStationDetail(s);
 
 }
 
 
-/* ============================================================
+/* ---------------------------------------------------------
+   MOTOR TAG
+--------------------------------------------------------- */
+
+function renderMotorTag(s){
+
+let fields=MOTOR_TAG_FIELDS;
+
+return `
+
+<div class="section-title">
+<span>⚙</span>
+Motor Etiketi
+</div>
+
+<div class="nameplate">
+
+<strong>
+${esc(s.motorTag.manufacturer||"MOTOR")}
+</strong>
+
+<small>
+${esc(s.motorTag.model||"Dalgıç Motor Etiketi")}
+</small>
+
+</div>
+
+
+<div class="tag">
+
+<div class="tag-title">
+${esc(s.motorTag.manufacturer||"Üretici")}
+</div>
+
+<div class="tag-subtitle">
+${esc(s.motorTag.model||"Motor Modeli")}
+</div>
+
+<table class="tag-table">
+
+<thead>
+<tr>
+<th>Teknik Bilgi</th>
+<th>Değer</th>
+</tr>
+</thead>
+
+<tbody>
+
+${fields.map(([label,key])=>`
+
+<tr>
+
+<td><b>${esc(label)}</b></td>
+
+<td>
+
+${state.editMode ?
+
+`<input
+value="${attr(s.motorTag[key]||"")}"
+onchange="setMotorTag('${key}',this.value)"
+style="background:#fff;color:#111;border:1px solid #777;border-radius:3px;padding:7px;width:100%">`
+
+:
+
+esc(s.motorTag[key]||"-")
+
+}
+
+</td>
+
+</tr>
+
+`).join("")}
+
+</tbody>
+
+</table>
+
+</div>
+
+
+${state.editMode ? `
+
+<div style="margin-top:15px">
+
+<button class="btn btn-success"
+onclick="saveMotorTag()">
+💾 Motor Etiketini Kaydet
+</button>
+
+</div>
+
+`:""}
+
+`;
+
+}
+
+
+function setMotorTag(key,value){
+
+const s=state.stations.find(x=>x.id===state.currentStation);
+
+s.motorTag[key]=value;
+
+}
+
+
+function saveMotorTag(){
+
+const s=state.stations.find(x=>x.id===state.currentStation);
+
+s.updated=new Date().toLocaleString("tr-TR");
+
+saveData();
+
+toast("Motor etiketi kaydedildi.");
+
+renderStationDetail(s);
+
+}
+
+
+/* ---------------------------------------------------------
+   PUMP TAG
+--------------------------------------------------------- */
+
+function renderPumpTag(s){
+
+let fields=PUMP_TAG_FIELDS;
+
+return `
+
+<div class="section-title">
+<span>💧</span>
+Pompa Etiketi
+</div>
+
+<div class="nameplate">
+
+<strong>
+${esc(s.pumpTag.manufacturer||"POMPA")}
+</strong>
+
+<small>
+${esc(s.pumpTag.model||"Pompa Etiketi")}
+</small>
+
+</div>
+
+
+<div class="tag">
+
+<div class="tag-title">
+${esc(s.pumpTag.manufacturer||"Üretici")}
+</div>
+
+<div class="tag-subtitle">
+${esc(s.pumpTag.model||"Pompa Modeli")}
+</div>
+
+<table class="tag-table">
+
+<thead>
+<tr>
+<th>Teknik Bilgi</th>
+<th>Değer</th>
+</tr>
+</thead>
+
+<tbody>
+
+${fields.map(([label,key])=>`
+
+<tr>
+
+<td><b>${esc(label)}</b></td>
+
+<td>
+
+${state.editMode ?
+
+`<input
+value="${attr(s.pumpTag[key]||"")}"
+onchange="setPumpTag('${key}',this.value)"
+style="background:#fff;color:#111;border:1px solid #777;border-radius:3px;padding:7px;width:100%">`
+
+:
+
+esc(s.pumpTag[key]||"-")
+
+}
+
+</td>
+
+</tr>
+
+`).join("")}
+
+</tbody>
+
+</table>
+
+</div>
+
+
+${state.editMode ? `
+
+<div style="margin-top:15px">
+
+<button class="btn btn-success"
+onclick="savePumpTag()">
+💾 Pompa Etiketini Kaydet
+</button>
+
+</div>
+
+`:""}
+
+`;
+
+}
+
+
+function setPumpTag(key,value){
+
+const s=state.stations.find(x=>x.id===state.currentStation);
+
+s.pumpTag[key]=value;
+
+}
+
+
+function savePumpTag(){
+
+const s=state.stations.find(x=>x.id===state.currentStation);
+
+s.updated=new Date().toLocaleString("tr-TR");
+
+saveData();
+
+toast("Pompa etiketi kaydedildi.");
+
+renderStationDetail(s);
+
+}
+
+
+/* ---------------------------------------------------------
+   MOTOR ÇALIŞMA DEĞERLERİ
+--------------------------------------------------------- */
+
+function renderRunning(s){
+
+const r=s.running||{};
+
+return `
+
+<div class="section-title">
+<span>📊</span>
+Motor Çalışma Değerleri
+</div>
+
+<div class="readonly-box" style="margin-bottom:17px">
+
+<div style="font-size:15px;font-weight:750">
+Sahada motor çalışırken okunan gerçek değerler
+</div>
+
+<div style="color:#9bb4ca;margin-top:6px;line-height:1.5">
+Bu bölüm motor etiketinden farklıdır.
+Buraya motorun o anda gerçekten çektiği değerleri giriyoruz.
+Daha sonra yeni ölçüm yapıldığında eski değerle karşılaştırabiliriz.
+</div>
+
+</div>
+
+
+${state.editMode ?
+
+`
+
+<div class="form-grid three">
+
+${RUNNING_FIELDS.map(([label,key])=>`
+
+<div class="field ${key==="note"?"full":""}">
+
+<label>${esc(label)}</label>
+
+${key==="note"
+
+?`<textarea id="run_${key}">${esc(r[key]||"")}</textarea>`
+
+:`<input id="run_${key}" value="${attr(r[key]||"")}">`
+
+}
+
+</div>
+
+`).join("")}
+
+</div>
+
+<div style="margin-top:18px">
+
+<button class="btn btn-success"
+onclick="saveRunning()">
+💾 Motor Çalışma Değerlerini Kaydet
+</button>
+
+</div>
+
+`
+
+:
+
+`
+
+<div class="form-grid three">
+
+${RUNNING_FIELDS.map(([label,key])=>`
+
+<div class="readonly-box">
+
+<div class="stat-label">${esc(label)}</div>
+
+<div class="value-big">
+${esc(r[key]||"-")}
+</div>
+
+</div>
+
+`).join("")}
+
+</div>
+
+`
+
+}
+
+
+<div style="margin-top:20px">
+
+${renderComparison(s)}
+
+</div>
+
+`;
+
+}
+
+
+function saveRunning(){
+
+const s=state.stations.find(x=>x.id===state.currentStation);
+
+s.running={};
+
+RUNNING_FIELDS.forEach(([label,key])=>{
+
+const el=document.getElementById("run_"+key);
+
+if(el)s.running[key]=el.value;
+
+});
+
+s.updated=new Date().toLocaleString("tr-TR");
+
+saveData();
+
+toast("Motor çalışma değerleri kaydedildi.");
+
+renderStationDetail(s);
+
+}
+
+
+function renderComparison(s){
+
+const r=s.running||{};
+
+if(!r.current && !r.frequency){
+    return "";
+}
+
+return `
+
+<div class="section-title">
+<span>🔎</span>
+Hızlı Kontrol
+</div>
+
+<div class="compare">
+
+<div class="readonly-box">
+
+<div class="stat-label">
+Etiket Akımı
+</div>
+
+<div class="value-big">
+${esc(s.motorTag.current_2||s.motorTag.current_1||"-")}
+</div>
+
+</div>
+
+
+<div class="readonly-box">
+
+<div class="stat-label">
+Son Çalışma Akımı
+</div>
+
+<div class="value-big">
+${esc(r.current||"-")}
+</div>
+
+</div>
+
+</div>
+
+<div class="readonly-box" style="margin-top:12px">
+
+<b>Kontrol:</b>
+
+Etiket üzerindeki nominal akım ile sahadaki gerçek çalışma akımını
+yan yana görebilirsin. Yeni ölçüm girildiğinde bu alan güncellenir.
+
+</div>
+
+`;
+
+}
+
+
+/* ---------------------------------------------------------
    HMI
-   ============================================================ */
+--------------------------------------------------------- */
 
-const hmiPages={
+function renderStationHmi(s){
 
-  1:[
-    ["minFrekans","Minimum Frekans"],
-    ["maxFrekans","Maksimum Frekans"],
-    ["minFrekans1","Minimum Frekans 1"],
-    ["maxFrekans1","Maksimum Frekans -1"],
-    ["minFrekans2","Minimum Frekans 2"],
-    ["maxFrekans2","Maksimum Frekans -1"],
-    ["minFrekans3","Minimum Frekans 3"],
-    ["maxFrekans3","Maksimum Frekans -1"],
-    ["minFrekansPlus1","Minimum frekans +1"],
-    ["tolerans","Tolerans [bar.]"],
-    ["toplamMotor","Top. Motor Sayısı"],
-    ["yardimciMotor","Yard. Motor Sayısı"],
-    ["uyanma","Uyanma süresi [Sn.]"],
-    ["maxBekleme","Maks. Frekans Bekleme süresi [Sn]"],
-    ["yardimciStop","Yard. motor Stop zamanı [sn]"],
-    ["uykuIptal","Uyku İptal"],
-    ["uykuZamani","Uyku Zamanı"]
-  ],
+return `
 
-  2:[
-    ["motorVoltaj","Motor Voltaj[V]"],
-    ["motorAkim","Motor Akım[A]"],
-    ["motorGuc","Motor Güç[Kw]"],
-    ["motorFrekans","Motor Frekans[Hz]"],
-    ["motorDevir","Motor Devir[Rpm]"],
-    ["sensorAI1Min","Sensör[AI1] Min."],
-    ["nominalAkim","Nominal Akım[A] x1.5"],
-    ["minSensorRange","Min. Sensör Range"],
-    ["maxSensorRange","Max. Sensör Range"],
-    ["sensorAI2Min","Sensör[AI2] Min."],
-    ["sensorAI2Max","Sensör[AI2] Maks."],
-    ["hizlanma","Hızlanma Rampası [sn]"],
-    ["yavaslama","Yavaşlama Rampası [Sn.]"],
-    ["pid","PID Kazanç"],
-    ["osilasyon","Osilasyon"],
-    ["tersDuz","Ters / Düz Çalıştırma"],
-    ["sensorAI1Max","Sensör[AI1] Maks."]
-  ],
+<div class="section-title">
+<span>▣</span>
+HMI / PLC Arşivi
+</div>
 
-  3:[
-    ["role1","Röle 1 Yapılandırma"],
-    ["role2","Röle 2 Yapılandırma"],
-    ["role3","Röle 3 Yapılandırma"],
-    ["role4","Röle 4 Yapılandırma"],
-    ["digitalRole","Dijital Röle"],
-    ["kilitleme","Kilitleme [DI1-DI5]"],
-    ["calismaSuresi","Çalışma Süresi [h]"],
-    ["otomatikDegisim","Otomatik Değişim Aralığı"],
-    ["otoDegisimSeviyesi","Oto Değişim Seviyesi (%)"]
-  ],
+<div class="tabs">
 
-  4:[
-    ["motorTermik","Motor Termik Kontrol"],
-    ["otoReset","Oto. Reset Sayısı"],
-    ["toplamReset","Top. Reset Süresi [Saniye]"],
-    ["resetGecikme","Reset Gecikme Süresi"],
-    ["sensorHata","Sensör Hata"],
-    ["ai1MinKal","[AI1] Min. Sensör Kalibrasyon"],
-    ["ai1MaxKal","[AI1] Max. Sensör Kalibrasyon"],
-    ["motorGurultu","Motor Gürültü Seviyesi"],
-    ["panelHata","Panel Hata"],
-    ["asiriGerilim","Aşırı Gerilim"],
-    ["dusukGerilim","Düşük Gerilim"],
-    ["sensorTipi","Sensör Tipi"],
-    ["sensorPort","Sensör Giriş Port"],
-    ["sensorGirisHata","Sensör Giriş Hata"],
-    ["asiriAkim","Aşırı Akım"],
-    ["toprakHata","Toprak Hata"],
-    ["setDegerSecimi","Set Değer Seçimi"],
-    ["ai2MinKal","[AI2]Min. Sensör Kalibrasyonu"],
-    ["ai2MaxKal","[AI2]Max. Sensör Kalibrasyonu"]
-  ],
+${HMI_PAGES.map((p,i)=>`
 
-  5:[
-    ["setAyari","Set Ayarı"],
-    ["calismaAyari","Çalışma Ayarı"],
-    ["ai1Durum","AI 1 Durum"],
-    ["ai2Durum","AI 2 Durum"],
-    ["invAO1","INV AO1"]
-  ]
+<button class="tab ${i===0?"active":""}"
+onclick="hmiTab(${i},this)">
+${p.name}
+</button>
 
-};
+`).join("")}
 
+</div>
 
-function renderHMI(el,s){
+<div id="hmiContent">
 
-  const page=hmiPages[currentHmiPage];
-  const values=s.hmi["page"+currentHmiPage];
+${renderHmiPage(s,0)}
 
-  el.innerHTML=`
+</div>
 
-    <div class="card card-pad">
-
-      <div class="section-title">
-
-        <div>
-          <h3>🖥️ Weintek HMI Ayarları</h3>
-          <div class="muted">
-            Sayfa ${currentHmiPage} / 5
-          </div>
-        </div>
-
-        ${canEdit()?`
-        <button class="btn btn-primary" onclick="saveHmiPage()">
-          💾 Sayfayı Kaydet
-        </button>`:""}
-
-      </div>
-
-
-      <div class="hmi-shell">
-
-        <div class="hmi-screen">
-
-          <div class="hmi-title">
-            ${hmiPageTitle(currentHmiPage)}
-          </div>
-
-          <div class="hmi-grid">
-
-            ${page.map(([key,label])=>`
-
-              <div class="hmi-item">
-
-                <label>${esc(label)}</label>
-
-                <input
-                  id="hmi_${key}"
-                  value="${escAttr(values[key]||"")}"
-                  ${canEdit()?"":"readonly"}
-                >
-
-              </div>
-
-            `).join("")}
-
-          </div>
-
-
-          <div class="hmi-nav">
-
-            <button
-              class="hmi-btn"
-              onclick="hmiPrev()">
-              ◀
-            </button>
-
-            <button
-              class="hmi-btn"
-              onclick="hmiNext()">
-              ▶
-            </button>
-
-          </div>
-
-
-          <div class="hmi-footer">
-
-            <div>
-              <small>MENÜ</small>
-            </div>
-
-            <div>
-              ${canEdit()?`
-              <button
-                class="hmi-save"
-                onclick="saveHmiPage()">
-                ✓
-              </button>`:""}
-            </div>
-
-          </div>
-
-        </div>
-
-      </div>
-
-    </div>
-
-  `;
+`;
 
 }
 
 
-function hmiPageTitle(p){
+function hmiTab(index,button){
 
-  const titles={
-    1:"FREKANS / MOTOR SAYILARI",
-    2:"MOTOR VE SENSÖR AYARLARI",
-    3:"RÖLE / OTOMATİK DEĞİŞİM",
-    4:"KORUMA / SENSÖR AYARLARI",
-    5:"SET / ÇALIŞMA DURUMU"
-  };
+document.querySelectorAll("#stationTabContent .tab")
+.forEach((x,i)=>{
+    if(i<HMI_PAGES.length)x.classList.remove("active");
+});
 
-  return titles[p]||"HMI AYARLARI";
+button.classList.add("active");
 
-}
+const s=state.stations.find(x=>x.id===state.currentStation);
 
-
-function hmiNext(){
-
-  currentHmiPage++;
-
-  if(currentHmiPage>5)currentHmiPage=1;
-
-  renderStationTab();
+document.getElementById("hmiContent").innerHTML=
+renderHmiPage(s,index);
 
 }
 
 
-function hmiPrev(){
+function renderHmiPage(s,index){
 
-  currentHmiPage--;
+const page=HMI_PAGES[index];
 
-  if(currentHmiPage<1)currentHmiPage=5;
+if(!s.hmi)s.hmi=buildDefaultHmi();
 
-  renderStationTab();
+if(!s.hmi[index])s.hmi[index]={};
 
-}
+return `
 
+<div class="hmi-page">
 
-function saveHmiPage(){
+<div style="font-size:19px;font-weight:800;margin-bottom:20px">
+${esc(page.name)}
+</div>
 
-  if(!canEdit())return;
+<div class="hmi-grid">
 
-  const s=db.stations.find(x=>x.id===currentStationId);
+${page.fields.map(([label,key])=>`
 
-  const obj=s.hmi["page"+currentHmiPage];
+<div class="hmi-field">
 
-  hmiPages[currentHmiPage].forEach(([key])=>{
+<label>${esc(label)}</label>
 
-    const el=document.getElementById("hmi_"+key);
+<input
+value="${attr(s.hmi[index][key]||"")}"
+${state.editMode?"":"disabled"}
+onchange="setHmiValue(${index},'${key}',this.value)"
+>
 
-    if(el)obj[key]=el.value.trim();
+</div>
 
-  });
+`).join("")}
 
-  s.updated=new Date().toISOString();
+</div>
 
-  logAction(
-    s.id+" HMI sayfa "+currentHmiPage+" güncellendi."
-  );
-
-  saveDB();
-
-  toast("HMI sayfası kaydedildi.");
-
-}
-
-
-/* ============================================================
-   MOTOR ETİKETİ
-   ============================================================ */
-
-function renderMotor(el,s){
-
-  const m=s.motor;
-
-  el.innerHTML=`
-
-    <div class="card card-pad">
-
-      <div class="section-title">
-
-        <div>
-          <h3>⚡ Motor Etiketi</h3>
-          <div class="muted">
-            Sahadaki motor etiketine göre teknik kayıt
-          </div>
-        </div>
-
-        ${canEdit()?`
-        <button class="btn btn-primary" onclick="saveMotor()">
-          💾 Kaydet
-        </button>`:""}
-
-      </div>
+</div>
 
 
-      <div class="real-label motor-label">
+${state.editMode ? `
 
-        <div class="motor-brand">
-          ${esc(m.marka||"MOTOR")}
-        </div>
+<div style="margin-top:15px">
 
-        <div class="motor-sub">
-          DALGIÇ MOTOR
-        </div>
+<button class="btn btn-success"
+onclick="saveHmi()">
+💾 Bu HMI Sayfasını Kaydet
+</button>
 
+</div>
 
-        <table class="spec-table">
+`:""}
 
-          <tr>
-            <th>Gerilim</th>
-            <th>Akım</th>
-            <th>Devir</th>
-            <th>Cosφ</th>
-          </tr>
-
-          <tr>
-            <td>
-              ${motorInput("gerilim380",m.gerilim380)}
-            </td>
-            <td>
-              ${motorInput("akim380",m.akim380)}
-            </td>
-            <td>
-              ${motorInput("devir380",m.devir380)}
-            </td>
-            <td>
-              ${motorInput("cos380",m.cos380)}
-            </td>
-          </tr>
-
-          <tr>
-            <td>
-              ${motorInput("gerilim400",m.gerilim400)}
-            </td>
-            <td>
-              ${motorInput("akim400",m.akim400)}
-            </td>
-            <td>
-              ${motorInput("devir400",m.devir400)}
-            </td>
-            <td>
-              ${motorInput("cos400",m.cos400)}
-            </td>
-          </tr>
-
-          <tr>
-            <td>
-              ${motorInput("gerilim415",m.gerilim415)}
-            </td>
-            <td>
-              ${motorInput("akim415",m.akim415)}
-            </td>
-            <td>
-              ${motorInput("devir415",m.devir415)}
-            </td>
-            <td>
-              ${motorInput("cos415",m.cos415)}
-            </td>
-          </tr>
-
-        </table>
-
-
-        <div class="label-fields">
-
-          ${motorField("marka","Marka",m.marka)}
-          ${motorField("tip","Tip",m.tip)}
-          ${motorField("model","Model",m.model)}
-          ${motorField("seriNo","Seri No",m.seriNo)}
-          ${motorField("gucHp","Güç [HP]",m.gucHp)}
-          ${motorField("gucKw","Güç [kW]",m.gucKw)}
-          ${motorField("frekans","Frekans [Hz]",m.frekans)}
-          ${motorField("ip","Koruma Sınıfı",m.ip)}
-          ${motorField("eksenelYuk","Maks. Eksenel Yük",m.eksenelYuk)}
-          ${motorField("maksSicaklik","Maks. Sıcaklık",m.maksSicaklik)}
-          ${motorField("kalkisSaat","Maks. Kalkış / Saat",m.kalkisSaat)}
-          ${motorField("sogutma","Soğutma",m.sogutma)}
-          ${motorField("uretimTarihi","Üretim Tarihi",m.uretimTarihi)}
-
-        </div>
-
-      </div>
-
-    </div>
-
-  `;
+`;
 
 }
 
 
-function motorInput(key,value){
+function setHmiValue(page,key,value){
 
-  if(!canEdit()){
+const s=state.stations.find(x=>x.id===state.currentStation);
 
-    return `<span>${esc(value||"—")}</span>`;
+if(!s.hmi)s.hmi=buildDefaultHmi();
 
-  }
+if(!s.hmi[page])s.hmi[page]={};
 
-  return `
-    <input
-      id="motor_${key}"
-      value="${escAttr(value||"")}"
-      style="width:100%;background:white;color:#111;border:1px solid #999;border-radius:3px;padding:5px;text-align:center"
-    >
-  `;
+s.hmi[page][key]=value;
 
 }
 
 
-function motorField(key,label,value){
+function saveHmi(){
 
-  return `
-    <div class="label-field">
+const s=state.stations.find(x=>x.id===state.currentStation);
 
-      <span>${esc(label)}</span>
+s.updated=new Date().toLocaleString("tr-TR");
 
-      ${canEdit()
-        ?`<input id="motor_${key}" value="${escAttr(value||"")}">`
-        :`<strong>${esc(value||"—")}</strong>`
-      }
+saveData();
 
-    </div>
-  `;
+toast("HMI sayfası kaydedildi.");
 
 }
 
 
-function saveMotor(){
+/* ---------------------------------------------------------
+   FAULTS
+--------------------------------------------------------- */
 
-  if(!canEdit())return;
+function renderStationFaults(s){
 
-  const s=db.stations.find(x=>x.id===currentStationId);
-  const m=s.motor;
+return `
 
-  Object.keys(m).forEach(key=>{
+<div class="section-title">
+<span>⚠</span>
+Arıza Geçmişi
+</div>
 
-    const el=document.getElementById("motor_"+key);
+${state.editMode ? `
 
-    if(el)m[key]=el.value.trim();
+<div class="form-grid">
 
-  });
+<div class="field">
+<label>Arıza</label>
+<input id="fault_title" placeholder="Örn. Düşük basınç">
+</div>
 
-  s.updated=new Date().toISOString();
+<div class="field">
+<label>Tarih</label>
+<input id="fault_date" type="date">
+</div>
 
-  saveDB();
+<div class="field full">
+<label>Açıklama</label>
+<textarea id="fault_desc"></textarea>
+</div>
 
-  toast("Motor etiketi kaydedildi.");
+</div>
 
-  renderStationTab();
+<button class="btn btn-primary"
+style="margin-top:13px"
+onclick="addFault()">
+＋ Arıza Kaydet
+</button>
 
-}
+`:""}
 
+<div style="margin-top:20px">
 
-/* ============================================================
-   POMPA ETİKETİ
-   ============================================================ */
+${(s.faults||[]).length===0
 
-function renderPump(el,s){
+?`<div class="readonly-box">Arıza kaydı bulunmuyor.</div>`
 
-  const p=s.pump;
+:
 
-  const fields=[
-    ["marka","Marka"],
-    ["model","Model"],
-    ["seriNo","S/N"],
-    ["tarih","Tarih"],
-    ["urunNo","Ü/N"],
-    ["pn","PN"],
-    ["q","Q"],
-    ["h","H"],
-    ["hmin","Hmin"],
-    ["hmax","Hmax"],
-    ["basinc","Basınç Maks."],
-    ["sicaklik","Sıcaklık Maks."],
-    ["voltaj","Gerilim"],
-    ["faz","Faz"],
-    ["guc","Güç"],
-    ["frekans","Frekans"],
-    ["akim","Nominal Akım"],
-    ["sinif","Sınıf"],
-    ["ip","IP"],
-    ["panelIp","Panel IP"],
-    ["kapasite","Kapasite"],
-    ["agirlik","Ağırlık"],
-    ["devamliCalisma","Devamlı Çalışma"]
-  ];
+(s.faults||[]).map((f,i)=>`
 
-  el.innerHTML=`
+<div class="readonly-box" style="margin-bottom:9px">
 
-    <div class="card card-pad">
+<b>${esc(f.title)}</b>
 
-      <div class="section-title">
+<div style="color:#9bb4ca;margin-top:4px">
+${esc(f.date||"")}
+</div>
 
-        <div>
-          <h3>💧 Pompa Etiketi</h3>
-          <div class="muted">
-            Pompa üzerindeki teknik etiket düzeni
-          </div>
-        </div>
+<div style="margin-top:7px">
+${esc(f.desc||"")}
+</div>
 
-        ${canEdit()?`
-        <button class="btn btn-primary" onclick="savePump()">
-          💾 Kaydet
-        </button>`:""}
+${state.editMode?`
 
-      </div>
+<button class="btn btn-danger btn-small"
+style="margin-top:9px"
+onclick="deleteFault(${i})">
+Sil
+</button>
 
+`:""}
 
-      <div class="real-label">
+</div>
 
-        <div class="motor-brand">
-          ${esc(p.marka||"POMPA")}
-        </div>
-
-        <div class="motor-sub">
-          DALGIÇ POMPA
-        </div>
-
-
-        <div class="label-fields">
-
-          ${fields.map(([key,label])=>`
-
-            <div class="label-field">
-
-              <span>${esc(label)}</span>
-
-              ${canEdit()
-                ?`<input id="pump_${key}" value="${escAttr(p[key]||"")}">`
-                :`<strong>${esc(p[key]||"—")}</strong>`
-              }
-
-            </div>
-
-          `).join("")}
-
-        </div>
-
-      </div>
-
-    </div>
-
-  `;
+`).join("")
 
 }
 
+</div>
 
-function savePump(){
-
-  if(!canEdit())return;
-
-  const s=db.stations.find(x=>x.id===currentStationId);
-
-  Object.keys(s.pump).forEach(key=>{
-
-    const el=document.getElementById("pump_"+key);
-
-    if(el)s.pump[key]=el.value.trim();
-
-  });
-
-  s.updated=new Date().toISOString();
-
-  saveDB();
-
-  toast("Pompa etiketi kaydedildi.");
-
-  renderStationTab();
-
-}
-
-
-/* ============================================================
-   SÜRÜCÜ
-   ============================================================ */
-
-function renderDrive(el,s){
-
-  el.innerHTML=`
-
-    <div class="card card-pad">
-
-      <div class="section-title">
-
-        <div>
-          <h3>🔌 Sürücü Kayıtları</h3>
-          <div class="muted">
-            Sürücü / inverter teknik bilgileri
-          </div>
-        </div>
-
-        ${canEdit()?`
-        <button class="btn btn-primary" onclick="addDrive()">
-          ＋ Sürücü Ekle
-        </button>`:""}
-
-      </div>
-
-
-      <div class="record-list">
-
-        ${(s.drives||[]).length===0
-          ?`<div class="muted">Henüz sürücü kaydı yok.</div>`
-          :s.drives.map((d,i)=>`
-
-            <div class="record">
-
-              <div>
-
-                <strong>${esc(d.title||"Sürücü")}</strong>
-
-                <small>
-                  ${esc(d.brand||"")} ·
-                  ${esc(d.model||"")} ·
-                  ${esc(d.power||"")}
-                </small>
-
-              </div>
-
-              ${canEdit()?`
-              <button
-                class="btn"
-                onclick="editDrive(${i})">
-                Düzenle
-              </button>`:""}
-
-            </div>
-
-          `).join("")
-        }
-
-      </div>
-
-    </div>
-
-  `;
-
-}
-
-
-function addDrive(){
-
-  const s=db.stations.find(x=>x.id===currentStationId);
-
-  s.drives.push({
-    title:"Sürücü",
-    brand:"",
-    model:"",
-    power:"",
-    voltage:"",
-    current:"",
-    frequency:"",
-    notes:""
-  });
-
-  saveDB();
-
-  editDrive(s.drives.length-1);
-
-}
-
-
-function editDrive(i){
-
-  if(!canEdit())return;
-
-  const s=db.stations.find(x=>x.id===currentStationId);
-  const d=s.drives[i];
-
-  openModal(
-    "Sürücü Bilgileri",
-    `
-
-      <label>Başlık</label>
-      <input id="d_title" value="${escAttr(d.title)}">
-
-      <div class="grid-2">
-
-        <div>
-          <label>Marka</label>
-          <input id="d_brand" value="${escAttr(d.brand)}">
-        </div>
-
-        <div>
-          <label>Model</label>
-          <input id="d_model" value="${escAttr(d.model)}">
-        </div>
-
-        <div>
-          <label>Güç</label>
-          <input id="d_power" value="${escAttr(d.power)}">
-        </div>
-
-        <div>
-          <label>Gerilim</label>
-          <input id="d_voltage" value="${escAttr(d.voltage)}">
-        </div>
-
-        <div>
-          <label>Akım</label>
-          <input id="d_current" value="${escAttr(d.current)}">
-        </div>
-
-        <div>
-          <label>Frekans</label>
-          <input id="d_frequency" value="${escAttr(d.frequency)}">
-        </div>
-
-      </div>
-
-      <label>Not</label>
-      <textarea id="d_notes">${esc(d.notes)}</textarea>
-
-    `,
-    `
-      <button class="btn" onclick="closeModal()">Vazgeç</button>
-      <button class="btn btn-primary" onclick="saveDrive(${i})">
-        Kaydet
-      </button>
-    `
-  );
-
-}
-
-
-function saveDrive(i){
-
-  const s=db.stations.find(x=>x.id===currentStationId);
-  const d=s.drives[i];
-
-  d.title=document.getElementById("d_title").value;
-  d.brand=document.getElementById("d_brand").value;
-  d.model=document.getElementById("d_model").value;
-  d.power=document.getElementById("d_power").value;
-  d.voltage=document.getElementById("d_voltage").value;
-  d.current=document.getElementById("d_current").value;
-  d.frequency=document.getElementById("d_frequency").value;
-  d.notes=document.getElementById("d_notes").value;
-
-  saveDB();
-  closeModal();
-  renderStationTab();
-
-}
-
-
-/* ============================================================
-   ÖLÇÜMLER
-   ============================================================ */
-
-function renderMeasurements(el,s){
-
-  el.innerHTML=`
-
-    <div class="card card-pad">
-
-      <div class="section-title">
-
-        <div>
-          <h3>📈 Ölçüm Kayıtları</h3>
-          <div class="muted">
-            Elektriksel ve saha ölçümleri
-          </div>
-        </div>
-
-        ${canEdit()?`
-        <button class="btn btn-primary" onclick="addMeasurement()">
-          ＋ Ölçüm Ekle
-        </button>`:""}
-
-      </div>
-
-
-      <div class="record-list">
-
-        ${(s.measurements||[]).length===0
-          ?`<div class="muted">Henüz ölçüm kaydı yok.</div>`
-          :s.measurements.map((m,i)=>`
-
-            <div class="record">
-
-              <div>
-
-                <strong>${esc(m.title||"Ölçüm")}</strong>
-
-                <small>
-                  ${esc(m.value||"")} ${esc(m.unit||"")}
-                  · ${formatDate(m.date)}
-                </small>
-
-              </div>
-
-              ${canEdit()?`
-              <button class="btn" onclick="editMeasurement(${i})">
-                Düzenle
-              </button>`:""}
-
-            </div>
-
-          `).join("")
-        }
-
-      </div>
-
-    </div>
-
-  `;
-
-}
-
-
-function addMeasurement(){
-
-  const s=db.stations.find(x=>x.id===currentStationId);
-
-  s.measurements.unshift({
-    title:"Motor Ölçümü",
-    value:"",
-    unit:"",
-    detail:"",
-    date:new Date().toISOString()
-  });
-
-  saveDB();
-
-  editMeasurement(0);
-
-}
-
-
-function editMeasurement(i){
-
-  if(!canEdit())return;
-
-  const s=db.stations.find(x=>x.id===currentStationId);
-  const m=s.measurements[i];
-
-  openModal(
-    "Ölçüm Kaydı",
-    `
-
-      <label>Ölçüm Başlığı</label>
-      <input id="m_title" value="${escAttr(m.title)}">
-
-      <div class="grid-2">
-
-        <div>
-          <label>Değer</label>
-          <input id="m_value" value="${escAttr(m.value)}">
-        </div>
-
-        <div>
-          <label>Birim</label>
-          <input id="m_unit" value="${escAttr(m.unit)}">
-        </div>
-
-      </div>
-
-      <label>Teknik Açıklama</label>
-      <textarea id="m_detail">${esc(m.detail)}</textarea>
-
-    `,
-    `
-      <button class="btn" onclick="closeModal()">Vazgeç</button>
-      <button class="btn btn-primary" onclick="saveMeasurement(${i})">
-        Kaydet
-      </button>
-    `
-  );
-
-}
-
-
-function saveMeasurement(i){
-
-  const s=db.stations.find(x=>x.id===currentStationId);
-  const m=s.measurements[i];
-
-  m.title=document.getElementById("m_title").value;
-  m.value=document.getElementById("m_value").value;
-  m.unit=document.getElementById("m_unit").value;
-  m.detail=document.getElementById("m_detail").value;
-  m.date=new Date().toISOString();
-
-  saveDB();
-  closeModal();
-  renderStationTab();
-
-}
-
-
-/* ============================================================
-   ARIZA
-   ============================================================ */
-
-function renderFaults(el,s){
-
-  el.innerHTML=`
-
-    <div class="card card-pad">
-
-      <div class="section-title">
-
-        <div>
-          <h3>⚠️ Arıza Kayıtları</h3>
-          <div class="muted">
-            Arıza, müdahale ve sonuç kayıtları
-          </div>
-        </div>
-
-        ${canEdit()?`
-        <button class="btn btn-primary" onclick="addFault()">
-          ＋ Arıza Ekle
-        </button>`:""}
-
-      </div>
-
-
-      <div class="record-list">
-
-        ${(s.faults||[]).length===0
-          ?`<div class="muted">Henüz arıza kaydı yok.</div>`
-          :s.faults.map((f,i)=>`
-
-            <div class="record">
-
-              <div>
-
-                <strong>⚠️ ${esc(f.title)}</strong>
-
-                <small>
-                  ${esc(f.status)} ·
-                  ${formatDate(f.date)}
-                </small>
-
-              </div>
-
-              ${canEdit()?`
-              <button class="btn" onclick="editFault(${i})">
-                Düzenle
-              </button>`:""}
-
-            </div>
-
-          `).join("")
-        }
-
-      </div>
-
-    </div>
-
-  `;
+`;
 
 }
 
 
 function addFault(){
 
-  const s=db.stations.find(x=>x.id===currentStationId);
+const s=state.stations.find(x=>x.id===state.currentStation);
 
-  s.faults.unshift({
-    title:"Yeni Arıza",
-    status:"Açık",
-    detail:"",
-    solution:"",
-    date:new Date().toISOString()
-  });
+if(!s.faults)s.faults=[];
 
-  saveDB();
+s.faults.push({
+title:document.getElementById("fault_title").value,
+date:document.getElementById("fault_date").value,
+desc:document.getElementById("fault_desc").value
+});
 
-  editFault(0);
+saveData();
 
-}
+toast("Arıza kaydedildi.");
 
-
-function editFault(i){
-
-  if(!canEdit())return;
-
-  const s=db.stations.find(x=>x.id===currentStationId);
-  const f=s.faults[i];
-
-  openModal(
-    "Arıza Kaydı",
-    `
-
-      <label>Arıza Başlığı</label>
-      <input id="f_title" value="${escAttr(f.title)}">
-
-      <label>Durum</label>
-      <select id="f_status">
-
-        <option ${f.status==="Açık"?"selected":""}>Açık</option>
-        <option ${f.status==="Devam Ediyor"?"selected":""}>Devam Ediyor</option>
-        <option ${f.status==="Giderildi"?"selected":""}>Giderildi</option>
-
-      </select>
-
-      <label>Arıza Açıklaması</label>
-      <textarea id="f_detail">${esc(f.detail)}</textarea>
-
-      <label>Yapılan İşlem / Sonuç</label>
-      <textarea id="f_solution">${esc(f.solution)}</textarea>
-
-    `,
-    `
-      <button class="btn" onclick="closeModal()">Vazgeç</button>
-      <button class="btn btn-primary" onclick="saveFault(${i})">
-        Kaydet
-      </button>
-    `
-  );
+renderStationDetail(s);
 
 }
 
 
-function saveFault(i){
+function deleteFault(i){
 
-  const s=db.stations.find(x=>x.id===currentStationId);
-  const f=s.faults[i];
+if(!confirm("Bu arıza kaydı silinsin mi?"))return;
 
-  f.title=document.getElementById("f_title").value;
-  f.status=document.getElementById("f_status").value;
-  f.detail=document.getElementById("f_detail").value;
-  f.solution=document.getElementById("f_solution").value;
-  f.date=new Date().toISOString();
+const s=state.stations.find(x=>x.id===state.currentStation);
 
-  saveDB();
-  closeModal();
-  renderStationTab();
+s.faults.splice(i,1);
+
+saveData();
+
+renderStationDetail(s);
 
 }
 
 
-/* ============================================================
-   BAKIM
-   ============================================================ */
+/* ---------------------------------------------------------
+   MAINTENANCE
+--------------------------------------------------------- */
 
-function renderMaintenance(el,s){
+function renderStationMaintenance(s){
 
-  el.innerHTML=`
+return `
 
-    <div class="card card-pad">
+<div class="section-title">
+<span>🔧</span>
+Bakım Geçmişi
+</div>
 
-      <div class="section-title">
+${state.editMode ? `
 
-        <div>
-          <h3>🔧 Bakım Kayıtları</h3>
-          <div class="muted">
-            Periyodik bakım ve müdahale geçmişi
-          </div>
-        </div>
+<div class="form-grid">
 
-        ${canEdit()?`
-        <button class="btn btn-primary" onclick="addMaintenance()">
-          ＋ Bakım Ekle
-        </button>`:""}
+<div class="field">
+<label>Bakım Başlığı</label>
+<input id="maint_title">
+</div>
 
-      </div>
+<div class="field">
+<label>Tarih</label>
+<input id="maint_date" type="date">
+</div>
 
+<div class="field full">
+<label>Açıklama</label>
+<textarea id="maint_desc"></textarea>
+</div>
 
-      <div class="record-list">
+</div>
 
-        ${(s.maintenance||[]).length===0
-          ?`<div class="muted">Henüz bakım kaydı yok.</div>`
-          :s.maintenance.map((m,i)=>`
+<button class="btn btn-primary"
+style="margin-top:13px"
+onclick="addMaintenance()">
+＋ Bakım Kaydet
+</button>
 
-            <div class="record">
+`:""}
 
-              <div>
+<div style="margin-top:20px">
 
-                <strong>🔧 ${esc(m.title)}</strong>
+${(s.maintenance||[]).length===0
 
-                <small>
-                  ${formatDate(m.date)}
-                </small>
+?`<div class="readonly-box">Bakım kaydı bulunmuyor.</div>`
 
-              </div>
+:
 
-              ${canEdit()?`
-              <button class="btn" onclick="editMaintenance(${i})">
-                Düzenle
-              </button>`:""}
+(s.maintenance||[]).map((m,i)=>`
 
-            </div>
+<div class="readonly-box" style="margin-bottom:9px">
 
-          `).join("")
-        }
+<b>${esc(m.title)}</b>
 
-      </div>
+<div style="color:#9bb4ca;margin-top:4px">
+${esc(m.date||"")}
+</div>
 
-    </div>
+<div style="margin-top:7px">
+${esc(m.desc||"")}
+</div>
 
-  `;
+${state.editMode?`
+
+<button class="btn btn-danger btn-small"
+style="margin-top:9px"
+onclick="deleteMaintenance(${i})">
+Sil
+</button>
+
+`:""}
+
+</div>
+
+`).join("")
+
+}
+
+</div>
+
+`;
 
 }
 
 
 function addMaintenance(){
 
-  const s=db.stations.find(x=>x.id===currentStationId);
+const s=state.stations.find(x=>x.id===state.currentStation);
 
-  s.maintenance.unshift({
-    title:"Bakım",
-    detail:"",
-    date:new Date().toISOString()
-  });
+if(!s.maintenance)s.maintenance=[];
 
-  saveDB();
+s.maintenance.push({
+title:document.getElementById("maint_title").value,
+date:document.getElementById("maint_date").value,
+desc:document.getElementById("maint_desc").value
+});
 
-  editMaintenance(0);
+saveData();
 
-}
+toast("Bakım kaydedildi.");
 
-
-function editMaintenance(i){
-
-  if(!canEdit())return;
-
-  const s=db.stations.find(x=>x.id===currentStationId);
-  const m=s.maintenance[i];
-
-  openModal(
-    "Bakım Kaydı",
-    `
-
-      <label>Bakım Başlığı</label>
-      <input id="b_title" value="${escAttr(m.title)}">
-
-      <label>Yapılan İşlem</label>
-      <textarea id="b_detail">${esc(m.detail)}</textarea>
-
-    `,
-    `
-      <button class="btn" onclick="closeModal()">Vazgeç</button>
-      <button class="btn btn-primary" onclick="saveMaintenance(${i})">
-        Kaydet
-      </button>
-    `
-  );
+renderStationDetail(s);
 
 }
 
 
-function saveMaintenance(i){
+function deleteMaintenance(i){
 
-  const s=db.stations.find(x=>x.id===currentStationId);
-  const m=s.maintenance[i];
+if(!confirm("Bu bakım kaydı silinsin mi?"))return;
 
-  m.title=document.getElementById("b_title").value;
-  m.detail=document.getElementById("b_detail").value;
-  m.date=new Date().toISOString();
+const s=state.stations.find(x=>x.id===state.currentStation);
 
-  saveDB();
-  closeModal();
-  renderStationTab();
+s.maintenance.splice(i,1);
+
+saveData();
+
+renderStationDetail(s);
 
 }
 
 
-/* ============================================================
-   NOTLAR
-   ============================================================ */
+/* ---------------------------------------------------------
+   NOTES
+--------------------------------------------------------- */
 
-function renderNotes(el,s){
+function renderStationNotes(s){
 
-  el.innerHTML=`
+return `
 
-    <div class="card card-pad">
+<div class="section-title">
+<span>📝</span>
+Teknik Notlar
+</div>
 
-      <div class="section-title">
+${state.editMode ? `
 
-        <div>
-          <h3>📝 Teknik Notlar</h3>
-        </div>
+<textarea id="newNote"
+placeholder="Sahada gördüğünüz teknik bilgiyi, değişikliği veya önemli notu yazın..."></textarea>
 
-        ${canEdit()?`
-        <button class="btn btn-primary" onclick="addNote()">
-          ＋ Not Ekle
-        </button>`:""}
+<button class="btn btn-primary"
+style="margin-top:12px"
+onclick="addNote()">
+＋ Not Kaydet
+</button>
 
-      </div>
+`:""}
 
+<div style="margin-top:20px">
 
-      <div class="record-list">
+${(s.notes||[]).length===0
 
-        ${(s.notes||[]).length===0
-          ?`<div class="muted">Henüz not yok.</div>`
-          :s.notes.map((n,i)=>`
+?`<div class="readonly-box">Not bulunmuyor.</div>`
 
-            <div class="record">
+:
 
-              <div>
+(s.notes||[]).map((n,i)=>`
 
-                <strong>${esc(n.title)}</strong>
+<div class="readonly-box" style="margin-bottom:9px">
 
-                <small>
-                  ${formatDate(n.date)}
-                </small>
+<div style="color:#91abc1;font-size:12px">
+${esc(n.date||"")}
+</div>
 
-                <div style="margin-top:7px;color:#bdd0df">
-                  ${esc(n.text)}
-                </div>
+<div style="margin-top:7px;white-space:pre-wrap">
+${esc(n.text||"")}
+</div>
 
-              </div>
+${state.editMode?`
 
-              ${canEdit()?`
-              <button class="btn" onclick="editNote(${i})">
-                Düzenle
-              </button>`:""}
+<button class="btn btn-danger btn-small"
+style="margin-top:9px"
+onclick="deleteNote(${i})">
+Sil
+</button>
 
-            </div>
+`:""}
 
-          `).join("")
-        }
+</div>
 
-      </div>
+`).join("")
 
-    </div>
+}
 
-  `;
+</div>
+
+`;
 
 }
 
 
 function addNote(){
 
-  const s=db.stations.find(x=>x.id===currentStationId);
+const s=state.stations.find(x=>x.id===state.currentStation);
 
-  s.notes.unshift({
-    title:"Teknik Not",
-    text:"",
-    date:new Date().toISOString()
-  });
+if(!s.notes)s.notes=[];
 
-  saveDB();
+s.notes.unshift({
+date:new Date().toLocaleString("tr-TR"),
+text:document.getElementById("newNote").value
+});
 
-  editNote(0);
+saveData();
 
-}
+toast("Not kaydedildi.");
 
-
-function editNote(i){
-
-  if(!canEdit())return;
-
-  const s=db.stations.find(x=>x.id===currentStationId);
-  const n=s.notes[i];
-
-  openModal(
-    "Teknik Not",
-    `
-
-      <label>Başlık</label>
-      <input id="n_title" value="${escAttr(n.title)}">
-
-      <label>Not</label>
-      <textarea id="n_text">${esc(n.text)}</textarea>
-
-    `,
-    `
-      <button class="btn" onclick="closeModal()">Vazgeç</button>
-      <button class="btn btn-primary" onclick="saveNote(${i})">
-        Kaydet
-      </button>
-    `
-  );
+renderStationDetail(s);
 
 }
 
 
-function saveNote(i){
+function deleteNote(i){
 
-  const s=db.stations.find(x=>x.id===currentStationId);
-  const n=s.notes[i];
+const s=state.stations.find(x=>x.id===state.currentStation);
 
-  n.title=document.getElementById("n_title").value;
-  n.text=document.getElementById("n_text").value;
-  n.date=new Date().toISOString();
+s.notes.splice(i,1);
 
-  saveDB();
-  closeModal();
-  renderStationTab();
+saveData();
+
+renderStationDetail(s);
 
 }
 
 
-/* ============================================================
-   ARŞİV / DIŞA AKTAR
-   ============================================================ */
+/* ---------------------------------------------------------
+   MOTORLAR LİSTESİ
+--------------------------------------------------------- */
+
+function renderMotors(){
+
+const main=document.getElementById("main");
+
+main.innerHTML=`
+
+<div class="page-title">
+
+<h1>Motorlar</h1>
+
+<p>
+Tüm terfilerdeki motor kayıtları.
+</p>
+
+</div>
+
+<div class="card">
+
+<div class="table-wrap">
+
+<table>
+
+<thead>
+<tr>
+<th>TERFİ</th>
+<th>İSTASYON</th>
+<th>ÜRETİCİ</th>
+<th>MODEL</th>
+<th>GÜÇ</th>
+<th>NOMİNAL AKIM</th>
+<th>SON ÇALIŞMA AKIMI</th>
+<th></th>
+</tr>
+</thead>
+
+<tbody>
+
+${state.stations.map(s=>`
+
+<tr>
+
+<td>${esc(s.id)}</td>
+<td>${esc(s.name)}</td>
+<td>${esc(s.motorTag?.manufacturer||"-")}</td>
+<td>${esc(s.motorTag?.model||"-")}</td>
+<td>${esc(s.motorTag?.power||"-")} ${esc(s.motorTag?.power_unit||"")}</td>
+<td>${esc(s.motorTag?.current_2||s.motorTag?.current_1||"-")}</td>
+<td>${esc(s.running?.current||"-")}</td>
+
+<td>
+<button class="btn btn-small btn-primary"
+onclick="openStation('${s.id}')">
+Aç
+</button>
+</td>
+
+</tr>
+
+`).join("")}
+
+</tbody>
+
+</table>
+
+</div>
+
+</div>
+
+`;
+
+}
+
+
+/* ---------------------------------------------------------
+   POMPALAR
+--------------------------------------------------------- */
+
+function renderPumps(){
+
+const main=document.getElementById("main");
+
+main.innerHTML=`
+
+<div class="page-title">
+
+<h1>Pompalar</h1>
+
+<p>
+Tüm terfilerdeki pompa etiket kayıtları.
+</p>
+
+</div>
+
+<div class="card">
+
+<div class="table-wrap">
+
+<table>
+
+<thead>
+<tr>
+<th>TERFİ</th>
+<th>İSTASYON</th>
+<th>ÜRETİCİ</th>
+<th>MODEL</th>
+<th>Q</th>
+<th>H</th>
+<th>BASINÇ</th>
+<th></th>
+</tr>
+</thead>
+
+<tbody>
+
+${state.stations.map(s=>`
+
+<tr>
+
+<td>${esc(s.id)}</td>
+<td>${esc(s.name)}</td>
+<td>${esc(s.pumpTag?.manufacturer||"-")}</td>
+<td>${esc(s.pumpTag?.model||"-")}</td>
+<td>${esc(s.pumpTag?.q_min||"-")} - ${esc(s.pumpTag?.q_max||"-")}</td>
+<td>${esc(s.pumpTag?.h_min||"-")} - ${esc(s.pumpTag?.h_max||"-")}</td>
+<td>${esc(s.pumpTag?.max_pressure||"-")}</td>
+
+<td>
+<button class="btn btn-small btn-primary"
+onclick="openStation('${s.id}')">
+Aç
+</button>
+</td>
+
+</tr>
+
+`).join("")}
+
+</tbody>
+
+</table>
+
+</div>
+
+</div>
+
+`;
+
+}
+
+
+/* ---------------------------------------------------------
+   HMI LIST
+--------------------------------------------------------- */
+
+function renderHmiList(){
+
+const main=document.getElementById("main");
+
+main.innerHTML=`
+
+<div class="page-title">
+
+<h1>HMI / PLC</h1>
+
+<p>
+Her terfinin HMI ekranları sayfa sayfa arşivlenir.
+</p>
+
+</div>
+
+<div class="card">
+
+<div class="table-wrap">
+
+<table>
+
+<thead>
+<tr>
+<th>TERFİ</th>
+<th>İSTASYON</th>
+<th>HMI SAYFA</th>
+<th>SON GÜNCELLEME</th>
+<th></th>
+</tr>
+</thead>
+
+<tbody>
+
+${state.stations.map(s=>`
+
+<tr>
+
+<td>${esc(s.id)}</td>
+<td>${esc(s.name)}</td>
+<td>${HMI_PAGES.length} sayfa</td>
+<td>${esc(s.updated||"-")}</td>
+
+<td>
+<button class="btn btn-primary btn-small"
+onclick="openStation('${s.id}')">
+HMI'yi Aç
+</button>
+</td>
+
+</tr>
+
+`).join("")}
+
+</tbody>
+
+</table>
+
+</div>
+
+</div>
+
+`;
+
+}
+
+
+/* ---------------------------------------------------------
+   MEASUREMENTS
+--------------------------------------------------------- */
+
+function renderMeasurements(){
+
+const main=document.getElementById("main");
+
+main.innerHTML=`
+
+<div class="page-title">
+
+<h1>Motor Çalışma Ölçümleri</h1>
+
+<p>
+Motor etiketindeki nominal değerlerle sahadaki gerçek çalışma değerleri ayrı tutulur.
+</p>
+
+</div>
+
+<div class="card">
+
+<div class="table-wrap">
+
+<table>
+
+<thead>
+<tr>
+<th>TERFİ</th>
+<th>İSTASYON</th>
+<th>FREKANS</th>
+<th>AKIM</th>
+<th>DEVİR</th>
+<th>GÜÇ</th>
+<th>GERİLİM</th>
+<th>SICAKLIK</th>
+<th>SON ÖLÇÜM</th>
+</tr>
+</thead>
+
+<tbody>
+
+${state.stations.map(s=>`
+
+<tr>
+
+<td>${esc(s.id)}</td>
+<td>${esc(s.name)}</td>
+<td>${esc(s.running?.frequency||"-")}</td>
+<td>${esc(s.running?.current||"-")}</td>
+<td>${esc(s.running?.rpm||"-")}</td>
+<td>${esc(s.running?.power||"-")}</td>
+<td>${esc(s.running?.voltage||"-")}</td>
+<td>${esc(s.running?.drive_temperature||"-")}</td>
+<td>${esc(s.running?.date||"-")} ${esc(s.running?.time||"")}</td>
+
+</tr>
+
+`).join("")}
+
+</tbody>
+
+</table>
+
+</div>
+
+</div>
+
+`;
+
+}
+
+
+/* ---------------------------------------------------------
+   GLOBAL FAULTS
+--------------------------------------------------------- */
+
+function renderFaults(){
+
+const main=document.getElementById("main");
+
+const data=[];
+
+state.stations.forEach(s=>{
+
+(s.faults||[]).forEach(f=>{
+
+data.push({
+station:s,
+...f
+});
+
+});
+
+});
+
+main.innerHTML=`
+
+<div class="page-title">
+
+<h1>Arızalar</h1>
+
+<p>
+Tüm terfilerdeki arıza geçmişi.
+</p>
+
+</div>
+
+<div class="card">
+
+<div class="card-body">
+
+${data.length===0
+
+?`<div class="readonly-box">Henüz arıza kaydı yok.</div>`
+
+:data.map(x=>`
+
+<div class="readonly-box" style="margin-bottom:10px">
+
+<b>${esc(x.station.id)} · ${esc(x.station.name)}</b>
+
+<div style="margin-top:5px">
+${esc(x.title)}
+</div>
+
+<div style="color:#9bb4ca;margin-top:5px">
+${esc(x.date||"")}
+</div>
+
+<div style="margin-top:7px">
+${esc(x.desc||"")}
+</div>
+
+</div>
+
+`).join("")}
+
+</div>
+
+</div>
+
+`;
+
+}
+
+
+/* ---------------------------------------------------------
+   GLOBAL MAINTENANCE
+--------------------------------------------------------- */
+
+function renderMaintenance(){
+
+const main=document.getElementById("main");
+
+main.innerHTML=`
+
+<div class="page-title">
+
+<h1>Bakım</h1>
+
+<p>
+Tüm terfilerdeki bakım geçmişi.
+</p>
+
+</div>
+
+<div class="card">
+
+<div class="card-body">
+
+${state.stations.flatMap(s=>
+
+(s.maintenance||[]).map(m=>`
+
+<div class="readonly-box" style="margin-bottom:10px">
+
+<b>${esc(s.id)} · ${esc(s.name)}</b>
+
+<div style="margin-top:5px">
+${esc(m.title)}
+</div>
+
+<div style="color:#9bb4ca;margin-top:5px">
+${esc(m.date||"")}
+</div>
+
+<div style="margin-top:7px">
+${esc(m.desc||"")}
+</div>
+
+</div>
+
+`)
+
+).join("") || `<div class="readonly-box">Bakım kaydı yok.</div>`}
+
+</div>
+
+</div>
+
+`;
+
+}
+
+
+/* ---------------------------------------------------------
+   NOTES
+--------------------------------------------------------- */
+
+function renderNotes(){
+
+const main=document.getElementById("main");
+
+main.innerHTML=`
+
+<div class="page-title">
+
+<h1>Teknik Notlar</h1>
+
+<p>
+Sahadan girilen tüm teknik notlar.
+</p>
+
+</div>
+
+<div class="card">
+
+<div class="card-body">
+
+${state.stations.flatMap(s=>
+
+(s.notes||[]).map(n=>`
+
+<div class="readonly-box" style="margin-bottom:10px">
+
+<b>${esc(s.id)} · ${esc(s.name)}</b>
+
+<div style="color:#9bb4ca;margin-top:5px">
+${esc(n.date||"")}
+</div>
+
+<div style="margin-top:8px;white-space:pre-wrap">
+${esc(n.text||"")}
+</div>
+
+</div>
+
+`)
+
+).join("") || `<div class="readonly-box">Teknik not bulunmuyor.</div>`}
+
+</div>
+
+</div>
+
+`;
+
+}
+
+
+/* ---------------------------------------------------------
+   ARCHIVE
+--------------------------------------------------------- */
 
 function renderArchive(){
 
-  document.getElementById("content").innerHTML=`
+const main=document.getElementById("main");
 
-    <div class="topbar">
+main.innerHTML=`
 
-      <div class="page-title">
+<div class="page-title">
 
-        <h2>Arşiv & Dışa Aktar</h2>
+<h1>Arşiv & Dışa Aktar</h1>
 
-        <p>
-          Arşivin tamamını yedekleyebilir veya PDF/Excel uyumlu
-          dosya oluşturabilirsiniz.
-        </p>
+<p>
+Arşiv verilerini dışarı aktarın.
+</p>
 
-      </div>
-
-    </div>
+</div>
 
 
-    <div class="section-grid">
+<div class="card">
 
-      <div class="card section-card">
+<div class="card-body">
 
-        <div class="section-title">
-          <h3>📦 Tam Arşiv Yedeği</h3>
-        </div>
+<div class="readonly-box">
 
-        <p class="muted">
-          Tüm terfileri JSON dosyası olarak dışarı aktarır.
-          Daha sonra tekrar içeri alabilirsiniz.
-        </p>
+<div class="section-title">
+<span>▧</span>
+JSON Arşivi
+</div>
 
-        <button class="btn btn-primary" onclick="exportJSON()">
-          ⬇️ JSON Yedeği Al
-        </button>
+<p style="color:#9bb4ca;line-height:1.6">
+Tüm terfi, motor etiketi, pompa etiketi,
+motor çalışma değerleri ve HMI verilerini tek dosya olarak dışarı aktarabilirsiniz.
+</p>
 
-        <button class="btn" onclick="importJSON()">
-          ⬆️ JSON Yedeği Yükle
-        </button>
+<button class="btn btn-primary"
+style="margin-top:15px"
+onclick="exportJSON()">
+⬇ JSON Dışa Aktar
+</button>
 
-      </div>
-
-
-      <div class="card section-card">
-
-        <div class="section-title">
-          <h3>📊 Excel</h3>
-        </div>
-
-        <p class="muted">
-          Excel'de açılabilen CSV dosyası oluşturur.
-          Terfi, HMI, motor ve pompa bilgileri ayrı bölümlerde
-          dışarı aktarılır.
-        </p>
-
-        <button class="btn btn-primary" onclick="exportCSV()">
-          📊 Excel Uyumlusu Oluştur
-        </button>
-
-      </div>
+</div>
 
 
-      <div class="card section-card">
+<div class="readonly-box" style="margin-top:15px">
 
-        <div class="section-title">
-          <h3>🖨️ PDF</h3>
-        </div>
+<div class="section-title">
+<span>📋</span>
+Yedekleme
+</div>
 
-        <p class="muted">
-          Seçtiğiniz terfinin tüm teknik kayıtlarını yazdırma
-          ekranından PDF olarak kaydedebilirsiniz.
-        </p>
+<p style="color:#9bb4ca">
+Bu sürüm test sırasında verileri cihazın tarayıcısında saklar.
+Supabase bağlantısı kurulduğunda saha ortak arşivine taşınacaktır.
+</p>
 
-        <button class="btn btn-primary" onclick="choosePDF()">
-          🖨️ Terfi PDF Oluştur
-        </button>
+</div>
 
-      </div>
+</div>
 
+</div>
 
-      <div class="card section-card">
-
-        <div class="section-title">
-          <h3>💾 Tarayıcı Durumu</h3>
-        </div>
-
-        <p class="muted">
-          Bu test sürümünde kayıtlar bu cihazın tarayıcısında
-          kalıcı olarak tutulur.
-        </p>
-
-        <strong>
-          ${db.stations.length} terfi kayıtlı
-        </strong>
-
-      </div>
-
-    </div>
-
-  `;
+`;
 
 }
 
 
 function exportJSON(){
 
-  if(!canEdit()){
+const data=JSON.stringify(state.stations,null,2);
 
-    toast("Yedek almak için düzenleme moduna geçin.");
+const blob=new Blob([data],{
+type:"application/json"
+});
 
-    return;
-  }
+const url=URL.createObjectURL(blob);
 
-  downloadFile(
-    "MESKI_TERFI_ARSIV_YEDEK_"+dateFile()+".json",
-    JSON.stringify(db,null,2),
-    "application/json"
-  );
+const a=document.createElement("a");
 
-  toast("JSON yedeği hazırlandı.");
+a.href=url;
+a.download="meski-terfi-arsiv-"+new Date().toISOString().slice(0,10)+".json";
 
-}
+a.click();
 
+URL.revokeObjectURL(url);
 
-function importJSON(){
-
-  if(!canEdit()){
-
-    toast("Yedek yüklemek için düzenleme modu gerekli.");
-
-    return;
-  }
-
-  const input=document.createElement("input");
-
-  input.type="file";
-  input.accept=".json";
-
-  input.onchange=()=>{
-
-    const file=input.files[0];
-
-    if(!file)return;
-
-    const reader=new FileReader();
-
-    reader.onload=()=>{
-
-      try{
-
-        const imported=JSON.parse(reader.result);
-
-        if(!imported.stations){
-
-          throw new Error("Geçersiz arşiv");
-
-        }
-
-        if(!confirm(
-          "Mevcut arşivin üzerine yedek yüklenecek. Devam edilsin mi?"
-        ))return;
-
-        db=imported;
-
-        saveDB();
-
-        showPage("dashboard");
-
-        toast("Arşiv yedeği yüklendi.");
-
-      }catch(e){
-
-        toast("Dosya geçersiz.");
-
-      }
-
-    };
-
-    reader.readAsText(file);
-
-  };
-
-  input.click();
+toast("Arşiv dışa aktarıldı.");
 
 }
 
 
-function exportCSV(){
-
-  if(!canEdit()){
-
-    toast("Dışa aktarmak için düzenleme modu gerekli.");
-
-    return;
-  }
-
-  let rows=[];
-
-  rows.push([
-    "TERFİ NO",
-    "İSTASYON",
-    "BÖLGE",
-    "ADRES",
-    "MOTOR MARKA",
-    "MOTOR MODEL",
-    "MOTOR GÜÇ KW",
-    "MOTOR AKIM 400V",
-    "MOTOR DEVİR",
-    "POMPA MARKA",
-    "POMPA MODEL",
-    "POMPA SERİ NO",
-    "POMPA GÜÇ",
-    "POMPA AKIM",
-    "POMPA GERİLİM",
-    "ÖLÇÜM SAYISI",
-    "ARIZA SAYISI",
-    "BAKIM SAYISI"
-  ]);
-
-  db.stations.forEach(s=>{
-
-    rows.push([
-      s.id,
-      s.name,
-      s.region,
-      s.address,
-      s.motor.marka,
-      s.motor.model,
-      s.motor.gucKw,
-      s.motor.akim400,
-      s.motor.devir400,
-      s.pump.marka,
-      s.pump.model,
-      s.pump.seriNo,
-      s.pump.guc,
-      s.pump.akim,
-      s.pump.voltaj,
-      s.measurements.length,
-      s.faults.length,
-      s.maintenance.length
-    ]);
-
-  });
-
-  const csv="\uFEFF"+
-    rows.map(r=>r.map(csvCell).join(";")).join("\n");
-
-  downloadFile(
-    "MESKI_TERFI_ARSIV_"+dateFile()+".csv",
-    csv,
-    "text/csv;charset=utf-8"
-  );
-
-  toast("Excel uyumlu CSV hazırlandı.");
-
-}
-
-
-function csvCell(v){
-
-  return `"${String(v??"").replaceAll('"','""')}"`;
-
-}
-
-
-/* ============================================================
-   PDF
-   ============================================================ */
-
-function choosePDF(){
-
-  if(db.stations.length===0){
-
-    toast("Terfi yok.");
-
-    return;
-  }
-
-  openModal(
-    "PDF Oluştur",
-    `
-
-      <label>Terfi seçin</label>
-
-      <select id="pdfStation">
-
-        ${db.stations.map(s=>`
-          <option value="${escAttr(s.id)}">
-            ${esc(s.id)} · ${esc(s.name)}
-          </option>
-        `).join("")}
-
-      </select>
-
-      <p class="muted">
-        PDF ekranında tarayıcının "Yazdır → PDF olarak kaydet"
-        seçeneğini kullanabilirsiniz.
-      </p>
-
-    `,
-    `
-      <button class="btn" onclick="closeModal()">Vazgeç</button>
-      <button class="btn btn-primary" onclick="makePDF()">
-        PDF Ekranını Aç
-      </button>
-    `
-  );
-
-}
-
-
-function makePDF(){
-
-  const id=document.getElementById("pdfStation").value;
-
-  closeModal();
-
-  currentStationId=id;
-
-  printStation();
-
-}
-
-
-function printStation(){
-
-  const s=db.stations.find(x=>x.id===currentStationId);
-
-  if(!s)return;
-
-  const w=window.open("","_blank");
-
-  if(!w){
-
-    toast("Tarayıcı yeni pencereyi engelledi.");
-
-    return;
-  }
-
-  w.document.write(`
-
-  <html>
-
-  <head>
-
-    <title>${esc(s.id)} - ${esc(s.name)}</title>
-
-    <style>
-
-      body{
-        font-family:Arial,sans-serif;
-        color:#111;
-        padding:25px;
-      }
-
-      h1{margin-bottom:4px}
-      h2{border-bottom:2px solid #222;padding-bottom:6px}
-      h3{margin-top:20px}
-
-      table{
-        width:100%;
-        border-collapse:collapse;
-        margin:10px 0 20px;
-      }
-
-      th,td{
-        border:1px solid #888;
-        padding:7px;
-        text-align:left;
-      }
-
-      th{
-        background:#eee;
-      }
-
-      .box{
-        border:1px solid #999;
-        padding:15px;
-        margin-bottom:20px;
-      }
-
-      .grid{
-        display:grid;
-        grid-template-columns:1fr 1fr;
-        gap:8px;
-      }
-
-      @media print{
-        body{padding:10mm}
-      }
-
-    </style>
-
-  </head>
-
-  <body>
-
-    <h1>MESKİ - TERFİ ARŞİVİM</h1>
-
-    <p>
-      <strong>${esc(s.id)}</strong> ·
-      ${esc(s.name)}
-    </p>
-
-    <p>
-      ${esc(s.region)} · ${esc(s.address)}
-    </p>
-
-
-    <h2>Terfi Bilgileri</h2>
-
-    <div class="box">
-
-      <div class="grid">
-
-        <div><b>Terfi No:</b> ${esc(s.id)}</div>
-        <div><b>İstasyon:</b> ${esc(s.name)}</div>
-        <div><b>Bölge:</b> ${esc(s.region)}</div>
-        <div><b>Adres:</b> ${esc(s.address)}</div>
-
-      </div>
-
-      <p>${esc(s.description)}</p>
-
-    </div>
-
-
-    <h2>Motor Etiketi</h2>
-
-    <table>
-
-      <tr>
-        <th>Marka</th>
-        <td>${esc(s.motor.marka)}</td>
-        <th>Model</th>
-        <td>${esc(s.motor.model)}</td>
-      </tr>
-
-      <tr>
-        <th>Güç</th>
-        <td>${esc(s.motor.gucHp)} HP / ${esc(s.motor.gucKw)} kW</td>
-        <th>Frekans</th>
-        <td>${esc(s.motor.frekans)} Hz</td>
-      </tr>
-
-      <tr>
-        <th>380 V</th>
-        <td>${esc(s.motor.akim380)} A / ${esc(s.motor.devir380)} RPM / Cosφ ${esc(s.motor.cos380)}</td>
-        <th>400 V</th>
-        <td>${esc(s.motor.akim400)} A / ${esc(s.motor.devir400)} RPM / Cosφ ${esc(s.motor.cos400)}</td>
-      </tr>
-
-      <tr>
-        <th>415 V</th>
-        <td>${esc(s.motor.akim415)} A / ${esc(s.motor.devir415)} RPM / Cosφ ${esc(s.motor.cos415)}</td>
-        <th>IP</th>
-        <td>${esc(s.motor.ip)}</td>
-      </tr>
-
-    </table>
-
-
-    <h2>Pompa Etiketi</h2>
-
-    <table>
-
-      ${[
-        ["Marka",s.pump.marka],
-        ["Model",s.pump.model],
-        ["S/N",s.pump.seriNo],
-        ["Tarih",s.pump.tarih],
-        ["Ü/N",s.pump.urunNo],
-        ["PN",s.pump.pn],
-        ["Q",s.pump.q],
-        ["H",s.pump.h],
-        ["Hmin",s.pump.hmin],
-        ["Hmax",s.pump.hmax],
-        ["Basınç Maks.",s.pump.basinc],
-        ["Sıcaklık",s.pump.sicaklik],
-        ["Gerilim",s.pump.voltaj],
-        ["Güç",s.pump.guc],
-        ["Frekans",s.pump.frekans],
-        ["Akım",s.pump.akim],
-        ["Sınıf",s.pump.sinif],
-        ["IP",s.pump.ip],
-        ["Ağırlık",s.pump.agirlik]
-      ].map(x=>`
-        <tr>
-          <th>${esc(x[0])}</th>
-          <td>${esc(x[1])}</td>
-        </tr>
-      `).join("")}
-
-    </table>
-
-
-    <h2>HMI Ayarları</h2>
-
-    ${Object.keys(s.hmi).map((page,i)=>`
-
-      <h3>HMI Sayfa ${i+1}</h3>
-
-      <table>
-
-        <tr>
-          <th>Başlık</th>
-          <th>Değer</th>
-        </tr>
-
-        ${hmiPages[i+1].map(([key,label])=>`
-
-          <tr>
-            <td>${esc(label)}</td>
-            <td>${esc(page[key])}</td>
-          </tr>
-
-        `).join("")}
-
-      </table>
-
-    `).join("")}
-
-
-    <h2>Ölçümler</h2>
-
-    <table>
-
-      <tr>
-        <th>Tarih</th>
-        <th>Başlık</th>
-        <th>Değer</th>
-        <th>Açıklama</th>
-      </tr>
-
-      ${s.measurements.map(m=>`
-
-        <tr>
-          <td>${formatDate(m.date)}</td>
-          <td>${esc(m.title)}</td>
-          <td>${esc(m.value)} ${esc(m.unit)}</td>
-          <td>${esc(m.detail)}</td>
-        </tr>
-
-      `).join("")}
-
-    </table>
-
-
-    <h2>Arızalar</h2>
-
-    <table>
-
-      <tr>
-        <th>Tarih</th>
-        <th>Arıza</th>
-        <th>Durum</th>
-        <th>Sonuç</th>
-      </tr>
-
-      ${s.faults.map(f=>`
-
-        <tr>
-          <td>${formatDate(f.date)}</td>
-          <td>${esc(f.title)}<br>${esc(f.detail)}</td>
-          <td>${esc(f.status)}</td>
-          <td>${esc(f.solution)}</td>
-        </tr>
-
-      `).join("")}
-
-    </table>
-
-
-    <h2>Bakım</h2>
-
-    <table>
-
-      <tr>
-        <th>Tarih</th>
-        <th>Başlık</th>
-        <th>İşlem</th>
-      </tr>
-
-      ${s.maintenance.map(m=>`
-
-        <tr>
-          <td>${formatDate(m.date)}</td>
-          <td>${esc(m.title)}</td>
-          <td>${esc(m.detail)}</td>
-        </tr>
-
-      `).join("")}
-
-    </table>
-
-
-    <h2>Teknik Notlar</h2>
-
-    ${s.notes.map(n=>`
-
-      <div class="box">
-
-        <b>${esc(n.title)}</b>
-
-        <p>${esc(n.text)}</p>
-
-        <small>${formatDate(n.date)}</small>
-
-      </div>
-
-    `).join("")}
-
-
-    <hr>
-
-    <p>
-      MESKİ Terfi Arşivim · Oluşturulma:
-      ${new Date().toLocaleString("tr-TR")}
-    </p>
-
-
-    <script>
-      window.onload=function(){
-        setTimeout(function(){
-          window.print();
-        },500);
-      };
-    <\/script>
-
-  </body>
-
-  </html>
-
-  `);
-
-  w.document.close();
-
-}
-
-
-/* ============================================================
-   KULLANICILAR
-   ============================================================ */
-
-function renderUsers(){
-
-  document.getElementById("content").innerHTML=`
-
-    <div class="topbar">
-
-      <div class="page-title">
-
-        <h2>👥 Kullanıcılar</h2>
-
-        <p>
-          Kullanıcı yönetimi yalnızca yetkili modda yapılabilir.
-        </p>
-
-      </div>
-
-      ${canEdit()?`
-      <button class="btn btn-primary" onclick="addUser()">
-        ＋ Kullanıcı Ekle
-      </button>`:""}
-
-    </div>
-
-
-    <div class="card card-pad">
-
-      ${!canEdit()?`
-
-        <div class="muted">
-          Kullanıcı yönetimi için 6872 yetkili şifresi gerekir.
-        </div>
-
-      `:`
-
-        <div class="record-list">
-
-          ${db.users.map((u,i)=>`
-
-            <div class="record">
-
-              <div>
-
-                <strong>👤 ${esc(u.username)}</strong>
-
-                <small>
-                  ${esc(u.role)} ·
-                  ${u.active?"Aktif":"Pasif"}
-                </small>
-
-              </div>
-
-              <button
-                class="btn"
-                onclick="editUser(${i})">
-                Düzenle
-              </button>
-
-            </div>
-
-          `).join("")}
-
-        </div>
-
-      `}
-
-    </div>
-
-  `;
-
-}
-
-
-function addUser(){
-
-  if(!canEdit())return;
-
-  db.users.push({
-    username:"",
-    role:"Teknisyen",
-    active:true
-  });
-
-  saveDB();
-
-  editUser(db.users.length-1);
-
-}
-
-
-function editUser(i){
-
-  if(!canEdit())return;
-
-  const u=db.users[i];
-
-  openModal(
-    "Kullanıcı",
-    `
-
-      <label>Kullanıcı Adı</label>
-      <input id="u_name" value="${escAttr(u.username)}">
-
-      <label>Yetki</label>
-
-      <select id="u_role">
-
-        <option ${u.role==="Teknisyen"?"selected":""}>
-          Teknisyen
-        </option>
-
-        <option ${u.role==="İzleyici"?"selected":""}>
-          İzleyici
-        </option>
-
-        <option ${u.role==="Yönetici"?"selected":""}>
-          Yönetici
-        </option>
-
-      </select>
-
-      <label>Durum</label>
-
-      <select id="u_active">
-
-        <option value="1" ${u.active?"selected":""}>
-          Aktif
-        </option>
-
-        <option value="0" ${!u.active?"selected":""}>
-          Pasif
-        </option>
-
-      </select>
-
-    `,
-    `
-      <button class="btn" onclick="closeModal()">Vazgeç</button>
-      <button class="btn btn-primary" onclick="saveUser(${i})">
-        Kaydet
-      </button>
-    `
-  );
-
-}
-
-
-function saveUser(i){
-
-  const u=db.users[i];
-
-  u.username=document.getElementById("u_name").value.trim();
-  u.role=document.getElementById("u_role").value;
-  u.active=document.getElementById("u_active").value==="1";
-
-  saveDB();
-
-  closeModal();
-
-  renderUsers();
-
-  toast("Kullanıcı kaydedildi.");
-
-}
-
-
-/* ============================================================
-   AYARLAR
-   ============================================================ */
-
-function renderSettings(){
-
-  document.getElementById("content").innerHTML=`
-
-    <div class="topbar">
-
-      <div class="page-title">
-
-        <h2>⚙️ Ayarlar</h2>
-
-        <p>Arşiv sistemi ayarları</p>
-
-      </div>
-
-    </div>
-
-
-    <div class="section-grid">
-
-      <div class="card section-card">
-
-        <h3>🔐 Güvenlik</h3>
-
-        <p class="muted">
-          Düzenleme şifresi:
-          <strong>••••</strong>
-        </p>
-
-        <p class="muted">
-          Ziyaretçiler kayıtları değiştiremez.
-        </p>
-
-      </div>
-
-
-      <div class="card section-card">
-
-        <h3>💾 Veri Depolama</h3>
-
-        <p class="muted">
-          Bu test sürümünde veriler tarayıcının
-          LocalStorage alanında tutulmaktadır.
-        </p>
-
-        <strong>
-          ${db.stations.length} terfi
-        </strong>
-
-      </div>
-
-
-      <div class="card section-card">
-
-        <h3>📦 Veri Güvenliği</h3>
-
-        <p class="muted">
-          Düzenli olarak JSON yedeği alın.
-          Merkezi Supabase bağlantısı yapıldığında
-          bu bölüm merkezi yedekleme sistemiyle değiştirilebilir.
-        </p>
-
-        <button class="btn btn-primary" onclick="exportJSON()">
-          Yedek Al
-        </button>
-
-      </div>
-
-
-      <div class="card section-card">
-
-        <h3>♻️ Test Verileri</h3>
-
-        <p class="muted">
-          Bu işlem örnek verileri geri yükler.
-        </p>
-
-        ${canEdit()?`
-        <button class="btn btn-warning" onclick="resetDemo()">
-          Örnek Arşivi Geri Yükle
-        </button>`:""}
-
-      </div>
-
-    </div>
-
-  `;
-
-}
-
-
-function resetDemo(){
-
-  if(!canEdit())return;
-
-  if(!confirm(
-    "Mevcut kayıtlar silinip örnek arşiv yüklenecek. Emin misiniz?"
-  ))return;
-
-  db=initialDB();
-
-  saveDB();
-
-  showPage("dashboard");
-
-  toast("Örnek arşiv yüklendi.");
-
-}
-
-
-/* ============================================================
-   SİLME
-   ============================================================ */
-
-function deleteStation(){
-
-  if(!canEdit())return;
-
-  const s=db.stations.find(x=>x.id===currentStationId);
-
-  const p=prompt(
-    `"${s.id} - ${s.name}" silinecek.\n\nSilmek için yetkili şifreyi girin:`
-  );
-
-  if(p!==PASSWORD){
-
-    if(p!==null)toast("Şifre hatalı.");
-
-    return;
-  }
-
-  db.stations=db.stations.filter(x=>x.id!==currentStationId);
-
-  saveDB();
-
-  toast("Terfi silindi.");
-
-  showPage("stations");
-
-}
-
-
-/* ============================================================
-   MODAL
-   ============================================================ */
-
-function openModal(title,body,foot){
-
-  document.getElementById("modalTitle").textContent=title;
-  document.getElementById("modalBody").innerHTML=body;
-  document.getElementById("modalFoot").innerHTML=foot;
-
-  document.getElementById("modal").classList.remove("hidden");
-
-}
-
-
-function closeModal(){
-
-  document.getElementById("modal").classList.add("hidden");
-
-}
-
-
-/* ============================================================
-   LOG
-   ============================================================ */
-
-function logAction(text){
-
-  db.logs.unshift({
-    date:new Date().toISOString(),
-    text
-  });
-
-  if(db.logs.length>500){
-    db.logs=db.logs.slice(0,500);
-  }
-
-}
-
-
-/* ============================================================
-   YARDIMCI
-   ============================================================ */
-
-function toast(text){
-
-  const t=document.getElementById("toast");
-
-  t.textContent=text;
-
-  t.classList.add("show");
-
-  clearTimeout(window.toastTimer);
-
-  window.toastTimer=setTimeout(()=>{
-    t.classList.remove("show");
-  },2500);
-
-}
-
-
-function formatDate(d){
-
-  if(!d)return"-";
-
-  try{
-
-    return new Date(d).toLocaleString("tr-TR",{
-      day:"2-digit",
-      month:"2-digit",
-      year:"numeric",
-      hour:"2-digit",
-      minute:"2-digit"
-    });
-
-  }catch(e){
-
-    return d;
-
-  }
-
-}
-
-
-function dateFile(){
-
-  return new Date().toISOString()
-    .slice(0,19)
-    .replaceAll(":","-");
-
-}
-
+/* ---------------------------------------------------------
+   HELPERS
+--------------------------------------------------------- */
 
 function esc(value){
 
-  return String(value??"")
-    .replaceAll("&","&amp;")
-    .replaceAll("<","&lt;")
-    .replaceAll(">","&gt;")
-    .replaceAll('"',"&quot;")
-    .replaceAll("'","&#039;");
+if(value===undefined||value===null)return "";
+
+return String(value)
+.replace(/&/g,"&amp;")
+.replace(/</g,"&lt;")
+.replace(/>/g,"&gt;")
+.replace(/"/g,"&quot;")
+.replace(/'/g,"&#039;");
 
 }
 
 
-function escAttr(value){
+function attr(value){
 
-  return esc(value);
-
-}
-
-
-function downloadFile(filename,data,type){
-
-  const blob=new Blob([data],{type});
-
-  const a=document.createElement("a");
-
-  a.href=URL.createObjectURL(blob);
-  a.download=filename;
-
-  document.body.appendChild(a);
-
-  a.click();
-
-  a.remove();
-
-  setTimeout(()=>{
-    URL.revokeObjectURL(a.href);
-  },1000);
+return esc(value);
 
 }
 
 
-/* ============================================================
+function renderCurrent(){
+
+if(state.currentStation){
+
+const s=state.stations.find(x=>x.id===state.currentStation);
+
+if(s){
+
+    renderStationDetail(s);
+    return;
+
+}
+
+}
+
+renderHome();
+
+}
+
+
+/* ---------------------------------------------------------
    BAŞLANGIÇ
-   ============================================================ */
+--------------------------------------------------------- */
 
-document.getElementById("loginPassword")
-  .addEventListener("keydown",e=>{
+loadData();
 
-    if(e.key==="Enter"){
-      loginEdit();
-    }
+updateMode();
 
-  });
+renderHome();
 
 </script>
 
