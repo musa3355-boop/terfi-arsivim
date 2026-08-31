@@ -3,662 +3,443 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-
 <meta name="theme-color" content="#07111f">
 
-<title>Terfi Arşivim • Teknisyen Musa Er</title>
+<title>Terfi Arşivim • Musa Er</title>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.2/dist/jspdf.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jspdf-autotable@3.8.2/dist/jspdf.plugin.autotable.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 
 <style>
 
 :root{
- --bg:#06101d;
- --panel:#0b1b2d;
- --panel2:#0e2238;
- --line:#1c3955;
- --text:#f4f7fb;
- --muted:#9eafc3;
- --blue:#2997ff;
- --cyan:#29d7ff;
- --green:#35d07f;
- --red:#ff5d6c;
- --orange:#ffad42;
- --shadow:0 18px 50px #0008;
+--bg:#06111f;
+--card:#0c1d30;
+--card2:#10263c;
+--line:#23415d;
+--text:#f5f8fc;
+--muted:#93a7bb;
+--blue:#2997ff;
+--cyan:#2bd9ff;
+--green:#35d07f;
+--red:#ff6573;
+--orange:#ffb04d;
 }
 
-*{
- box-sizing:border-box;
-}
-
-html{
- scroll-behavior:smooth;
-}
+*{box-sizing:border-box}
 
 body{
- margin:0;
- min-height:100vh;
- background:
- radial-gradient(circle at 15% 0%,#123b61 0,transparent 32%),
- radial-gradient(circle at 100% 20%,#073a55 0,transparent 28%),
- var(--bg);
- color:var(--text);
- font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+margin:0;
+background:
+radial-gradient(circle at 10% 0%,#123a5b,transparent 32%),
+var(--bg);
+color:var(--text);
+font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
 }
 
-button,
-input,
-textarea,
-select{
- font:inherit;
-}
+button,input,textarea,select{font:inherit}
 
 button{
- cursor:pointer;
+border:0;
+cursor:pointer;
+color:white;
+background:#16304a;
+border-radius:13px;
+padding:12px 15px;
+font-weight:800;
 }
 
-.app{
- width:min(1180px,100%);
- margin:auto;
- padding:18px;
-}
-
-.header{
- display:flex;
- align-items:center;
- justify-content:space-between;
- gap:15px;
- margin-bottom:20px;
-}
-
-.brand{
- display:flex;
- align-items:center;
- gap:14px;
-}
-
-.logo{
- width:58px;
- height:58px;
- border-radius:18px;
- display:grid;
- place-items:center;
- font-size:30px;
- background:linear-gradient(135deg,#2997ff,#39d7d1);
- box-shadow:0 10px 30px #0005;
-}
-
-.brand h1{
- margin:0;
- font-size:25px;
-}
-
-.brand p{
- margin:4px 0 0;
- color:var(--muted);
- font-size:14px;
-}
-
-.technician{
- text-align:right;
- color:#91a7bd;
- font-size:13px;
-}
-
-.hero{
- position:relative;
- overflow:hidden;
- min-height:285px;
- padding:35px;
- border:1px solid #284b6a;
- border-radius:28px;
- background:
- linear-gradient(90deg,#071522e8,#071522aa),
- url("https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=1400&q=80")
- center/cover;
- box-shadow:var(--shadow);
- margin-bottom:18px;
-}
-
-.hero:after{
- content:"";
- position:absolute;
- inset:0;
- background:linear-gradient(120deg,transparent,#2997ff0c,transparent);
- pointer-events:none;
-}
-
-.hero small{
- color:var(--cyan);
- font-weight:800;
- letter-spacing:2px;
-}
-
-.hero h2{
- position:relative;
- z-index:1;
- max-width:720px;
- font-size:46px;
- line-height:1.05;
- margin:12px 0;
-}
-
-.hero p{
- position:relative;
- z-index:1;
- max-width:720px;
- color:#c0ccda;
- font-size:18px;
- line-height:1.7;
- margin:0;
-}
-
-.toolbar{
- display:flex;
- gap:10px;
- flex-wrap:wrap;
- margin-bottom:16px;
-}
-
-.search{
- flex:1 1 280px;
-}
-
-input,
-textarea,
-select{
- width:100%;
- border:1px solid #274663;
- border-radius:14px;
- background:#081a2b;
- color:var(--text);
- padding:14px;
- outline:none;
-}
-
-input:focus,
-textarea:focus,
-select:focus{
- border-color:var(--blue);
- box-shadow:0 0 0 3px #2997ff22;
-}
-
-textarea{
- min-height:120px;
- resize:vertical;
-}
-
-button{
- border:0;
- border-radius:14px;
- padding:13px 17px;
- font-weight:800;
- color:white;
- background:#183049;
-}
-
-button:hover{
- filter:brightness(1.12);
-}
+button:hover{filter:brightness(1.12)}
 
 .primary{
- background:linear-gradient(135deg,#168cff,#2997ff);
+background:linear-gradient(135deg,#168cff,#2997ff);
 }
 
 .green{
- background:linear-gradient(135deg,#20b86b,#35d07f);
+background:#116f43;
 }
 
 .danger{
- background:#54202a;
- color:#ff9aa4;
+background:#55232b;
+color:#ffabb3;
 }
 
-.secondary{
- background:#10263c;
- border:1px solid #284965;
+.app{
+width:min(1150px,100%);
+margin:auto;
+padding:15px;
+}
+
+.header{
+display:flex;
+justify-content:space-between;
+align-items:center;
+margin-bottom:16px;
+}
+
+.brand{
+display:flex;
+gap:12px;
+align-items:center;
+}
+
+.logo{
+width:54px;
+height:54px;
+border-radius:17px;
+display:grid;
+place-items:center;
+font-size:28px;
+background:linear-gradient(135deg,#2997ff,#34d7d0);
+}
+
+.brand h1{
+margin:0;
+font-size:24px;
+}
+
+.brand p{
+margin:3px 0 0;
+color:var(--muted);
+font-size:13px;
+}
+
+.tech{
+text-align:right;
+color:var(--muted);
+font-size:12px;
+}
+
+.hero{
+padding:30px;
+border-radius:26px;
+margin-bottom:16px;
+border:1px solid #2a4c69;
+background:
+linear-gradient(90deg,#06121eee,#07182dcc),
+url("https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=1400&q=80")
+center/cover;
+}
+
+.hero small{
+color:var(--cyan);
+font-weight:900;
+letter-spacing:2px;
+}
+
+.hero h2{
+font-size:40px;
+max-width:700px;
+line-height:1.1;
+margin:10px 0;
+}
+
+.hero p{
+color:#bdcad8;
+font-size:17px;
+line-height:1.6;
+max-width:700px;
+}
+
+.toolbar{
+display:flex;
+gap:9px;
+flex-wrap:wrap;
+margin-bottom:15px;
+}
+
+.search{
+flex:1 1 280px;
+}
+
+input,textarea,select{
+width:100%;
+padding:13px;
+border-radius:12px;
+border:1px solid #294964;
+background:#081827;
+color:white;
+outline:none;
+}
+
+textarea{
+min-height:110px;
+resize:vertical;
+}
+
+input:focus,textarea:focus,select:focus{
+border-color:var(--blue);
+box-shadow:0 0 0 3px #2997ff22;
 }
 
 .stats{
- display:grid;
- grid-template-columns:repeat(4,1fr);
- gap:14px;
- margin:16px 0 22px;
+display:grid;
+grid-template-columns:repeat(4,1fr);
+gap:11px;
+margin:14px 0 22px;
 }
 
 .stat{
- padding:22px;
- border:1px solid var(--line);
- border-radius:22px;
- background:linear-gradient(145deg,#0c2034,#081728);
-}
-
-.stat .icon{
- font-size:25px;
+padding:18px;
+border-radius:18px;
+border:1px solid var(--line);
+background:var(--card);
 }
 
 .stat strong{
- display:block;
- font-size:30px;
- margin:7px 0;
+display:block;
+font-size:28px;
+margin:5px 0;
 }
 
 .stat span{
- color:var(--muted);
-}
-
-.section-title{
- display:flex;
- align-items:center;
- justify-content:space-between;
- gap:10px;
- margin:25px 0 12px;
-}
-
-.section-title h2{
- margin:0;
- font-size:22px;
-}
-
-.section-title span{
- color:var(--muted);
- font-size:13px;
+color:var(--muted);
+font-size:13px;
 }
 
 .grid{
- display:grid;
- grid-template-columns:repeat(2,1fr);
- gap:14px;
-}
-
-.grid3{
- display:grid;
- grid-template-columns:repeat(3,1fr);
- gap:14px;
+display:grid;
+grid-template-columns:repeat(2,1fr);
+gap:13px;
 }
 
 .card{
- background:linear-gradient(145deg,#0b1c2e,#081726);
- border:1px solid var(--line);
- border-radius:22px;
- padding:20px;
- box-shadow:0 10px 30px #0003;
+background:linear-gradient(145deg,#0c1e31,#081827);
+border:1px solid var(--line);
+border-radius:20px;
+padding:18px;
+margin-bottom:13px;
 }
 
-.station-card{
- cursor:pointer;
- transition:.18s;
+.station{
+cursor:pointer;
+transition:.15s;
 }
 
-.station-card:hover{
- transform:translateY(-2px);
- border-color:#3575a6;
+.station:hover{
+transform:translateY(-2px);
+border-color:#397bab;
 }
 
-.station-top{
- display:flex;
- justify-content:space-between;
- gap:10px;
- align-items:flex-start;
+.station h3{
+margin:10px 0 5px;
+font-size:21px;
 }
 
-.station-icon{
- width:48px;
- height:48px;
- display:grid;
- place-items:center;
- border-radius:15px;
- background:#102a43;
- font-size:25px;
+.no{
+color:var(--cyan);
+font-weight:800;
 }
 
-.station-card h3{
- margin:12px 0 5px;
- font-size:21px;
-}
-
-.station-no{
- color:var(--cyan);
- font-weight:800;
-}
-
-.address{
- color:#aebdcd;
- line-height:1.5;
+.muted{
+color:var(--muted);
 }
 
 .badges{
- display:flex;
- flex-wrap:wrap;
- gap:7px;
- margin-top:15px;
+display:flex;
+gap:7px;
+flex-wrap:wrap;
+margin-top:12px;
 }
 
 .badge{
- padding:7px 10px;
- border-radius:999px;
- background:#10273c;
- color:#aec0d2;
- font-size:12px;
-}
-
-.empty{
- text-align:center;
- padding:40px;
- color:var(--muted);
-}
-
-.detail-head{
- display:flex;
- align-items:flex-start;
- justify-content:space-between;
- gap:15px;
- margin:15px 0;
-}
-
-.detail-title h2{
- margin:0 0 5px;
- font-size:30px;
-}
-
-.detail-title p{
- margin:0;
- color:var(--muted);
+padding:6px 9px;
+border-radius:999px;
+background:#112b43;
+color:#aec2d6;
+font-size:11px;
 }
 
 .tabs{
- display:flex;
- gap:8px;
- overflow-x:auto;
- padding-bottom:4px;
- margin:18px 0;
+display:flex;
+gap:7px;
+overflow:auto;
+margin:16px 0;
+padding-bottom:5px;
+position:sticky;
+top:0;
+z-index:5;
+background:#06111fe8;
+backdrop-filter:blur(12px);
 }
 
 .tabs button{
- white-space:nowrap;
+white-space:nowrap;
 }
 
-.tab-active{
- background:linear-gradient(135deg,#168cff,#29b9ff);
+.active{
+background:linear-gradient(135deg,#168cff,#2bc5ff);
+}
+
+.formgrid{
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:11px;
 }
 
 .field{
- margin-bottom:13px;
+margin-bottom:11px;
 }
 
 .field label{
- display:block;
- margin-bottom:7px;
- color:#b9c9d9;
- font-size:13px;
- font-weight:800;
+display:block;
+font-size:12px;
+font-weight:800;
+color:#b9c9d9;
+margin-bottom:6px;
 }
 
-.field small{
- display:block;
- color:#71869b;
- margin-top:5px;
+.section{
+margin:18px 0 9px;
+display:flex;
+justify-content:space-between;
+align-items:center;
 }
 
-.form-card h3{
- margin-top:0;
+.section h2,.section h3{
+margin:0;
+}
+
+.empty{
+text-align:center;
+padding:35px;
+color:var(--muted);
+}
+
+.item{
+border-top:1px solid #1c354c;
+padding:14px 0;
+}
+
+.item:first-child{
+border-top:0;
 }
 
 .actions{
- display:flex;
- flex-wrap:wrap;
- gap:9px;
- margin-top:15px;
-}
-
-.photo-grid{
- display:grid;
- grid-template-columns:repeat(3,1fr);
- gap:12px;
-}
-
-.photo{
- position:relative;
- border-radius:16px;
- overflow:hidden;
- border:1px solid var(--line);
- background:#06111e;
-}
-
-.photo img{
- width:100%;
- height:190px;
- display:block;
- object-fit:cover;
-}
-
-.photo .caption{
- padding:9px;
- font-size:12px;
- color:#aebdcd;
-}
-
-.photo button{
- position:absolute;
- right:8px;
- top:8px;
- padding:7px 9px;
-}
-
-.hmi-group{
- margin-bottom:22px;
-}
-
-.hmi-group h3{
- margin:0 0 12px;
- color:#dce8f4;
-}
-
-.hmi-grid{
- display:grid;
- grid-template-columns:repeat(3,1fr);
- gap:11px;
-}
-
-.number-field{
- position:relative;
-}
-
-.number-field input{
- padding-right:55px;
-}
-
-.unit{
- position:absolute;
- right:12px;
- bottom:14px;
- color:#7189a0;
- font-size:12px;
-}
-
-.connection{
- padding:15px;
- border:1px solid var(--line);
- border-radius:16px;
- background:#091a2b;
- margin-bottom:10px;
-}
-
-.connection strong{
- display:block;
- margin-bottom:5px;
-}
-
-.connection span{
- color:var(--muted);
- font-size:13px;
-}
-
-.footer{
- margin:35px 0 10px;
- padding:20px;
- text-align:center;
- border-top:1px solid #19334c;
- color:#70859a;
-}
-
-.footer strong{
- color:#aabbd0;
-}
-
-.loading{
- text-align:center;
- padding:60px 20px;
- color:#9eb1c5;
-}
-
-.spinner{
- width:35px;
- height:35px;
- border:3px solid #24425d;
- border-top-color:var(--blue);
- border-radius:50%;
- margin:0 auto 15px;
- animation:spin 1s linear infinite;
-}
-
-@keyframes spin{
- to{transform:rotate(360deg)}
+display:flex;
+gap:8px;
+flex-wrap:wrap;
+margin-top:12px;
 }
 
 .notice{
- padding:13px 15px;
- border-radius:14px;
- background:#10273b;
- border:1px solid #214661;
- color:#abc0d3;
- margin:12px 0;
+padding:13px;
+border-radius:13px;
+background:#102a40;
+border:1px solid #234a67;
+color:#b5c9da;
+margin:10px 0;
 }
 
 .notice.warning{
- background:#392719;
- border-color:#704b27;
- color:#ffd39a;
+background:#382919;
+border-color:#684a28;
+color:#ffd39a;
 }
 
-.modal{
- position:fixed;
- inset:0;
- background:#000b;
- display:none;
- align-items:center;
- justify-content:center;
- padding:18px;
- z-index:100;
+.hmi-screen{
+background:#02070b;
+border:1px solid #315773;
+border-radius:17px;
+padding:14px;
+margin-bottom:15px;
 }
 
-.modal.show{
- display:flex;
+.hmi-title{
+text-align:center;
+font-weight:900;
+color:#9be7ff;
+margin-bottom:13px;
 }
 
-.modal-box{
- width:min(650px,100%);
- max-height:90vh;
- overflow:auto;
- background:#0a1b2c;
- border:1px solid #31516d;
- border-radius:24px;
- padding:22px;
- box-shadow:var(--shadow);
+.hmi-grid{
+display:grid;
+grid-template-columns:repeat(3,1fr);
+gap:9px;
 }
 
-.modal-head{
- display:flex;
- justify-content:space-between;
- align-items:center;
- margin-bottom:15px;
+.hmi-field{
+position:relative;
 }
 
-.modal-head h2{
- margin:0;
+.hmi-field input{
+padding-right:45px;
 }
 
-.close{
- background:#1b3045;
- border-radius:50%;
- width:42px;
- height:42px;
- padding:0;
+.unit{
+position:absolute;
+right:10px;
+bottom:13px;
+font-size:11px;
+color:#7189a0;
 }
 
-@media(max-width:850px){
-
- .stats{
-  grid-template-columns:repeat(2,1fr);
- }
-
- .grid3,
- .hmi-grid{
-  grid-template-columns:repeat(2,1fr);
- }
-
- .photo-grid{
-  grid-template-columns:repeat(2,1fr);
- }
-
- .hero h2{
-  font-size:36px;
- }
-
+.compare{
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:10px;
 }
 
-@media(max-width:600px){
+.compare-box{
+background:#081827;
+border:1px solid var(--line);
+padding:12px;
+border-radius:13px;
+}
 
- .app{
-  padding:12px;
- }
+.compare-box b{
+font-size:18px;
+display:block;
+}
 
- .header{
-  align-items:flex-start;
- }
+table{
+width:100%;
+border-collapse:collapse;
+font-size:12px;
+}
 
- .technician{
-  display:none;
- }
+th,td{
+padding:8px;
+border-bottom:1px solid #203a51;
+text-align:left;
+}
 
- .hero{
-  min-height:270px;
-  padding:25px 20px;
- }
+th{
+color:#9fc8e9;
+}
 
- .hero h2{
-  font-size:31px;
- }
+.footer{
+text-align:center;
+padding:30px 0 10px;
+color:#60778e;
+font-size:12px;
+}
 
- .hero p{
-  font-size:16px;
- }
+.loading{
+text-align:center;
+padding:50px;
+color:var(--muted);
+}
 
- .grid,
- .grid3,
- .hmi-grid{
-  grid-template-columns:1fr;
- }
+@media(max-width:800px){
 
- .stats{
-  grid-template-columns:1fr 1fr;
- }
+.stats{
+grid-template-columns:1fr 1fr;
+}
 
- .stat{
-  padding:15px;
- }
+.grid,.formgrid,.hmi-grid{
+grid-template-columns:1fr;
+}
 
- .stat strong{
-  font-size:25px;
- }
+.hero h2{
+font-size:31px;
+}
 
- .photo-grid{
-  grid-template-columns:1fr;
- }
-
- .detail-head{
-  flex-direction:column;
- }
+.tech{
+display:none;
+}
 
 }
 
@@ -677,60 +458,33 @@ button:hover{
 
 <div>
 <h1>Terfi Arşivim</h1>
-<p>Saha teknik kayıt sistemi</p>
+<p>Saha teknik arşiv sistemi</p>
 </div>
 
 </div>
 
-<div class="technician">
-TEKNİSYEN<br>
-<strong>Musa Er</strong>
+<div class="tech">
+ELEKTRİK • OTOMASYON • MEKANİK<br>
+<strong>Teknisyen Musa Er</strong>
 </div>
 
 </header>
 
-<div id="app">
-
-<div class="loading">
-<div class="spinner"></div>
-Arşiv yükleniyor...
-</div>
-
-</div>
+<div id="app"></div>
 
 <footer class="footer">
-<strong>Terfi Arşivim</strong> • Elektrik / Otomasyon / Mekanik Saha Arşivi
+Terfi Arşivim • Merkezi Teknik Arşiv
 <br>
-Teknisyen <strong>Musa Er</strong>
+Teknisyen Musa Er
 </footer>
 
 </div>
 
-
-<div id="modal" class="modal">
-
-<div class="modal-box">
-
-<div class="modal-head">
-
-<h2 id="modalTitle">Yeni Terfi İstasyonu</h2>
-
-<button class="close" onclick="closeModal()">×</button>
-
-</div>
-
-<div id="modalBody"></div>
-
-</div>
-
-</div>
-
-
 <script>
 
-/* =========================================================
+/* =====================================================
    SUPABASE
-========================================================= */
+===================================================== */
 
 const SUPABASE_URL =
 "https://vthjqdlsijdvvlegpqrg.supabase.co";
@@ -738,2156 +492,3010 @@ const SUPABASE_URL =
 const SUPABASE_KEY =
 "sb_publishable_pJrgD6-8p-SOxTu8bP02Ag_Cv5InPtB";
 
-const db = supabase.createClient(
+const db=supabase.createClient(
 SUPABASE_URL,
 SUPABASE_KEY
 );
 
 
-/* =========================================================
+/* =====================================================
    GLOBAL
-========================================================= */
+===================================================== */
 
-let terfiler = [];
-let current = null;
-let activeTab = "genel";
-let searchText = "";
+let terfiler=[];
+let current=null;
+let activeTab="genel";
+let hmiScreen=1;
+let hmiCurrent={};
 
 
-/* =========================================================
-   YARDIMCI
-========================================================= */
+/* =====================================================
+   HELPERS
+===================================================== */
 
-function esc(value){
+function esc(v){
 
- return String(value ?? "")
- .replace(/&/g,"&amp;")
- .replace(/</g,"&lt;")
- .replace(/>/g,"&gt;")
- .replace(/"/g,"&quot;")
- .replace(/'/g,"&#039;");
+return String(v??"")
+.replace(/&/g,"&amp;")
+.replace(/</g,"&lt;")
+.replace(/>/g,"&gt;")
+.replace(/"/g,"&quot;")
+.replace(/'/g,"&#039;");
+
+}
+
+function fmt(date){
+
+if(!date)return"";
+
+return new Date(date).toLocaleString(
+"tr-TR",
+{
+dateStyle:"short",
+timeStyle:"short"
+}
+);
+
+}
+
+function loading(text){
+
+document.getElementById("app").innerHTML=
+`<div class="loading">${esc(text)}</div>`;
 
 }
 
 
-function showLoading(text="Yükleniyor..."){
+/* =====================================================
+   ANA YÜKLEME
+===================================================== */
 
- document.getElementById("app").innerHTML=`
+async function load(){
 
- <div class="loading">
+loading("Merkezi arşiv yükleniyor...");
 
- <div class="spinner"></div>
+const {data,error}=await db
+.from("terfiler")
+.select("*")
+.order("terfi_no");
 
- ${esc(text)}
+if(error){
 
- </div>
+document.getElementById("app").innerHTML=`
 
- `;
+<div class="card">
+
+<h2>⚠️ Supabase bağlantı hatası</h2>
+
+<p>${esc(error.message)}</p>
+
+<div class="notice warning">
+
+Uygulama veritabanına bağlanamadı.
+
+</div>
+
+</div>`;
+
+return;
+}
+
+terfiler=data||[];
+
+home();
 
 }
 
 
-function closeModal(){
-
- document.getElementById("modal").classList.remove("show");
-
-}
-
-
-function openModal(title,body){
-
- document.getElementById("modalTitle").textContent=title;
-
- document.getElementById("modalBody").innerHTML=body;
-
- document.getElementById("modal").classList.add("show");
-
-}
-
-
-/* =========================================================
-   TERFİLER
-========================================================= */
-
-async function loadTerfiler(){
-
- showLoading("Saha arşivi yükleniyor...");
-
- const {data,error}=await db
- .from("terfiler")
- .select("*")
- .order("terfi_no");
-
- if(error){
-
-   document.getElementById("app").innerHTML=`
-
-   <div class="card">
-
-   <h2>⚠️ Veritabanı bağlantı hatası</h2>
-
-   <p>${esc(error.message)}</p>
-
-   <div class="notice warning">
-
-   Supabase bağlantısını kontrol et.
-
-   </div>
-
-   </div>
-
-   `;
-
-   return;
- }
-
- terfiler=data||[];
-
- renderHome();
-
-}
-
-
-/* =========================================================
+/* =====================================================
    ANA SAYFA
-========================================================= */
+===================================================== */
 
-function renderHome(){
+function home(){
 
- const filtered=terfiler.filter(t=>{
+document.getElementById("app").innerHTML=`
 
-   const text=(
+<div class="hero">
 
-    (t.ad||"")+" "+
-    (t.terfi_no||"")+" "+
-    (t.adres||"")+" "+
-    (t.aciklama||"")
+<small>MERKEZİ SAHA TEKNİK ARŞİVİ</small>
 
-   ).toLocaleLowerCase("tr-TR");
+<h2>İstasyon bilgisini kaybetme.</h2>
 
-   return text.includes(searchText.toLocaleLowerCase("tr-TR"));
+<p>
+Motor, pompa, sürücü, HMI ayarları, pano,
+ölçüm, bakım ve arıza kayıtlarını tek merkezde tut.
+</p>
 
- });
-
-
- document.getElementById("app").innerHTML=`
-
- <section class="hero">
-
- <small>SAHA TEKNİK ARŞİVİ</small>
-
- <h2>İstasyon bilgisini kaybetme.</h2>
-
- <p>
- Motor, pompa, sürücü, HMI ayarları, pano bağlantıları,
- ölçümler ve saha fotoğraflarını tek istasyonda sakla.
- </p>
-
- </section>
+</div>
 
 
- <div class="toolbar">
+<div class="toolbar">
 
- <input
- class="search"
- id="searchInput"
- placeholder="İstasyon adı, terfi no veya adres ara..."
- value="${esc(searchText)}"
- >
+<input
+class="search"
+id="search"
+placeholder="Terfi, istasyon veya adres ara..."
+>
 
- <button class="primary" onclick="newTerfi()">
- ＋ Yeni Terfi İstasyonu
- </button>
+<button class="primary"
+onclick="newTerfi()">
+＋ Yeni Terfi
+</button>
 
- </div>
+<button
+onclick="exportAllExcel()">
+📊 Excel
+</button>
 
+<button
+onclick="backupJSON()">
+💾 Yedek
+</button>
 
- <div class="stats">
-
- <div class="stat">
- <div class="icon">🏭</div>
- <strong>${terfiler.length}</strong>
- <span>Terfi istasyonu</span>
- </div>
-
- <div class="stat">
- <div class="icon">⚡</div>
- <strong id="motorCount">—</strong>
- <span>Motor</span>
- </div>
-
- <div class="stat">
- <div class="icon">💧</div>
- <strong id="pumpCount">—</strong>
- <span>Pompa</span>
- </div>
-
- <div class="stat">
- <div class="icon">🛠️</div>
- <strong>${terfiler.length}</strong>
- <span>Aktif arşiv</span>
- </div>
-
- </div>
+</div>
 
 
- <div class="section-title">
+<div class="stats">
 
- <h2>İstasyonlar</h2>
+<div class="stat">
+<strong>${terfiler.length}</strong>
+<span>Terfi</span>
+</div>
 
- <span>${filtered.length} kayıt gösteriliyor</span>
+<div class="stat">
+<strong id="motorTotal">...</strong>
+<span>Motor</span>
+</div>
 
- </div>
+<div class="stat">
+<strong id="pumpTotal">...</strong>
+<span>Pompa</span>
+</div>
 
+<div class="stat">
+<strong>☁️</strong>
+<span>Supabase Merkez</span>
+</div>
 
- <div id="stationList" class="grid"></div>
-
- `;
-
-
- document.getElementById("searchInput").addEventListener(
- "input",
- e=>{
-   searchText=e.target.value;
-   renderHome();
-   document.getElementById("searchInput").focus();
- }
- );
-
-
- const list=document.getElementById("stationList");
+</div>
 
 
- if(!filtered.length){
+<div class="section">
+<h2>🏭 İstasyonlar</h2>
+<span class="muted">${terfiler.length} kayıt</span>
+</div>
 
-   list.innerHTML=`
+<div id="list" class="grid"></div>
 
-   <div class="card empty" style="grid-column:1/-1">
+`;
 
-   🔎 Kayıt bulunamadı.
+document.getElementById("search").oninput=e=>
+drawList(e.target.value);
 
-   </div>
+drawList("");
 
-   `;
-
- }else{
-
-   list.innerHTML=filtered.map(t=>`
-
-   <div class="card station-card"
-   onclick="openTerfi('${esc(t.id)}')">
-
-   <div class="station-top">
-
-   <div>
-
-   <div class="station-no">
-   ${esc(t.terfi_no)}
-   </div>
-
-   <h3>
-   🏭 ${esc(t.ad||"İsimsiz İstasyon")}
-   </h3>
-
-   </div>
-
-   <div class="station-icon">⚡</div>
-
-   </div>
-
-   <div class="address">
-   ${esc(t.adres||"Adres girilmedi")}
-   </div>
-
-   <div class="badges">
-
-   <span class="badge">⚡ Motor</span>
-   <span class="badge">💧 Pompa</span>
-   <span class="badge">🎛️ Sürücü</span>
-   <span class="badge">🖥️ HMI</span>
-
-   </div>
-
-   </div>
-
-   `).join("");
-
- }
-
- loadQuickStats();
+quickStats();
 
 }
 
 
-async function loadQuickStats(){
+function drawList(q){
 
- const motor=db.from("motorlar").select("id",{count:"exact",head:true});
- const pump=db.from("pompalar").select("id",{count:"exact",head:true});
+q=(q||"").toLocaleLowerCase("tr-TR");
 
- const [m,p]=await Promise.all([motor,pump]);
+const rows=terfiler.filter(t=>
 
- const motorEl=document.getElementById("motorCount");
- const pumpEl=document.getElementById("pumpCount");
+(
+(t.terfi_no||"")+" "+
+(t.ad||"")+" "+
+(t.adres||"")+" "+
+(t.bolge||"")
+)
+.toLocaleLowerCase("tr-TR")
+.includes(q)
 
- if(motorEl)motorEl.textContent=m.count ?? 0;
- if(pumpEl)pumpEl.textContent=p.count ?? 0;
+);
+
+const el=document.getElementById("list");
+
+if(!rows.length){
+
+el.innerHTML=
+`<div class="card empty" style="grid-column:1/-1">
+Kayıt bulunamadı.
+</div>`;
+
+return;
+}
+
+el.innerHTML=rows.map(t=>`
+
+<div class="card station"
+onclick="openTerfi('${esc(t.id)}')">
+
+<div class="no">
+${esc(t.terfi_no||t.kod||"")}
+</div>
+
+<h3>
+🏭 ${esc(t.ad||"İsimsiz İstasyon")}
+</h3>
+
+<div class="muted">
+📍 ${esc(t.adres||"Adres girilmedi")}
+</div>
+
+<div class="badges">
+
+<span class="badge">⚡ Motor</span>
+<span class="badge">💧 Pompa</span>
+<span class="badge">🎛️ Sürücü</span>
+<span class="badge">🖥️ HMI</span>
+
+</div>
+
+</div>
+
+`).join("");
 
 }
 
 
-/* =========================================================
+async function quickStats(){
+
+const [m,p]=await Promise.all([
+
+db.from("motorlar")
+.select("id",{count:"exact",head:true}),
+
+db.from("pompalar")
+.select("id",{count:"exact",head:true})
+
+]);
+
+const a=document.getElementById("motorTotal");
+const b=document.getElementById("pumpTotal");
+
+if(a)a.textContent=m.count??0;
+if(b)b.textContent=p.count??0;
+
+}
+
+
+/* =====================================================
    YENİ TERFİ
-========================================================= */
+===================================================== */
 
 function newTerfi(){
 
- const nextNo="T"+String(terfiler.length+1).padStart(3,"0");
+const no=
+"T"+
+String(terfiler.length+1)
+.padStart(3,"0");
 
- openModal(
- "Yeni Terfi İstasyonu",
- `
+const name=prompt(
+"Terfi / istasyon adı:"
+);
 
- <div class="field">
- <label>Terfi No</label>
- <input id="newNo" value="${nextNo}">
- </div>
+if(!name)return;
 
- <div class="field">
- <label>Terfi İstasyonu Adı</label>
- <input id="newName" placeholder="Örn. Dalgıç 3">
- </div>
+const address=prompt(
+"Adres / bölge:"
+)||"";
 
- <div class="field">
- <label>Adres / Bölge</label>
- <input id="newAddress" placeholder="Örn. Şebeke - Yeni Mahalle">
- </div>
-
- <div class="field">
- <label>Açıklama</label>
- <textarea id="newDescription"
- placeholder="İstasyon hakkında teknik not..."></textarea>
- </div>
-
- <div class="actions">
-
- <button class="primary" onclick="createTerfi()">
- 💾 İstasyonu Kaydet
- </button>
-
- <button class="secondary" onclick="closeModal()">
- Vazgeç
- </button>
-
- </div>
-
- `);
+createTerfi(no,name,address);
 
 }
 
 
-async function createTerfi(){
+async function createTerfi(no,name,address){
 
- const payload={
+const {data,error}=await db
+.from("terfiler")
+.insert({
 
-   terfi_no:document.getElementById("newNo").value.trim(),
+terfi_no:no,
+ad:name,
+adres:address,
+aciklama:""
 
-   ad:document.getElementById("newName").value.trim(),
+})
+.select()
+.single();
 
-   adres:document.getElementById("newAddress").value.trim(),
+if(error){
 
-   aciklama:document.getElementById("newDescription").value.trim()
+alert(error.message);
+return;
 
- };
+}
 
+terfiler.push(data);
 
- if(!payload.terfi_no || !payload.ad){
-
-   alert("Terfi No ve Terfi Adı zorunludur.");
-
-   return;
-
- }
-
-
- const {data,error}=await db
- .from("terfiler")
- .insert(payload)
- .select()
- .single();
-
-
- if(error){
-
-   alert(error.message);
-
-   return;
-
- }
-
-
- closeModal();
-
- terfiler.unshift(data);
-
- openTerfi(data.id);
+openTerfi(data.id);
 
 }
 
 
-/* =========================================================
+/* =====================================================
    TERFİ DETAY
-========================================================= */
+===================================================== */
 
-async function openTerfi(id){
+function openTerfi(id){
 
- current=terfiler.find(x=>String(x.id)===String(id));
+current=
+terfiler.find(x=>String(x.id)===String(id));
 
- if(!current){
+if(!current)return;
 
-   alert("İstasyon bulunamadı.");
+activeTab="genel";
 
-   return;
-
- }
-
- activeTab="genel";
-
- renderDetail();
+detail();
 
 }
 
 
-function renderDetail(){
+function detail(){
 
- document.getElementById("app").innerHTML=`
+document.getElementById("app").innerHTML=`
 
- <button class="secondary"
- onclick="loadTerfiler()">
- ← İstasyonlara dön
- </button>
-
-
- <div class="detail-head">
-
- <div class="detail-title">
-
- <h2>🏭 ${esc(current.ad||"İsimsiz")}</h2>
-
- <p>
- ${esc(current.terfi_no)}
- • ${esc(current.adres||"Adres girilmedi")}
- </p>
-
- </div>
+<button onclick="home()">
+← İstasyonlara dön
+</button>
 
 
- <div class="actions">
+<div class="section">
 
- <button class="primary"
- onclick="saveGeneral()">
- 💾 Değişiklikleri kaydet
- </button>
+<div>
 
- </div>
+<h2>
+🏭 ${esc(current.ad)}
+</h2>
 
- </div>
+<div class="muted">
+${esc(current.terfi_no)}
+ • ${esc(current.adres||"")}
+</div>
 
+</div>
 
- <div class="tabs">
-
- ${tabButton("genel","📋 Genel")}
- ${tabButton("motor","⚡ Motorlar")}
- ${tabButton("pompa","💧 Pompalar")}
- ${tabButton("surucu","🎛️ Sürücüler")}
- ${tabButton("hmi","🖥️ HMI Ayarları")}
- ${tabButton("pano","🔌 Pano / Bağlantılar")}
- ${tabButton("olcum","📏 Ölçümler")}
- ${tabButton("foto","📷 Saha Fotoğrafları")}
- ${tabButton("bakim","🛠️ Bakım / Arıza")}
-
- </div>
+</div>
 
 
- <div id="detailContent"></div>
+<div class="tabs">
 
- `;
+${tab("genel","📋 Genel")}
+${tab("motor","⚡ Motor")}
+${tab("pompa","💧 Pompa")}
+${tab("surucu","🎛️ Sürücü")}
+${tab("hmi","🖥️ HMI Ayarları")}
+${tab("anlik","📟 Anlık Veriler")}
+${tab("pano","🔌 Pano")}
+${tab("olcum","📏 Ölçüm")}
+${tab("bakim","🛠️ Bakım")}
+${tab("ariza","⚠️ Arıza")}
+${tab("gecmis","🕘 Geçmiş")}
+${tab("rapor","📄 PDF / Dışa Aktar")}
 
+</div>
 
- renderTab();
+<div id="content"></div>
+
+`;
+
+renderTab();
 
 }
 
 
-function tabButton(id,text){
+function tab(id,text){
 
- return `
+return`
 
- <button
- class="${activeTab===id?"tab-active":""}"
- onclick="setTab('${id}')">
+<button
+class="${activeTab===id?"active":""}"
+onclick="switchTab('${id}')">
 
- ${text}
+${text}
 
- </button>
+</button>
 
- `;
+`;
 
 }
 
 
-function setTab(tab){
+function switchTab(tabName){
 
- activeTab=tab;
+activeTab=tabName;
 
- renderDetail();
+detail();
 
 }
 
 
 function renderTab(){
 
- const el=document.getElementById("detailContent");
+const el=document.getElementById("content");
 
- if(activeTab==="genel") renderGeneral(el);
- if(activeTab==="motor") renderMotor(el);
- if(activeTab==="pompa") renderPompa(el);
- if(activeTab==="surucu") renderSurucu(el);
- if(activeTab==="hmi") renderHMI(el);
- if(activeTab==="pano") renderPano(el);
- if(activeTab==="olcum") renderOlcum(el);
- if(activeTab==="foto") renderPhotos(el);
- if(activeTab==="bakim") renderMaintenance(el);
+if(activeTab==="genel")general(el);
+if(activeTab==="motor")motor(el);
+if(activeTab==="pompa")pump(el);
+if(activeTab==="surucu")drive(el);
+if(activeTab==="hmi")hmi(el);
+if(activeTab==="anlik")instant(el);
+if(activeTab==="pano")panel(el);
+if(activeTab==="olcum")measurement(el);
+if(activeTab==="bakim")maintenance(el);
+if(activeTab==="ariza")fault(el);
+if(activeTab==="gecmis")history(el);
+if(activeTab==="rapor")reports(el);
 
 }
 
 
-/* =========================================================
+/* =====================================================
    GENEL
-========================================================= */
+===================================================== */
 
-function renderGeneral(el){
+function general(el){
 
- el.innerHTML=`
+el.innerHTML=`
 
- <div class="grid">
+<div class="card">
 
- <div class="card form-card">
+<h3>📋 İstasyon Bilgileri</h3>
 
- <h3>📋 İstasyon Bilgileri</h3>
+<div class="formgrid">
 
- <div class="field">
- <label>Terfi No</label>
- <input id="generalNo" value="${esc(current.terfi_no)}">
- </div>
+<div class="field">
+<label>Terfi No</label>
+<input id="gNo" value="${esc(current.terfi_no||"")}">
+</div>
 
- <div class="field">
- <label>Terfi İstasyonu</label>
- <input id="generalName" value="${esc(current.ad)}">
- </div>
+<div class="field">
+<label>İstasyon Adı</label>
+<input id="gName" value="${esc(current.ad||"")}">
+</div>
 
- <div class="field">
- <label>Adres</label>
- <input id="generalAddress" value="${esc(current.adres||"")}">
- </div>
+</div>
 
- <div class="field">
- <label>Açıklama</label>
- <textarea id="generalDescription">${esc(current.aciklama||"")}</textarea>
- </div>
+<div class="field">
+<label>Bölge</label>
+<input id="gRegion" value="${esc(current.bolge||"")}">
+</div>
 
- <button class="primary"
- onclick="saveGeneral()">
- 💾 Bilgileri Kaydet
- </button>
+<div class="field">
+<label>Adres</label>
+<input id="gAddress" value="${esc(current.adres||"")}">
+</div>
 
- </div>
+<div class="field">
+<label>Genel Teknik Not</label>
+<textarea id="gNote">${esc(current.aciklama||"")}</textarea>
+</div>
+
+<button class="primary"
+onclick="saveGeneral()">
+💾 Kaydet
+</button>
+
+</div>
 
 
- <div class="card">
+<div class="grid">
 
- <h3>👨‍🔧 Teknisyen Kaydı</h3>
+<div class="card">
 
- <div class="notice">
+<h3>⚡ Elektrik</h3>
 
- Bu arşiv <strong>Teknisyen Musa Er</strong>
- tarafından saha ekipmanlarının teknik bilgilerinin
- kayıt altında tutulması amacıyla oluşturulmuştur.
+<p class="muted">
+Motor • Sürücü • Pano • Kablo • Ölçüm
+</p>
 
- </div>
+</div>
 
- <div class="connection">
- <strong>⚡ Elektrik</strong>
- <span>Motor, sürücü, pano ve enerji bilgileri</span>
- </div>
+<div class="card">
 
- <div class="connection">
- <strong>💧 Mekanik</strong>
- <span>Pompa ve saha ekipmanları</span>
- </div>
+<h3>🖥️ Otomasyon</h3>
 
- <div class="connection">
- <strong>🖥️ Otomasyon</strong>
- <span>HMI, PLC, sensör ve parametre ayarları</span>
- </div>
+<p class="muted">
+HMI • PLC • Sensör • Parametre • Anlık veriler
+</p>
 
- <div class="connection">
- <strong>📷 Saha</strong>
- <span>Fotoğraf ve bakım geçmişi</span>
- </div>
+</div>
 
- </div>
+</div>
 
- </div>
 
- `;
+<div class="card">
+
+<h3>🛡️ Arşiv Güvenliği</h3>
+
+<div class="notice">
+
+Ana kayıtlar Supabase üzerinde tutulur.
+Telefonun tarayıcı hafızasına güvenilmez.
+
+</div>
+
+<div class="notice">
+
+📄 PDF = teknik belge<br>
+📊 Excel = rapor / dış yedek<br>
+💾 JSON = tam veri yedeği
+
+</div>
+
+</div>
+
+`;
+
 
 }
 
 
 async function saveGeneral(){
 
- const payload={
+const old={...current};
 
-   terfi_no:document.getElementById("generalNo").value.trim(),
+const payload={
 
-   ad:document.getElementById("generalName").value.trim(),
+terfi_no:
+document.getElementById("gNo").value.trim(),
 
-   adres:document.getElementById("generalAddress").value.trim(),
+ad:
+document.getElementById("gName").value.trim(),
 
-   aciklama:document.getElementById("generalDescription").value.trim()
+bolge:
+document.getElementById("gRegion").value.trim(),
 
- };
+adres:
+document.getElementById("gAddress").value.trim(),
 
+aciklama:
+document.getElementById("gNote").value.trim()
 
- const {data,error}=await db
- .from("terfiler")
- .update(payload)
- .eq("id",current.id)
- .select()
- .single();
+};
 
+const {data,error}=await db
+.from("terfiler")
+.update(payload)
+.eq("id",current.id)
+.select()
+.single();
 
- if(error){
+if(error){
 
-   alert(error.message);
+alert(error.message);
+return;
 
-   return;
+}
 
- }
+current=data;
 
+const i=terfiler.findIndex(x=>x.id===current.id);
 
- current=data;
+if(i>=0)terfiler[i]=data;
 
- const index=terfiler.findIndex(x=>x.id===current.id);
+await logChange(
+"terfi",
+current.id,
+"güncelleme",
+old,
+data
+);
 
- if(index>=0)terfiler[index]=current;
+alert("İstasyon kaydedildi.");
 
- alert("İstasyon bilgileri kaydedildi.");
-
- renderDetail();
+detail();
 
 }
 
 
-/* =========================================================
+/* =====================================================
    MOTOR
-========================================================= */
+===================================================== */
 
-const motorFields=[
+async function motor(el){
 
- ["ad","Motor Adı"],
- ["marka_model","Marka / Model"],
- ["guc","Güç"],
- ["gerilim","Gerilim"],
- ["akim","Akım"],
- ["devir","Devir"],
- ["seri_no","Seri No"],
- ["notlar","Teknik Notlar"]
+const {data,error}=await db
+.from("motorlar")
+.select("*")
+.eq("terfi_id",current.id)
+.order("created_at",{ascending:false});
 
-];
+if(error){
 
-
-async function renderMotor(el){
-
- el.innerHTML=`<div class="loading">Motor kayıtları yükleniyor...</div>`;
-
- const {data,error}=await db
- .from("motorlar")
- .select("*")
- .eq("terfi_id",current.id)
- .order("created_at",{ascending:false});
-
-
- if(error){
-
-   el.innerHTML=errorBox(error);
-
-   return;
-
- }
-
-
- el.innerHTML=`
-
- <div class="card form-card">
-
- <h3>⚡ Yeni Motor</h3>
-
- <div class="grid">
-
- ${motorFields.map(f=>fieldHTML(
-   "motor_"+f[0],
-   f[1],
-   "",
-   ["notlar"].includes(f[0])
- )).join("")}
-
- </div>
-
- <button class="primary"
- onclick="addMotor()">
- ＋ Motoru Kaydet
- </button>
-
- </div>
-
-
- <div class="section-title">
-
- <h2>Kayıtlı Motorlar</h2>
-
- <span>${data.length} motor</span>
-
- </div>
-
-
- <div class="grid">
-
- ${data.length
- ?data.map(m=>`
-
- <div class="card">
-
- <h3>⚡ ${esc(m.ad||"Motor")}</h3>
-
- <p class="station-no">
- ${esc(m.marka_model||"Model belirtilmedi")}
- </p>
-
- <div class="badges">
-
- <span class="badge">
- ${esc(m.guc||"—")}
- </span>
-
- <span class="badge">
- ${esc(m.gerilim||"—")}
- </span>
-
- <span class="badge">
- ${esc(m.akim||"—")}
- </span>
-
- <span class="badge">
- ${esc(m.devir||"—")}
- </span>
-
- </div>
-
- <div class="notice">
- Seri No: ${esc(m.seri_no||"—")}
- </div>
-
- <button class="danger"
- onclick="deleteEquipment('motorlar','${esc(m.id)}')">
- Sil
- </button>
-
- </div>
-
- `).join("")
- :`<div class="card empty" style="grid-column:1/-1">Henüz motor kaydı yok.</div>`
- }
-
- </div>
-
- `;
+el.innerHTML=err(error);
+return;
 
 }
 
+el.innerHTML=`
 
-function fieldHTML(id,label,value="",textarea=false){
+<div class="card">
 
- return `
+<h3>⚡ Motor Etiketi</h3>
 
- <div class="field">
+${input("mAd","Motor Adı")}
+${input("mMarka","Marka")}
+${input("mModel","Model")}
+${input("mSeri","Seri No")}
 
- <label>${esc(label)}</label>
+<div class="formgrid">
 
- ${textarea
- ?`<textarea id="${esc(id)}"
- placeholder="${esc(label)}">${esc(value)}</textarea>`
- :`<input id="${esc(id)}"
- placeholder="${esc(label)}"
- value="${esc(value)}">`
- }
+${input("mKw","Güç kW")}
+${input("mHp","Güç HP")}
+${input("mV","Gerilim V")}
+${input("mA","Nominal Akım A")}
+${input("mHz","Frekans Hz")}
+${input("mRpm","Devir RPM")}
+${input("mCos","Cos φ")}
 
- </div>
+</div>
 
- `;
+${textarea("mNote","Etiket / teknik not")}
+
+<button class="primary"
+onclick="addMotor()">
+＋ Motoru Kaydet
+</button>
+
+</div>
+
+
+<div class="section">
+<h2>Motorlar</h2>
+<span class="muted">${data.length}</span>
+</div>
+
+<div class="grid">
+
+${data.map(x=>`
+
+<div class="card">
+
+<h3>
+⚡ ${esc(x.ad||x.marka||"Motor")}
+</h3>
+
+<div class="badges">
+
+<span class="badge">
+${esc(x.guc||x.guc_kw||"")} kW
+</span>
+
+<span class="badge">
+${esc(x.gerilim||x.gerilim_v||"")} V
+</span>
+
+<span class="badge">
+${esc(x.akim||x.nominal_akim_a||"")} A
+</span>
+
+<span class="badge">
+${esc(x.devir||x.devir_rpm||"")} RPM
+</span>
+
+</div>
+
+<p class="muted">
+${esc(x.marka_model||x.marka||"")}
+</p>
+
+<button class="danger"
+onclick="del('motorlar','${esc(x.id)}')">
+Sil
+</button>
+
+</div>
+
+`).join("")}
+
+</div>
+
+`;
 
 }
 
 
 async function addMotor(){
 
- const record={terfi_id:current.id};
+const record={
 
- motorFields.forEach(f=>{
+terfi_id:current.id,
 
-   record[f[0]]=document
-   .getElementById("motor_"+f[0])
-   .value.trim();
+ad:val("mAd"),
 
- });
+marka:val("mMarka"),
 
+model:val("mModel"),
 
- const {error}=await db
- .from("motorlar")
- .insert(record);
+seri_no:val("mSeri"),
 
+guc_kw:num("mKw"),
 
- if(error){
+guc_hp:num("mHp"),
 
-   alert(error.message);
+gerilim_v:num("mV"),
 
-   return;
+nominal_akim_a:num("mA"),
 
- }
+frekans_hz:num("mHz"),
 
+devir_rpm:num("mRpm"),
 
- renderMotor(document.getElementById("detailContent"));
+cos_phi:num("mCos"),
+
+etiket_notu:val("mNote")
+
+};
+
+const {error}=await db
+.from("motorlar")
+.insert(record);
+
+if(error){
+
+alert(error.message);
+return;
+
+}
+
+alert("Motor kaydedildi.");
+
+motor(document.getElementById("content"));
 
 }
 
 
-/* =========================================================
+/* =====================================================
    POMPA
-========================================================= */
+===================================================== */
 
-const pumpFields=[
+async function pump(el){
 
- ["ad","Pompa Adı"],
- ["marka_model","Marka / Model"],
- ["debi","Debi"],
- ["basma_yuksekligi","Basma Yüksekliği"],
- ["guc","Güç"],
- ["notlar","Teknik Notlar"]
+const {data,error}=await db
+.from("pompalar")
+.select("*")
+.eq("terfi_id",current.id)
+.order("created_at",{ascending:false});
 
-];
+if(error){
 
+el.innerHTML=err(error);
+return;
 
-async function renderPompa(el){
+}
 
- el.innerHTML=`<div class="loading">Pompa kayıtları yükleniyor...</div>`;
+el.innerHTML=`
 
- const {data,error}=await db
- .from("pompalar")
- .select("*")
- .eq("terfi_id",current.id)
- .order("created_at",{ascending:false});
+<div class="card">
 
+<h3>💧 Pompa Etiketi</h3>
 
- if(error){
+${input("pAd","Pompa Adı")}
+${input("pMarka","Marka")}
+${input("pModel","Model")}
+${input("pTip","Tip")}
+${input("pSeri","Seri No")}
 
-   el.innerHTML=errorBox(error);
+<div class="formgrid">
 
-   return;
+${input("pKw","Güç kW")}
+${input("pHp","Güç HP")}
+${input("pQmin","Q Min m³/h")}
+${input("pQmax","Q Max m³/h")}
+${input("pHmin","H Min m")}
+${input("pHmax","H Max m")}
 
- }
+</div>
 
+${textarea("pNote","Etiket / teknik not")}
 
- el.innerHTML=`
+<button class="primary"
+onclick="addPump()">
+＋ Pompayı Kaydet
+</button>
 
- <div class="card form-card">
-
- <h3>💧 Yeni Pompa</h3>
-
- ${pumpFields.map(f=>fieldHTML(
- "pump_"+f[0],
- f[1],
- "",
- f[0]==="notlar"
- )).join("")}
-
- <button class="primary"
- onclick="addPump()">
- ＋ Pompayı Kaydet
- </button>
-
- </div>
+</div>
 
 
- <div class="section-title">
+<div class="section">
+<h2>Pompalar</h2>
+<span class="muted">${data.length}</span>
+</div>
 
- <h2>Kayıtlı Pompalar</h2>
+<div class="grid">
 
- <span>${data.length} pompa</span>
+${data.map(x=>`
 
- </div>
+<div class="card">
 
+<h3>
+💧 ${esc(x.ad||x.marka||"Pompa")}
+</h3>
 
- <div class="grid">
+<p class="muted">
+${esc(x.marka_model||x.marka||"")}
+</p>
 
- ${data.length
- ?data.map(p=>`
+<div class="badges">
 
- <div class="card">
+<span class="badge">
+${esc(x.debi||x.q_max_m3h||"")} m³/h
+</span>
 
- <h3>💧 ${esc(p.ad||"Pompa")}</h3>
+<span class="badge">
+${esc(x.basma_yuksekligi||x.h_max_m||"")} m
+</span>
 
- <p class="station-no">
- ${esc(p.marka_model||"Model belirtilmedi")}
- </p>
+<span class="badge">
+${esc(x.guc||x.guc_kw||"")} kW
+</span>
 
- <div class="badges">
+</div>
 
- <span class="badge">Debi: ${esc(p.debi||"—")}</span>
+<button class="danger"
+onclick="del('pompalar','${esc(x.id)}')">
+Sil
+</button>
 
- <span class="badge">
- Basma: ${esc(p.basma_yuksekligi||"—")}
- </span>
+</div>
 
- <span class="badge">
- Güç: ${esc(p.guc||"—")}
- </span>
+`).join("")}
 
- </div>
+</div>
 
- <button class="danger"
- onclick="deleteEquipment('pompalar','${esc(p.id)}')">
- Sil
- </button>
-
- </div>
-
- `).join("")
- :`<div class="card empty" style="grid-column:1/-1">Henüz pompa kaydı yok.</div>`
- }
-
- </div>
-
- `;
+`;
 
 }
 
 
 async function addPump(){
 
- const record={terfi_id:current.id};
+const record={
 
- pumpFields.forEach(f=>{
+terfi_id:current.id,
 
-   record[f[0]]=document
-   .getElementById("pump_"+f[0])
-   .value.trim();
+ad:val("pAd"),
 
- });
+marka:val("pMarka"),
 
+model:val("pModel"),
 
- const {error}=await db
- .from("pompalar")
- .insert(record);
+tip:val("pTip"),
 
+seri_no:val("pSeri"),
 
- if(error){
+guc_kw:num("pKw"),
 
-   alert(error.message);
+guc_hp:num("pHp"),
 
-   return;
+q_min_m3h:num("pQmin"),
 
- }
+q_max_m3h:num("pQmax"),
 
+h_min_m:num("pHmin"),
 
- renderPompa(document.getElementById("detailContent"));
+h_max_m:num("pHmax"),
+
+etiket_notu:val("pNote")
+
+};
+
+const {error}=await db
+.from("pompalar")
+.insert(record);
+
+if(error){
+
+alert(error.message);
+return;
+
+}
+
+alert("Pompa kaydedildi.");
+
+pump(document.getElementById("content"));
 
 }
 
 
-/* =========================================================
+/* =====================================================
    SÜRÜCÜ
-========================================================= */
+===================================================== */
 
-const driveFields=[
+async function drive(el){
 
- ["ad","Sürücü Adı"],
- ["marka","Marka"],
- ["model","Model"],
- ["guc","Güç"],
- ["gerilim","Gerilim"],
- ["parametreler","Parametre / Ayar Notları"],
- ["ariza_kayitlari","Arıza Kayıtları"],
- ["notlar","Teknik Notlar"]
+const {data,error}=await db
+.from("suruculer")
+.select("*")
+.eq("terfi_id",current.id)
+.order("created_at",{ascending:false});
 
-];
+if(error){
 
+el.innerHTML=err(error);
+return;
 
-async function renderSurucu(el){
+}
 
- el.innerHTML=`<div class="loading">Sürücü kayıtları yükleniyor...</div>`;
+el.innerHTML=`
 
- const {data,error}=await db
- .from("suruculer")
- .select("*")
- .eq("terfi_id",current.id)
- .order("created_at",{ascending:false});
+<div class="card">
 
+<h3>🎛️ Sürücü</h3>
 
- if(error){
+${input("dAd","Sürücü Adı")}
 
-   el.innerHTML=errorBox(error);
+${input("dBrand","Marka")}
 
-   return;
+${input("dModel","Model")}
 
- }
+${input("dSerial","Seri No")}
 
+<div class="formgrid">
 
- el.innerHTML=`
+${input("dPower","Güç kW")}
 
- <div class="card">
+${input("dVoltage","Besleme / Gerilim")}
 
- <h3>🎛️ Yeni Sürücü</h3>
+</div>
 
- ${driveFields.map(f=>fieldHTML(
- "drive_"+f[0],
- f[1],
- "",
- ["parametreler","ariza_kayitlari","notlar"].includes(f[0])
- )).join("")}
+${textarea("dParam","Parametreler")}
 
- <button class="primary"
- onclick="addDrive()">
- ＋ Sürücüyü Kaydet
- </button>
+${textarea("dFault","Sürücü arıza kayıtları")}
 
- </div>
+${textarea("dNote","Teknik not")}
+
+<button class="primary"
+onclick="addDrive()">
+＋ Sürücüyü Kaydet
+</button>
+
+</div>
 
 
- <div class="section-title">
+<div class="grid">
 
- <h2>Sürücüler</h2>
+${data.map(x=>`
 
- <span>${data.length} kayıt</span>
+<div class="card">
 
- </div>
+<h3>
+🎛️ ${esc(x.ad||x.marka||"Sürücü")}
+</h3>
 
+<p class="no">
+${esc(x.marka||"")}
+ ${esc(x.model||"")}
+</p>
 
- <div class="grid">
+<div class="badges">
 
- ${data.length
- ?data.map(d=>`
+<span class="badge">
+${esc(x.guc||x.guc_kw||"")} kW
+</span>
 
- <div class="card">
+<span class="badge">
+${esc(x.gerilim||x.besleme_v||"")}
+</span>
 
- <h3>🎛️ ${esc(d.ad||"Sürücü")}</h3>
+</div>
 
- <p class="station-no">
- ${esc(d.marka||"")} ${esc(d.model||"")}
- </p>
+<button class="danger"
+onclick="del('suruculer','${esc(x.id)}')">
+Sil
+</button>
 
- <div class="badges">
+</div>
 
- <span class="badge">
- Güç: ${esc(d.guc||"—")}
- </span>
+`).join("")}
 
- <span class="badge">
- Gerilim: ${esc(d.gerilim||"—")}
- </span>
+</div>
 
- </div>
-
- <div class="notice">
- Parametre notları:
- <br>
- ${esc(d.parametreler||"Kayıt yok")}
- </div>
-
- <button class="danger"
- onclick="deleteEquipment('suruculer','${esc(d.id)}')">
- Sil
- </button>
-
- </div>
-
- `).join("")
- :`<div class="card empty" style="grid-column:1/-1">Henüz sürücü kaydı yok.</div>`
- }
-
- </div>
-
- `;
+`;
 
 }
 
 
 async function addDrive(){
 
- const record={terfi_id:current.id};
+const record={
 
- driveFields.forEach(f=>{
+terfi_id:current.id,
 
-   record[f[0]]=document
-   .getElementById("drive_"+f[0])
-   .value.trim();
+ad:val("dAd"),
 
- });
+marka:val("dBrand"),
 
+model:val("dModel"),
 
- const {error}=await db
- .from("suruculer")
- .insert(record);
+seri_no:val("dSerial"),
 
+guc:val("dPower"),
 
- if(error){
+gerilim:val("dVoltage"),
 
-   alert(error.message);
+parametreler:val("dParam"),
 
-   return;
+ariza_kayitlari:val("dFault"),
 
- }
+notlar:val("dNote")
 
+};
 
- renderSurucu(document.getElementById("detailContent"));
+const {error}=await db
+.from("suruculer")
+.insert(record);
+
+if(error){
+
+alert(error.message);
+return;
+
+}
+
+alert("Sürücü kaydedildi.");
+
+drive(document.getElementById("content"));
 
 }
 
 
-/* =========================================================
-   HMI AYARLARI
-========================================================= */
+/* =====================================================
+   HMI
+===================================================== */
 
-const hmiSections={
+const hmiScreens={
 
- "Motor Bilgileri":[
+1:{
+name:"Basınç Koruma",
+fields:[
+["dusuk_min","Alçak Basınç Koruması Min.","bar"],
+["pompa_giris","Pompa Giriş Basıncı","bar"],
+["yuksek_max","Yüksek Basınç Max.","bar"],
+["dusuk_giris","Alçak Basınç Girme","sn"],
+["yuksek_giris","Yüksek Basınç Girme","sn"],
+["dusuk_cikis","Alçak Basınç Çıkma","sn"],
+["yuksek_cikis","Yüksek Basınç Çıkma","sn"]
+]
+},
 
-  ["motor_voltage","Motor Voltajı","V"],
-  ["motor_current","Motor Akımı","A"],
-  ["motor_power","Motor Gücü","kW"],
-  ["motor_frequency","Motor Frekansı","Hz"],
-  ["motor_rpm","Motor Devir","RPM"],
-  ["nominal_current","Nominal Akım ×1.5","A"],
-  ["sensor_ai1_min","Sensör [AI1] Min.",""],
-  ["sensor_ai1_max","Sensör [AI1] Maks.",""],
-  ["sensor_ai2_min","Sensör [AI2] Min.",""],
-  ["sensor_ai2_max","Sensör [AI2] Maks.",""]
+2:{
+name:"Röle / Çalışma",
+fields:[
+["role1","Röle 1",""],
+["role2","Röle 2",""],
+["role3","Röle 3",""],
+["role4","Röle 4",""],
+["dijital","Dijital Röle",""],
+["kilitleme","Kilitleme DI1-DI5",""],
+["calisma","Çalışma Süresi","h"],
+["oto_aralik","Otomatik Değişim",""],
+["oto_seviye","Oto Değişim Seviyesi","%"]
+]
+},
 
- ],
+3:{
+name:"Motor / Sensör",
+fields:[
+["termik","Motor Termik Kontrol",""],
+["reset","Oto Reset Sayısı",""],
+["reset_sure","Toplam Reset Süresi","sn"],
+["sensor_hata","Sensör Hata",""],
+["ai1_min","AI1 Min. Kalibrasyon",""],
+["ai1_max","AI1 Max. Kalibrasyon",""],
+["sensor_tipi","Sensör Tipi",""],
+["sensor_port","Sensör Port",""],
+["asiri_akim","Aşırı Akım",""],
+["asiri_gerilim","Aşırı Gerilim",""],
+["dusuk_gerilim","Düşük Gerilim",""],
+["toprak","Toprak Hata",""]
+]
+},
 
- "Hız / PID / Çalışma":[
+4:{
+name:"Motor / PID",
+fields:[
+["motor_voltaj","Motor Voltaj","V"],
+["motor_akim","Motor Akım","A"],
+["motor_guc","Motor Güç","kW"],
+["motor_frekans","Motor Frekans","Hz"],
+["motor_devir","Motor Devir","RPM"],
+["ai1_min","AI1 Min.",""],
+["ai1_max","AI1 Maks.",""],
+["ai2_min","AI2 Min.",""],
+["ai2_max","AI2 Maks.",""],
+["rampa_hiz","Hızlanma Rampası","sn"],
+["rampa_yavas","Yavaşlama Rampası","sn"],
+["pid","PID Kazanç",""],
+["osilasyon","Osilasyon",""],
+["ters_duz","Ters / Düz",""]
+]
+},
 
-  ["min_frequency","Minimum Frekans","Hz"],
-  ["max_frequency","Maksimum Frekans","Hz"],
-  ["min_frequency_1","Minimum Frekans 1","Hz"],
-  ["max_frequency_1","Maksimum Frekans 1","Hz"],
-  ["min_frequency_2","Minimum Frekans 2","Hz"],
-  ["max_frequency_2","Maksimum Frekans 2","Hz"],
-  ["min_frequency_3","Minimum Frekans 3","Hz"],
-  ["max_frequency_3","Maksimum Frekans 3","Hz"],
-  ["acceleration_ramp","Hızlanma Rampası","sn"],
-  ["deceleration_ramp","Yavaşlama Rampası","sn"],
-  ["pid_gain","PID Kazanç",""],
-  ["oscillation","Osilasyon",""],
-  ["reverse_forward","Ters / Düz Çalıştırma",""]
-
- ],
-
- "Basınç Koruma":[
-
-  ["low_pressure_min","Alçak Basınç Koruması Min.","bar"],
-  ["pump_inlet_pressure","Alçak Basınç Pompa Giriş Basıncı","bar"],
-  ["high_pressure_max","Yüksek Basınç Koruması Max.","bar"],
-  ["low_pressure_enter","Alçak Basınç Koruma Girme Zamanı","sn"],
-  ["high_pressure_enter","Yüksek Basınç Koruma Girme Zamanı","sn"],
-  ["low_pressure_exit","Alçak Basınç Koruma Çıkma Zamanı","sn"],
-  ["high_pressure_exit","Yüksek Basınç Koruma Çıkma Zamanı","sn"]
-
- ],
-
- "Röle / Dijital Giriş":[
-
-  ["relay_1","Röle 1 Yapılandırma",""],
-  ["relay_2","Röle 2 Yapılandırma",""],
-  ["relay_3","Röle 3 Yapılandırma",""],
-  ["relay_4","Röle 4 Yapılandırma",""],
-  ["digital_relay","Dijital Röle",""],
-  ["lock_di","Kilitleme [DI1-DI5]",""],
-  ["sensor_port","Sensör Giriş Port",""],
-  ["sensor_fault","Sensör Giriş Hata",""],
-  ["panel_fault","Panel Hata",""]
-
- ],
-
- "Koruma / Hata":[
-
-  ["motor_thermal","Motor Termik Kontrol",""],
-  ["auto_reset_count","Oto. Reset Sayısı",""],
-  ["total_reset_time","Top. Reset Süresi","sn"],
-  ["reset_delay","Reset Gecikme Süresi","sn"],
-  ["sensor_fault_2","Sensör Hata",""],
-  ["overcurrent","Aşırı Akım",""],
-  ["overvoltage","Aşırı Gerilim",""],
-  ["undervoltage","Düşük Gerilim",""],
-  ["ground_fault","Toprak Hata",""]
-
- ],
-
- "Pompa Sistemi":[
-
-  ["total_motor_count","Top. Motor Sayısı",""],
-  ["aux_motor_count","Yard. Motor Sayısı",""],
-  ["auto_change_interval","Otomatik Değişim Aralığı",""],
-  ["auto_change_level","Oto Değişim Seviyesi","%"],
-  ["sleep_cancel","Uyku İptal",""],
-  ["sleep_time","Uyku Zamanı","sn"],
-  ["wake_time","Uyanma Süresi","sn"],
-  ["max_wait_time","Maks. Frekans Bekleme Süresi","sn"],
-  ["aux_stop_time","Yard. Motor Stop Zamanı","sn"]
-
- ],
-
- "Sensör / Kalibrasyon":[
-
-  ["sensor_type","Sensör Tipi",""],
-  ["sensor_min_calibration","[AI1] Min. Sensör Kalibrasyonu",""],
-  ["sensor_max_calibration","[AI1] Max. Sensör Kalibrasyonu",""],
-  ["sensor2_min_calibration","[AI2] Min. Sensör Kalibrasyonu",""],
-  ["sensor2_max_calibration","[AI2] Max. Sensör Kalibrasyonu",""],
-  ["setpoint_selection","Set Değer Seçimi",""],
-  ["sensor_range_min","Min. Sensör Range",""],
-  ["sensor_range_max","Max. Sensör Range",""]
-
- ]
+5:{
+name:"Frekans / Motor",
+fields:[
+["min_frekans","Minimum Frekans","Hz"],
+["max_frekans","Maksimum Frekans","Hz"],
+["min_f1","Minimum Frekans 1","Hz"],
+["max_f1","Maksimum Frekans 1","Hz"],
+["min_f2","Minimum Frekans 2","Hz"],
+["max_f2","Maksimum Frekans 2","Hz"],
+["min_f3","Minimum Frekans 3","Hz"],
+["max_f3","Maksimum Frekans 3","Hz"],
+["tolerans","Tolerans","bar"],
+["top_motor","Toplam Motor",""],
+["uyanma","Uyanma Süresi","sn"],
+["bekleme","Maks. Bekleme","sn"],
+["yard_stop","Yardımcı Stop","sn"],
+["uyku","Uyku Zamanı","sn"]
+]
+}
 
 };
 
 
-function hmiKey(){
+async function hmi(el){
 
- return "terfi_hmi_"+String(current.id);
+el.innerHTML=`
 
-}
+<div class="notice">
 
+🖥️ <strong>HMI / PLC Ayar Arşivi</strong><br><br>
 
-function getHmiData(){
+Her ekran ayrı tutulur. Kaydettiğin her değer
+Supabase'de merkezi arşive gider.
 
- try{
+</div>
 
-   return JSON.parse(
-    localStorage.getItem(hmiKey())||"{}"
-   );
+<div class="tabs">
 
- }catch(e){
+${Object.keys(hmiScreens).map(n=>`
 
-   return {};
+<button
+class="${Number(n)===hmiScreen?"active":""}"
+onclick="selectHMI(${n})">
 
- }
+Ekran ${n}
 
-}
+</button>
 
+`).join("")}
 
-function renderHMI(el){
+</div>
 
- const saved=getHmiData();
+<div id="hmiBox"></div>
 
- el.innerHTML=`
+<div id="hmiHistory"></div>
 
- <div class="notice">
+`;
 
- 🖥️ <strong>HMI / PLC Ayar Arşivi</strong>
-
- <br><br>
-
- Buraya sahada HMI ekranında gördüğün
- <strong>tüm sayısal değerleri</strong> yazabilirsin.
-
- <br>
-
- Bu bölüm özellikle parametrelerin kaybolmaması
- için istasyon bazında tutulur.
-
- </div>
-
-
- ${Object.entries(hmiSections).map(([section,fields])=>`
-
- <div class="card hmi-group">
-
- <h3>${esc(section)}</h3>
-
- <div class="hmi-grid">
-
- ${fields.map(f=>`
-
- <div class="field number-field">
-
- <label>${esc(f[1])}</label>
-
- <input
- id="hmi_${esc(f[0])}"
- inputmode="decimal"
- value="${esc(saved[f[0]]||"")}"
- placeholder="Değer">
-
- ${f[2]?`<span class="unit">${esc(f[2])}</span>`:""}
-
- </div>
-
- `).join("")}
-
- </div>
-
- </div>
-
- `).join("")}
-
-
- <div class="actions">
-
- <button class="primary"
- onclick="saveHMI()">
- 💾 HMI Ayarlarını Kaydet
- </button>
-
- <button class="secondary"
- onclick="clearHMI()">
- 🗑️ Bu İstasyonun HMI Arşivini Temizle
- </button>
-
- </div>
-
- `;
+drawHMI();
 
 }
 
 
-function saveHMI(){
+function selectHMI(n){
 
- const data={};
+hmiScreen=n;
 
- Object.values(hmiSections).forEach(fields=>{
-
-   fields.forEach(f=>{
-
-     const input=document.getElementById("hmi_"+f[0]);
-
-     if(input){
-       data[f[0]]=input.value.trim();
-     }
-
-   });
-
- });
-
-
- localStorage.setItem(
-  hmiKey(),
-  JSON.stringify(data)
- );
-
-
- alert("HMI ayarları kaydedildi.");
+drawHMI();
 
 }
 
 
-function clearHMI(){
+function drawHMI(){
 
- if(!confirm("Bu istasyonun HMI ayarları silinsin mi?"))
- return;
+const box=document.getElementById("hmiBox");
 
- localStorage.removeItem(hmiKey());
+if(!box)return;
 
- renderHMI(document.getElementById("detailContent"));
+const s=hmiScreens[hmiScreen];
 
-}
+box.innerHTML=`
 
+<div class="hmi-screen">
 
-/* =========================================================
-   PANO / BAĞLANTILAR
-========================================================= */
+<div class="hmi-title">
+EKRAN ${hmiScreen} • ${esc(s.name)}
+</div>
 
-function renderPano(el){
+<div class="hmi-grid">
 
- const key="terfi_pano_"+current.id;
+${s.fields.map(f=>`
 
- const saved=JSON.parse(
- localStorage.getItem(key)||"{}"
- );
+<div class="hmi-field">
 
+<label class="field">
 
- el.innerHTML=`
+${esc(f[1])}
 
- <div class="notice">
+</label>
 
- 🔌 Bu bölümde panodaki bağlantı ve saha kablolama
- bilgilerini istasyon bazında saklayabilirsin.
+<input
+id="hmi_${esc(f[0])}"
+inputmode="decimal"
+placeholder="Değer">
 
- </div>
+${f[2]?`<span class="unit">${esc(f[2])}</span>`:""}
 
+</div>
 
- <div class="card">
+`).join("")}
 
- <h3>⚡ Enerji / Pano</h3>
+</div>
 
- <div class="grid">
+<br>
 
- ${fieldHTML(
- "pano_enerji",
- "Enerji Beslemesi",
- saved.enerji||""
- )}
+${textarea("hmiNote","Bu ekranla ilgili not")}
 
- ${fieldHTML(
- "pano_ana_salter",
- "Ana Şalter",
- saved.ana_salter||""
- )}
+<button class="primary"
+onclick="saveHMI()">
+💾 Ekran ${hmiScreen} Kaydet
+</button>
 
- ${fieldHTML(
- "pano_kontaktor",
- "Kontaktör / Kontaktörler",
- saved.kontaktor||""
- )}
+</div>
 
- ${fieldHTML(
- "pano_termik",
- "Termik / Motor Koruma",
- saved.termik||""
- )}
+`;
 
- </div>
-
- </div>
-
-
- <div class="card">
-
- <h3>🔌 Bağlantı Bilgileri</h3>
-
- ${fieldHTML(
- "pano_motor",
- "Motor bağlantısı / U-V-W",
- saved.motor||""
- )}
-
- ${fieldHTML(
- "pano_sensor",
- "Basınç / Analog Sensör",
- saved.sensor||""
- )}
-
- ${fieldHTML(
- "pano_control",
- "Kumanda / Dijital Girişler",
- saved.control||""
- )}
-
- ${fieldHTML(
- "pano_communication",
- "Haberleşme",
- saved.communication||""
- )}
-
- ${fieldHTML(
- "pano_notes",
- "Pano Teknik Notları",
- saved.notes||"",
- true
- )}
-
- <button class="primary"
- onclick="savePano()">
- 💾 Pano Bilgilerini Kaydet
- </button>
-
- </div>
-
-
- <div class="card">
-
- <h3>🧭 Bağlantı Şeması / Hatırlatma</h3>
-
- <div class="connection">
- <strong>Şebeke → Pano</strong>
- <span>Ana enerji beslemesi ve koruma elemanları</span>
- </div>
-
- <div class="connection">
- <strong>Pano → Sürücü</strong>
- <span>Güç kablosu, kumanda ve topraklama</span>
- </div>
-
- <div class="connection">
- <strong>Sürücü → Motor</strong>
- <span>U / V / W ve PE bağlantısı</span>
- </div>
-
- <div class="connection">
- <strong>Sensör → PLC / Sürücü</strong>
- <span>AI1 / AI2, +24 V ve 0 V bilgileri</span>
- </div>
-
- </div>
-
- `;
+loadHMIHistory();
 
 }
 
 
-function savePano(){
+async function saveHMI(){
 
- const data={
+const values={};
 
-   enerji:document.getElementById("pano_enerji").value.trim(),
+hmiScreens[hmiScreen].fields.forEach(f=>{
 
-   ana_salter:document.getElementById("pano_ana_salter").value.trim(),
+values[f[0]]=val("hmi_"+f[0]);
 
-   kontaktor:document.getElementById("pano_kontaktor").value.trim(),
+});
 
-   termik:document.getElementById("pano_termik").value.trim(),
 
-   motor:document.getElementById("pano_motor").value.trim(),
+const {error}=await db
+.from("hmi_kayitlari")
+.insert({
 
-   sensor:document.getElementById("pano_sensor").value.trim(),
+terfi_id:current.id,
 
-   control:document.getElementById("pano_control").value.trim(),
+ekran_no:hmiScreen,
 
-   communication:document.getElementById("pano_communication").value.trim(),
+degerler:values,
 
-   notes:document.getElementById("pano_notes").value.trim()
+notlar:val("hmiNote")
 
- };
+});
 
- localStorage.setItem(
-  "terfi_pano_"+current.id,
-  JSON.stringify(data)
- );
 
- alert("Pano / bağlantı bilgileri kaydedildi.");
+if(error){
+
+alert(error.message);
+return;
+
+}
+
+alert("HMI ekranı arşivlendi.");
+
+loadHMIHistory();
 
 }
 
 
-/* =========================================================
-   ÖLÇÜMLER
-========================================================= */
+async function loadHMIHistory(){
 
-async function renderOlcum(el){
+const el=document.getElementById("hmiHistory");
 
- el.innerHTML=`<div class="loading">Ölçümler yükleniyor...</div>`;
+if(!el)return;
 
- const {data,error}=await db
- .from("olcumler")
- .select("*")
- .eq("terfi_id",current.id)
- .order("created_at",{ascending:false});
+const {data,error}=await db
+.from("hmi_kayitlari")
+.select("*")
+.eq("terfi_id",current.id)
+.eq("ekran_no",hmiScreen)
+.order("created_at",{ascending:false});
 
+if(error){
 
- if(error){
+el.innerHTML=err(error);
+return;
 
-   el.innerHTML=errorBox(error);
+}
 
-   return;
+el.innerHTML=`
 
- }
+<div class="card">
 
+<div class="section">
 
- el.innerHTML=`
+<h3>🕘 Ekran ${hmiScreen} Geçmişi</h3>
 
- <div class="card">
+<span class="muted">${data.length} kayıt</span>
 
- <h3>📏 Yeni Ölçüm</h3>
+</div>
 
- <div class="grid">
+${data.map((r,i)=>`
 
- ${fieldHTML(
- "measure_type",
- "Ölçüm Türü",
- "",
- false
- )}
+<div class="item">
 
- ${fieldHTML(
- "measure_value",
- "Değer",
- "",
- false
- )}
+<strong>
+${i===0?"Son kayıt":"Önceki kayıt"}
+</strong>
 
- ${fieldHTML(
- "measure_unit",
- "Birim",
- "",
- false
- )}
+<div class="muted">
+${fmt(r.created_at)}
+</div>
 
- </div>
+<div class="badges">
 
- ${fieldHTML(
- "measure_description",
- "Açıklama",
- "",
- true
- )}
+${Object.entries(r.degerler||{}).map(
+([k,v])=>
+`<span class="badge">${esc(k)}: ${esc(v)}</span>`
+).join("")
+}
 
- <button class="primary"
- onclick="addMeasurement()">
- ＋ Ölçümü Kaydet
- </button>
+</div>
 
- </div>
+${r.notlar?`
+<div class="notice">${esc(r.notlar)}</div>
+`:""}
 
+<button class="danger"
+onclick="del('hmi_kayitlari','${esc(r.id)}');setTimeout(loadHMIHistory,500)">
+Sil
+</button>
 
- <div class="section-title">
+</div>
 
- <h2>Ölçüm Geçmişi</h2>
+`).join("")}
 
- <span>${data.length} ölçüm</span>
+${!data.length?
+`<div class="empty">Bu ekran için kayıt yok.</div>`:""}
 
- </div>
+</div>
+
+`;
+
+}
 
 
- <div class="grid">
+/* =====================================================
+   ANLIK VERİLER
+===================================================== */
 
- ${data.length
- ?data.map(x=>`
+async function instant(el){
 
- <div class="card">
+const {data,error}=await db
+.from("anlik_calisma_verileri")
+.select("*")
+.eq("terfi_id",current.id)
+.order("kayit_tarihi",{ascending:false});
 
- <h3>📏 ${esc(x.tur||"Ölçüm")}</h3>
+if(error){
 
- <strong style="font-size:27px">
- ${esc(x.deger||"—")}
- ${esc(x.birim||"")}
- </strong>
+el.innerHTML=err(error);
+return;
 
- <p class="muted">
- ${esc(x.aciklama||"")}
- </p>
+}
 
- <button class="danger"
- onclick="deleteEquipment('olcumler','${esc(x.id)}')">
- Sil
- </button>
+el.innerHTML=`
 
- </div>
+<div class="card">
 
- `).join("")
- :`<div class="card empty" style="grid-column:1/-1">Henüz ölçüm yok.</div>`
- }
+<h3>📟 Anlık Çalışma Verisi</h3>
 
- </div>
+<div class="notice">
 
- `;
+Bu bölüm HMI'da o anda görülen çalışma değerlerini
+kaydetmek içindir.
+
+</div>
+
+${input("iType","Ekipman Türü")}
+${input("iName","Ekipman Adı")}
+${input("iParam","Parametre")}
+${input("iValue","Değer")}
+${input("iUnit","Birim")}
+${textarea("iNote","Açıklama")}
+
+<button class="primary"
+onclick="addInstant()">
+＋ Anlık Veriyi Kaydet
+</button>
+
+</div>
+
+
+<div class="card">
+
+<h3>📟 Anlık Veri Geçmişi</h3>
+
+${data.map(x=>`
+
+<div class="item">
+
+<strong>
+${esc(x.ekipman_adi||x.ekipman_turu||"Ekipman")}
+</strong>
+
+<div class="muted">
+${esc(x.parametre)}:
+<strong>${esc(x.deger)} ${esc(x.birim)}</strong>
+</div>
+
+<div class="small">
+${fmt(x.kayit_tarihi)}
+</div>
+
+</div>
+
+`).join("")}
+
+</div>
+
+`;
+
+}
+
+
+async function addInstant(){
+
+const {error}=await db
+.from("anlik_calisma_verileri")
+.insert({
+
+terfi_id:current.id,
+
+ekipman_turu:val("iType"),
+
+ekipman_adi:val("iName"),
+
+parametre:val("iParam"),
+
+deger:val("iValue"),
+
+birim:val("iUnit"),
+
+aciklama:val("iNote"),
+
+kayit_tarihi:new Date().toISOString()
+
+});
+
+if(error){
+
+alert(error.message);
+return;
+
+}
+
+alert("Anlık veri kaydedildi.");
+
+instant(document.getElementById("content"));
+
+}
+
+
+/* =====================================================
+   PANO
+===================================================== */
+
+async function panel(el){
+
+const {data,error}=await db
+.from("panolar")
+.select("*")
+.eq("terfi_id",current.id)
+.order("created_at",{ascending:false});
+
+if(error){
+
+el.innerHTML=err(error);
+return;
+
+}
+
+el.innerHTML=`
+
+<div class="card">
+
+<h3>🔌 Pano Bilgileri</h3>
+
+${input("paName","Pano Adı")}
+${input("paModel","Marka / Model")}
+${input("paPLC","PLC")}
+${input("paHMI","HMI")}
+${input("paDrive","Sürücü Beslemesi")}
+${input("paBreaker","Ana Şalter")}
+${input("paContact","Kontaktörler")}
+${input("paThermal","Termik")}
+${input("paRelay","Röleler")}
+${input("paTerminal","Klemensler")}
+${input("paComm","Haberleşme")}
+
+${textarea("paCable","Kablo notları")}
+
+${textarea("paConnection","Bağlantı notları")}
+
+<button class="primary"
+onclick="addPanel()">
+＋ Pano Kaydet
+</button>
+
+</div>
+
+
+<div class="card">
+
+<h3>🔌 Pano Geçmişi</h3>
+
+${data.map(x=>`
+
+<div class="item">
+
+<strong>${esc(x.pano_adi||"Pano")}</strong>
+
+<div class="muted">
+${esc(x.marka_model||"")}
+</div>
+
+<div class="notice">
+
+PLC: ${esc(x.plc||"—")}<br>
+HMI: ${esc(x.hmi||"—")}<br>
+Sürücü: ${esc(x.surucu_besleme||"—")}<br>
+Haberleşme: ${esc(x.haberlesme||"—")}
+
+</div>
+
+<button class="danger"
+onclick="del('panolar','${esc(x.id)}');setTimeout(()=>panel(document.getElementById('content')),500)">
+Sil
+</button>
+
+</div>
+
+`).join("")}
+
+</div>
+
+`;
+
+}
+
+
+async function addPanel(){
+
+const {error}=await db
+.from("panolar")
+.insert({
+
+terfi_id:current.id,
+
+pano_adi:val("paName"),
+
+marka_model:val("paModel"),
+
+plc:val("paPLC"),
+
+hmi:val("paHMI"),
+
+surucu_besleme:val("paDrive"),
+
+ana_salter:val("paBreaker"),
+
+kontaktorler:val("paContact"),
+
+termik:val("paThermal"),
+
+roleler:val("paRelay"),
+
+klemensler:val("paTerminal"),
+
+haberlesme:val("paComm"),
+
+kablo_notlari:val("paCable"),
+
+baglanti_notlari:val("paConnection")
+
+});
+
+if(error){
+
+alert(error.message);
+return;
+
+}
+
+alert("Pano kaydedildi.");
+
+panel(document.getElementById("content"));
+
+}
+
+
+/* =====================================================
+   ÖLÇÜM
+===================================================== */
+
+async function measurement(el){
+
+const {data,error}=await db
+.from("olcum_kayitlari")
+.select("*")
+.eq("terfi_id",current.id)
+.order("tarih",{ascending:false});
+
+let rows=data;
+
+if(error){
+
+const second=await db
+.from("olcumler")
+.select("*")
+.eq("terfi_id",current.id)
+.order("created_at",{ascending:false});
+
+rows=second.data||[];
+}
+
+el.innerHTML=`
+
+<div class="card">
+
+<h3>📏 Yeni Ölçüm</h3>
+
+${input("oType","Ölçüm Türü")}
+${input("oValue","Değer")}
+${input("oUnit","Birim")}
+${input("oPoint","Ölçüm Noktası")}
+${textarea("oNote","Not")}
+
+<button class="primary"
+onclick="addMeasurement()">
+＋ Ölçümü Kaydet
+</button>
+
+</div>
+
+
+<div class="card">
+
+<h3>📏 Ölçüm Geçmişi</h3>
+
+${rows.map(x=>`
+
+<div class="item">
+
+<strong>
+${esc(x.olcum_tipi||x.tur||"Ölçüm")}
+</strong>
+
+<div style="font-size:22px">
+${esc(x.deger)} ${esc(x.birim)}
+</div>
+
+<div class="muted">
+${esc(x.nokta||"")}
+</div>
+
+<div class="muted">
+${fmt(x.tarih||x.created_at)}
+</div>
+
+</div>
+
+`).join("")}
+
+</div>
+
+`;
 
 }
 
 
 async function addMeasurement(){
 
- const record={
+const {error}=await db
+.from("olcum_kayitlari")
+.insert({
 
-   terfi_id:current.id,
+terfi_id:current.id,
 
-   tur:document.getElementById("measure_type").value.trim(),
+tarih:new Date().toISOString(),
 
-   deger:document.getElementById("measure_value").value.trim(),
+olcum_tipi:val("oType"),
 
-   birim:document.getElementById("measure_unit").value.trim(),
+deger:val("oValue"),
 
-   aciklama:document.getElementById("measure_description").value.trim(),
+birim:val("oUnit"),
 
-   tarih:new Date().toISOString()
+nokta:val("oPoint"),
 
- };
+notlar:val("oNote")
 
+});
 
- const {error}=await db
- .from("olcumler")
- .insert(record);
+if(error){
 
+alert(error.message);
+return;
 
- if(error){
+}
 
-   alert(error.message);
+alert("Ölçüm kaydedildi.");
 
-   return;
-
- }
-
-
- renderOlcum(document.getElementById("detailContent"));
+measurement(document.getElementById("content"));
 
 }
 
 
-/* =========================================================
-   FOTOĞRAFLAR
-========================================================= */
+/* =====================================================
+   BAKIM
+===================================================== */
 
-function photoKey(){
+async function maintenance(el){
 
- return "terfi_photos_"+current.id;
+const {data,error}=await db
+.from("bakim_kayitlari")
+.select("*")
+.eq("terfi_id",current.id)
+.order("tarih",{ascending:false});
+
+if(error){
+
+el.innerHTML=err(error);
+return;
+
+}
+
+el.innerHTML=`
+
+<div class="card">
+
+<h3>🛠️ Bakım Kaydı</h3>
+
+${input("bDate","Tarih",new Date().toISOString().slice(0,10))}
+
+${input("bEquipment","Ekipman")}
+
+${textarea("bWork","Yapılan İşlem")}
+
+${textarea("bNote","Notlar")}
+
+${input("bPerson","Personel","Musa Er")}
+
+${input("bNext","Sonraki Bakım Tarihi")}
+
+<button class="primary"
+onclick="addMaintenance()">
+＋ Bakımı Kaydet
+</button>
+
+</div>
+
+
+<div class="card">
+
+<h3>🕘 Bakım Geçmişi</h3>
+
+${data.map(x=>`
+
+<div class="item">
+
+<strong>
+${esc(x.ekipman||"Bakım")}
+</strong>
+
+<div class="muted">
+${esc(x.tarih||"")}
+</div>
+
+<p>
+${esc(x.islem||"")}
+</p>
+
+<div class="notice">
+${esc(x.notlar||"")}
+</div>
+
+</div>
+
+`).join("")}
+
+</div>
+
+`;
 
 }
 
 
-function getPhotos(){
+async function addMaintenance(){
 
- try{
+const {error}=await db
+.from("bakim_kayitlari")
+.insert({
 
-   return JSON.parse(
-    localStorage.getItem(photoKey())||"[]"
-   );
+terfi_id:current.id,
 
- }catch(e){
+tarih:val("bDate")||new Date().toISOString(),
 
-   return [];
+ekipman:val("bEquipment"),
 
- }
+islem:val("bWork"),
+
+notlar:val("bNote"),
+
+personel:val("bPerson"),
+
+sonraki_bakim_tarihi:val("bNext")||null
+
+});
+
+if(error){
+
+alert(error.message);
+return;
+
+}
+
+alert("Bakım kaydedildi.");
+
+maintenance(document.getElementById("content"));
 
 }
 
 
-function renderPhotos(el){
+/* =====================================================
+   ARIZA
+===================================================== */
 
- const photos=getPhotos();
+async function fault(el){
 
- el.innerHTML=`
+const {data,error}=await db
+.from("ariza_notlari")
+.select("*")
+.eq("terfi_id",current.id)
+.order("tarih",{ascending:false});
 
- <div class="card">
+if(error){
 
- <h3>📷 Saha Fotoğrafı Ekle</h3>
+el.innerHTML=err(error);
+return;
 
- <div class="field">
+}
 
- <label>Fotoğraf açıklaması</label>
+el.innerHTML=`
 
- <input id="photoCaption"
- placeholder="Örn. Pano içi / Motor etiketi / HMI ekranı">
+<div class="card">
 
- </div>
+<h3>⚠️ Arıza Kaydı</h3>
 
- <div class="field">
+${input("fTitle","Arıza Başlığı")}
 
- <input
- type="file"
- id="photoFile"
- accept="image/*"
- capture="environment">
+${textarea("fNote","Arıza / Bulgular")}
 
- </div>
+<button class="primary"
+onclick="addFault()">
+＋ Arıza Kaydet
+</button>
 
- <button class="primary"
- onclick="savePhoto()">
- 📷 Fotoğrafı Arşive Ekle
- </button>
-
- </div>
-
-
- <div class="section-title">
-
- <h2>Saha Fotoğrafları</h2>
-
- <span>${photos.length} fotoğraf</span>
-
- </div>
+</div>
 
 
- <div class="photo-grid">
+<div class="card">
 
- ${photos.length
- ?photos.map((p,i)=>`
+<h3>⚠️ Arıza Geçmişi</h3>
 
- <div class="photo">
+${data.map(x=>`
 
- <img src="${p.data}" alt="Saha fotoğrafı">
+<div class="item">
 
- <div class="caption">
- ${esc(p.caption||"Saha fotoğrafı")}
- </div>
+<strong>
+${esc(x.baslik||"Arıza")}
+</strong>
 
- <button class="danger"
- onclick="deletePhoto(${i})">
- ×
- </button>
+<div class="muted">
+${fmt(x.tarih)}
+</div>
 
- </div>
+<p>
+${esc(x.notlar||"")}
+</p>
 
- `).join("")
- :`<div class="card empty" style="grid-column:1/-1">
- Henüz fotoğraf eklenmedi.
- </div>`
- }
+<div class="badges">
 
- </div>
+<span class="badge">
+${x.cozuldu?"✅ Çözüldü":"🔴 Açık"}
+</span>
 
- `;
+</div>
+
+</div>
+
+`).join("")}
+
+</div>
+
+`;
 
 }
 
 
-function savePhoto(){
+async function addFault(){
 
- const file=document.getElementById("photoFile").files[0];
+const {error}=await db
+.from("ariza_notlari")
+.insert({
 
- if(!file){
+terfi_id:current.id,
 
-   alert("Önce bir fotoğraf seç.");
+tarih:new Date().toISOString(),
 
-   return;
+baslik:val("fTitle"),
 
- }
+notlar:val("fNote"),
 
- const caption=document
- .getElementById("photoCaption")
- .value
- .trim();
+cozuldu:false
 
+});
 
- const reader=new FileReader();
+if(error){
 
+alert(error.message);
+return;
 
- reader.onload=()=>{
+}
 
-   const photos=getPhotos();
+alert("Arıza kaydedildi.");
 
-   photos.unshift({
-
-     data:reader.result,
-
-     caption:caption,
-
-     date:new Date().toISOString()
-
-   });
-
-
-   try{
-
-     localStorage.setItem(
-      photoKey(),
-      JSON.stringify(photos)
-     );
-
-     renderPhotos(document.getElementById("detailContent"));
-
-   }catch(e){
-
-     alert(
-      "Fotoğraf cihaz hafızasına sığmadı. Daha küçük bir fotoğraf seç."
-     );
-
-   }
-
- };
-
-
- reader.readAsDataURL(file);
+fault(document.getElementById("content"));
 
 }
 
 
-function deletePhoto(index){
+/* =====================================================
+   DEĞİŞİKLİK GEÇMİŞİ
+===================================================== */
 
- if(!confirm("Bu fotoğraf silinsin mi?"))
- return;
+async function history(el){
 
- const photos=getPhotos();
+const {data,error}=await db
+.from("degisiklik_gecmisi")
+.select("*")
+.eq("terfi_id",current.id)
+.order("tarih",{ascending:false});
 
- photos.splice(index,1);
+if(error){
 
- localStorage.setItem(
-  photoKey(),
-  JSON.stringify(photos)
- );
+el.innerHTML=err(error);
+return;
 
- renderPhotos(document.getElementById("detailContent"));
+}
+
+el.innerHTML=`
+
+<div class="card">
+
+<h3>🕘 Değişiklik Geçmişi</h3>
+
+<div class="notice">
+
+Burada yapılan önemli değişikliklerin
+eski ve yeni hali tutulur.
+
+</div>
+
+${data.map(x=>`
+
+<div class="item">
+
+<strong>
+${esc(x.varlik_tipi||"Kayıt")}
+</strong>
+
+<div class="muted">
+${fmt(x.tarih)}
+ • ${esc(x.islem)}
+</div>
+
+${x.aciklama?
+`<p>${esc(x.aciklama)}</p>`:""}
+
+<div class="compare">
+
+<div class="compare-box">
+
+<span class="muted">
+Eski
+</span>
+
+<pre>${esc(JSON.stringify(x.eski_deger||{},null,2))}</pre>
+
+</div>
+
+<div class="compare-box">
+
+<span class="muted">
+Yeni
+</span>
+
+<pre>${esc(JSON.stringify(x.yeni_deger||{},null,2))}</pre>
+
+</div>
+
+</div>
+
+</div>
+
+`).join("")}
+
+</div>
+
+`;
 
 }
 
 
-/* =========================================================
-   BAKIM / ARIZA
-========================================================= */
+async function logChange(type,id,action,oldValue,newValue){
 
-function maintenanceKey(){
+try{
 
- return "terfi_maintenance_"+current.id;
+await db
+.from("degisiklik_gecmisi")
+.insert({
+
+terfi_id:current.id,
+
+varlik_tipi:type,
+
+varlik_id:id,
+
+islem:action,
+
+tarih:new Date().toISOString(),
+
+aciklama:"Terfi bilgisi güncellendi",
+
+eski_deger:oldValue,
+
+yeni_deger:newValue
+
+});
+
+}catch(e){
+
+console.log(e);
+
+}
 
 }
 
 
-function getMaintenance(){
+/* =====================================================
+   RAPORLAR
+===================================================== */
 
- try{
+function reports(el){
 
-   return JSON.parse(
-    localStorage.getItem(maintenanceKey())||"[]"
-   );
+el.innerHTML=`
 
- }catch(e){
+<div class="card">
 
-   return [];
+<h2>📄 Teknik Arşiv Dışa Aktarma</h2>
 
- }
+<p class="muted">
 
-}
+Buradan bu istasyonun tamamını belge haline
+getirebilir veya bütün arşivi dışa aktarabilirsin.
 
+</p>
 
-function renderMaintenance(el){
+<div class="actions">
 
- const rows=getMaintenance();
+<button class="primary"
+onclick="exportPDF()">
+📄 Bu Terfiyi PDF Yap
+</button>
 
- el.innerHTML=`
+<button
+onclick="exportExcel()">
+📊 Bu Terfiyi Excel Yap
+</button>
 
- <div class="card">
+<button
+onclick="exportAllExcel()">
+📊 Tüm Arşivi Excel Yap
+</button>
 
- <h3>🛠️ Yeni Bakım / Arıza Kaydı</h3>
+<button
+onclick="backupJSON()">
+💾 Tüm Arşivi JSON Yedekle
+</button>
 
- <div class="grid">
+</div>
 
- ${fieldHTML(
- "maint_date",
- "Tarih",
- new Date().toLocaleDateString("tr-TR")
- )}
-
- ${fieldHTML(
- "maint_subject",
- "Konu",
- ""
- )}
-
- </div>
-
- ${fieldHTML(
- "maint_description",
- "Yapılan İşlem / Arıza Açıklaması",
- "",
- true
- )}
-
- ${fieldHTML(
- "maint_measurement",
- "Ölçüm / Sonuç",
- "",
- true
- )}
-
- <button class="primary"
- onclick="addMaintenance()">
- ＋ Kaydı Ekle
- </button>
-
- </div>
+</div>
 
 
- <div class="section-title">
+<div class="card">
 
- <h2>Bakım / Arıza Geçmişi</h2>
+<h3>🛡️ Yedekleme Mantığı</h3>
 
- <span>${rows.length} kayıt</span>
+<div class="notice">
 
- </div>
+☁️ <strong>Supabase</strong><br>
+Ana kayıt yeri.
 
+</div>
 
- <div>
+<div class="notice">
 
- ${rows.length
- ?rows.map((r,i)=>`
+📄 <strong>PDF</strong><br>
+İstasyonun o andaki teknik durumunun
+mühürlenmiş belge kopyası.
 
- <div class="card" style="margin-bottom:12px">
+</div>
 
- <div class="station-no">
- ${esc(r.date)}
- </div>
+<div class="notice">
 
- <h3>
- 🛠️ ${esc(r.subject||"Bakım Kaydı")}
- </h3>
+📊 <strong>Excel</strong><br>
+Toplu rapor ve bilgisayarda çalışma.
 
- <p>
- ${esc(r.description||"")}
- </p>
+</div>
 
- <div class="notice">
- ${esc(r.measurement||"")}
- </div>
+<div class="notice">
 
- <button class="danger"
- onclick="deleteMaintenance(${i})">
- Sil
- </button>
+💾 <strong>JSON</strong><br>
+Ham verilerin taşınabilir yedeği.
 
- </div>
+</div>
 
- `).join("")
- :`<div class="card empty">Henüz bakım / arıza kaydı yok.</div>`
- }
+</div>
 
- </div>
-
- `;
+`;
 
 }
 
 
-function addMaintenance(){
+/* =====================================================
+   PDF
+===================================================== */
 
- const rows=getMaintenance();
+async function exportPDF(){
 
- rows.unshift({
+try{
 
-   date:document.getElementById("maint_date").value.trim(),
+const data=await collectStationData();
 
-   subject:document.getElementById("maint_subject").value.trim(),
+const {jsPDF}=window.jspdf;
 
-   description:document.getElementById("maint_description").value.trim(),
+const pdf=new jsPDF();
 
-   measurement:document.getElementById("maint_measurement").value.trim()
+pdf.setFont("helvetica","bold");
 
- });
+pdf.setFontSize(20);
+
+pdf.text("TERFİ ARŞİVİM",15,18);
+
+pdf.setFontSize(10);
+
+pdf.text("Teknisyen Musa Er",15,25);
+
+pdf.text(
+"Tarih: "+new Date().toLocaleString("tr-TR"),
+15,31
+);
+
+pdf.setFontSize(16);
+
+pdf.text(
+current.ad||"İstasyon",
+15,43
+);
+
+pdf.setFontSize(10);
+
+pdf.text(
+"Terfi No: "+(current.terfi_no||""),
+15,50
+);
+
+pdf.text(
+"Adres: "+(current.adres||""),
+15,56
+);
+
+let y=65;
 
 
- localStorage.setItem(
-  maintenanceKey(),
-  JSON.stringify(rows)
- );
+y=pdfSection(
+pdf,
+"GENEL BİLGİLER",
+[
+["Bölge",current.bolge||""],
+["Açıklama",current.aciklama||""]
+],
+y
+);
 
 
- renderMaintenance(document.getElementById("detailContent"));
+y=pdfTable(
+pdf,
+"FOTOĞRAFSIZ MOTOR ARŞİVİ",
+data.motorlar,
+["ad","marka","model","guc_kw","gerilim_v","nominal_akim_a","devir_rpm"],
+y
+);
+
+
+y=pdfTable(
+pdf,
+"POMPA ARŞİVİ",
+data.pompalar,
+["ad","marka","model","tip","guc_kw","q_max_m3h","h_max_m"],
+y
+);
+
+
+y=pdfTable(
+pdf,
+"SÜRÜCÜ ARŞİVİ",
+data.suruculer,
+["ad","marka","model","guc","gerilim"],
+y
+);
+
+
+y=pdfTable(
+pdf,
+"PANOLAR",
+data.panolar,
+["pano_adi","marka_model","plc","hmi","surucu_besleme","ana_salter","haberlesme"],
+y
+);
+
+
+y=pdfTable(
+pdf,
+"ÖLÇÜMLER",
+data.olcumler,
+["olcum_tipi","deger","birim","nokta","tarih"],
+y
+);
+
+
+y=pdfTable(
+pdf,
+"BAKIM",
+data.bakim,
+["tarih","ekipman","islem","personel","sonraki_bakim_tarihi"],
+y
+);
+
+
+y=pdfTable(
+pdf,
+"ARIZALAR",
+data.arizalar,
+["tarih","baslik","notlar","cozuldu"],
+y
+);
+
+
+y=pdfTable(
+pdf,
+"ANLIK ÇALIŞMA VERİLERİ",
+data.anlik,
+["ekipman_turu","ekipman_adi","parametre","deger","birim","kayit_tarihi"],
+y
+);
+
+
+y=pdfHMI(
+pdf,
+data.hmi,
+y
+);
+
+
+pdf.setFontSize(8);
+
+pdf.text(
+"Terfi Arşivim • Teknisyen Musa Er",
+15,
+285
+);
+
+const filename=
+(current.terfi_no||"TERFI")+
+"_"+safeFile(current.ad)+
+"_TEKNIK_ARSIV.pdf";
+
+pdf.save(filename);
+
+}catch(e){
+
+alert(
+"PDF oluşturulurken hata oluştu: "+
+e.message
+);
+
+}
 
 }
 
 
-function deleteMaintenance(index){
+function pdfSection(pdf,title,rows,y){
 
- if(!confirm("Bu bakım kaydı silinsin mi?"))
- return;
+if(y>255){
 
- const rows=getMaintenance();
+pdf.addPage();
+y=18;
 
- rows.splice(index,1);
+}
 
- localStorage.setItem(
-  maintenanceKey(),
-  JSON.stringify(rows)
- );
+pdf.setFontSize(13);
+pdf.setFont("helvetica","bold");
+pdf.text(title,15,y);
 
- renderMaintenance(document.getElementById("detailContent"));
+y+=7;
+
+pdf.setFontSize(9);
+pdf.setFont("helvetica","normal");
+
+rows.forEach(r=>{
+
+const text=
+r[0]+": "+String(r[1]||"");
+
+const lines=pdf.splitTextToSize(text,175);
+
+pdf.text(lines,15,y);
+
+y+=lines.length*5;
+
+});
+
+return y+7;
 
 }
 
 
-/* =========================================================
-   SİLME
-========================================================= */
+function pdfTable(pdf,title,rows,fields,y){
 
-async function deleteEquipment(table,id){
+if(!rows||!rows.length)return y;
 
- if(!confirm("Bu kayıt silinsin mi?"))
- return;
+if(y>230){
 
+pdf.addPage();
+y=18;
 
- const {error}=await db
- .from(table)
- .delete()
- .eq("id",id);
+}
 
+pdf.setFontSize(13);
+pdf.setFont("helvetica","bold");
 
- if(error){
+pdf.text(title,15,y);
 
-   alert(error.message);
+y+=5;
 
-   return;
+const head=[
+fields.map(x=>pretty(x))
+];
 
- }
+const body=rows.map(r=>
+fields.map(f=>String(r[f]??""))
+);
 
+pdf.autoTable({
 
- renderTab();
+startY:y+2,
+
+head:head,
+
+body:body,
+
+theme:"grid",
+
+styles:{
+fontSize:7,
+cellPadding:2
+},
+
+margin:{
+left:10,
+right:10
+}
+
+});
+
+return pdf.lastAutoTable.finalY+10;
 
 }
 
 
-/* =========================================================
-   TERFİ SİL
-========================================================= */
+function pdfHMI(pdf,records,y){
 
-async function deleteCurrentTerfi(){
+if(!records.length)return y;
 
- if(!current)return;
+if(y>220){
 
- if(!confirm(
- "DİKKAT!\n\nBu istasyonun ana kaydı silinecek.\nDevam edilsin mi?"
- ))return;
+pdf.addPage();
+y=18;
 
+}
 
- const {error}=await db
- .from("terfiler")
- .delete()
- .eq("id",current.id);
+pdf.setFontSize(13);
+pdf.setFont("helvetica","bold");
 
+pdf.text("HMI AYARLARI",15,y);
 
- if(error){
+y+=5;
 
-   alert(error.message);
+records.forEach(r=>{
 
-   return;
+if(y>255){
 
- }
+pdf.addPage();
+y=18;
 
+}
 
- localStorage.removeItem(hmiKey());
- localStorage.removeItem("terfi_pano_"+current.id);
- localStorage.removeItem(photoKey());
- localStorage.removeItem(maintenanceKey());
+pdf.setFontSize(10);
 
- current=null;
+pdf.text(
+"EKRAN "+r.ekran_no+
+" • "+fmt(r.created_at),
+15,y
+);
 
- await loadTerfiler();
+y+=5;
+
+const body=
+Object.entries(r.degerler||{})
+.map(([k,v])=>[
+pretty(k),
+String(v??"")
+]);
+
+pdf.autoTable({
+
+startY:y,
+
+head:[["Parametre","Değer"]],
+
+body:body,
+
+theme:"grid",
+
+styles:{
+fontSize:7
+},
+
+margin:{
+left:12,
+right:12
+}
+
+});
+
+y=pdf.lastAutoTable.finalY+8;
+
+});
+
+return y;
 
 }
 
 
-/* =========================================================
-   HATA
-========================================================= */
+/* =====================================================
+   VERİ TOPLAMA
+===================================================== */
 
-function errorBox(error){
+async function collectStationData(){
 
- return `
+const tables={
 
- <div class="card">
+motorlar:"motorlar",
 
- <h3>⚠️ Kayıt yüklenemedi</h3>
+pompalar:"pompalar",
 
- <p>${esc(error.message)}</p>
+suruculer:"suruculer",
 
- </div>
+panolar:"panolar",
 
- `;
+olcumler:"olcum_kayitlari",
+
+bakim:"bakim_kayitlari",
+
+arizalar:"ariza_notlari",
+
+anlik:"anlik_calisma_verileri",
+
+hmi:"hmi_kayitlari",
+
+gecmis:"degisiklik_gecmisi"
+
+};
+
+const out={};
+
+for(const [key,table] of Object.entries(tables)){
+
+const r=await db
+.from(table)
+.select("*")
+.eq("terfi_id",current.id)
+.order("created_at",{ascending:false});
+
+out[key]=r.data||[];
+
+}
+
+return out;
 
 }
 
 
-/* =========================================================
+/* =====================================================
+   EXCEL
+===================================================== */
+
+async function exportExcel(){
+
+const data=await collectStationData();
+
+const wb=XLSX.utils.book_new();
+
+const add=(name,rows)=>{
+
+if(!rows.length)rows=[{}];
+
+const ws=XLSX.utils.json_to_sheet(rows);
+
+XLSX.utils.book_append_sheet(
+wb,
+ws,
+name.slice(0,31)
+);
+
+};
+
+add("TERFI",[current]);
+
+add("MOTORLAR",data.motorlar);
+
+add("POMPALAR",data.pompalar);
+
+add("SURUCULER",data.suruculer);
+
+add("PANOLAR",data.panolar);
+
+add("OLCUMLER",data.olcumler);
+
+add("BAKIM",data.bakim);
+
+add("ARIZALAR",data.arizalar);
+
+add("ANLIK_VERILER",data.anlik);
+
+add(
+"HMI_KAYITLARI",
+data.hmi.map(x=>({
+
+ekran:x.ekran_no,
+
+tarih:fmt(x.created_at),
+
+degerler:JSON.stringify(
+x.degerler||{}
+)
+
+}))
+);
+
+add("DEGISIKLIKLER",data.gecmis);
+
+XLSX.writeFile(
+wb,
+safeFile(current.terfi_no+"_"+current.ad)+
+"_ARSIV.xlsx"
+);
+
+}
+
+
+async function exportAllExcel(){
+
+const wb=XLSX.utils.book_new();
+
+const stationSheet=terfiler.map(x=>({
+
+Terfi_No:x.terfi_no,
+
+Istasyon:x.ad,
+
+Bolge:x.bolge,
+
+Adres:x.adres,
+
+Aciklama:x.aciklama,
+
+Olusturma:x.created_at,
+
+Guncelleme:x.updated_at
+
+}));
+
+XLSX.utils.book_append_sheet(
+wb,
+XLSX.utils.json_to_sheet(stationSheet),
+"TERFILER"
+);
+
+const allTables=[
+
+["MOTORLAR","motorlar"],
+
+["POMPALAR","pompalar"],
+
+["SURUCULER","suruculer"],
+
+["PANOLAR","panolar"],
+
+["OLCUMLER","olcum_kayitlari"],
+
+["BAKIM","bakim_kayitlari"],
+
+["ARIZALAR","ariza_notlari"],
+
+["ANLIK_VERILER","anlik_calisma_verileri"],
+
+["HMI_KAYITLARI","hmi_kayitlari"],
+
+["DEGISIKLIKLER","degisiklik_gecmisi"]
+
+];
+
+for(const [sheet,table] of allTables){
+
+const r=await db
+.from(table)
+.select("*");
+
+const rows=r.data||[];
+
+if(table==="hmi_kayitlari"){
+
+rows.forEach(x=>{
+x.degerler=JSON.stringify(x.degerler||{});
+});
+
+}
+
+XLSX.utils.book_append_sheet(
+wb,
+XLSX.utils.json_to_sheet(rows.length?rows:[{}]),
+sheet
+);
+
+}
+
+XLSX.writeFile(
+wb,
+"TERFI_ARSIV_MASTER.xlsx"
+);
+
+}
+
+
+/* =====================================================
+   JSON YEDEK
+===================================================== */
+
+async function backupJSON(){
+
+const data={
+
+yedek_tarihi:new Date().toISOString(),
+
+uygulama:"Terfi Arşivim",
+
+teknisyen:"Musa Er",
+
+terfiler:terfiler,
+
+kayitlar:await allData()
+
+};
+
+const blob=new Blob(
+[
+JSON.stringify(data,null,2)
+],
+{
+type:"application/json"
+}
+);
+
+downloadBlob(
+blob,
+"TERFI_ARSIV_YEDEK_"+
+new Date()
+.toISOString()
+.slice(0,10)+
+".json"
+);
+
+}
+
+
+async function allData(){
+
+const tables=[
+
+"motorlar",
+"pompalar",
+"suruculer",
+"panolar",
+"olcum_kayitlari",
+"bakim_kayitlari",
+"ariza_notlari",
+"anlik_calisma_verileri",
+"hmi_kayitlari",
+"degisiklik_gecmisi"
+
+];
+
+const result={};
+
+for(const table of tables){
+
+const r=await db
+.from(table)
+.select("*");
+
+result[table]=r.data||[];
+
+}
+
+return result;
+
+}
+
+
+/* =====================================================
+   GENEL YARDIMCILAR
+===================================================== */
+
+function input(id,label,value=""){
+
+return`
+
+<div class="field">
+
+<label>${esc(label)}</label>
+
+<input
+id="${esc(id)}"
+value="${esc(value)}"
+placeholder="${esc(label)}">
+
+</div>
+
+`;
+
+}
+
+
+function textarea(id,label){
+
+return`
+
+<div class="field">
+
+<label>${esc(label)}</label>
+
+<textarea
+id="${esc(id)}"
+placeholder="${esc(label)}"></textarea>
+
+</div>
+
+`;
+
+}
+
+
+function val(id){
+
+const e=document.getElementById(id);
+
+return e?e.value.trim():"";
+
+}
+
+
+function num(id){
+
+const v=val(id);
+
+if(v==="")return null;
+
+const n=Number(v.replace(",","."));
+
+return Number.isFinite(n)?n:null;
+
+}
+
+
+function safeFile(text){
+
+return String(text||"ARSIV")
+.replace(/[^\p{L}\p{N}\-_ ]/gu,"")
+.replace(/\s+/g,"_")
+.slice(0,80);
+
+}
+
+
+function pretty(k){
+
+const map={
+
+ad:"Ad",
+
+marka:"Marka",
+
+model:"Model",
+
+guc_kw:"Güç kW",
+
+guc_hp:"Güç HP",
+
+gerilim_v:"Gerilim V",
+
+nominal_akim_a:"Akım A",
+
+devir_rpm:"Devir RPM",
+
+pano_adi:"Pano",
+
+marka_model:"Marka / Model",
+
+plc:"PLC",
+
+hmi:"HMI",
+
+surucu_besleme:"Sürücü Besleme",
+
+ana_salter:"Ana Şalter",
+
+haberlesme:"Haberleşme",
+
+olcum_tipi:"Ölçüm",
+
+deger:"Değer",
+
+birim:"Birim",
+
+nokta:"Nokta",
+
+ekipman:"Ekipman",
+
+islem:"İşlem",
+
+personel:"Personel",
+
+baslik:"Başlık",
+
+notlar:"Notlar",
+
+cozuldu:"Çözüldü",
+
+ekipman_turu:"Ekipman Türü",
+
+ekipman_adi:"Ekipman",
+
+parametre:"Parametre",
+
+kayit_tarihi:"Kayıt Tarihi"
+
+};
+
+return map[k]||k;
+
+}
+
+
+function err(e){
+
+return`
+
+<div class="card">
+
+<h3>⚠️ Kayıt okunamadı</h3>
+
+<p>${esc(e.message)}</p>
+
+</div>
+
+`;
+
+}
+
+
+async function del(table,id){
+
+if(!confirm("Bu kayıt silinsin mi?"))return;
+
+const {error}=await db
+.from(table)
+.delete()
+.eq("id",id);
+
+if(error){
+
+alert(error.message);
+return;
+
+}
+
+if(activeTab==="motor")
+motor(document.getElementById("content"));
+
+else if(activeTab==="pompa")
+pump(document.getElementById("content"));
+
+else if(activeTab==="surucu")
+drive(document.getElementById("content"));
+
+else if(activeTab==="hmi")
+loadHMIHistory();
+
+else if(activeTab==="pano")
+panel(document.getElementById("content"));
+
+else
+renderTab();
+
+}
+
+
+function downloadBlob(blob,name){
+
+const a=document.createElement("a");
+
+a.href=URL.createObjectURL(blob);
+
+a.download=name;
+
+document.body.appendChild(a);
+
+a.click();
+
+a.remove();
+
+setTimeout(
+()=>URL.revokeObjectURL(a.href),
+1000
+);
+
+}
+
+
+/* =====================================================
    BAŞLAT
-========================================================= */
+===================================================== */
 
-loadTerfiler();
+load();
 
 </script>
 
