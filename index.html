@@ -2,86 +2,585 @@
 <html lang="tr">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Terfi Arşivim</title>
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#07111f">
+<title>Terfi Arşivim — Musa Er</title>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <style>
+:root{
+--bg:#07111f;
+--panel:#0d1b2d;
+--panel2:#10243a;
+--line:#20354d;
+--text:#f5f7fb;
+--muted:#9fb0c3;
+--blue:#2997ff;
+--cyan:#28d7ff;
+--green:#35d07f;
+--red:#ff5d6c;
+--orange:#ffad42;
+--shadow:0 18px 50px #0008
+}
+
 *{box-sizing:border-box}
+
+html,body{
+margin:0;
+background:var(--bg);
+color:var(--text);
+font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif
+}
+
 body{
- margin:0;background:#f3f4f6;color:#111827;
- font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif
+min-height:100vh
 }
-.container{max-width:900px;margin:auto;padding:18px}
-.hero{
- background:#111827;color:white;border-radius:28px;
- padding:30px;margin-bottom:18px
+
+button,input,textarea,select{
+font:inherit
 }
-.hero h1{margin:0 0 8px;font-size:34px}
-.hero p{margin:0;color:#d1d5db}
-input,textarea{
- width:100%;padding:13px;border:1px solid #d1d5db;
- border-radius:12px;font-size:16px;background:white
-}
-textarea{min-height:100px}
+
 button{
- border:0;border-radius:12px;padding:12px 18px;
- font-size:15px;font-weight:700;cursor:pointer
+border:0;
+cursor:pointer
 }
-.primary{background:#2563eb;color:white}
-.secondary{background:#e5e7eb;color:#111827}
-.danger{background:#fee2e2;color:#b91c1c}
-.search{margin-bottom:15px}
+
+.app{
+max-width:1180px;
+margin:auto;
+padding:18px 18px 100px
+}
+
+.topbar{
+display:flex;
+align-items:center;
+justify-content:space-between;
+gap:12px;
+margin-bottom:18px
+}
+
+.brand{
+display:flex;
+align-items:center;
+gap:12px
+}
+
+.logo{
+width:46px;
+height:46px;
+border-radius:14px;
+display:grid;
+place-items:center;
+background:linear-gradient(135deg,#1687ff,#16d5c5);
+font-size:24px;
+box-shadow:0 8px 25px #078fff44
+}
+
+.brand h1{
+font-size:19px;
+margin:0
+}
+
+.brand p{
+font-size:12px;
+color:var(--muted);
+margin:3px 0 0
+}
+
+.technician{
+font-size:12px;
+color:#dce8f5;
+background:#10243a;
+border:1px solid var(--line);
+padding:9px 12px;
+border-radius:999px
+}
+
+.hero{
+position:relative;
+overflow:hidden;
+border:1px solid #29445f;
+border-radius:30px;
+min-height:300px;
+padding:34px;
+
+background:
+linear-gradient(
+90deg,
+#07111ff5 0%,
+#07111fcc 42%,
+#07111f70 100%
+),
+url("https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=1800&q=85")
+center/cover
+}
+
+.hero:after{
+content:"";
+position:absolute;
+right:-80px;
+bottom:-110px;
+width:330px;
+height:330px;
+border-radius:50%;
+background:#1598ff22;
+filter:blur(5px)
+}
+
+.hero .eyebrow{
+color:#70d9ff;
+font-weight:800;
+letter-spacing:.12em;
+font-size:12px
+}
+
+.hero h2{
+font-size:clamp(34px,7vw,62px);
+line-height:.98;
+margin:10px 0 14px;
+max-width:720px
+}
+
+.hero p{
+max-width:620px;
+color:#c5d2df;
+line-height:1.55;
+margin:0
+}
+
+.hero-actions{
+display:flex;
+gap:10px;
+flex-wrap:wrap;
+margin-top:24px
+}
+
+.btn{
+padding:12px 16px;
+border-radius:13px;
+font-weight:800
+}
+
+.btn.primary{
+background:var(--blue);
+color:white
+}
+
+.btn.secondary{
+background:#ffffff12;
+color:white;
+border:1px solid #ffffff18
+}
+
+.btn.danger{
+background:#ff5d6c18;
+color:#ff9aa4;
+border:1px solid #ff5d6c35
+}
+
+.searchbar{
+display:flex;
+gap:10px;
+margin:20px 0
+}
+
+.searchbar input,
+.field input,
+.field textarea,
+.field select{
+width:100%;
+background:#0c1a2a;
+color:white;
+border:1px solid var(--line);
+border-radius:13px;
+padding:13px;
+outline:none
+}
+
+.searchbar input{
+padding:15px 16px
+}
+
+input:focus,
+textarea:focus,
+select:focus{
+border-color:#2e9eff;
+box-shadow:0 0 0 3px #2997ff18
+}
+
+.section-title{
+display:flex;
+align-items:end;
+justify-content:space-between;
+gap:10px;
+margin:26px 0 12px
+}
+
+.section-title h3{
+margin:0;
+font-size:22px
+}
+
+.section-title span{
+color:var(--muted);
+font-size:13px
+}
+
+.stats{
+display:grid;
+grid-template-columns:repeat(4,1fr);
+gap:12px
+}
+
+.stat{
+background:linear-gradient(145deg,#0f2236,#0a1726);
+border:1px solid var(--line);
+border-radius:20px;
+padding:18px
+}
+
+.stat .icon{
+font-size:23px
+}
+
+.stat b{
+display:block;
+font-size:28px;
+margin-top:8px
+}
+
+.stat span{
+color:var(--muted);
+font-size:12px
+}
+
+.cards{
+display:grid;
+grid-template-columns:repeat(3,1fr);
+gap:14px
+}
+
 .card{
- background:white;border:1px solid #e5e7eb;
- border-radius:20px;padding:20px;margin:12px 0;
- box-shadow:0 1px 3px #0001
+background:#0d1b2d;
+border:1px solid var(--line);
+border-radius:22px;
+padding:18px;
+box-shadow:0 10px 30px #0002
 }
-.card:hover{background:#f9fafb}
-.card h2{margin:0 0 5px;color:#2563eb}
-.grid{
- display:grid;grid-template-columns:1fr 1fr;gap:12px
+
+.station{
+position:relative;
+overflow:hidden;
+min-height:190px;
+cursor:pointer
 }
-.field{margin-bottom:12px}
-.field label{
- display:block;font-weight:700;margin-bottom:6px
+
+.station:before{
+content:"";
+position:absolute;
+inset:0;
+background:var(--img) center/cover;
+opacity:.22;
+transition:.25s
 }
-.actions{display:flex;gap:10px;flex-wrap:wrap}
-.tabs{
- display:flex;gap:8px;overflow:auto;margin:15px 0
+
+.station:hover:before{
+opacity:.34;
+transform:scale(1.03)
 }
-.tabs button{white-space:nowrap}
-.item{
- border-top:1px solid #eee;padding:15px 0
+
+.station>*{
+position:relative
 }
-.item:first-child{border-top:0}
-.muted{color:#6b7280}
-.count{font-size:14px;color:#6b7280}
+
+.station h3{
+font-size:23px;
+margin:8px 0 5px
+}
+
+.station p{
+color:var(--muted);
+margin:0
+}
+
+.station .tag{
+display:inline-block;
+background:#07111dcc;
+border:1px solid #ffffff20;
+padding:6px 9px;
+border-radius:999px;
+font-size:11px
+}
+
 .empty{
- text-align:center;padding:30px;color:#6b7280
+text-align:center;
+color:var(--muted);
+padding:35px;
+border:1px dashed #2a4159;
+border-radius:20px
 }
-.message{
- padding:12px;margin-top:12px;border-radius:10px;
- background:#eff6ff;color:#1d4ed8
+
+.detail-head{
+display:flex;
+justify-content:space-between;
+align-items:flex-start;
+gap:14px;
+margin:20px 0
 }
-@media(max-width:650px){
- .grid{grid-template-columns:1fr}
- .container{padding:12px}
+
+.back{
+color:#b9c9da;
+background:#ffffff0d;
+border:1px solid var(--line);
+padding:10px 13px;
+border-radius:12px
+}
+
+.detail-title h2{
+margin:0;
+font-size:32px
+}
+
+.detail-title p{
+margin:5px 0;
+color:var(--muted)
+}
+
+.tabs{
+display:flex;
+gap:8px;
+overflow:auto;
+padding-bottom:4px;
+margin:18px 0
+}
+
+.tab{
+white-space:nowrap;
+background:#0d1b2d;
+color:#aebed0;
+border:1px solid var(--line);
+padding:10px 13px;
+border-radius:12px;
+font-weight:800
+}
+
+.tab.active{
+background:#1687ff;
+color:white;
+border-color:#1687ff
+}
+
+.form-card{
+margin-bottom:14px
+}
+
+.form-grid{
+display:grid;
+grid-template-columns:repeat(2,1fr);
+gap:12px
+}
+
+.field{
+margin-bottom:12px
+}
+
+.field label{
+display:block;
+font-size:12px;
+color:#b8c8d8;
+font-weight:800;
+margin:0 0 6px
+}
+
+.field textarea{
+min-height:100px;
+resize:vertical
+}
+
+.record{
+display:flex;
+justify-content:space-between;
+gap:12px;
+align-items:flex-start;
+border-top:1px solid #ffffff0d;
+padding:15px 0
+}
+
+.record:first-child{
+border-top:0
+}
+
+.record h4{
+margin:0 0 5px;
+font-size:16px
+}
+
+.record p{
+margin:0;
+color:var(--muted);
+font-size:13px;
+line-height:1.45
+}
+
+.record .meta{
+text-align:right;
+color:#7890a8;
+font-size:11px;
+white-space:nowrap
+}
+
+.badge{
+display:inline-block;
+padding:5px 8px;
+border-radius:999px;
+font-size:11px;
+font-weight:800
+}
+
+.ok{
+background:#35d07f18;
+color:#70e8a7
+}
+
+.warn{
+background:#ffad4218;
+color:#ffc16d
+}
+
+.fault{
+background:#ff5d6c18;
+color:#ff8995
+}
+
+.footer{
+margin-top:45px;
+padding:18px 2px;
+color:#708398;
+font-size:12px;
+text-align:center;
+border-top:1px solid #ffffff0b
+}
+
+.toast{
+position:fixed;
+left:50%;
+bottom:24px;
+transform:translateX(-50%) translateY(30px);
+opacity:0;
+background:#10243a;
+border:1px solid #29445f;
+color:white;
+padding:12px 16px;
+border-radius:13px;
+box-shadow:var(--shadow);
+transition:.25s;
+z-index:20
+}
+
+.toast.show{
+opacity:1;
+transform:translateX(-50%)
+}
+
+.loading{
+padding:35px;
+text-align:center;
+color:var(--muted)
+}
+
+@media(max-width:800px){
+
+.stats{
+grid-template-columns:repeat(2,1fr)
+}
+
+.cards{
+grid-template-columns:1fr 1fr
+}
+
+.hero{
+min-height:270px;
+padding:25px
+}
+
+}
+
+@media(max-width:600px){
+
+.app{
+padding:12px 12px 90px
+}
+
+.topbar{
+align-items:flex-start
+}
+
+.technician{
+display:none
+}
+
+.hero{
+border-radius:24px
+}
+
+.cards,
+.form-grid{
+grid-template-columns:1fr
+}
+
+.stats{
+grid-template-columns:1fr 1fr
+}
+
+.detail-head{
+flex-direction:column
+}
+
+.searchbar{
+margin-top:15px
+}
+
 }
 </style>
 </head>
 
 <body>
 
-<div class="container">
-<div class="hero">
+<div class="app">
+
+<div class="topbar">
+
+<div class="brand">
+
+<div class="logo">⚡</div>
+
+<div>
 <h1>Terfi Arşivim</h1>
-<p>Terfi istasyonu teknik kayıt sistemi</p>
+<p>Saha teknik kayıt sistemi</p>
 </div>
 
-<div id="app"></div>
 </div>
+
+<div class="technician">
+👨‍🔧 Teknisyen: <b>Musa Er</b>
+</div>
+
+</div>
+
+<main id="app">
+<div class="loading">
+Arşiv yükleniyor…
+</div>
+</main>
+
+<div class="footer">
+Terfi Arşivim • Elektrik / Mekanik Saha Arşivi • Teknisyen Musa Er
+</div>
+
+</div>
+
+<div id="toast" class="toast"></div>
 
 <script>
 
@@ -91,7 +590,8 @@ const SUPABASE_URL =
 const SUPABASE_KEY =
 "sb_publishable_pJrgD6-8p-SOxTu8bP02Ag_Cv5InPtB";
 
-const db = supabase.createClient(
+const db =
+supabase.createClient(
 SUPABASE_URL,
 SUPABASE_KEY
 );
@@ -99,504 +599,941 @@ SUPABASE_KEY
 let terfiler=[];
 let current=null;
 let activeTab="genel";
+let records=[];
+
+const tabs=[
+["genel","📋 Genel"],
+["motor","⚡ Motorlar"],
+["pompa","💧 Pompalar"],
+["surucu","🎛️ Sürücüler"],
+["olcum","📏 Ölçümler"]
+];
+
+const definitions={
+
+motor:{
+table:"motorlar",
+title:"Motor",
+icon:"⚡",
+
+fields:[
+["ad","Motor Adı"],
+["marka_model","Marka / Model"],
+["guc","Güç"],
+["gerilim","Gerilim"],
+["akim","Akım"],
+["devir","Devir"],
+["seri_no","Seri No"],
+["notlar","Teknisyen Notu"]
+]
+},
+
+pompa:{
+table:"pompalar",
+title:"Pompa",
+icon:"💧",
+
+fields:[
+["ad","Pompa Adı"],
+["marka_model","Marka / Model"],
+["debi","Debi"],
+["basma_yuksekligi","Basma Yüksekliği"],
+["guc","Güç"],
+["notlar","Teknisyen Notu"]
+]
+},
+
+surucu:{
+table:"suruculer",
+title:"Sürücü",
+icon:"🎛️",
+
+fields:[
+["ad","Sürücü Adı"],
+["marka","Marka"],
+["model","Model"],
+["guc","Güç"],
+["gerilim","Gerilim"],
+["parametreler","Parametre / Ayar Notları"],
+["ariza_kayitlari","Arıza Kayıtları"],
+["notlar","Teknisyen Notu"]
+]
+},
+
+olcum:{
+table:"olcumler",
+title:"Ölçüm",
+icon:"📏",
+
+fields:[
+["tur","Ölçüm Türü"],
+["deger","Değer"],
+["birim","Birim"],
+["aciklama","Açıklama"]
+]
+}
+
+};
+
+function esc(s){
+
+return String(s??"")
+.replace(/[&<>"']/g,m=>({
+
+"&":"&amp;",
+"<":"&lt;",
+">":"&gt;",
+"\"":"&quot;",
+"'":"&#39;"
+
+}[m]));
+
+}
+
+function toast(message){
+
+const x=document.getElementById("toast");
+
+x.textContent=message;
+
+x.classList.add("show");
+
+setTimeout(()=>{
+x.classList.remove("show");
+},2200);
+
+}
 
 async function loadTerfiler(){
 
- const {data,error}=await db
- .from("terfiler")
- .select("*")
- .order("terfi_no");
+const {data,error}=await db
+.from("terfiler")
+.select("*")
+.order("terfi_no");
 
- if(error){
-   document.getElementById("app").innerHTML=
-   `<div class="card">
-   <b>Veritabanı bağlantı hatası</b>
-   <p>${error.message}</p>
-   </div>`;
-   return;
- }
+if(error){
 
- terfiler=data||[];
- showList();
+renderError(error.message);
+
+return;
+
 }
 
-function showList(){
+terfiler=data||[];
 
- document.getElementById("app").innerHTML=`
+showHome();
 
- <input
-   class="search"
-   id="search"
-   placeholder="Terfi ara..."
- >
-
- <button class="primary" onclick="newTerfi()">
- + Yeni Terfi
- </button>
-
- <p class="count">${terfiler.length} terfi</p>
-
- <div id="list"></div>
- `;
-
- document.getElementById("search").oninput=e=>{
-   drawList(e.target.value);
- };
-
- drawList("");
 }
 
-function drawList(q){
+function renderError(message){
 
- const list=document.getElementById("list");
+document.getElementById("app").innerHTML=`
 
- const rows=terfiler.filter(t=>
-   (t.ad+" "+t.terfi_no+" "+t.adres)
-   .toLowerCase()
-   .includes(q.toLowerCase())
- );
+<div class="card" style="margin-top:25px">
 
- if(!rows.length){
-   list.innerHTML=
-   `<div class="card empty">Kayıt bulunamadı.</div>`;
-   return;
- }
+<h2>⚠️ Veritabanına bağlanamadı</h2>
 
- list.innerHTML=rows.map(t=>`
+<p style="color:var(--muted)">
+${esc(message)}
+</p>
 
- <div class="card" onclick="openTerfi('${t.id}')">
+<p style="color:var(--muted)">
+Supabase bağlantısını ve tablo izinlerini kontrol et.
+</p>
 
-   <h2>${t.ad}</h2>
+<button
+class="btn primary"
+onclick="loadTerfiler()">
 
-   <div class="muted">
-   ${t.terfi_no}
-   </div>
+Tekrar dene
 
-   <div>
-   ${t.adres||"Adres girilmedi"}
-   </div>
+</button>
 
- </div>
+</div>
 
- `).join("");
+`;
+
+}
+
+function showHome(){
+
+current=null;
+
+document.getElementById("app").innerHTML=`
+
+<section class="hero">
+
+<div class="eyebrow">
+SAHA TEKNİK ARŞİVİ
+</div>
+
+<h2>
+İstasyondaki bilgiyi kaybetme.
+</h2>
+
+<p>
+Motor, pompa, sürücü ve ölçüm kayıtlarını tek yerde tut.
+Arıza geldiğinde geçmiş ölçümlere ve ekipman bilgilerine hızlıca ulaş.
+</p>
+
+<div class="hero-actions">
+
+<button
+class="btn primary"
+onclick="newTerfi()">
+
+＋ Yeni Terfi İstasyonu
+
+</button>
+
+<button
+class="btn secondary"
+onclick="document.getElementById('search').focus()">
+
+🔎 Arşivde ara
+
+</button>
+
+</div>
+
+</section>
+
+<div class="searchbar">
+
+<input
+id="search"
+placeholder="İstasyon adı, terfi no veya adres ara…">
+
+</div>
+
+<div class="stats">
+
+<div class="stat">
+
+<div class="icon">🏭</div>
+
+<b>${terfiler.length}</b>
+
+<span>Terfi istasyonu</span>
+
+</div>
+
+<div class="stat">
+
+<div class="icon">⚡</div>
+
+<b>—</b>
+
+<span>Motor</span>
+
+</div>
+
+<div class="stat">
+
+<div class="icon">💧</div>
+
+<b>—</b>
+
+<span>Pompa</span>
+
+</div>
+
+<div class="stat">
+
+<div class="icon">🔧</div>
+
+<b>${terfiler.length}</b>
+
+<span>Aktif arşiv</span>
+
+</div>
+
+</div>
+
+<div class="section-title">
+
+<h3>İstasyonlar</h3>
+
+<span>${terfiler.length} kayıt</span>
+
+</div>
+
+<div id="stationList" class="cards"></div>
+
+`;
+
+document.getElementById("search").oninput=e=>{
+drawStations(e.target.value);
+};
+
+drawStations("");
+
+}
+
+function drawStations(q){
+
+const box=document.getElementById("stationList");
+
+const rows=terfiler.filter(t=>
+
+(`${t.ad||""} ${t.terfi_no||""} ${t.adres||""}`)
+.toLowerCase()
+.includes(q.toLowerCase())
+
+);
+
+if(!rows.length){
+
+box.innerHTML=`
+
+<div
+class="empty"
+style="grid-column:1/-1">
+
+Henüz kayıt yok.
+İlk terfi istasyonunu oluşturabilirsin.
+
+</div>
+
+`;
+
+return;
+
+}
+
+box.innerHTML=rows.map(t=>`
+
+<article
+class="card station"
+style="--img:url('https://images.unsplash.com/photo-1581092921461-eab62e97a780?auto=format&fit=crop&w=1000&q=80')"
+onclick="openTerfi('${esc(t.id)}')">
+
+<span class="tag">
+${esc(t.terfi_no)}
+</span>
+
+<h3>
+${esc(t.ad)}
+</h3>
+
+<p>
+${esc(t.adres||"Adres girilmedi")}
+</p>
+
+<div style="margin-top:25px;color:#c7d5e3;font-size:12px">
+Detayları aç →
+</div>
+
+</article>
+
+`).join("");
+
 }
 
 function newTerfi(){
 
- current={
-   id:null,
-   terfi_no:"T"+String(terfiler.length+1).padStart(3,"0"),
-   ad:"",
-   adres:"",
-   aciklama:""
- };
+current={
 
- activeTab="genel";
- showDetail();
+id:null,
+
+terfi_no:
+"T"+String(terfiler.length+1).padStart(3,"0"),
+
+ad:"",
+
+adres:"",
+
+aciklama:""
+
+};
+
+activeTab="genel";
+
+showDetail();
+
 }
 
-async function openTerfi(id){
+function openTerfi(id){
 
- current=terfiler.find(x=>x.id===id);
- activeTab="genel";
- showDetail();
+current=
+terfiler.find(x=>x.id===id);
+
+activeTab="genel";
+
+showDetail();
+
 }
 
 function showDetail(){
 
- document.getElementById("app").innerHTML=`
+document.getElementById("app").innerHTML=`
 
- <button class="secondary"
- onclick="loadTerfiler()">
- ← Tüm terfilere dön
- </button>
+<div class="detail-head">
 
- <div class="hero" style="margin-top:15px">
- <h1>${current.ad||"Yeni Terfi"}</h1>
- <p>${current.terfi_no}</p>
- </div>
+<div class="detail-title">
 
- <div class="card">
+<button
+class="back"
+onclick="showHome()">
 
- <div class="grid">
+← Arşive dön
 
- <div class="field">
- <label>Terfi No</label>
- <input id="terfi_no"
- value="${current.terfi_no}">
- </div>
+</button>
 
- <div class="field">
- <label>Terfi Adı</label>
- <input id="ad"
- value="${current.ad}">
- </div>
+<h2 style="margin-top:15px">
 
- </div>
+${esc(current.ad||"Yeni Terfi İstasyonu")}
 
- <div class="field">
- <label>Adres</label>
- <input id="adres"
- value="${current.adres||""}">
- </div>
+</h2>
 
- <div class="field">
- <label>Açıklama</label>
- <textarea id="aciklama">${current.aciklama||""}</textarea>
- </div>
+<p>
+${esc(current.terfi_no||"")}
+</p>
 
- <div class="actions">
+</div>
 
- <button class="primary"
- onclick="saveTerfi()">
- Kaydet
- </button>
+${current.id?
 
- ${current.id?
- `<button class="danger"
- onclick="deleteTerfi()">
- Terfiyi Sil
- </button>`:""}
+`
 
- </div>
+<button
+class="btn danger"
+onclick="deleteTerfi()">
 
- <div id="message"></div>
+Terfiyi Sil
 
- </div>
+</button>
 
- ${current.id?`
+`
 
- <div class="tabs">
+:""}
 
- <button class="${activeTab=="genel"?"primary":"secondary"}"
- onclick="changeTab('genel')">
- Genel
- </button>
+</div>
 
- <button class="${activeTab=="motor"?"primary":"secondary"}"
- onclick="changeTab('motor')">
- Motorlar
- </button>
+<div class="card form-card">
 
- <button class="${activeTab=="pompa"?"primary":"secondary"}"
- onclick="changeTab('pompa')">
- Pompalar
- </button>
+<div class="form-grid">
 
- <button class="${activeTab=="surucu"?"primary":"secondary"}"
- onclick="changeTab('surucu')">
- Sürücüler
- </button>
+<div class="field">
 
- <button class="${activeTab=="olcum"?"primary":"secondary"}"
- onclick="changeTab('olcum')">
- Ölçümler
- </button>
+<label>
+Terfi No
+</label>
 
- </div>
+<input
+id="terfi_no"
+value="${esc(current.terfi_no)}">
 
- <div id="tab"></div>
+</div>
 
- `:""}
+<div class="field">
 
- `;
+<label>
+Terfi / İstasyon Adı
+</label>
 
- if(current.id && activeTab!="genel")
- loadTab();
+<input
+id="ad"
+value="${esc(current.ad)}">
+
+</div>
+
+</div>
+
+<div class="field">
+
+<label>
+Adres / Konum
+</label>
+
+<input
+id="adres"
+value="${esc(current.adres)}">
+
+</div>
+
+<div class="field">
+
+<label>
+Genel Teknik Açıklama
+</label>
+
+<textarea id="aciklama">
+${esc(current.aciklama)}
+</textarea>
+
+</div>
+
+<button
+class="btn primary"
+onclick="saveTerfi()">
+
+💾
+${current.id?
+"Değişiklikleri kaydet":
+"İstasyonu oluştur"}
+
+</button>
+
+<div id="message"></div>
+
+</div>
+
+${current.id?
+
+`
+
+<div class="tabs">
+
+${tabs.map(t=>`
+
+<button
+class="tab ${activeTab===t[0]?"active":""}"
+onclick="changeTab('${t[0]}')">
+
+${t[1]}
+
+</button>
+
+`).join("")}
+
+</div>
+
+<div id="tab"></div>
+
+`
+
+:""}
+
+`;
+
+if(current.id && activeTab!=="genel"){
+
+loadTab();
+
+}
+
 }
 
 function changeTab(tab){
 
- activeTab=tab;
- showDetail();
+activeTab=tab;
+
+showDetail();
 
 }
 
 async function saveTerfi(){
 
- const payload={
-   terfi_no:document.getElementById("terfi_no").value.trim(),
-   ad:document.getElementById("ad").value.trim(),
-   adres:document.getElementById("adres").value.trim(),
-   aciklama:document.getElementById("aciklama").value.trim()
- };
+const payload={
 
- if(!payload.terfi_no || !payload.ad){
-   alert("Terfi No ve Terfi Adı zorunludur.");
-   return;
- }
+terfi_no:
+document.getElementById("terfi_no").value.trim(),
 
- let result;
+ad:
+document.getElementById("ad").value.trim(),
 
- if(current.id){
+adres:
+document.getElementById("adres").value.trim(),
 
-   result=await db
-   .from("terfiler")
-   .update(payload)
-   .eq("id",current.id)
-   .select()
-   .single();
+aciklama:
+document.getElementById("aciklama").value.trim()
 
- }else{
+};
 
-   result=await db
-   .from("terfiler")
-   .insert(payload)
-   .select()
-   .single();
+if(!payload.terfi_no || !payload.ad){
 
- }
+alert("Terfi No ve istasyon adı zorunludur.");
 
- if(result.error){
-
-   document.getElementById("message").innerHTML=
-   `<div class="message">${result.error.message}</div>`;
-
-   return;
- }
-
- current=result.data;
-
- document.getElementById("message").innerHTML=
- `<div class="message">Kayıt başarıyla kaydedildi ✓</div>`;
-
- await loadTerfilerData();
+return;
 
 }
 
-async function loadTerfilerData(){
+let result;
 
- const {data}=await db
- .from("terfiler")
- .select("*")
- .order("terfi_no");
+if(current.id){
 
- terfiler=data||[];
+result=await db
+.from("terfiler")
+.update(payload)
+.eq("id",current.id)
+.select()
+.single();
+
+}else{
+
+result=await db
+.from("terfiler")
+.insert(payload)
+.select()
+.single();
+
+}
+
+if(result.error){
+
+document.getElementById("message").innerHTML=`
+
+<div class="badge fault">
+
+${esc(result.error.message)}
+
+</div>
+
+`;
+
+return;
+
+}
+
+current=result.data;
+
+const {data}=await db
+.from("terfiler")
+.select("*")
+.order("terfi_no");
+
+terfiler=data||[];
+
+showDetail();
+
+toast("Kayıt başarıyla kaydedildi ✓");
 
 }
 
 async function deleteTerfi(){
 
- if(!confirm("Bu terfi silinsin mi?"))return;
+if(!confirm(
+"Bu terfi istasyonu ve ona bağlı kayıtlar silinsin mi?"
+))return;
 
- const {error}=await db
- .from("terfiler")
- .delete()
- .eq("id",current.id);
+const {error}=await db
+.from("terfiler")
+.delete()
+.eq("id",current.id);
 
- if(error){
-   alert(error.message);
-   return;
- }
+if(error){
 
- loadTerfiler();
+alert(error.message);
+
+return;
 
 }
 
-const definitions={
+terfiler=
+terfiler.filter(x=>x.id!==current.id);
 
- motor:{
-  table:"motorlar",
-  title:"Motor",
-  fields:[
-   ["ad","Motor Adı"],
-   ["marka_model","Marka / Model"],
-   ["guc","Güç"],
-   ["gerilim","Gerilim"],
-   ["akim","Akım"],
-   ["devir","Devir"],
-   ["seri_no","Seri No"],
-   ["notlar","Notlar"]
-  ]
- },
+showHome();
 
- pompa:{
-  table:"pompalar",
-  title:"Pompa",
-  fields:[
-   ["ad","Pompa Adı"],
-   ["marka_model","Marka / Model"],
-   ["debi","Debi"],
-   ["basma_yuksekligi","Basma Yüksekliği"],
-   ["guc","Güç"],
-   ["notlar","Notlar"]
-  ]
- },
+toast("İstasyon silindi");
 
- surucu:{
-  table:"suruculer",
-  title:"Sürücü",
-  fields:[
-   ["ad","Sürücü Adı"],
-   ["marka","Marka"],
-   ["model","Model"],
-   ["guc","Güç"],
-   ["gerilim","Gerilim"],
-   ["parametreler","Parametreler"],
-   ["ariza_kayitlari","Arıza Kayıtları"],
-   ["notlar","Notlar"]
-  ]
- },
-
- olcum:{
-  table:"olcumler",
-  title:"Ölçüm",
-  fields:[
-   ["tur","Ölçüm Türü"],
-   ["deger","Değer"],
-   ["birim","Birim"],
-   ["aciklama","Açıklama"]
-  ]
- }
-
-};
+}
 
 async function loadTab(){
 
- const d=definitions[activeTab];
+const d=definitions[activeTab];
 
- const {data,error}=await db
- .from(d.table)
- .select("*")
- .eq("terfi_id",current.id)
- .order("created_at",{ascending:false});
+const {data,error}=await db
+.from(d.table)
+.select("*")
+.eq("terfi_id",current.id)
+.order("created_at",{ascending:false});
 
- const tab=document.getElementById("tab");
+const tab=document.getElementById("tab");
 
- if(error){
-   tab.innerHTML=
-   `<div class="card">${error.message}</div>`;
-   return;
- }
+if(error){
 
- tab.innerHTML=`
+tab.innerHTML=`
 
- <div class="card">
+<div class="card">
 
- <h2 style="color:#111827">
- Yeni ${d.title}
- </h2>
+<span class="badge fault">
+Tablo hatası
+</span>
 
- ${d.fields.map(f=>`
+<p style="color:var(--muted)">
+${esc(error.message)}
+</p>
 
- <div class="field">
+</div>
 
- <label>${f[1]}</label>
+`;
 
- ${
- ["notlar","parametreler","ariza_kayitlari","aciklama"]
- .includes(f[0])
+return;
 
- ?
+}
 
- `<textarea id="field_${f[0]}"></textarea>`
+records=data||[];
 
- :
+tab.innerHTML=`
 
- `<input id="field_${f[0]}">`
- }
+<div class="card form-card">
 
- </div>
+<div
+class="section-title"
+style="margin-top:0">
 
- `).join("")}
+<h3>
+${d.icon} Yeni ${d.title}
+</h3>
 
- <button class="primary"
- onclick="addRecord()">
- ${d.title} Kaydet
- </button>
+<span>Saha kaydı</span>
 
- </div>
+</div>
 
- <div class="card">
+${d.fields.map(f=>`
 
- <h2 style="color:#111827">
- ${d.title} Kayıtları (${data.length})
- </h2>
+<div class="field">
 
- ${
- data.length?
+<label>
+${esc(f[1])}
+</label>
 
- data.map(x=>`
+${
+[
+"notlar",
+"parametreler",
+"ariza_kayitlari",
+"aciklama"
+].includes(f[0])
 
- <div class="item">
+?
 
- <b>
- ${x.ad||x.tur||"Ölçüm"}
- </b>
+`
 
- <div class="muted">
- ${x.marka_model||x.model||x.deger||""}
- </div>
+<textarea
+id="field_${f[0]}"
+placeholder="Teknik detay, ölçüm sonucu, gözlem…">
+</textarea>
 
- <br>
+`
 
- <button class="danger"
- onclick="removeRecord('${x.id}')">
- Sil
- </button>
+:
 
- </div>
+`
 
- `).join("")
+<input
+id="field_${f[0]}"
+placeholder="${esc(f[1])}">
 
- :
+`
 
- `<div class="empty">Kayıt yok</div>`
- }
+}
 
- </div>
+</div>
 
- `;
+`).join("")}
+
+<button
+class="btn primary"
+onclick="addRecord()">
+
+＋ ${d.title} kaydet
+
+</button>
+
+</div>
+
+<div class="card">
+
+<div
+class="section-title"
+style="margin-top:0">
+
+<h3>
+Geçmiş ${d.title} kayıtları
+</h3>
+
+<span>
+${records.length} kayıt
+</span>
+
+</div>
+
+${records.length?
+
+records.map(recordHtml).join("")
+
+:
+
+`
+
+<div class="empty">
+
+Bu istasyon için henüz
+${d.title.toLowerCase()}
+kaydı yok.
+
+</div>
+
+`
+
+}
+
+</div>
+
+`;
+
+}
+
+function recordHtml(x){
+
+const d=definitions[activeTab];
+
+let title=
+x.ad||
+x.tur||
+"Kayıt";
+
+let sub=
+x.marka_model||
+x.model||
+x.deger||
+x.aciklama||
+"";
+
+let extra=
+d.fields
+
+.filter(f=>
+![
+"ad",
+"tur",
+"marka_model",
+"model",
+"deger",
+"aciklama"
+].includes(f[0])
+&&x[f[0]]
+)
+
+.slice(0,2)
+
+.map(f=>
+`${esc(f[1])}: ${esc(x[f[0]])}`
+)
+
+.join(" • ");
+
+return `
+
+<div class="record">
+
+<div>
+
+<h4>
+${esc(title)}
+</h4>
+
+<p>
+
+${esc(sub)}
+
+${extra?
+`<br>${extra}`:
+""}
+
+</p>
+
+</div>
+
+<div class="meta">
+
+${x.created_at?
+new Date(x.created_at)
+.toLocaleDateString("tr-TR"):
+""}
+
+<br>
+
+<button
+class="btn danger"
+style="
+padding:7px 9px;
+margin-top:8px;
+font-size:11px
+"
+onclick="removeRecord('${esc(x.id)}')">
+
+Sil
+
+</button>
+
+</div>
+
+</div>
+
+`;
 
 }
 
 async function addRecord(){
 
- const d=definitions[activeTab];
+const d=definitions[activeTab];
 
- const record={
-   terfi_id:current.id
- };
+const record={
+terfi_id:current.id
+};
 
- d.fields.forEach(f=>{
-   record[f[0]]=
-   document.getElementById("field_"+f[0]).value.trim();
- });
+d.fields.forEach(f=>{
 
- if(activeTab==="olcum"){
-   record.tarih=new Date().toISOString();
- }
+record[f[0]]=
+document
+.getElementById("field_"+f[0])
+.value
+.trim();
 
- const {error}=await db
- .from(d.table)
- .insert(record);
+});
 
- if(error){
-   alert(error.message);
-   return;
- }
+if(activeTab==="olcum"){
 
- loadTab();
+record.tarih=
+new Date().toISOString();
+
+}
+
+const {error}=await db
+.from(d.table)
+.insert(record);
+
+if(error){
+
+alert(error.message);
+
+return;
+
+}
+
+await loadTab();
+
+toast(`${d.title} kaydedildi ✓`);
 
 }
 
 async function removeRecord(id){
 
- if(!confirm("Bu kayıt silinsin mi?"))return;
+if(!confirm(
+"Bu kayıt silinsin mi?"
+))return;
 
- const d=definitions[activeTab];
+const d=definitions[activeTab];
 
- const {error}=await db
- .from(d.table)
- .delete()
- .eq("id",id);
+const {error}=await db
+.from(d.table)
+.delete()
+.eq("id",id);
 
- if(error){
-   alert(error.message);
-   return;
- }
+if(error){
 
- loadTab();
+alert(error.message);
+
+return;
+
+}
+
+loadTab();
+
+toast("Kayıt silindi");
 
 }
 
