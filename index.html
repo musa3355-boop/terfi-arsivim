@@ -2,11 +2,8 @@
 <html lang="tr">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 <title>MESKİ | Terfi Arşivim</title>
-
-<!-- PDF.js -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 
 <style>
 :root{
@@ -15,12 +12,14 @@
     --panel:#ffffff;
     --panel2:#f7fafc;
     --line:#cbdce6;
+    --line2:#a9c6d7;
     --blue:#087fe0;
     --blue2:#2c9af0;
     --text:#173042;
     --muted:#698092;
     --muted2:#8ba0ad;
     --success:#159b69;
+    --warning:#d89216;
     --danger:#d84b4b;
     --shadow:0 10px 30px rgba(27,68,91,.10);
     --radius:16px;
@@ -36,13 +35,7 @@ html{
 
 body{
     margin:0;
-    font-family:
-        -apple-system,
-        BlinkMacSystemFont,
-        "Segoe UI",
-        Roboto,
-        Arial,
-        sans-serif;
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
     background:
         radial-gradient(circle at 80% 0%,rgba(47,154,240,.08),transparent 28%),
         linear-gradient(145deg,var(--bg),var(--bg2));
@@ -50,10 +43,7 @@ body{
     min-height:100vh;
 }
 
-button,
-input,
-textarea,
-select{
+button,input,textarea,select{
     font:inherit;
 }
 
@@ -61,18 +51,12 @@ button{
     -webkit-tap-highlight-color:transparent;
 }
 
-/* =========================
-   APP
-========================= */
-
 .app{
     min-height:100vh;
     display:flex;
 }
 
-/* =========================
-   SIDEBAR
-========================= */
+/* SIDEBAR */
 
 .sidebar{
     width:225px;
@@ -165,9 +149,7 @@ button{
     line-height:1.6;
 }
 
-/* =========================
-   MAIN
-========================= */
+/* MAIN */
 
 .main{
     margin-left:225px;
@@ -221,9 +203,7 @@ button{
     margin:auto;
 }
 
-/* =========================
-   CARD
-========================= */
+/* CARD */
 
 .card{
     background:rgba(255,255,255,.94);
@@ -261,9 +241,7 @@ button{
     padding:20px;
 }
 
-/* =========================
-   HERO
-========================= */
+/* HERO */
 
 .hero{
     padding:26px;
@@ -288,9 +266,7 @@ button{
     font-size:12px;
 }
 
-/* =========================
-   STATS
-========================= */
+/* STATS */
 
 .stats{
     display:grid;
@@ -322,9 +298,7 @@ button{
     color:var(--muted2);
 }
 
-/* =========================
-   BUTTONS
-========================= */
+/* BUTTONS */
 
 .btn{
     border:1px solid #aac8d9;
@@ -335,7 +309,6 @@ button{
     cursor:pointer;
     font-size:12px;
     font-weight:700;
-    transition:.15s;
 }
 
 .btn:hover{
@@ -366,9 +339,7 @@ button{
     font-size:10px;
 }
 
-/* =========================
-   SEARCH
-========================= */
+/* SEARCH */
 
 .toolbar{
     display:flex;
@@ -392,9 +363,7 @@ button{
     outline:none;
 }
 
-/* =========================
-   STATION
-========================= */
+/* STATION */
 
 .station-grid{
     display:grid;
@@ -408,7 +377,6 @@ button{
     background:linear-gradient(145deg,#fff,#f7fafc);
     border-radius:13px;
     cursor:pointer;
-    transition:.15s;
 }
 
 .station-card:hover{
@@ -469,15 +437,12 @@ button{
     font-weight:750;
 }
 
-/* =========================
-   DETAIL
-========================= */
+/* DETAIL */
 
 .back-row{
     display:flex;
     gap:8px;
     margin-bottom:14px;
-    flex-wrap:wrap;
 }
 
 .station-heading{
@@ -494,10 +459,6 @@ button{
     color:var(--muted);
     font-size:12px;
 }
-
-/* =========================
-   DETAIL TABS
-========================= */
 
 .detail-tabs{
     display:flex;
@@ -551,9 +512,7 @@ button{
     grid-column:1/-1;
 }
 
-/* =========================
-   FORM
-========================= */
+/* FORM */
 
 .form-grid{
     display:grid;
@@ -604,9 +563,7 @@ button{
     background:#f3f6f8;
 }
 
-/* =========================
-   VALUE
-========================= */
+/* VALUE */
 
 .value-grid{
     display:grid;
@@ -641,9 +598,7 @@ button{
     padding:9px;
 }
 
-/* =========================
-   SSR
-========================= */
+/* SSR */
 
 .ssr-grid{
     display:grid;
@@ -671,9 +626,7 @@ button{
     margin-top:7px;
 }
 
-/* =========================
-   NAMEPLATE
-========================= */
+/* NAMEPLATE */
 
 .nameplate{
     background:linear-gradient(145deg,#f0f3f4,#d7dee2);
@@ -737,9 +690,7 @@ button{
     font-size:12px;
 }
 
-/* =========================
-   CABLE
-========================= */
+/* CABLE */
 
 .cable-grid{
     display:grid;
@@ -761,10 +712,21 @@ button{
     border:1px solid rgba(0,0,0,.18);
 }
 
-.wire-red{background:#d92828}
-.wire-yellow{background:#e8c52e}
-.wire-black{background:#111}
-.wire-green{background:#198744}
+.wire-red{
+    background:#d92828;
+}
+
+.wire-yellow{
+    background:#e8c52e;
+}
+
+.wire-black{
+    background:#111;
+}
+
+.wire-green{
+    background:#198744;
+}
 
 .wire-label{
     font-size:10px;
@@ -780,9 +742,7 @@ button{
     background:#fff;
 }
 
-/* =========================
-   HMI
-========================= */
+/* HMI */
 
 .hmi-tabs{
     display:flex;
@@ -862,9 +822,7 @@ button{
     font-size:9px;
 }
 
-/* =========================
-   REFERENCES
-========================= */
+/* REFERENCES */
 
 .reference-grid{
     display:grid;
@@ -898,9 +856,7 @@ button{
     margin:7px 0;
 }
 
-/* =========================
-   SETTINGS
-========================= */
+/* SETTINGS */
 
 .settings-grid{
     display:grid;
@@ -942,102 +898,7 @@ button{
     border-color:#2799ed;
 }
 
-/* =========================
-   PDF
-========================= */
-
-.pdf-toolbar{
-    display:flex;
-    flex-wrap:wrap;
-    align-items:center;
-    gap:8px;
-    padding:12px;
-    background:#f3f8fb;
-    border-bottom:1px solid var(--line);
-}
-
-.pdf-toolbar input[type="file"]{
-    max-width:250px;
-    font-size:11px;
-}
-
-.pdf-url{
-    flex:1;
-    min-width:180px;
-    padding:10px;
-    border:1px solid #c8dce7;
-    border-radius:8px;
-    background:#fff;
-}
-
-.pdf-stage{
-    background:#65727a;
-    min-height:650px;
-    padding:22px;
-    overflow:auto;
-    display:flex;
-    justify-content:center;
-    align-items:flex-start;
-}
-
-.pdf-pages{
-    display:flex;
-    flex-direction:column;
-    align-items:center;
-    gap:18px;
-}
-
-.pdf-page-wrap{
-    background:white;
-    box-shadow:0 5px 25px rgba(0,0,0,.25);
-    position:relative;
-}
-
-.pdf-page-wrap canvas{
-    display:block;
-    max-width:none;
-}
-
-.pdf-empty{
-    color:#dce8ee;
-    text-align:center;
-    padding:100px 20px;
-    max-width:500px;
-}
-
-.pdf-empty-icon{
-    font-size:50px;
-    margin-bottom:15px;
-}
-
-.pdf-status{
-    padding:10px 13px;
-    background:#fff;
-    border-top:1px solid var(--line);
-    color:#61798a;
-    font-size:11px;
-}
-
-.pdf-controls{
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    gap:8px;
-    padding:11px;
-    background:#fff;
-    border-top:1px solid var(--line);
-}
-
-.pdf-page-info{
-    min-width:90px;
-    text-align:center;
-    font-weight:800;
-    font-size:12px;
-}
-
-/* =========================
-   EMPTY
-========================= */
+/* EMPTY */
 
 .empty{
     text-align:center;
@@ -1049,9 +910,7 @@ button{
     color:#365467;
 }
 
-/* =========================
-   LOCK
-========================= */
+/* LOCK */
 
 .lock-box{
     text-align:center;
@@ -1085,9 +944,7 @@ button{
     letter-spacing:4px;
 }
 
-/* =========================
-   TOAST
-========================= */
+/* TOAST */
 
 .toast{
     position:fixed;
@@ -1111,9 +968,7 @@ button{
     transform:none;
 }
 
-/* =========================
-   DARK
-========================= */
+/* DARK */
 
 .theme-dark{
     --bg:#0b1d2d;
@@ -1121,6 +976,7 @@ button{
     --panel:#102b40;
     --panel2:#0d2538;
     --line:#24506b;
+    --line2:#35647d;
     --text:#edf5fb;
     --muted:#9ab0bf;
     --muted2:#7893a5;
@@ -1171,21 +1027,7 @@ button{
     background:#12324a;
 }
 
-.theme-dark .pdf-toolbar,
-.theme-dark .pdf-controls,
-.theme-dark .pdf-status{
-    background:#102b40;
-    color:#dceaf2;
-}
-
-.theme-dark .pdf-url{
-    background:#0a2235;
-    color:#fff;
-}
-
-/* =========================
-   COMPACT
-========================= */
+/* COMPACT */
 
 .compact .content{
     padding:15px;
@@ -1207,9 +1049,7 @@ button{
     padding:9px;
 }
 
-/* =========================
-   MOBILE
-========================= */
+/* MOBILE */
 
 @media(max-width:1000px){
 
@@ -1321,81 +1161,6 @@ button{
     .detail-tab{
         padding:10px 11px;
     }
-
-    .pdf-stage{
-        padding:10px;
-        min-height:500px;
-    }
-
-    .pdf-toolbar{
-        flex-direction:column;
-        align-items:stretch;
-    }
-
-    .pdf-toolbar input[type="file"]{
-        max-width:none;
-        width:100%;
-    }
-
-    .pdf-url{
-        width:100%;
-    }
-}
-
-/* =========================
-   PRINT / PDF
-========================= */
-
-@media print{
-
-    body{
-        background:#fff !important;
-    }
-
-    .sidebar,
-    .topbar,
-    .detail-tabs,
-    .back-row,
-    .no-print,
-    .pdf-toolbar,
-    .pdf-controls,
-    .pdf-status{
-        display:none !important;
-    }
-
-    .main{
-        margin:0 !important;
-        width:100% !important;
-    }
-
-    .content{
-        max-width:none !important;
-        padding:0 !important;
-    }
-
-    .card{
-        box-shadow:none !important;
-        border:1px solid #bbb !important;
-        break-inside:avoid;
-        page-break-inside:avoid;
-    }
-
-    .detail-grid{
-        display:block !important;
-    }
-
-    .detail-grid .card{
-        margin-bottom:14px;
-    }
-
-    .nameplate{
-        break-inside:avoid;
-    }
-
-    @page{
-        size:A4;
-        margin:12mm;
-    }
 }
 </style>
 </head>
@@ -1407,12 +1172,21 @@ button{
 <aside class="sidebar">
 
     <div class="brand">
+
         <div class="brand-mark">M</div>
 
         <div class="brand-text">
-            <div class="brand-title">MESKİ</div>
-            <div class="brand-sub">TERFİ ARŞİVİM</div>
+
+            <div class="brand-title">
+                MESKİ
+            </div>
+
+            <div class="brand-sub">
+                TERFİ ARŞİVİM
+            </div>
+
         </div>
+
     </div>
 
     <nav class="nav">
@@ -1425,11 +1199,6 @@ button{
         <button id="navStations" onclick="showStations()">
             <span class="nav-icon">▣</span>
             <span class="nav-text">Terfiler</span>
-        </button>
-
-        <button id="navPDF" onclick="showPDF()">
-            <span class="nav-icon">📄</span>
-            <span class="nav-text">PDF Arşivi</span>
         </button>
 
         <button id="navRefs" onclick="showReferences()">
@@ -1487,20 +1256,18 @@ button{
 
 <div class="toast" id="toast"></div>
 
-
 <script>
 
 /* =========================================================
-   TEMEL
+   MESKİ TERFİ ARŞİVİM
 ========================================================= */
 
-const EDIT_PASSWORD="6872";
+const EDIT_PASSWORD = "6872";
 
-const STORAGE_KEY="meski_terfi_arsiv_v5";
+const STORAGE_KEY = "meski_terfi_arsiv_v5";
+const PREF_KEY = "meski_gorunum_v3";
 
-const PREF_KEY="meski_gorunum_v3";
-
-let state={
+let state = {
 
     editMode:false,
 
@@ -1519,24 +1286,15 @@ let state={
         density:"normal"
     },
 
-    stations:[],
-
-    pdf:{
-        pdf:null,
-        page:1,
-        scale:1,
-        numPages:0,
-        url:""
-    }
+    stations:[]
 
 };
 
-
 /* =========================================================
-   HMI
+   HMI SAYFALARI
 ========================================================= */
 
-const HMI_PAGES=[
+const HMI_PAGES = [
 
 {
 title:"HMI Sayfa 1",
@@ -1642,12 +1400,11 @@ fields:[
 
 ];
 
-
 /* =========================================================
-   MOTOR
+   MOTOR ETİKET
 ========================================================= */
 
-const MOTOR_FIELDS=[
+const MOTOR_FIELDS = [
 
 ["Marka","brand","text"],
 ["Model / Tip","model","text"],
@@ -1670,12 +1427,11 @@ const MOTOR_FIELDS=[
 
 ];
 
-
 /* =========================================================
-   POMPA
+   POMPA ETİKET
 ========================================================= */
 
-const PUMP_FIELDS=[
+const PUMP_FIELDS = [
 
 ["Marka","brand","text"],
 ["Model","model","text"],
@@ -1699,12 +1455,11 @@ const PUMP_FIELDS=[
 
 ];
 
-
 /* =========================================================
    MOTOR ÇALIŞMA
 ========================================================= */
 
-const RUNNING_FIELDS=[
+const RUNNING_FIELDS = [
 
 ["Ölçüm Tarihi","measurement_date","date"],
 ["Ölçüm Saati","measurement_time","time"],
@@ -1722,12 +1477,11 @@ const RUNNING_FIELDS=[
 
 ];
 
-
 /* =========================================================
-   REFERANS
+   REFERANSLAR
 ========================================================= */
 
-const REFERENCES=[
+const REFERENCES = [
 
 {
 title:"Üç Faz Motor Akım Dengesi",
@@ -1767,14 +1521,13 @@ text:"Frekans, akım, güç ve sürücü sıcaklığının aynı çalışma kayd
 
 ];
 
-
 /* =========================================================
    YENİ TERFİ
 ========================================================= */
 
 function createDefaultStation(){
 
-    return{
+    return {
 
         id:Date.now()+Math.random(),
 
@@ -1824,6 +1577,30 @@ function createDefaultStation(){
 
 }
 
+/* =========================================================
+   GÜVENLİ STORAGE
+========================================================= */
+
+function safeStorageGet(key){
+
+    try{
+        return localStorage.getItem(key);
+    }catch(e){
+        return null;
+    }
+
+}
+
+function safeStorageSet(key,value){
+
+    try{
+        localStorage.setItem(key,value);
+        return true;
+    }catch(e){
+        return false;
+    }
+
+}
 
 /* =========================================================
    STORAGE
@@ -1831,22 +1608,32 @@ function createDefaultStation(){
 
 function saveData(){
 
-    localStorage.setItem(
+    const ok=safeStorageSet(
         STORAGE_KEY,
         JSON.stringify(state.stations)
     );
+
+    if(!ok){
+        console.warn("Veri cihaz hafızasına yazılamadı.");
+    }
 
 }
 
 function loadData(){
 
+    let saved=null;
+
     try{
 
-        const saved=JSON.parse(
-            localStorage.getItem(STORAGE_KEY)||"[]"
+        saved=JSON.parse(
+            safeStorageGet(STORAGE_KEY)||"[]"
         );
 
-        state.stations=saved;
+        if(Array.isArray(saved)){
+            state.stations=saved;
+        }else{
+            state.stations=[];
+        }
 
     }catch(e){
 
@@ -1854,14 +1641,16 @@ function loadData(){
 
     }
 
-
     try{
 
         const prefs=JSON.parse(
-            localStorage.getItem(PREF_KEY)||"null"
+            safeStorageGet(PREF_KEY)||"null"
         );
 
-        if(prefs){
+        if(
+            prefs &&
+            typeof prefs==="object"
+        ){
 
             state.settings={
                 ...state.settings,
@@ -1872,6 +1661,54 @@ function loadData(){
 
     }catch(e){}
 
+    /*
+       Eski kayıtların eksik alanlarını tamamla.
+    */
+
+    state.stations=state.stations.map(s=>{
+
+        const d=createDefaultStation();
+
+        return {
+
+            ...d,
+            ...s,
+
+            measurement:{
+                ...d.measurement,
+                ...(s.measurement||{})
+            },
+
+            motor:{
+                ...d.motor,
+                ...(s.motor||{})
+            },
+
+            pump:{
+                ...d.pump,
+                ...(s.pump||{})
+            },
+
+            ssr:{
+                ...d.ssr,
+                ...(s.ssr||{})
+            },
+
+            cable:{
+                ...d.cable,
+                ...(s.cable||{})
+            },
+
+            hmi:Array.isArray(s.hmi)
+                ? s.hmi.map((x,i)=>({
+                    ...(d.hmi[i]||{}),
+                    ...(x||{})
+                }))
+                : d.hmi
+
+        };
+
+    });
 
     if(!state.stations.length){
 
@@ -1928,14 +1765,13 @@ function loadData(){
 
 }
 
-
 /* =========================================================
    GÖRÜNÜM
 ========================================================= */
 
 function savePreferences(){
 
-    localStorage.setItem(
+    safeStorageSet(
         PREF_KEY,
         JSON.stringify(state.settings)
     );
@@ -1958,7 +1794,6 @@ function applyPreferences(){
 
 }
 
-
 /* =========================================================
    HELPERS
 ========================================================= */
@@ -1978,6 +1813,9 @@ function toast(message){
 
     const t=document.getElementById("toast");
 
+    if(!t)
+        return;
+
     t.textContent=message;
 
     t.classList.add("show");
@@ -1996,7 +1834,6 @@ function currentStation(){
 
 }
 
-
 /* =========================================================
    NAV
 ========================================================= */
@@ -2006,7 +1843,6 @@ function setActiveNav(id){
     [
         "navHome",
         "navStations",
-        "navPDF",
         "navRefs",
         "navSettings"
     ].forEach(x=>{
@@ -2030,7 +1866,9 @@ function goHome(){
     state.page="home";
     state.selectedStation=null;
 
-    document.getElementById("pageTitle").textContent="Ana Sayfa";
+    document.getElementById(
+        "pageTitle"
+    ).textContent="Ana Sayfa";
 
     setActiveNav("navHome");
 
@@ -2043,7 +1881,9 @@ function showStations(){
     state.page="stations";
     state.selectedStation=null;
 
-    document.getElementById("pageTitle").textContent="Terfiler";
+    document.getElementById(
+        "pageTitle"
+    ).textContent="Terfiler";
 
     setActiveNav("navStations");
 
@@ -2056,7 +1896,9 @@ function showReferences(){
     state.page="references";
     state.selectedStation=null;
 
-    document.getElementById("pageTitle").textContent="Teknik Referanslar";
+    document.getElementById(
+        "pageTitle"
+    ).textContent="Teknik Referanslar";
 
     setActiveNav("navRefs");
 
@@ -2069,32 +1911,15 @@ function showSettings(){
     state.page="settings";
     state.selectedStation=null;
 
-    document.getElementById("pageTitle").textContent="Ayarlar";
+    document.getElementById(
+        "pageTitle"
+    ).textContent="Ayarlar";
 
     setActiveNav("navSettings");
 
     render();
 
 }
-
-
-/* =========================================================
-   PDF SAYFASI
-========================================================= */
-
-function showPDF(){
-
-    state.page="pdf";
-    state.selectedStation=null;
-
-    document.getElementById("pageTitle").textContent="PDF Arşivi";
-
-    setActiveNav("navPDF");
-
-    render();
-
-}
-
 
 /* =========================================================
    MODE
@@ -2103,33 +1928,30 @@ function showPDF(){
 function updateMode(){
 
     const badge=document.getElementById("modeBadge");
-
     const button=document.getElementById("editBtn");
+
+    if(!badge || !button)
+        return;
 
     if(state.editMode){
 
         badge.textContent="Düzenleme Modu";
-
         badge.classList.add("edit");
 
         button.textContent="🔒 Kilitle";
-
         button.onclick=lockEditing;
 
     }else{
 
         badge.textContent="Ziyaretçi Modu";
-
         badge.classList.remove("edit");
 
         button.textContent="Düzenleme";
-
         button.onclick=openAccess;
 
     }
 
 }
-
 
 /* =========================================================
    RENDER
@@ -2137,32 +1959,82 @@ function updateMode(){
 
 function render(){
 
-    updateMode();
+    try{
 
-    applyPreferences();
+        updateMode();
 
-    const root=document.getElementById("appContent");
+        applyPreferences();
 
-    if(state.page==="home")
-        root.innerHTML=homeHTML();
+        const root=document.getElementById(
+            "appContent"
+        );
 
-    if(state.page==="stations")
-        root.innerHTML=stationsHTML();
+        if(!root)
+            return;
 
-    if(state.page==="detail")
-        root.innerHTML=detailHTML();
+        if(state.page==="home"){
+            root.innerHTML=homeHTML();
+        }
+        else if(state.page==="stations"){
+            root.innerHTML=stationsHTML();
+        }
+        else if(state.page==="detail"){
+            root.innerHTML=detailHTML();
+        }
+        else if(state.page==="references"){
+            root.innerHTML=referencesHTML();
+        }
+        else if(state.page==="settings"){
+            root.innerHTML=settingsHTML();
+        }
+        else{
+            state.page="home";
+            root.innerHTML=homeHTML();
+        }
 
-    if(state.page==="references")
-        root.innerHTML=referencesHTML();
+    }catch(error){
 
-    if(state.page==="settings")
-        root.innerHTML=settingsHTML();
+        console.error("Render hatası:",error);
 
-    if(state.page==="pdf")
-        root.innerHTML=pdfHTML();
+        const root=document.getElementById(
+            "appContent"
+        );
+
+        if(root){
+
+            root.innerHTML=`
+
+            <section class="card">
+
+                <div class="empty">
+
+                    <h3>
+                        Uygulama yüklenirken hata oluştu.
+                    </h3>
+
+                    <p>
+                        Sayfayı yenileyip tekrar deneyin.
+                    </p>
+
+                    <button
+                        class="btn btn-primary"
+                        onclick="location.reload()">
+
+                        Yenile
+
+                    </button>
+
+                </div>
+
+            </section>
+
+            `;
+
+        }
+
+    }
 
 }
-
 
 /* =========================================================
    HOME
@@ -2210,33 +2082,83 @@ function homeHTML(){
 <section class="stats">
 
     <div class="stat">
-        <div class="stat-label">Kayıtlı Terfi</div>
-        <div class="stat-value">${total}</div>
-        <div class="stat-unit">istasyon</div>
+
+        <div class="stat-label">
+            Kayıtlı Terfi
+        </div>
+
+        <div class="stat-value">
+            ${total}
+        </div>
+
+        <div class="stat-unit">
+            istasyon
+        </div>
+
     </div>
 
     <div class="stat">
-        <div class="stat-label">Motor</div>
-        <div class="stat-value">${motors}</div>
-        <div class="stat-unit">adet</div>
+
+        <div class="stat-label">
+            Motor
+        </div>
+
+        <div class="stat-value">
+            ${motors}
+        </div>
+
+        <div class="stat-unit">
+            adet
+        </div>
+
     </div>
 
     <div class="stat">
-        <div class="stat-label">Pompa</div>
-        <div class="stat-value">${pumps}</div>
-        <div class="stat-unit">adet</div>
+
+        <div class="stat-label">
+            Pompa
+        </div>
+
+        <div class="stat-value">
+            ${pumps}
+        </div>
+
+        <div class="stat-unit">
+            adet
+        </div>
+
     </div>
 
     <div class="stat">
-        <div class="stat-label">Sürücü</div>
-        <div class="stat-value">${drives}</div>
-        <div class="stat-unit">adet</div>
+
+        <div class="stat-label">
+            Sürücü
+        </div>
+
+        <div class="stat-value">
+            ${drives}
+        </div>
+
+        <div class="stat-unit">
+            adet
+        </div>
+
     </div>
 
     <div class="stat">
-        <div class="stat-label">Arşiv</div>
-        <div class="stat-value">AKTİF</div>
-        <div class="stat-unit">yerel kayıt</div>
+
+        <div class="stat-label">
+            Arşiv
+        </div>
+
+        <div class="stat-value">
+            AKTİF
+        </div>
+
+        <div class="stat-unit">
+            yerel kayıt
+        </div>
+
     </div>
 
 </section>
@@ -2246,6 +2168,7 @@ function homeHTML(){
     <div class="card-header">
 
         <div>
+
             <div class="card-title">
                 Terfi Kayıtları
             </div>
@@ -2253,15 +2176,21 @@ function homeHTML(){
             <div class="card-subtitle">
                 Terfiyi seçerek teknik arşivine girin.
             </div>
+
         </div>
 
         ${
             state.editMode
             ?
-            `<button class="btn btn-primary"
+            `
+            <button
+                class="btn btn-primary"
                 onclick="newStation()">
+
                 + Yeni Terfi
-            </button>`
+
+            </button>
+            `
             :
             ""
         }
@@ -2280,14 +2209,13 @@ function homeHTML(){
 
 }
 
-
 /* =========================================================
    STATION CARDS
 ========================================================= */
 
 function stationCardsHTML(){
 
-    const q=state.search.toLowerCase();
+    const q=String(state.search||"").toLowerCase();
 
     const list=state.stations.filter(s=>{
 
@@ -2304,21 +2232,21 @@ function stationCardsHTML(){
 
     });
 
-
     if(!list.length){
 
         return `
 
         <div class="empty">
 
-            <h3>Kayıt bulunamadı</h3>
+            <h3>
+                Kayıt bulunamadı
+            </h3>
 
         </div>
 
         `;
 
     }
-
 
     return `
 
@@ -2329,7 +2257,10 @@ function stationCardsHTML(){
         <input
             placeholder="Terfi no, isim, bölge veya adres..."
             value="${esc(state.search)}"
-            oninput="state.search=this.value;render()"
+            oninput="
+                state.search=this.value;
+                render();
+            "
         >
 
     </div>
@@ -2340,8 +2271,9 @@ function stationCardsHTML(){
 
 ${list.map(s=>`
 
-<div class="station-card"
-     onclick="openStation(${s.id})">
+<div
+    class="station-card"
+    onclick="openStation(${s.id})">
 
     <div class="station-top">
 
@@ -2366,10 +2298,13 @@ ${list.map(s=>`
     <div style="
         font-size:11px;
         color:#6f8795;
-        margin-top:6px">
+        margin-top:6px
+    ">
 
         ${esc(s.region||"Bölge girilmemiş")}
+
         ·
+
         ${esc(s.address||"Adres girilmemiş")}
 
     </div>
@@ -2377,24 +2312,39 @@ ${list.map(s=>`
     <div class="station-meta">
 
         <div class="meta-box">
-            <div class="meta-label">MOTOR</div>
+
+            <div class="meta-label">
+                MOTOR
+            </div>
+
             <div class="meta-value">
                 ${s.motorCount||0}
             </div>
+
         </div>
 
         <div class="meta-box">
-            <div class="meta-label">POMPA</div>
+
+            <div class="meta-label">
+                POMPA
+            </div>
+
             <div class="meta-value">
                 ${s.pumpCount||0}
             </div>
+
         </div>
 
         <div class="meta-box">
-            <div class="meta-label">SÜRÜCÜ</div>
+
+            <div class="meta-label">
+                SÜRÜCÜ
+            </div>
+
             <div class="meta-value">
                 ${s.driveCount||0}
             </div>
+
         </div>
 
     </div>
@@ -2408,7 +2358,6 @@ ${list.map(s=>`
 `;
 
 }
-
 
 function stationsHTML(){
 
@@ -2433,10 +2382,15 @@ function stationsHTML(){
         ${
             state.editMode
             ?
-            `<button class="btn btn-primary"
+            `
+            <button
+                class="btn btn-primary"
                 onclick="newStation()">
+
                 + Yeni Terfi
-            </button>`
+
+            </button>
+            `
             :
             ""
         }
@@ -2455,7 +2409,6 @@ function stationsHTML(){
 
 }
 
-
 /* =========================================================
    DETAIL
 ========================================================= */
@@ -2463,15 +2416,13 @@ function stationsHTML(){
 function openStation(id){
 
     state.selectedStation=id;
-
     state.page="detail";
-
     state.detailTab="station";
-
     state.hmiPage=0;
 
-    document.getElementById("pageTitle").textContent=
-        "Terfi Teknik Arşivi";
+    document.getElementById(
+        "pageTitle"
+    ).textContent="Terfi Teknik Arşivi";
 
     setActiveNav("navStations");
 
@@ -2510,7 +2461,11 @@ function detailTab(id,label){
 
 <button
     class="detail-tab ${
-        state.detailTab===id ? "active" : ""
+        state.detailTab===id
+        ?
+        "active"
+        :
+        ""
     }"
     onclick="setDetailTab('${id}')">
 
@@ -2522,18 +2477,33 @@ function detailTab(id,label){
 
 }
 
-
-/* =========================================================
-   DETAIL HTML
-========================================================= */
-
 function detailHTML(){
 
     const s=currentStation();
 
-    if(!s)
-        return `<div class="empty">Kayıt bulunamadı.</div>`;
+    if(!s){
 
+        return `
+
+        <div class="empty">
+
+            <h3>
+                Kayıt bulunamadı.
+            </h3>
+
+            <button
+                class="btn btn-primary"
+                onclick="showStations()">
+
+                Terfilere Dön
+
+            </button>
+
+        </div>
+
+        `;
+
+    }
 
     const tabs=[
 
@@ -2549,31 +2519,15 @@ function detailHTML(){
 
     ];
 
-
     return `
 
 <div class="back-row">
 
-    <button class="btn"
-            onclick="showStations()">
-
-        ← Terfilere Dön
-
-    </button>
-
-    <button
-        class="btn btn-success"
-        onclick="printStationPDF()">
-
-        📄 PDF Al / Aktar
-
-    </button>
-
     <button
         class="btn"
-        onclick="openPDFForStation()">
+        onclick="showStations()">
 
-        📑 PDF Görüntüle
+        ← Terfilere Dön
 
     </button>
 
@@ -2595,7 +2549,6 @@ function detailHTML(){
 
 </div>
 
-
 <div class="station-heading">
 
     <h1>
@@ -2605,13 +2558,14 @@ function detailHTML(){
     <p>
 
         ${esc(s.region||"Bölge belirtilmemiş")}
+
         ·
+
         ${esc(s.address||"Adres belirtilmemiş")}
 
     </p>
 
 </div>
-
 
 <div class="detail-tabs">
 
@@ -2620,7 +2574,6 @@ function detailHTML(){
     ).join("")}
 
 </div>
-
 
 <div class="detail-grid">
 
@@ -2633,7 +2586,6 @@ function detailHTML(){
 `;
 
 }
-
 
 /* =========================================================
    SECTION
@@ -2675,7 +2627,7 @@ function sectionHTML(id,s){
 
         spare:[
             "Yedek Motor",
-            "Yedek motor bilgileri"
+            "Aynı motorun yedeklenmesi durumunda yedek kablo bilgileri"
         ],
 
         hmi:[
@@ -2690,9 +2642,7 @@ function sectionHTML(id,s){
 
     };
 
-
     let content="";
-
 
     if(id==="station"){
 
@@ -2700,21 +2650,69 @@ function sectionHTML(id,s){
 
         <div class="form-grid">
 
-            ${fieldHTML("Terfi No","code","text",s,"station")}
+            ${fieldHTML(
+                "Terfi No",
+                "code",
+                "text",
+                s,
+                "station"
+            )}
 
-            ${fieldHTML("Terfi Adı","name","text",s,"station")}
+            ${fieldHTML(
+                "Terfi Adı",
+                "name",
+                "text",
+                s,
+                "station"
+            )}
 
-            ${fieldHTML("Bölge","region","text",s,"station")}
+            ${fieldHTML(
+                "Bölge",
+                "region",
+                "text",
+                s,
+                "station"
+            )}
 
-            ${fieldHTML("Adres","address","text",s,"station")}
+            ${fieldHTML(
+                "Adres",
+                "address",
+                "text",
+                s,
+                "station"
+            )}
 
-            ${fieldHTML("Motor Sayısı","motorCount","integer",s,"station")}
+            ${fieldHTML(
+                "Motor Sayısı",
+                "motorCount",
+                "integer",
+                s,
+                "station"
+            )}
 
-            ${fieldHTML("Pompa Sayısı","pumpCount","integer",s,"station")}
+            ${fieldHTML(
+                "Pompa Sayısı",
+                "pumpCount",
+                "integer",
+                s,
+                "station"
+            )}
 
-            ${fieldHTML("Sürücü Sayısı","driveCount","integer",s,"station")}
+            ${fieldHTML(
+                "Sürücü Sayısı",
+                "driveCount",
+                "integer",
+                s,
+                "station"
+            )}
 
-            ${fieldHTML("Açıklama","description","textarea",s,"station")}
+            ${fieldHTML(
+                "Açıklama",
+                "description",
+                "textarea",
+                s,
+                "station"
+            )}
 
         </div>
 
@@ -2722,34 +2720,26 @@ function sectionHTML(id,s){
 
     }
 
-
     if(id==="ssr")
         content=ssrHTML(s);
-
 
     if(id==="running")
         content=runningHTML(s);
 
-
     if(id==="motor")
         content=motorHTML(s);
-
 
     if(id==="pump")
         content=pumpHTML(s);
 
-
     if(id==="cable")
         content=cableHTML(s);
-
 
     if(id==="spare")
         content=spareHTML(s);
 
-
     if(id==="hmi")
         content=hmiHTML(s);
-
 
     if(id==="notes"){
 
@@ -2763,12 +2753,12 @@ function sectionHTML(id,s){
 
     }
 
-
     const full=
         ["station","running","hmi","notes"].includes(id)
-        ? "full"
-        : "";
-
+        ?
+        "full"
+        :
+        "";
 
     return `
 
@@ -2804,18 +2794,26 @@ function sectionHTML(id,s){
 
 }
 
-
 /* =========================================================
    FIELD
 ========================================================= */
 
-function fieldHTML(label,key,type,obj,prefix){
+function fieldHTML(
+    label,
+    key,
+    type,
+    obj,
+    prefix
+){
 
     const value=obj?.[key]??"";
 
     const disabled=
-        state.editMode ? "" : "disabled";
-
+        state.editMode
+        ?
+        ""
+        :
+        "disabled";
 
     if(type==="textarea"){
 
@@ -2825,7 +2823,9 @@ function fieldHTML(label,key,type,obj,prefix){
             class="field"
             style="grid-column:1/-1">
 
-            <label>${esc(label)}</label>
+            <label>
+                ${esc(label)}
+            </label>
 
             <textarea
                 ${disabled}
@@ -2843,7 +2843,6 @@ function fieldHTML(label,key,type,obj,prefix){
 
     }
 
-
     let htmlType="text";
 
     if(type==="integer" || type==="decimal")
@@ -2855,12 +2854,13 @@ function fieldHTML(label,key,type,obj,prefix){
     if(type==="time")
         htmlType="time";
 
-
     return `
 
     <div class="field">
 
-        <label>${esc(label)}</label>
+        <label>
+            ${esc(label)}
+        </label>
 
         <input
 
@@ -2898,18 +2898,23 @@ function fieldHTML(label,key,type,obj,prefix){
 
 }
 
-
 /* =========================================================
    UPDATE
 ========================================================= */
 
-function updateObject(prefix,key,value){
+function updateObject(
+    prefix,
+    key,
+    value
+){
+
+    if(!state.editMode)
+        return;
 
     const s=currentStation();
 
     if(!s)
         return;
-
 
     if(prefix==="station"){
 
@@ -2924,11 +2929,9 @@ function updateObject(prefix,key,value){
 
     }
 
-
     saveData();
 
 }
-
 
 /* =========================================================
    SSR
@@ -2948,12 +2951,12 @@ function ssrHTML(s){
 
     ];
 
-
     return `
 
 <div class="ssr-grid">
 
-${fields.map(([label,key])=>`
+${fields.map(
+([label,key])=>`
 
 <div class="ssr-card">
 
@@ -2964,6 +2967,7 @@ ${fields.map(([label,key])=>`
     ${
         state.editMode
         ?
+
         `
         <input
             type="number"
@@ -2987,24 +2991,27 @@ ${fields.map(([label,key])=>`
             "
         >
         `
+
         :
+
         `
         <div class="ssr-card-value">
             ${esc(s.ssr[key]||"—")}
         </div>
         `
+
     }
 
 </div>
 
-`).join("")}
+`
+).join("")}
 
 </div>
 
 `;
 
 }
-
 
 /* =========================================================
    MOTOR ÇALIŞMA
@@ -3018,7 +3025,8 @@ function runningHTML(s){
 
 <div class="value-grid">
 
-${RUNNING_FIELDS.map(([label,key,type])=>{
+${RUNNING_FIELDS.map(
+([label,key,type])=>{
 
     const value=s.measurement[key]??"";
 
@@ -3033,7 +3041,6 @@ ${RUNNING_FIELDS.map(([label,key,type])=>{
     if(type==="decimal")
         inputType="number";
 
-
     return `
 
     <div class="value">
@@ -3044,7 +3051,9 @@ ${RUNNING_FIELDS.map(([label,key,type])=>{
 
         ${
             state.editMode
+
             ?
+
             `
             <input
                 type="${inputType}"
@@ -3065,12 +3074,15 @@ ${RUNNING_FIELDS.map(([label,key,type])=>{
                 "
             >
             `
+
             :
+
             `
             <div class="value-number">
                 ${esc(value||"—")}
             </div>
             `
+
         }
 
     </div>
@@ -3085,12 +3097,16 @@ ${RUNNING_FIELDS.map(([label,key,type])=>{
 
 }
 
-
 /* =========================================================
    NAMEPLATE
 ========================================================= */
 
-function plateHTML(fields,object,prefix,title){
+function plateHTML(
+    fields,
+    object,
+    prefix,
+    title
+){
 
     object ??= {};
 
@@ -3112,7 +3128,8 @@ function plateHTML(fields,object,prefix,title){
 
     <div class="nameplate-grid">
 
-${fields.map(([label,key,type])=>`
+${fields.map(
+([label,key,type])=>`
 
 <div class="np-field">
 
@@ -3122,7 +3139,9 @@ ${fields.map(([label,key,type])=>`
 
     ${
         state.editMode
+
         ?
+
         `
         <input
             type="${type==="text"?"text":"number"}"
@@ -3147,17 +3166,21 @@ ${fields.map(([label,key,type])=>`
             "
         >
         `
+
         :
+
         `
         <div class="np-value">
             ${esc(object[key]||"—")}
         </div>
         `
+
     }
 
 </div>
 
-`).join("")}
+`
+).join("")}
 
     </div>
 
@@ -3189,7 +3212,6 @@ function pumpHTML(s){
 
 }
 
-
 /* =========================================================
    KABLO
 ========================================================= */
@@ -3201,18 +3223,21 @@ function cableHTML(s){
     const wires=[
 
         ["L1 / Faz 1","l1","wire-red"],
+
         ["L2 / Faz 2","l2","wire-yellow"],
+
         ["L3 / Faz 3","l3","wire-black"],
+
         ["PE / Toprak","pe","wire-green"]
 
     ];
-
 
     return `
 
 <div class="cable-grid">
 
-${wires.map(([label,key,wire])=>`
+${wires.map(
+([label,key,wire])=>`
 
 <div class="cable">
 
@@ -3224,7 +3249,9 @@ ${wires.map(([label,key,wire])=>`
 
     ${
         state.editMode
+
         ?
+
         `
         <input
             value="${esc(s.cable[key]||"")}"
@@ -3238,18 +3265,21 @@ ${wires.map(([label,key,wire])=>`
             "
         >
         `
+
         :
+
         `
         <strong>
             ${esc(s.cable[key]||"—")}
         </strong>
         `
+
     }
 
 </div>
 
-`).join("")}
-
+`
+).join("")}
 
 <div
     class="cable"
@@ -3261,7 +3291,9 @@ ${wires.map(([label,key,wire])=>`
 
     ${
         state.editMode
+
         ?
+
         `
         <input
             value="${esc(s.cable.note||"")}"
@@ -3275,12 +3307,15 @@ ${wires.map(([label,key,wire])=>`
             "
         >
         `
+
         :
+
         `
         <strong>
             ${esc(s.cable.note||"—")}
         </strong>
         `
+
     }
 
 </div>
@@ -3290,7 +3325,6 @@ ${wires.map(([label,key,wire])=>`
 `;
 
 }
-
 
 /* =========================================================
    YEDEK MOTOR
@@ -3310,7 +3344,7 @@ function spareHTML(s){
 
             <p>
                 Aynı motorun yedeği kullanıldığında
-                burada yedek motor kablo bilgileri tutulur.
+                burada yalnızca yedek motor kablo bilgileri tutulur.
             </p>
 
             ${
@@ -3335,9 +3369,7 @@ function spareHTML(s){
 
     }
 
-
     s.spareMotor.cable ??= {};
-
 
     return `
 
@@ -3351,7 +3383,13 @@ function spareHTML(s){
 
         <input
             value="${esc(s.spareMotor.label||"")}"
-            ${state.editMode?"":"disabled"}
+            ${
+                state.editMode
+                ?
+                ""
+                :
+                "disabled"
+            }
             onchange="
                 updateSpare(
                     'label',
@@ -3362,13 +3400,26 @@ function spareHTML(s){
 
     </div>
 
+    <div class="field">
+
+        <label>
+            Motor Etiketi
+        </label>
+
+        <input
+            value="Asıl motor ile aynı"
+            disabled
+        >
+
+    </div>
 
 ${[
     ["L1","l1"],
     ["L2","l2"],
     ["L3","l3"],
     ["PE","pe"]
-].map(([label,key])=>`
+].map(
+([label,key])=>`
 
 <div class="field">
 
@@ -3379,7 +3430,13 @@ ${[
     <input
         value="${esc(s.spareMotor.cable[key]||"")}"
         placeholder="Kablo rengi"
-        ${state.editMode?"":"disabled"}
+        ${
+            state.editMode
+            ?
+            ""
+            :
+            "disabled"
+        }
         onchange="
             updateSpareCable(
                 '${key}',
@@ -3390,8 +3447,8 @@ ${[
 
 </div>
 
-`).join("")}
-
+`
+).join("")}
 
 <div
     class="field"
@@ -3402,7 +3459,13 @@ ${[
     </label>
 
     <textarea
-        ${state.editMode?"":"disabled"}
+        ${
+            state.editMode
+            ?
+            ""
+            :
+            "disabled"
+        }
         onchange="
             updateSpareCable(
                 'note',
@@ -3441,6 +3504,9 @@ ${
 
 function addSpareMotor(){
 
+    if(!state.editMode)
+        return;
+
     const s=currentStation();
 
     if(!s)
@@ -3451,11 +3517,13 @@ function addSpareMotor(){
         label:s.name+" Yedek Motor",
 
         cable:{
+
             l1:"",
             l2:"",
             l3:"",
             pe:"",
             note:""
+
         }
 
     };
@@ -3470,6 +3538,9 @@ function addSpareMotor(){
 
 function updateSpare(key,value){
 
+    if(!state.editMode)
+        return;
+
     const s=currentStation();
 
     if(!s?.spareMotor)
@@ -3482,6 +3553,9 @@ function updateSpare(key,value){
 }
 
 function updateSpareCable(key,value){
+
+    if(!state.editMode)
+        return;
 
     const s=currentStation();
 
@@ -3498,7 +3572,12 @@ function updateSpareCable(key,value){
 
 function removeSpareMotor(){
 
-    if(!confirm("Yedek motor kaydı kaldırılsın mı?"))
+    if(!state.editMode)
+        return;
+
+    if(!confirm(
+        "Yedek motor kaydı kaldırılsın mı?"
+    ))
         return;
 
     const s=currentStation();
@@ -3516,27 +3595,37 @@ function removeSpareMotor(){
 
 }
 
-
 /* =========================================================
    HMI
 ========================================================= */
 
 function hmiHTML(s){
 
-    s.hmi ??= HMI_PAGES.map(()=>({}));
+    s.hmi ??=HMI_PAGES.map(()=>({}));
+
+    if(
+        state.hmiPage<0 ||
+        state.hmiPage>=HMI_PAGES.length
+    ){
+        state.hmiPage=0;
+    }
 
     const page=HMI_PAGES[state.hmiPage];
-
 
     return `
 
 <div class="hmi-tabs">
 
-${HMI_PAGES.map((p,i)=>`
+${HMI_PAGES.map(
+(p,i)=>`
 
 <button
     class="hmi-tab ${
-        i===state.hmiPage ? "active" : ""
+        i===state.hmiPage
+        ?
+        "active"
+        :
+        ""
     }"
     onclick="
         state.hmiPage=${i};
@@ -3547,10 +3636,10 @@ ${HMI_PAGES.map((p,i)=>`
 
 </button>
 
-`).join("")}
+`
+).join("")}
 
 </div>
-
 
 <div class="hmi-screen">
 
@@ -3560,7 +3649,8 @@ ${HMI_PAGES.map((p,i)=>`
 
     <div class="hmi-fields">
 
-${page.fields.map(([label,key,type])=>{
+${page.fields.map(
+([label,key,type])=>{
 
     const value=
         s.hmi[state.hmiPage]?.[key]??"";
@@ -3575,7 +3665,9 @@ ${page.fields.map(([label,key,type])=>{
 
         ${
             state.editMode
+
             ?
+
             `
             <input
                 type="number"
@@ -3603,13 +3695,16 @@ ${page.fields.map(([label,key,type])=>{
                 "
             >
             `
+
             :
+
             `
             <input
                 value="${esc(value)}"
                 disabled
             >
             `
+
         }
 
     </div>
@@ -3638,7 +3733,14 @@ ${page.fields.map(([label,key,type])=>{
 
 }
 
-function updateHMI(page,key,value){
+function updateHMI(
+    page,
+    key,
+    value
+){
+
+    if(!state.editMode)
+        return;
 
     const s=currentStation();
 
@@ -3657,9 +3759,8 @@ function updateHMI(page,key,value){
 
 }
 
-
 /* =========================================================
-   REFERANSLAR
+   REFERENCES
 ========================================================= */
 
 function referencesHTML(){
@@ -3688,7 +3789,8 @@ function referencesHTML(){
 
         <div class="reference-grid">
 
-${REFERENCES.map(r=>`
+${REFERENCES.map(
+r=>`
 
 <div class="reference">
 
@@ -3706,7 +3808,8 @@ ${REFERENCES.map(r=>`
 
 </div>
 
-`).join("")}
+`
+).join("")}
 
         </div>
 
@@ -3718,9 +3821,8 @@ ${REFERENCES.map(r=>`
 
 }
 
-
 /* =========================================================
-   AYARLAR
+   SETTINGS
 ========================================================= */
 
 function settingsHTML(){
@@ -3758,14 +3860,21 @@ function settingsHTML(){
 
                 <div class="choice-row">
 
-                    ${choice("theme","light","Açık")}
+                    ${choice(
+                        "theme",
+                        "light",
+                        "Açık"
+                    )}
 
-                    ${choice("theme","dark","Koyu")}
+                    ${choice(
+                        "theme",
+                        "dark",
+                        "Koyu"
+                    )}
 
                 </div>
 
             </div>
-
 
             <div class="setting-group">
 
@@ -3775,44 +3884,43 @@ function settingsHTML(){
 
                 <div class="choice-row">
 
-                    ${choice("density","normal","Normal")}
+                    ${choice(
+                        "density",
+                        "normal",
+                        "Normal"
+                    )}
 
-                    ${choice("density","compact","Kompakt")}
+                    ${choice(
+                        "density",
+                        "compact",
+                        "Kompakt"
+                    )}
 
                 </div>
 
             </div>
-
 
             <div
                 class="setting-group"
                 style="grid-column:1/-1">
 
                 <h3>
-                    PDF Kullanımı
+                    Terfi Detay Kullanımı
                 </h3>
 
                 <p style="
                     font-size:11px;
                     color:#708694;
-                    line-height:1.6">
+                    line-height:1.6;
+                    margin-top:0
+                ">
 
-                    PDF Arşivi bölümünden PDF dosyasını seçebilir,
-                    uygulama içerisinde sayfa sayfa görüntüleyebilir,
-                    yakınlaştırabilir ve sayfalar arasında gezebilirsiniz.
+                    Terfiye girdiğinde bütün teknik bölümler
+                    sekmelerden açılır.
 
                 </p>
 
-                <button
-                    class="btn btn-primary"
-                    onclick="showPDF()">
-
-                    📄 PDF Arşivini Aç
-
-                </button>
-
             </div>
-
 
             <div
                 class="setting-group"
@@ -3842,7 +3950,11 @@ function settingsHTML(){
 
 }
 
-function choice(key,value,label){
+function choice(
+    key,
+    value,
+    label
+){
 
     return `
 
@@ -3869,7 +3981,10 @@ function choice(key,value,label){
 
 }
 
-function setPreference(key,value){
+function setPreference(
+    key,
+    value
+){
 
     state.settings[key]=value;
 
@@ -3896,593 +4011,20 @@ function resetPreferences(){
 
 }
 
-
-/* =========================================================
-   PDF ARŞİVİ
-========================================================= */
-
-function pdfHTML(){
-
-    return `
-
-<section class="card">
-
-    <div class="card-header">
-
-        <div>
-
-            <div class="card-title">
-                PDF Arşivi
-            </div>
-
-            <div class="card-subtitle">
-                Teknik dokümanları uygulama içinde görüntüle.
-            </div>
-
-        </div>
-
-        <button
-            class="btn"
-            onclick="clearPDF()">
-
-            PDF'yi Kapat
-
-        </button>
-
-    </div>
-
-
-    <div class="pdf-toolbar">
-
-        <input
-            id="pdfFileInput"
-            type="file"
-            accept="application/pdf,.pdf"
-            onchange="loadPDFFile(event)"
-        >
-
-
-        <input
-            id="pdfUrlInput"
-            class="pdf-url"
-            placeholder="PDF bağlantısını buraya yapıştır..."
-        >
-
-
-        <button
-            class="btn btn-primary"
-            onclick="loadPDFFromURL()">
-
-            PDF'yi Aç
-
-        </button>
-
-
-        <button
-            class="btn"
-            onclick="pdfZoomOut()">
-
-            −
-
-        </button>
-
-
-        <button
-            class="btn"
-            onclick="pdfZoomReset()">
-
-            ${Math.round(state.pdf.scale*100)}%
-
-        </button>
-
-
-        <button
-            class="btn"
-            onclick="pdfZoomIn()">
-
-            +
-
-        </button>
-
-    </div>
-
-
-    <div
-        id="pdfStage"
-        class="pdf-stage">
-
-        <div
-            id="pdfPages"
-            class="pdf-pages">
-
-            <div class="pdf-empty">
-
-                <div class="pdf-empty-icon">
-                    📄
-                </div>
-
-                <h2>
-                    PDF seç
-                </h2>
-
-                <p>
-                    Yukarıdaki dosya seçme alanından
-                    bir PDF yükle. PDF burada sayfa sayfa
-                    görüntülenecek.
-                </p>
-
-            </div>
-
-        </div>
-
-    </div>
-
-
-    <div class="pdf-controls">
-
-        <button
-            class="btn"
-            onclick="pdfPreviousPage()">
-
-            ◀ Önceki
-
-        </button>
-
-
-        <div
-            id="pdfPageInfo"
-            class="pdf-page-info">
-
-            0 / 0
-
-        </div>
-
-
-        <button
-            class="btn"
-            onclick="pdfNextPage()">
-
-            Sonraki ▶
-
-        </button>
-
-    </div>
-
-
-    <div
-        id="pdfStatus"
-        class="pdf-status">
-
-        PDF yüklenmedi.
-
-    </div>
-
-</section>
-
-`;
-
-}
-
-
-/* =========================================================
-   PDF DOSYA AÇ
-========================================================= */
-
-async function loadPDFFile(event){
-
-    const file=event.target.files?.[0];
-
-    if(!file)
-        return;
-
-    if(file.type!=="application/pdf" &&
-       !file.name.toLowerCase().endsWith(".pdf")){
-
-        toast("Lütfen PDF dosyası seç.");
-
-        return;
-
-    }
-
-    try{
-
-        const buffer=await file.arrayBuffer();
-
-        await openPDFData(buffer);
-
-        toast("PDF açıldı.");
-
-    }catch(error){
-
-        console.error(error);
-
-        toast("PDF açılamadı.");
-
-        setPDFStatus(
-            "PDF okunamadı. Dosyanın sağlam olduğundan emin olun."
-        );
-
-    }
-
-}
-
-
-/* =========================================================
-   PDF URL
-========================================================= */
-
-async function loadPDFFromURL(){
-
-    const input=document.getElementById("pdfUrlInput");
-
-    if(!input)
-        return;
-
-    const url=input.value.trim();
-
-    if(!url){
-
-        toast("PDF bağlantısı gir.");
-
-        return;
-
-    }
-
-    setPDFStatus("PDF indiriliyor...");
-
-    try{
-
-        await openPDFData(url);
-
-        toast("PDF açıldı.");
-
-    }catch(error){
-
-        console.error(error);
-
-        setPDFStatus(
-            "PDF açılamadı. Sunucu CORS izni vermiyor olabilir."
-        );
-
-        toast("PDF açılamadı.");
-
-    }
-
-}
-
-
-/* =========================================================
-   PDF DATA
-========================================================= */
-
-async function openPDFData(source){
-
-    if(!window.pdfjsLib){
-
-        throw new Error(
-            "PDF.js yüklenemedi."
-        );
-
-    }
-
-    pdfjsLib.GlobalWorkerOptions.workerSrc=
-        "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js";
-
-
-    const loadingTask=
-        pdfjsLib.getDocument(source);
-
-    const pdf=
-        await loadingTask.promise;
-
-
-    state.pdf.pdf=pdf;
-
-    state.pdf.page=1;
-
-    state.pdf.numPages=pdf.numPages;
-
-    renderPDFPages();
-
-}
-
-
-/* =========================================================
-   PDF RENDER
-========================================================= */
-
-async function renderPDFPages(){
-
-    const container=
-        document.getElementById("pdfPages");
-
-    if(!container)
-        return;
-
-
-    container.innerHTML="";
-
-
-    if(!state.pdf.pdf){
-
-        return;
-
-    }
-
-
-    setPDFStatus(
-        "PDF hazırlanıyor..."
-    );
-
-
-    for(
-        let pageNumber=1;
-        pageNumber<=state.pdf.numPages;
-        pageNumber++
-    ){
-
-        const page=
-            await state.pdf.pdf.getPage(
-                pageNumber
-            );
-
-
-        const viewport=
-            page.getViewport({
-                scale:state.pdf.scale
-            });
-
-
-        const wrap=
-            document.createElement("div");
-
-        wrap.className=
-            "pdf-page-wrap";
-
-
-        const canvas=
-            document.createElement("canvas");
-
-        const context=
-            canvas.getContext("2d");
-
-
-        canvas.width=
-            Math.floor(viewport.width);
-
-        canvas.height=
-            Math.floor(viewport.height);
-
-
-        canvas.style.width=
-            viewport.width+"px";
-
-        canvas.style.height=
-            viewport.height+"px";
-
-
-        wrap.appendChild(canvas);
-
-        container.appendChild(wrap);
-
-
-        await page.render({
-
-            canvasContext:context,
-
-            viewport:viewport
-
-        }).promise;
-
-    }
-
-
-    updatePDFControls();
-
-
-    setPDFStatus(
-        `${state.pdf.numPages} sayfa yüklendi.`
-    );
-
-}
-
-
-/* =========================================================
-   PDF ZOOM
-========================================================= */
-
-function pdfZoomIn(){
-
-    state.pdf.scale=
-        Math.min(
-            3,
-            state.pdf.scale+.25
-        );
-
-    renderPDFPages();
-
-}
-
-function pdfZoomOut(){
-
-    state.pdf.scale=
-        Math.max(
-            .5,
-            state.pdf.scale-.25
-        );
-
-    renderPDFPages();
-
-}
-
-function pdfZoomReset(){
-
-    state.pdf.scale=1;
-
-    renderPDFPages();
-
-}
-
-
-/* =========================================================
-   PDF SAYFA
-========================================================= */
-
-function pdfPreviousPage(){
-
-    if(state.pdf.page<=1)
-        return;
-
-    state.pdf.page--;
-
-    updatePDFControls();
-
-    scrollToPDFPage();
-
-}
-
-function pdfNextPage(){
-
-    if(state.pdf.page>=state.pdf.numPages)
-        return;
-
-    state.pdf.page++;
-
-    updatePDFControls();
-
-    scrollToPDFPage();
-
-}
-
-function updatePDFControls(){
-
-    const info=
-        document.getElementById(
-            "pdfPageInfo"
-        );
-
-    if(info){
-
-        info.textContent=
-            state.pdf.numPages
-            ?
-            `${state.pdf.page} / ${state.pdf.numPages}`
-            :
-            "0 / 0";
-
-    }
-
-}
-
-function scrollToPDFPage(){
-
-    const pages=
-        document.querySelectorAll(
-            ".pdf-page-wrap"
-        );
-
-    const target=
-        pages[state.pdf.page-1];
-
-    if(target){
-
-        target.scrollIntoView({
-            behavior:"smooth",
-            block:"center"
-        });
-
-    }
-
-}
-
-
-/* =========================================================
-   PDF STATUS
-========================================================= */
-
-function setPDFStatus(text){
-
-    const el=
-        document.getElementById(
-            "pdfStatus"
-        );
-
-    if(el)
-        el.textContent=text;
-
-}
-
-
-/* =========================================================
-   PDF TEMİZLE
-========================================================= */
-
-function clearPDF(){
-
-    state.pdf={
-        pdf:null,
-        page:1,
-        scale:1,
-        numPages:0,
-        url:""
-    };
-
-    render();
-
-}
-
-
-/* =========================================================
-   TERFİDEN PDF AÇ
-========================================================= */
-
-function openPDFForStation(){
-
-    showPDF();
-
-}
-
-
-/* =========================================================
-   TERFİYİ PDF OLARAK AKTAR
-========================================================= */
-
-function printStationPDF(){
-
-    if(state.page!=="detail"){
-
-        toast("Önce bir terfi aç.");
-
-        return;
-
-    }
-
-
-    /*
-       Tarayıcının yazdırma motoru kullanılıyor.
-       iPhone / iPad üzerinde:
-       Paylaş → Yazdır
-       veya yazdır ekranından PDF olarak kaydet.
-    */
-
-    setTimeout(()=>{
-
-        window.print();
-
-    },100);
-
-}
-
-
 /* =========================================================
    ACCESS
 ========================================================= */
 
 function openAccess(){
 
-    document.getElementById(
+    const root=document.getElementById(
         "appContent"
-    ).innerHTML=`
+    );
+
+    if(!root)
+        return;
+
+    root.innerHTML=`
 
 <section class="card">
 
@@ -4501,7 +4043,6 @@ function openAccess(){
             düzenleme şifresini girin.
         </p>
 
-
         <div class="password-row">
 
             <input
@@ -4516,7 +4057,6 @@ function openAccess(){
                 "
             >
 
-
             <button
                 class="btn btn-primary"
                 onclick="checkPassword()">
@@ -4526,7 +4066,6 @@ function openAccess(){
             </button>
 
         </div>
-
 
         <div style="margin-top:14px">
 
@@ -4546,15 +4085,28 @@ function openAccess(){
 
 `;
 
+    const input=document.getElementById(
+        "passwordInput"
+    );
+
+    if(input){
+
+        setTimeout(()=>{
+            input.focus();
+        },50);
+
+    }
+
 }
 
 function checkPassword(){
 
-    const input=
-        document.getElementById(
-            "passwordInput"
-        );
+    const input=document.getElementById(
+        "passwordInput"
+    );
 
+    if(!input)
+        return;
 
     if(input.value===EDIT_PASSWORD){
 
@@ -4567,6 +4119,10 @@ function checkPassword(){
         );
 
     }else{
+
+        input.value="";
+
+        input.focus();
 
         toast(
             "Şifre hatalı."
@@ -4600,7 +4156,6 @@ function lockEditing(){
 
 }
 
-
 /* =========================================================
    NEW STATION
 ========================================================= */
@@ -4615,9 +4170,7 @@ function newStation(){
 
     }
 
-
     const s=createDefaultStation();
-
 
     const numbers=
         state.stations.map(
@@ -4628,27 +4181,22 @@ function newStation(){
                 )||0
         );
 
-
     const next=
         Math.max(
             0,
             ...numbers
         )+1;
 
-
     s.code=
         "T"+
         String(next)
         .padStart(3,"0");
 
-
     s.name="Yeni Terfi";
-
 
     state.stations.push(s);
 
     saveData();
-
 
     state.selectedStation=s.id;
 
@@ -4656,12 +4204,12 @@ function newStation(){
 
     state.detailTab="station";
 
-
     document.getElementById(
         "pageTitle"
     ).textContent=
         "Terfi Teknik Arşivi";
 
+    setActiveNav("navStations");
 
     render();
 
@@ -4670,7 +4218,6 @@ function newStation(){
     );
 
 }
-
 
 /* =========================================================
    DELETE
@@ -4681,24 +4228,20 @@ function deleteStation(){
     if(!state.editMode)
         return;
 
-
     const s=currentStation();
 
     if(!s)
         return;
-
 
     if(!confirm(
         `"${s.code} - ${s.name}" kaydı silinsin mi?`
     ))
         return;
 
-
     state.stations=
         state.stations.filter(
             x=>x.id!==s.id
         );
-
 
     saveData();
 
@@ -4710,14 +4253,25 @@ function deleteStation(){
 
 }
 
-
 /* =========================================================
    BAŞLAT
 ========================================================= */
 
-loadData();
+(function startApp(){
 
-render();
+    loadData();
+
+    state.page="home";
+
+    state.selectedStation=null;
+
+    state.editMode=false;
+
+    render();
+
+    setActiveNav("navHome");
+
+})();
 
 </script>
 
