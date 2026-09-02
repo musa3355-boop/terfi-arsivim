@@ -3,26 +3,28 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#061a2d">
 <title>MESKİ Terfi Arşivim</title>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <style>
 :root{
- --bg:#071a2f;
- --card:#0d2945;
+ --bg:#061a2d;
+ --bg2:#09233b;
+ --card:#0c2a45;
  --card2:#102f4d;
- --line:#28506e;
- --line2:#356b8e;
- --text:#eef7ff;
- --muted:#9db7ca;
- --blue:#38a9e8;
- --blue2:#63c4f5;
- --ok:#18b878;
- --danger:#c9464d;
- --warning:#e1a52e;
- --shadow:0 12px 35px rgba(0,0,0,.18);
- --radius:15px;
+ --line:#285573;
+ --line2:#3a769d;
+ --text:#eff8ff;
+ --muted:#9eb9cc;
+ --blue:#2eacef;
+ --blue2:#6dd0ff;
+ --ok:#18bd82;
+ --danger:#df4e5b;
+ --warn:#e0a62f;
+ --shadow:0 12px 32px rgba(0,0,0,.22);
+ --radius:16px;
  --scale:1;
 }
 
@@ -31,17 +33,17 @@
 }
 
 html{
- scroll-behavior:smooth;
+ scroll-behavior:smooth
 }
 
 body{
  margin:0;
- background:
-   radial-gradient(circle at top right,rgba(56,169,232,.09),transparent 30%),
-   linear-gradient(145deg,#06172a,#0a2138);
- color:var(--text);
- font:15px system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
  min-height:100vh;
+ background:
+  radial-gradient(circle at top right,rgba(46,172,239,.11),transparent 28%),
+  linear-gradient(145deg,#041525,#09233b 60%,#071a2d);
+ color:var(--text);
+ font:15px system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif
 }
 
 body.zoom-small{
@@ -56,150 +58,184 @@ button,
 input,
 textarea,
 select{
- font:inherit;
+ font:inherit
 }
 
 button{
- -webkit-tap-highlight-color:transparent;
+ cursor:pointer;
+ -webkit-tap-highlight-color:transparent
 }
 
 input[type=number]{
- appearance:textfield;
+ appearance:textfield
 }
 
 input[type=number]::-webkit-outer-spin-button,
 input[type=number]::-webkit-inner-spin-button{
  appearance:none;
- margin:0;
+ margin:0
 }
 
 .hidden{
- display:none!important;
+ display:none!important
 }
 
 #app{
- min-height:100vh;
+ min-height:100vh
 }
 
-main{
+.wrap{
  max-width:1450px;
  margin:auto;
- padding:15px 15px 105px;
+ padding:12px 14px 105px
 }
 
 h1,
 h2,
 h3,
 h4{
- margin:0 0 10px;
+ margin:0 0 10px
 }
 
 .card{
- background:linear-gradient(145deg,rgba(13,41,69,.98),rgba(10,34,56,.98));
+ background:linear-gradient(145deg,rgba(12,42,69,.99),rgba(8,30,50,.99));
  border:1px solid var(--line);
  border-radius:var(--radius);
  padding:15px;
  margin:10px 0;
- box-shadow:var(--shadow);
+ box-shadow:var(--shadow)
 }
 
 .row{
  display:grid;
  grid-template-columns:repeat(2,minmax(0,1fr));
- gap:10px;
+ gap:10px
 }
 
 .row3{
  display:grid;
  grid-template-columns:repeat(3,minmax(0,1fr));
- gap:10px;
+ gap:10px
 }
 
 .row4{
  display:grid;
  grid-template-columns:repeat(4,minmax(0,1fr));
- gap:10px;
+ gap:10px
+}
+
+.grid2{
+ display:grid;
+ grid-template-columns:repeat(2,minmax(0,1fr));
+ gap:9px
+}
+
+.grid3{
+ display:grid;
+ grid-template-columns:repeat(3,minmax(0,1fr));
+ gap:9px
+}
+
+.grid4{
+ display:grid;
+ grid-template-columns:repeat(4,minmax(0,1fr));
+ gap:9px
 }
 
 .field{
- min-width:0;
+ min-width:0
 }
 
 .field label{
  display:block;
  font-size:11px;
- font-weight:700;
+ font-weight:750;
  color:var(--muted);
- margin-bottom:5px;
+ margin-bottom:5px
 }
 
 .field input,
 .field textarea,
 .field select{
  width:100%;
- padding:11px 12px;
- background:#071a2f;
+ padding:12px;
+ background:#061a2d;
  color:#fff;
  border:1px solid var(--line);
- border-radius:9px;
+ border-radius:10px;
  outline:none;
+ min-height:44px
 }
 
 .field textarea{
- min-height:80px;
- resize:vertical;
+ min-height:90px;
+ resize:vertical
 }
 
 .field input:focus,
 .field textarea:focus,
 .field select:focus{
  border-color:var(--blue);
- box-shadow:0 0 0 3px rgba(56,169,232,.10);
+ box-shadow:0 0 0 3px rgba(46,172,239,.11)
 }
 
 .btn{
- padding:10px 13px;
+ min-height:44px;
+ padding:10px 14px;
  border:1px solid var(--line);
- border-radius:9px;
- background:#164465;
+ border-radius:10px;
+ background:#154664;
  color:#fff;
  margin:3px;
  cursor:pointer;
- font-weight:700;
+ font-weight:800;
+ transition:.16s;
+ touch-action:manipulation
 }
 
 .btn:hover{
  border-color:var(--blue2);
+ transform:translateY(-1px)
+}
+
+.btn:active{
+ transform:scale(.97)
+}
+
+.btn.primary{
+ background:linear-gradient(145deg,#2eacef,#197fb8);
+ border-color:#4ec1fa
 }
 
 .btn.on{
  background:var(--blue);
- border-color:var(--blue);
+ border-color:var(--blue)
 }
 
 .btn.ok{
- background:var(--ok);
- border-color:var(--ok);
+ background:linear-gradient(145deg,#18bd82,#0e9164);
+ border-color:#2bd59a
 }
 
 .btn.bad{
- background:var(--danger);
- border-color:var(--danger);
+ background:linear-gradient(145deg,#df4e5b,#b73d49);
+ border-color:#f06a75
 }
 
 .btn.warn{
- background:#77551d;
- border-color:#97702b;
+ background:linear-gradient(145deg,#87631f,#695019);
+ border-color:#a8802e
 }
 
 .btn.big{
+ min-height:50px;
  padding:13px 16px;
- font-weight:900;
+ font-weight:950
 }
 
 .btn:disabled{
  opacity:.55;
- cursor:not-allowed;
+ cursor:not-allowed
 }
 
 .top{
@@ -207,177 +243,171 @@ h4{
  align-items:center;
  justify-content:space-between;
  gap:10px;
- flex-wrap:wrap;
+ flex-wrap:wrap
 }
 
 .top-left{
  display:flex;
  align-items:center;
- gap:8px;
- flex-wrap:wrap;
+ gap:10px;
+ flex-wrap:wrap
 }
 
 .top-right{
  display:flex;
  align-items:center;
- gap:5px;
+ gap:6px;
  flex-wrap:wrap;
+ justify-content:flex-end
 }
 
 .logo{
- width:45px;
- height:45px;
+ width:48px;
+ height:48px;
  display:grid;
  place-items:center;
- border-radius:13px;
+ border-radius:14px;
  background:linear-gradient(145deg,#168fe2,#075fae);
- font-size:23px;
- font-weight:900;
+ font-size:24px;
+ font-weight:950;
+ box-shadow:0 8px 22px rgba(15,144,224,.24)
 }
 
 .page-title{
  font-size:calc(22px * var(--scale));
  font-weight:950;
+ letter-spacing:.2px
 }
 
 .page-sub{
  color:var(--muted);
  font-size:12px;
+ line-height:1.45
 }
 
 .badge{
  display:inline-block;
- padding:5px 8px;
+ padding:6px 9px;
  border-radius:999px;
  background:#163f59;
  color:#9edcff;
  font-size:10px;
- font-weight:850;
+ font-weight:850
 }
 
 .badge.ok{
  background:#104b39;
- color:#8bf0bf;
+ color:#8bf0bf
 }
 
 .badge.warn{
  background:#574119;
- color:#ffd87c;
+ color:#ffd87c
 }
 
-.tabs{
+.admin-status{
+ display:inline-block;
+ padding:7px 9px;
+ border-radius:999px;
+ background:#104b39;
+ color:#8bf0bf;
+ font-size:10px;
+ font-weight:800
+}
+
+.nav{
  display:flex;
  gap:6px;
  overflow-x:auto;
- padding:4px 0 10px;
+ padding:6px 0 10px;
  position:sticky;
  top:0;
  z-index:50;
- background:rgba(7,26,47,.96);
+ background:rgba(5,20,35,.95);
  backdrop-filter:blur(12px);
- scrollbar-width:none;
+ scrollbar-width:none
 }
 
-.tabs::-webkit-scrollbar{
- display:none;
+.nav::-webkit-scrollbar{
+ display:none
 }
 
-.tabs .btn{
+.nav .btn{
  white-space:nowrap;
  flex:0 0 auto;
+ margin:0
 }
 
 .station{
- background:#0b2741;
- border:1px solid #28506e;
- border-radius:14px;
+ background:linear-gradient(145deg,#0b2945,#0a2137);
+ border:1px solid #2a5775;
+ border-radius:15px;
  padding:15px;
  margin:9px 0;
  cursor:pointer;
- transition:.2s;
+ transition:.16s;
+ box-shadow:0 8px 20px rgba(0,0,0,.12)
 }
 
 .station:hover{
  border-color:var(--blue);
- transform:translateY(-1px);
+ transform:translateY(-1px)
+}
+
+.station:active{
+ transform:scale(.995)
 }
 
 .station-title{
  font-weight:950;
- font-size:18px;
+ font-size:18px
 }
 
 .station-meta{
  font-size:12px;
  color:var(--muted);
- margin-top:4px;
-}
-
-.station-stats{
- display:grid;
- grid-template-columns:repeat(4,1fr);
- gap:7px;
- margin-top:12px;
-}
-
-.mini{
- border:1px solid #284d67;
- border-radius:9px;
- padding:8px;
- background:#091d30;
-}
-
-.mini b{
- display:block;
- font-size:9px;
- color:#7f9cad;
-}
-
-.mini strong{
- display:block;
- margin-top:3px;
- font-size:15px;
+ margin-top:4px
 }
 
 .summary{
  display:grid;
  grid-template-columns:repeat(5,1fr);
- gap:10px;
+ gap:10px
 }
 
 .stat{
  border:1px solid var(--line);
  border-radius:13px;
  background:#0a2138;
- padding:14px;
+ padding:14px
 }
 
 .stat-label{
  font-size:11px;
- color:var(--muted);
+ color:var(--muted)
 }
 
 .stat-value{
  font-size:25px;
  font-weight:950;
- margin-top:5px;
+ margin-top:5px
 }
 
 .stat-unit{
  font-size:10px;
- color:#7591a5;
+ color:#7591a5
 }
 
 .section-title{
  font-size:17px;
  font-weight:950;
- margin-bottom:10px;
+ margin-bottom:10px
 }
 
 .section-sub{
  color:var(--muted);
  font-size:11px;
- line-height:1.5;
+ line-height:1.55
 }
 
 .workbox{
@@ -385,12 +415,12 @@ h4{
  border:1px solid #274c67;
  border-radius:12px;
  padding:12px;
- margin:8px 0;
+ margin:8px 0
 }
 
 .workbox h4{
  font-size:12px;
- color:#b5cad7;
+ color:#b5cad7
 }
 
 .empty{
@@ -398,7 +428,7 @@ h4{
  color:var(--muted);
  border:1px dashed #34536b;
  border-radius:10px;
- text-align:center;
+ text-align:center
 }
 
 .motor-card,
@@ -411,7 +441,7 @@ h4{
  border:1px solid #203b56;
  border-radius:14px;
  padding:13px;
- margin:9px 0;
+ margin:9px 0
 }
 
 .motor-header,
@@ -422,31 +452,13 @@ h4{
  justify-content:space-between;
  gap:10px;
  flex-wrap:wrap;
- margin-bottom:10px;
-}
-
-.grid2{
- display:grid;
- grid-template-columns:repeat(2,minmax(0,1fr));
- gap:9px;
-}
-
-.grid3{
- display:grid;
- grid-template-columns:repeat(3,minmax(0,1fr));
- gap:9px;
-}
-
-.grid4{
- display:grid;
- grid-template-columns:repeat(4,minmax(0,1fr));
- gap:9px;
+ margin-bottom:10px
 }
 
 .library-grid{
  display:grid;
  grid-template-columns:repeat(2,minmax(0,1fr));
- gap:10px;
+ gap:10px
 }
 
 .library-card{
@@ -454,23 +466,24 @@ h4{
  border:1px solid #203b56;
  border-radius:14px;
  padding:13px;
+ transition:.15s
 }
 
 .library-card:hover{
- border-color:var(--blue);
+ border-color:var(--blue)
 }
 
 .library-code{
  font-size:20px;
  font-weight:950;
  color:#67c9ff;
- cursor:pointer;
+ cursor:pointer
 }
 
 .library-name{
  font-weight:900;
  margin-top:3px;
- cursor:pointer;
+ cursor:pointer
 }
 
 .library-desc{
@@ -478,43 +491,43 @@ h4{
  color:#a9bbcd;
  line-height:1.5;
  margin-top:7px;
- cursor:pointer;
+ cursor:pointer
 }
 
 .library-source{
  font-size:10px;
  color:#71879b;
  margin-top:8px;
- cursor:pointer;
+ cursor:pointer
 }
 
 .library-actions{
  display:flex;
  gap:5px;
  flex-wrap:wrap;
- margin-top:10px;
+ margin-top:10px
 }
 
 .library-actions .btn{
- margin:0;
+ margin:0
 }
 
 .param-row-actions{
  display:flex;
  gap:5px;
  flex-wrap:wrap;
- margin-top:8px;
+ margin-top:8px
 }
 
 .param-row-actions .btn{
- margin:0;
+ margin:0
 }
 
 .hmi-shell{
  border:1px solid #335563;
  border-radius:14px;
  background:#102a34;
- padding:13px;
+ padding:13px
 }
 
 .hmi-tabs{
@@ -522,41 +535,42 @@ h4{
  gap:6px;
  overflow-x:auto;
  padding-bottom:8px;
- scrollbar-width:none;
+ scrollbar-width:none
 }
 
 .hmi-tabs::-webkit-scrollbar{
- display:none;
+ display:none
 }
 
 .hmi-tab{
  flex:0 0 auto;
- padding:10px 13px;
+ min-height:44px;
+ padding:10px 14px;
  border:1px solid #466d7d;
  border-radius:9px;
  background:#163745;
  color:#a9cad9;
  cursor:pointer;
- font-weight:800;
+ font-weight:800
 }
 
 .hmi-tab.active{
  background:var(--blue);
  color:#fff;
- border-color:var(--blue);
+ border-color:var(--blue)
 }
 
 .hmi-fields{
  display:grid;
  grid-template-columns:repeat(3,minmax(0,1fr));
- gap:9px;
+ gap:9px
 }
 
 .hmi-field{
  background:#0b222c;
  border:1px solid #264c5a;
  border-radius:10px;
- padding:9px;
+ padding:9px
 }
 
 .hmi-field label{
@@ -564,71 +578,93 @@ h4{
  color:#a6c6d3;
  font-size:10px;
  font-weight:800;
- margin-bottom:5px;
+ margin-bottom:5px
 }
 
 .hmi-field input{
  width:100%;
+ min-height:44px;
  padding:10px;
- border-radius:7px;
+ border-radius:8px;
  border:1px solid #597885;
  background:#f5f9fb;
- color:#061828;
+ color:#061828
+}
+
+.box-grid{
+ display:grid;
+ grid-template-columns:repeat(3,minmax(0,1fr));
+ gap:10px
+}
+
+.box-node{
+ background:#071827;
+ border:1px solid #2c536b;
+ border-radius:12px;
+ padding:11px
+}
+
+.box-node h4{
+ color:#a9cad9;
+ margin-bottom:8px
 }
 
 .box-table{
  width:100%;
  border-collapse:collapse;
  overflow:hidden;
- border-radius:10px;
+ border-radius:10px
 }
 
 .box-table th,
 .box-table td{
  border:1px solid #294d64;
- padding:7px;
+ padding:8px;
  font-size:11px;
+ vertical-align:top
 }
 
 .box-table th{
  background:#123550;
  color:#9fd7ef;
- text-align:left;
+ text-align:left
 }
 
 .box-table input{
  width:100%;
+ min-height:40px;
  background:#071a2f;
  color:#fff;
  border:1px solid #315670;
- border-radius:6px;
- padding:7px;
+ border-radius:7px;
+ padding:8px
 }
 
 .photo-grid{
  display:grid;
  grid-template-columns:repeat(4,minmax(0,1fr));
- gap:9px;
+ gap:9px
 }
 
 .photo-item{
  border:1px solid #284c63;
  border-radius:10px;
  overflow:hidden;
- background:#081726;
+ background:#081726
 }
 
 .photo-item img{
  width:100%;
- height:150px;
+ height:160px;
  object-fit:cover;
- display:block;
+ display:block
 }
 
 .photo-caption{
- padding:7px;
+ padding:8px;
  font-size:10px;
  color:var(--muted);
+ line-height:1.45
 }
 
 .bottom-save{
@@ -640,17 +676,20 @@ h4{
  padding:9px;
  background:rgba(5,20,35,.97);
  border-top:1px solid #18364f;
+ box-shadow:0 -8px 30px rgba(0,0,0,.18)
 }
 
 .bottom-save button{
  width:100%;
+ min-height:52px;
  padding:14px;
  border:0;
- border-radius:10px;
- background:var(--ok);
+ border-radius:11px;
+ background:linear-gradient(145deg,#18bd82,#0d9665);
  color:#fff;
  font-weight:950;
  cursor:pointer;
+ font-size:15px
 }
 
 .modal-backdrop{
@@ -661,11 +700,11 @@ h4{
  display:flex;
  align-items:center;
  justify-content:center;
- padding:15px;
+ padding:15px
 }
 
 .modal{
- width:min(560px,100%);
+ width:min(620px,100%);
  max-height:90vh;
  overflow:auto;
  background:#0d2945;
@@ -673,11 +712,11 @@ h4{
  border-radius:17px;
  padding:18px;
  box-shadow:0 25px 80px rgba(0,0,0,.45);
- position:relative;
+ position:relative
 }
 
 .modal h2{
- font-size:19px;
+ font-size:19px
 }
 
 .modal-head{
@@ -685,33 +724,33 @@ h4{
  align-items:center;
  justify-content:space-between;
  gap:10px;
- margin-bottom:10px;
+ margin-bottom:10px
 }
 
 .modal-head h2{
  margin:0;
- padding-right:8px;
+ padding-right:8px
 }
 
 .modal-close{
- width:38px;
- height:38px;
- flex:0 0 38px;
+ width:42px;
+ height:42px;
+ flex:0 0 42px;
  border:1px solid #44637a;
  border-radius:10px;
  background:#172f45;
  color:#fff;
- font-size:20px;
+ font-size:21px;
  font-weight:900;
  cursor:pointer;
  display:grid;
  place-items:center;
- line-height:1;
+ line-height:1
 }
 
 .modal-close:hover{
  background:var(--danger);
- border-color:var(--danger);
+ border-color:var(--danger)
 }
 
 .modal-actions{
@@ -719,7 +758,7 @@ h4{
  justify-content:flex-end;
  gap:6px;
  flex-wrap:wrap;
- margin-top:12px;
+ margin-top:12px
 }
 
 .toast{
@@ -736,11 +775,13 @@ h4{
  pointer-events:none;
  transition:.2s;
  font-size:12px;
+ max-width:92vw;
+ text-align:center
 }
 
 .toast.show{
  opacity:1;
- transform:translateX(-50%) translateY(0);
+ transform:translateX(-50%) translateY(0)
 }
 
 .login-wrap{
@@ -749,17 +790,17 @@ h4{
  place-items:center;
  padding:20px;
  background:
-   radial-gradient(circle at top right,rgba(56,169,232,.12),transparent 30%),
-   linear-gradient(145deg,#06172a,#0a2138);
+  radial-gradient(circle at top right,rgba(56,169,232,.12),transparent 30%),
+  linear-gradient(145deg,#06172a,#0a2138)
 }
 
 .login-card{
- width:min(430px,100%);
+ width:min(440px,100%);
  background:#0d2945;
  border:1px solid #28506e;
  border-radius:20px;
  padding:22px;
- box-shadow:0 30px 90px rgba(0,0,0,.35);
+ box-shadow:0 30px 90px rgba(0,0,0,.35)
 }
 
 .login-logo{
@@ -771,13 +812,13 @@ h4{
  place-items:center;
  margin:0 auto 15px;
  font-size:32px;
- font-weight:950;
+ font-weight:950
 }
 
 .login-title{
  text-align:center;
  font-size:24px;
- font-weight:950;
+ font-weight:950
 }
 
 .login-sub{
@@ -785,58 +826,58 @@ h4{
  color:var(--muted);
  font-size:12px;
  line-height:1.5;
- margin:6px 0 18px;
+ margin:6px 0 18px
 }
 
 .numeric{
  text-align:center;
  letter-spacing:8px;
- font-size:25px!important;
+ font-size:25px!important
 }
 
 .settings-grid{
  display:grid;
  grid-template-columns:repeat(2,minmax(0,1fr));
- gap:10px;
+ gap:10px
 }
 
 .setting{
  background:#091827;
  border:1px solid #203b56;
  border-radius:12px;
- padding:12px;
+ padding:12px
 }
 
 .setting h4{
  margin-bottom:8px;
- font-size:12px;
+ font-size:12px
 }
 
 .history-list{
  max-height:390px;
- overflow:auto;
+ overflow:auto
 }
 
 .history-card{
- padding:10px;
+ padding:10px
 }
 
 .history-date{
  font-size:10px;
- color:#7896a8;
+ color:#7896a8
 }
 
 .history-title{
  font-weight:900;
  font-size:12px;
- margin-top:3px;
+ margin-top:3px
 }
 
 .kpi{
  display:flex;
  gap:7px;
  flex-wrap:wrap;
- margin-top:8px;
+ margin-top:8px
 }
 
 .kpi span{
@@ -844,32 +885,21 @@ h4{
  padding:5px 8px;
  border-radius:999px;
  font-size:10px;
- color:#9fc2d2;
+ color:#9fc2d2
 }
 
-.admin-status{
- font-size:10px;
- padding:5px 8px;
- border-radius:999px;
- background:#104b39;
- color:#8bf0bf;
- display:inline-block;
-}
-
-/* ---------------- PRINT ---------------- */
+/* =========================================================
+   PRINT
+========================================================= */
 
 .print-only{
- display:none;
+ display:none
 }
 
 @media(max-width:900px){
 
  .summary{
   grid-template-columns:repeat(3,1fr)
- }
-
- .station-stats{
-  grid-template-columns:repeat(2,1fr)
  }
 
  .grid4{
@@ -880,17 +910,24 @@ h4{
   grid-template-columns:repeat(2,1fr)
  }
 
+ .box-grid{
+  grid-template-columns:repeat(2,minmax(0,1fr))
+ }
+
 }
 
 @media(max-width:650px){
 
- main{
+ .wrap{
   padding:10px 10px 100px
  }
 
  .row,
+ .row3,
+ .row4,
  .grid2,
- .grid3{
+ .grid3,
+ .grid4{
   grid-template-columns:1fr
  }
 
@@ -903,7 +940,7 @@ h4{
  }
 
  .hmi-fields{
-  grid-template-columns:repeat(2,minmax(0,1fr))
+  grid-template-columns:1fr
  }
 
  .settings-grid{
@@ -914,13 +951,38 @@ h4{
   grid-template-columns:1fr 1fr
  }
 
+ .box-grid{
+  grid-template-columns:1fr
+ }
+
+ .top-right{
+  width:100%;
+  justify-content:flex-start
+ }
+
+ .top-right .btn{
+  min-height:46px
+ }
+
+ .page-title{
+  font-size:20px
+ }
+
+ .station-title{
+  font-size:17px
+ }
+
+ .modal{
+  padding:15px
+ }
+
 }
 
 @media print{
 
  @page{
   size:A4 landscape;
-  margin:3mm;
+  margin:3mm
  }
 
  html,
@@ -928,17 +990,17 @@ h4{
   width:100%;
   min-height:0;
   background:#fff!important;
-  color:#111!important;
+  color:#111!important
  }
 
  #app,
  .bottom-save,
  .toast{
-  display:none!important;
+  display:none!important
  }
 
  .print-only{
-  display:block!important;
+  display:block!important
  }
 
  .print-page{
@@ -946,162 +1008,101 @@ h4{
   min-height:0;
   color:#111;
   background:#fff;
-  overflow:hidden;
+  overflow:hidden
  }
 
- .print-header{
+ .print-head{
   display:flex;
   justify-content:space-between;
   align-items:flex-start;
   border-bottom:1.2px solid #0c2b45;
   padding-bottom:1.7mm;
-  margin-bottom:1.5mm;
+  margin-bottom:1.5mm
  }
 
- .print-header h1{
+ .print-head h1{
   margin:0;
-  font-size:10pt;
+  font-size:10pt
  }
 
- .print-header p{
+ .print-head p{
   margin:1px 0 0;
   font-size:5pt;
-  color:#555;
+  color:#555
  }
 
- .print-right{
-  text-align:right;
-  font-size:5pt;
- }
-
- .print-columns{
+ .print-cols{
   display:grid;
   grid-template-columns:1fr 1fr 1fr;
   gap:1.2mm;
-  align-items:start;
+  align-items:start
  }
 
- .print-section{
+ .print-sec{
   border:1px solid #aeb8c0;
   border-radius:2px;
   padding:1.2mm;
   margin-bottom:1.2mm;
-  break-inside:avoid;
+  break-inside:avoid
  }
 
- .print-section h2{
+ .print-sec h2{
   font-size:5.7pt;
   margin:0 0 1mm;
   border-bottom:1px solid #d7dde2;
   padding-bottom:.7mm;
-  color:#0c2b45;
+  color:#0c2b45
  }
 
  .print-grid{
   display:grid;
   grid-template-columns:repeat(2,1fr);
-  gap:.5mm;
- }
-
- .print-grid3{
-  display:grid;
-  grid-template-columns:repeat(3,1fr);
-  gap:.5mm;
+  gap:.5mm
  }
 
  .print-cell{
   border:1px solid #d7dde2;
   padding:.6mm;
-  min-height:4.2mm;
+  min-height:4.2mm
  }
 
  .print-cell b{
   display:block;
   color:#55636e;
-  font-size:3.8pt;
+  font-size:3.8pt
  }
 
  .print-cell span{
   display:block;
   font-size:4.2pt;
   font-weight:700;
-  word-break:break-word;
+  word-break:break-word
  }
 
- .print-hmi{
-  border:1px solid #9baab3;
-  padding:1.1mm;
-  margin-bottom:1mm;
-  break-inside:avoid;
- }
-
- .print-hmi-title{
-  display:flex;
-  justify-content:space-between;
-  border-bottom:1px solid #cdd4d8;
-  padding-bottom:.6mm;
+ .print-box{
+  border:1px solid #bbb;
+  padding:.9mm;
   margin-bottom:.7mm;
-  font-size:4.8pt;
+  break-inside:avoid
+ }
+
+ .print-box-title{
+  font-size:4.5pt;
   font-weight:900;
+  margin-bottom:.7mm
  }
 
- .print-hmi-grid{
-  display:grid;
-  grid-template-columns:repeat(3,1fr);
-  gap:.45mm;
- }
-
- .print-hmi-cell{
-  border:1px solid #d7dde2;
-  padding:.55mm;
-  min-height:3.8mm;
- }
-
- .print-hmi-cell b{
-  display:block;
-  font-size:3.35pt;
-  color:#56656f;
-  line-height:1.05;
- }
-
- .print-hmi-cell span{
-  display:block;
-  font-size:3.7pt;
-  font-weight:700;
-  word-break:break-word;
- }
-
- .print-footer{
+ .print-foot{
   border-top:1px solid #777;
   padding-top:1mm;
   margin-top:1mm;
   display:flex;
   justify-content:space-between;
-  font-size:3.8pt;
+  font-size:3.8pt
  }
 
  .print-small{
-  font-size:3.8pt;
- }
-
- .print-item{
-  margin-bottom:1mm;
- }
-
- .print-motor{
-  border:1px solid #bbb;
-  padding:.9mm;
-  margin-bottom:.7mm;
- }
-
- .print-motor-title{
-  font-size:4.5pt;
-  font-weight:900;
-  margin-bottom:.7mm;
- }
-
- .no-print{
-  display:none!important;
+  font-size:3.8pt
  }
 
 }
@@ -1123,7 +1124,7 @@ h4{
 <script>
 
 /* =========================================================
-   MESKİ TERFİ ARŞİVİM
+   SUPABASE
 ========================================================= */
 
 const SUPABASE_URL =
@@ -1132,21 +1133,21 @@ const SUPABASE_URL =
 const SUPABASE_KEY =
  'sb_publishable_pJrgD6-8p-SOxTu8bP02Ag_Cv5InPtB';
 
-const db = supabase.createClient(
- SUPABASE_URL,
- SUPABASE_KEY
-);
-
+const db =
+ supabase.createClient(
+  SUPABASE_URL,
+  SUPABASE_KEY
+ );
 
 /* =========================================================
-   ŞİFRELER
+   AYARLAR / ANAHTARLAR
 ========================================================= */
 
 const DEFAULT_SITE_PASSWORD='2468';
 const DEFAULT_ADMIN_PASSWORD='6872';
 
 const APP_PREF_KEY='meski_terfi_preferences_v10';
-const LOCAL_META_KEY='meski_terfi_meta_v10';
+
 const LOCAL_BOX_KEY='meski_motor_box_v10';
 const LOCAL_FAULT_KEY='meski_fault_library_v10';
 const LOCAL_PARAM_KEY='meski_param_library_v10';
@@ -1160,14 +1161,6 @@ const LOCAL_FAULT_DELETE_KEY='meski_fault_deleted_v11';
 const LOCAL_PARAM_EDIT_KEY='meski_param_edits_v11';
 const LOCAL_PARAM_DELETE_KEY='meski_param_deleted_v11';
 
-/*
-  Yönetici oturumu:
-  sessionStorage kullanılır.
-  Aynı tarayıcı sekmesi/oturumu boyunca devam eder.
-  Sekme kapatıldığında gider.
-  Ayrıca 30 dakika işlem yapılmazsa otomatik kilitlenir.
-*/
-
 const ADMIN_SESSION_KEY='meski_admin_session_v11';
 const ADMIN_IDLE_MS=30*60*1000;
 
@@ -1177,12 +1170,12 @@ let current=null;
 let tab='terfi';
 let hmiPage=1;
 let workMotor=null;
-let subView={};
+let selectedMotorId=null;
 let adminTimer=null;
 
 
 /* =========================================================
-   HMI 5 SAYFA
+   HMI
 ========================================================= */
 
 const HMI=[
@@ -1273,11 +1266,12 @@ const HMI=[
   'AI 2 Durum',
   'INV AO1'
  ]
+
 ];
 
 
 /* =========================================================
-   HMI ÇALIŞMA
+   ÇALIŞMA
 ========================================================= */
 
 const WORK=[
@@ -1294,7 +1288,7 @@ const WORK=[
 
 
 /* =========================================================
-   ARIZA KÜTÜPHANESİ
+   ARIZALAR
 ========================================================= */
 
 const DEFAULT_FAULTS=[
@@ -1423,7 +1417,7 @@ const DEFAULT_FAULTS=[
 
 
 /* =========================================================
-   PARAMETRE KÜTÜPHANESİ
+   PARAMETRELER
 ========================================================= */
 
 const DEFAULT_PARAMS=[
@@ -1473,6 +1467,7 @@ const DEFAULT_PARAMS=[
  ['28.15','Frekans referans zinciri','s','Frekans rampasıyla ilgili ayar.','ABB ACQ580'],
 
  ['31.20','Toprak hatası','-','Topraklama hatası fonksiyonu.','ABB ACQ580']
+
 ].map(x=>({
  code:x[0],
  name:x[1],
@@ -1492,13 +1487,13 @@ function loadPrefs(){
 
   const x=
    JSON.parse(
-    localStorage.getItem(APP_PREF_KEY)||'{}'
+    localStorage.getItem(
+     APP_PREF_KEY
+    )||'{}'
    );
 
   return {
-
    theme:x.theme||'dark',
-
    zoom:x.zoom||'normal',
 
    sitePassword:
@@ -1519,17 +1514,13 @@ function loadPrefs(){
      'Merkezi saha teknik arşivi',
 
     ...x.labels
-
    }
-
   };
 
  }catch(e){
 
   return {
-
    theme:'dark',
-
    zoom:'normal',
 
    sitePassword:
@@ -1542,7 +1533,6 @@ function loadPrefs(){
     title:'MESKİ TERFİ ARŞİVİM',
     subtitle:'Merkezi saha teknik arşivi'
    }
-
   };
 
  }
@@ -1568,17 +1558,23 @@ function applyPrefs(){
   'zoom-large'
  );
 
- if(prefs.zoom==='small')
-  document.body.classList.add('zoom-small');
+ if(prefs.zoom==='small'){
+  document.body.classList.add(
+   'zoom-small'
+  );
+ }
 
- if(prefs.zoom==='large')
-  document.body.classList.add('zoom-large');
+ if(prefs.zoom==='large'){
+  document.body.classList.add(
+   'zoom-large'
+  );
+ }
 
 }
 
 
 /* =========================================================
-   LOCAL STORE
+   LOCAL DATA
 ========================================================= */
 
 function localJSON(
@@ -1598,7 +1594,6 @@ function localJSON(
   return fallback;
 
  }
-
 }
 
 function saveLocal(
@@ -1697,8 +1692,7 @@ function num(v){
  if(
   v===null||
   v===undefined||
-  v===
-''
+  v===''
  )
   return null;
 
@@ -1707,13 +1701,18 @@ function num(v){
    String(v).replace(',','.')
   );
 
- return Number.isFinite(n)?n:null;
+ return Number.isFinite(n)
+  ?n
+  :null;
 
 }
 
-function nowText(){
+function now(){
 
- return new Date().toLocaleString('tr-TR');
+ return new Date()
+  .toLocaleString(
+   'tr-TR'
+  );
 
 }
 
@@ -1725,13 +1724,19 @@ function nowText(){
 function toast(message){
 
  const t=
-  document.getElementById('toast');
+  document.getElementById(
+   'toast'
+  );
 
- if(!t)return;
+ if(!t)
+  return;
 
- t.textContent=message;
+ t.textContent=
+  message;
 
- t.classList.add('show');
+ t.classList.add(
+  'show'
+ );
 
  clearTimeout(
   window.__toast
@@ -1739,15 +1744,19 @@ function toast(message){
 
  window.__toast=
   setTimeout(
-   ()=>t.classList.remove('show'),
-   2200
+   ()=>{
+    t.classList.remove(
+     'show'
+    );
+   },
+   2300
   );
 
 }
 
 
 /* =========================================================
-   GEÇMİŞ
+   HISTORY
 ========================================================= */
 
 function recordHistory(
@@ -1791,75 +1800,57 @@ function recordHistory(
 
 
 /* =========================================================
-   ARIZA / PARAMETRELER
+   KÜTÜPHANELER
 ========================================================= */
 
 function faults(){
 
- const all=[
+ return [
   ...DEFAULT_FAULTS,
   ...customFaults
- ];
-
- return all
-  .filter(
-   f=>
-    !faultDeleted.includes(
-     f.code
-    )
-  )
-  .map(
-   f=>{
-
-    const editData=
-     faultEdits[f.code]||{};
-
-    return {
-     ...f,
-     ...editData
-    };
-
-   }
-  );
+ ]
+ .filter(
+  f=>
+   !faultDeleted.includes(
+    f.code
+   )
+ )
+ .map(
+  f=>({
+   ...f,
+   ...(faultEdits[f.code]||{})
+  })
+ );
 
 }
 
 function params(){
 
- const all=[
+ return [
   ...DEFAULT_PARAMS,
   ...customParams
- ];
-
- return all
-  .filter(
-   p=>
-    !paramDeleted.includes(
-     p.code
-    )
-  )
-  .map(
-   p=>{
-
-    const editData=
-     paramEdits[p.code]||{};
-
-    return {
-     ...p,
-     ...editData
-    };
-
-   }
-  );
+ ]
+ .filter(
+  p=>
+   !paramDeleted.includes(
+    p.code
+   )
+ )
+ .map(
+  p=>({
+   ...p,
+   ...(paramEdits[p.code]||{})
+  })
+ );
 
 }
 
 
 /* =========================================================
-   YÖNETİCİ OTURUM SİSTEMİ
+   ADMIN SESSION
 ========================================================= */
 
-function getAdminSession(){
+function getSession(){
 
  try{
 
@@ -1874,19 +1865,18 @@ function getAdminSession(){
   return null;
 
  }
-
 }
 
-function setAdminSession(){
+function setSession(){
 
- const session={
+ const s={
   active:true,
   lastActivity:Date.now()
  };
 
  sessionStorage.setItem(
   ADMIN_SESSION_KEY,
-  JSON.stringify(session)
+  JSON.stringify(s)
  );
 
  armAdminTimeout();
@@ -1899,12 +1889,9 @@ function touchAdminSession(){
   return;
 
  const s=
-  getAdminSession();
+  getSession();
 
- if(
-  !s ||
-  !s.active
- ){
+ if(!s?.active){
 
   edit=false;
 
@@ -1947,12 +1934,9 @@ function clearAdminSession(){
 function restoreAdminSession(){
 
  const s=
-  getAdminSession();
+  getSession();
 
- if(
-  !s ||
-  !s.active
- ){
+ if(!s?.active){
 
   edit=false;
 
@@ -1966,7 +1950,9 @@ function restoreAdminSession(){
    s.lastActivity||0
   );
 
- if(age>=ADMIN_IDLE_MS){
+ if(
+  age>=ADMIN_IDLE_MS
+ ){
 
   clearAdminSession();
 
@@ -1992,7 +1978,7 @@ function armAdminTimeout(){
   return;
 
  const s=
-  getAdminSession();
+  getSession();
 
  if(!s){
 
@@ -2021,9 +2007,7 @@ function armAdminTimeout(){
 
  adminTimer=
   setTimeout(
-   ()=>{
-    checkAdminTimeout();
-   },
+   checkAdminTimeout,
    Math.min(
     remaining,
     15000
@@ -2038,7 +2022,7 @@ function checkAdminTimeout(){
   return;
 
  const s=
-  getAdminSession();
+  getSession();
 
  if(!s){
 
@@ -2086,57 +2070,36 @@ function lockAdminForTimeout(){
 
 }
 
-
 document.addEventListener(
  'click',
- function(){
-
-  if(edit){
-
+ ()=>{
+  if(edit)
    touchAdminSession();
-
-  }
-
  },
  true
 );
 
 document.addEventListener(
  'keydown',
- function(){
-
-  if(edit){
-
+ ()=>{
+  if(edit)
    touchAdminSession();
-
-  }
-
  },
  true
 );
 
 document.addEventListener(
  'input',
- function(){
-
-  if(edit){
-
+ ()=>{
+  if(edit)
    touchAdminSession();
-
-  }
-
  },
  true
 );
 
-
-/* =========================================================
-   MODAL ESC
-========================================================= */
-
 document.addEventListener(
  'keydown',
- function(e){
+ e=>{
 
   if(
    e.key==='Escape' &&
@@ -2181,9 +2144,10 @@ function showLogin(){
 
     ${esc(prefs.labels.subtitle)}
 
-    <br>
+    <br><br>
 
-    Yetkisiz erişimi önlemek için giriş şifresi gereklidir.
+    Yetkisiz erişimi önlemek için
+    giriş şifresi gereklidir.
 
    </div>
 
@@ -2199,7 +2163,7 @@ function showLogin(){
      type="password"
      inputmode="numeric"
      pattern="[0-9]*"
-     maxlength="12"
+     maxlength="16"
      autocomplete="off"
      onkeydown="
       if(event.key==='Enter')
@@ -2242,7 +2206,9 @@ function showLogin(){
  setTimeout(
   ()=>{
    document
-    .getElementById('sitePassword')
+    .getElementById(
+     'sitePassword'
+    )
     ?.focus();
   },
   80
@@ -2253,9 +2219,14 @@ function showLogin(){
 function loginSite(){
 
  const p=
-  val('sitePassword');
+  val(
+   'sitePassword'
+  );
 
- if(p===prefs.sitePassword){
+ if(
+  p===
+  prefs.sitePassword
+ ){
 
   loggedIn=true;
 
@@ -2286,7 +2257,7 @@ function loginSite(){
 
 
 /* =========================================================
-   ANA SAYFA
+   HOME
 ========================================================= */
 
 async function home(){
@@ -2320,23 +2291,32 @@ async function home(){
 
   app.innerHTML=`
 
-   <div class="card">
+   <div class="wrap">
 
-    <h2>
-     Supabase bağlantısı kurulamadı
-    </h2>
+    <div class="card">
 
-    <p class="muted">
-     ${esc(r.error.message)}
-    </p>
+     <h2>
+      Supabase bağlantısı kurulamadı
+     </h2>
 
-    <button
-     class="btn"
-     onclick="home()">
+     <p style="
+      color:var(--muted);
+      line-height:1.5
+     ">
 
-     TEKRAR DENE
+      ${esc(r.error.message)}
 
-    </button>
+     </p>
+
+     <button
+      class="btn"
+      onclick="home()">
+
+      TEKRAR DENE
+
+     </button>
+
+    </div>
 
    </div>
 
@@ -2349,267 +2329,292 @@ async function home(){
  const rows=
   r.data||[];
 
+ const ids=
+  rows.map(
+   x=>x.id
+  );
+
  const motorCount=
   await countTable(
    'motorlar',
-   rows.map(x=>x.id)
+   ids
   );
 
  const pumpCount=
   await countTable(
    'pompalar',
-   rows.map(x=>x.id)
+   ids
   );
 
  const driveCount=
   await countTable(
    'suruculer',
-   rows.map(x=>x.id)
+   ids
   );
 
  app.innerHTML=`
 
- <div class="top">
-
-  <div class="top-left">
-
-   <div class="logo">
-    M
-   </div>
-
-   <div>
-
-    <div class="page-title">
-     ${esc(prefs.labels.title)}
-    </div>
-
-    <div class="page-sub">
-     ${esc(prefs.labels.subtitle)}
-    </div>
-
-   </div>
-
-  </div>
-
-  <div class="top-right">
-
-   <span class="badge ${edit?'warn':''}">
-    ${edit?'Yönetici':'Ziyaretçi'}
-   </span>
-
-   ${
-    edit
-    ?
-    `
-    <button
-     class="btn"
-     onclick="showSettings()">
-
-     ⚙ AYARLAR
-
-    </button>
-    `
-    :
-    ''
-   }
-
-   ${
-    edit
-    ?
-    `
-    <button
-     class="btn warn"
-     onclick="requestAdmin()">
-
-     🔒 KİLİTLE
-
-    </button>
-    `
-    :
-    `
-    <button
-     class="btn on"
-     onclick="requestAdmin()">
-
-     🔐 YÖNETİCİ
-
-    </button>
-    `
-   }
-
-   <button
-    class="btn"
-    onclick="logout()">
-
-    ÇIKIŞ
-
-   </button>
-
-  </div>
-
- </div>
-
- ${
-  edit
-  ?
-  `
-  <div style="margin-top:7px">
-
-   <span class="admin-status">
-    🔓 Yönetici oturumu açık · 30 dk hareketsizlikte otomatik kilit
-   </span>
-
-  </div>
-  `
-  :
-  ''
- }
-
- <div class="card">
-
-  <div class="summary">
-
-   <div class="stat">
-
-    <div class="stat-label">
-     Kayıtlı Terfi
-    </div>
-
-    <div class="stat-value">
-     ${rows.length}
-    </div>
-
-    <div class="stat-unit">
-     istasyon
-    </div>
-
-   </div>
-
-   <div class="stat">
-
-    <div class="stat-label">
-     Motor
-    </div>
-
-    <div class="stat-value">
-     ${motorCount}
-    </div>
-
-    <div class="stat-unit">
-     adet
-    </div>
-
-   </div>
-
-   <div class="stat">
-
-    <div class="stat-label">
-     Pompa
-    </div>
-
-    <div class="stat-value">
-     ${pumpCount}
-    </div>
-
-    <div class="stat-unit">
-     adet
-    </div>
-
-   </div>
-
-   <div class="stat">
-
-    <div class="stat-label">
-     Sürücü
-    </div>
-
-    <div class="stat-value">
-     ${driveCount}
-    </div>
-
-    <div class="stat-unit">
-     adet
-    </div>
-
-   </div>
-
-   <div class="stat">
-
-    <div class="stat-label">
-     Arşiv
-    </div>
-
-    <div class="stat-value">
-     AKTİF
-    </div>
-
-    <div class="stat-unit">
-     Supabase
-    </div>
-
-   </div>
-
-  </div>
-
- </div>
-
- <div class="card">
+ <div class="wrap">
 
   <div class="top">
 
-   <div>
+   <div class="top-left">
 
-    <h2>
-     TERFİ KAYITLARI
-    </h2>
+    <div class="logo">
+     M
+    </div>
 
-    <div class="section-sub">
+    <div>
 
-     Terfiyi açarak bütün teknik sekmelere ulaş.
+     <div class="page-title">
+      ${esc(
+       prefs.labels.title
+      )}
+     </div>
+
+     <div class="page-sub">
+      ${esc(
+       prefs.labels.subtitle
+      )}
+     </div>
 
     </div>
 
    </div>
 
-   ${
-    edit
-    ?
-    `
-    <button
-     class="btn ok"
-     onclick="newStation()">
+   <div class="top-right">
 
-     + YENİ TERFİ
+    <button
+     class="btn primary"
+     onclick="home()">
+
+     🏠 ANA SAYFA
 
     </button>
-    `
-    :
-    ''
-   }
+
+    <span class="badge ${edit?'warn':''}">
+
+     ${edit
+      ?
+      'Yönetici'
+      :
+      'Ziyaretçi'
+     }
+
+    </span>
+
+    ${
+     edit
+     ?
+     `
+     <button
+      class="btn"
+      onclick="showSettings()">
+
+      ⚙ AYARLAR
+
+     </button>
+     `
+     :
+     ''
+    }
+
+    <button
+     class="btn ${edit?'warn':'primary'}"
+     onclick="requestAdmin()">
+
+     ${edit
+      ?
+      '🔒 KİLİTLE'
+      :
+      '🔐 YÖNETİCİ'
+     }
+
+    </button>
+
+    <button
+     class="btn"
+     onclick="logout()">
+
+     ÇIKIŞ
+
+    </button>
+
+   </div>
 
   </div>
 
-  <div style="margin-top:10px">
+  ${
+   edit
+   ?
+   `
+   <div style="margin-top:7px">
 
-   <input
-    id="search"
-    placeholder="Terfi adı, kod, bölge veya adres ara..."
-    oninput="filterStations()"
-    style="
-     width:100%;
-     padding:12px;
-     border-radius:9px;
-     border:1px solid var(--line);
-     background:#071a2f;
-     color:#fff
-    "
-   >
+    <span class="admin-status">
+
+     🔓 Yönetici modu açık
+     · 30 dk hareketsizlikte kilit
+
+    </span>
+
+   </div>
+   `
+   :
+   ''
+  }
+
+  <div class="card">
+
+   <div class="summary">
+
+    <div class="stat">
+
+     <div class="stat-label">
+      Kayıtlı Terfi
+     </div>
+
+     <div class="stat-value">
+      ${rows.length}
+     </div>
+
+     <div class="stat-unit">
+      istasyon
+     </div>
+
+    </div>
+
+    <div class="stat">
+
+     <div class="stat-label">
+      Motor
+     </div>
+
+     <div class="stat-value">
+      ${motorCount}
+     </div>
+
+     <div class="stat-unit">
+      adet
+     </div>
+
+    </div>
+
+    <div class="stat">
+
+     <div class="stat-label">
+      Pompa
+     </div>
+
+     <div class="stat-value">
+      ${pumpCount}
+     </div>
+
+     <div class="stat-unit">
+      adet
+     </div>
+
+    </div>
+
+    <div class="stat">
+
+     <div class="stat-label">
+      Sürücü
+     </div>
+
+     <div class="stat-value">
+      ${driveCount}
+     </div>
+
+     <div class="stat-unit">
+      adet
+     </div>
+
+    </div>
+
+    <div class="stat">
+
+     <div class="stat-label">
+      Arşiv
+     </div>
+
+     <div class="stat-value">
+      AKTİF
+     </div>
+
+     <div class="stat-unit">
+      Supabase
+     </div>
+
+    </div>
+
+   </div>
 
   </div>
 
-  <div id="stations">
+  <div class="card">
 
-   ${renderStationMarkup(rows)}
+   <div class="top">
+
+    <div>
+
+     <h2>
+      TERFİ KAYITLARI
+     </h2>
+
+     <div class="section-sub">
+
+      Terfiyi açarak bütün teknik sekmelere
+      ulaş.
+
+     </div>
+
+    </div>
+
+    ${
+     edit
+     ?
+     `
+     <button
+      class="btn ok"
+      onclick="newStation()">
+
+      + YENİ TERFİ
+
+     </button>
+     `
+     :
+     ''
+    }
+
+   </div>
+
+   <div style="margin-top:10px">
+
+    <input
+     id="search"
+     placeholder="
+      Terfi adı, kod, bölge veya adres ara...
+     "
+     oninput="filterStations()"
+     style="
+      width:100%;
+      padding:12px;
+      border-radius:10px;
+      border:1px solid var(--line);
+      background:#061a2d;
+      color:#fff;
+      outline:none;
+      min-height:46px
+     "
+    >
+
+   </div>
+
+   <div id="stations">
+
+    ${renderStationMarkup(rows)}
+
+   </div>
 
   </div>
 
@@ -2645,72 +2650,82 @@ async function countTable(
 
 }
 
-function renderStationMarkup(rows){
+function renderStationMarkup(
+ rows
+){
 
- return rows.map(x=>`
+ return rows.map(
+  x=>`
 
- <div
-  class="station"
-  data-search="${esc(
-   (
-    `${x.ad||''} `+
-    `${x.kod||''} `+
-    `${x.terfi_no||''} `+
-    `${x.bolge||''} `+
-    `${x.adres||''}`
-   ).toLowerCase()
-  )}"
-  onclick="openStation('${x.id}')">
+  <div
+   class="station"
+   data-search="${esc(
+    (
+     `${x.ad||''} `+
+     `${x.kod||''} `+
+     `${x.terfi_no||''} `+
+     `${x.bolge||''} `+
+     `${x.adres||''}`
+    ).toLowerCase()
+   )}"
+   onclick="
+    openStation(
+     '${x.id}'
+    )
+   ">
 
-  <div class="top">
+   <div class="top">
 
-   <div>
+    <div>
 
-    <div class="station-title">
-     ${esc(
-      x.ad||'İsimsiz Terfi'
-     )}
+     <div class="station-title">
+
+      ${esc(
+       x.ad||
+       'İsimsiz Terfi'
+      )}
+
+     </div>
+
+     <div class="station-meta">
+
+      ${esc(
+       x.terfi_no||
+       x.kod||
+       ''
+      )}
+
+      ${
+       x.bolge
+       ?
+       ' · '+esc(x.bolge)
+       :
+       ''
+      }
+
+     </div>
+
+     <div class="station-meta">
+
+      ${esc(
+       x.adres||
+       'Adres girilmemiş'
+      )}
+
+     </div>
+
     </div>
 
-    <div class="station-meta">
-
-     ${esc(
-      x.terfi_no||
-      x.kod||
-      ''
-     )}
-
-     ${
-      x.bolge
-      ?
-      ' · '+esc(x.bolge)
-      :
-      ''
-     }
-
-    </div>
-
-    <div class="station-meta">
-
-     ${esc(
-      x.adres||
-      'Adres girilmemiş'
-     )}
-
-    </div>
+    <span class="badge ok">
+     TEKNİK KAYIT
+    </span>
 
    </div>
 
-   <span class="badge ok">
-    TEKNİK KAYIT
-   </span>
-
   </div>
 
- </div>
-
- `).join('')||
-
+  `
+ ).join('')||
  `<div class="empty">
   Henüz terfi kaydı yok.
  </div>`;
@@ -2722,32 +2737,38 @@ function filterStations(){
  const q=
   (
    document
-    .getElementById('search')
+    .getElementById(
+     'search'
+    )
     ?.value||
    ''
   ).toLowerCase();
 
  document
-  .querySelectorAll('.station')
-  .forEach(x=>{
-
-   x.style.display=
-    x.dataset.search.includes(q)
-    ?
-    'block'
-    :
-    'none';
-
-  });
+  .querySelectorAll(
+   '.station'
+  )
+  .forEach(
+   x=>{
+    x.style.display=
+     x.dataset.search.includes(q)
+     ?
+     'block'
+     :
+     'none';
+   }
+  );
 
 }
 
 
 /* =========================================================
-   TERFİYİ AÇ
+   OPEN STATION
 ========================================================= */
 
-async function openStation(id){
+async function openStation(
+ id
+){
 
  const [
   s,
@@ -2769,7 +2790,10 @@ async function openStation(id){
    db
     .from('motorlar')
     .select('*')
-    .eq('terfi_id',id)
+    .eq(
+     'terfi_id',
+     id
+    )
     .order(
      'created_at',
      {ascending:true}
@@ -2778,7 +2802,10 @@ async function openStation(id){
    db
     .from('pompalar')
     .select('*')
-    .eq('terfi_id',id)
+    .eq(
+     'terfi_id',
+     id
+    )
     .order(
      'created_at',
      {ascending:true}
@@ -2787,7 +2814,10 @@ async function openStation(id){
    db
     .from('suruculer')
     .select('*')
-    .eq('terfi_id',id)
+    .eq(
+     'terfi_id',
+     id
+    )
     .order(
      'created_at',
      {ascending:true}
@@ -2796,7 +2826,10 @@ async function openStation(id){
    db
     .from('hmi_kayitlari')
     .select('*')
-    .eq('terfi_id',id)
+    .eq(
+     'terfi_id',
+     id
+    )
     .order(
      'ekran_no',
      {ascending:true}
@@ -2805,7 +2838,10 @@ async function openStation(id){
    db
     .from('motor_calisma_kayitlari')
     .select('*')
-    .eq('terfi_id',id)
+    .eq(
+     'terfi_id',
+     id
+    )
     .order(
      'captured_at',
      {ascending:false}
@@ -2814,7 +2850,10 @@ async function openStation(id){
    db
     .from('terfi_parametreleri')
     .select('*')
-    .eq('terfi_id',id)
+    .eq(
+     'terfi_id',
+     id
+    )
     .order(
      'sira',
      {ascending:true}
@@ -2839,7 +2878,13 @@ async function openStation(id){
   d:d.data||[],
   h:h.data||[],
   w:w.data||[],
-  tp:tp.data||[]
+  tp:tp.data||[],
+  ssr:{
+   level:'',
+   low:'',
+   high:'',
+   note:''
+  }
  };
 
  const ssrMap=
@@ -2849,18 +2894,18 @@ async function openStation(id){
   );
 
  current.ssr=
-  ssrMap[id]||{
-   level:'',
-   low:'',
-   high:'',
-   note:''
-  };
+  ssrMap[id]||
+  current.ssr;
 
  tab='terfi';
 
  hmiPage=1;
 
  workMotor=
+  current.m[0]?.id||
+  null;
+
+ selectedMotorId=
   current.m[0]?.id||
   null;
 
@@ -2878,10 +2923,18 @@ async function openStation(id){
 
 
 /* =========================================================
-   MAIN RENDER
+   RENDER
 ========================================================= */
 
 function render(){
+
+ if(!loggedIn){
+
+  showLogin();
+
+  return;
+
+ }
 
  if(!current){
 
@@ -2893,10 +2946,10 @@ function render(){
 
  if(edit){
 
-  const session=
-   getAdminSession();
+  const s=
+   getSession();
 
-  if(!session){
+  if(!s){
 
    edit=false;
 
@@ -2905,7 +2958,7 @@ function render(){
    const age=
     Date.now()-
     Number(
-     session.lastActivity||0
+     s.lastActivity||0
     );
 
    if(age>=ADMIN_IDLE_MS){
@@ -2922,71 +2975,246 @@ function render(){
 
  }
 
- document.getElementById(
-  'saveBar'
- )
- .classList.toggle(
-  'hidden',
-  !edit
- );
+ document
+  .getElementById(
+   'saveBar'
+  )
+  .classList.toggle(
+   'hidden',
+   !edit
+  );
 
  app.innerHTML=`
 
- <div class="top">
+ <div class="wrap">
 
-  <div>
+  <div class="top">
 
-   <div class="page-title">
-    ${esc(
-     current.s.ad||
-     'Terfi'
-    )}
+   <div>
+
+    <div class="page-title">
+
+     ${esc(
+      current.s.ad||
+      'Terfi'
+     )}
+
+    </div>
+
+    <div class="page-sub">
+
+     ${esc(
+      current.s.terfi_no||
+      current.s.kod||
+      ''
+     )}
+
+     ·
+
+     ${esc(
+      current.s.bolge||
+      'Bölge'
+     )}
+
+     ·
+
+     ${esc(
+      current.s.adres||
+      'Adres'
+     )}
+
+    </div>
+
    </div>
 
-   <div class="page-sub">
+   <div class="top-right">
 
-    ${esc(
-     current.s.terfi_no||
-     current.s.kod||
+    <button
+     class="btn primary"
+     onclick="home()">
+
+     🏠 ANA SAYFA
+
+    </button>
+
+    <span class="badge ${edit?'warn':''}">
+
+     ${edit
+      ?
+      'YÖNETİCİ MODU'
+      :
+      'ZİYARETÇİ MODU'
+     }
+
+    </span>
+
+    ${
+     edit
+     ?
+     `
+     <button
+      class="btn"
+      onclick="showSettings()">
+
+      ⚙ AYARLAR
+
+     </button>
+     `
+     :
      ''
-    )}
+    }
 
-    ·
+    <button
+     class="btn ${edit?'warn':'primary'}"
+     onclick="requestAdmin()">
 
-    ${esc(
-     current.s.bolge||
-     'Bölge'
-    )}
+     ${edit
+      ?
+      '🔒 KİLİTLE'
+      :
+      '🔐 YÖNETİCİ'
+     }
 
-    ·
-
-    ${esc(
-     current.s.adres||
-     'Adres'
-    )}
+    </button>
 
    </div>
 
   </div>
 
-  <div class="top-right">
+  ${
+   edit
+   ?
+   `
+   <div style="margin-top:7px">
 
-   <span class="badge ${edit?'warn':''}">
-    ${edit?
-     'YÖNETİCİ MODU':
-     'ZİYARETÇİ MODU'
-    }
-   </span>
+    <span class="admin-status">
+
+     🔓 Yönetici modu açık
+     · 30 dk hareketsizlikte kilitlenir
+
+    </span>
+
+   </div>
+   `
+   :
+   ''
+  }
+
+  <nav class="nav">
+
+   <button
+    class="btn ${tab==='terfi'?'primary':''}"
+    onclick="setTab('terfi')">
+
+    TERFİ
+
+   </button>
+
+   <button
+    class="btn ${tab==='ssr'?'primary':''}"
+    onclick="setTab('ssr')">
+
+    SSR / SEVİYE
+
+   </button>
+
+   <button
+    class="btn ${tab==='motor'?'primary':''}"
+    onclick="setTab('motor')">
+
+    MOTORLAR
+
+   </button>
+
+   <button
+    class="btn ${tab==='surucu'?'primary':''}"
+    onclick="setTab('surucu')">
+
+    SÜRÜCÜLER
+
+   </button>
+
+   <button
+    class="btn ${tab==='box'?'primary':''}"
+    onclick="setTab('box')">
+
+    BOX / KABLO
+
+   </button>
+
+   <button
+    class="btn ${tab==='pompa'?'primary':''}"
+    onclick="setTab('pompa')">
+
+    POMPA
+
+   </button>
+
+   <button
+    class="btn ${tab==='calisma'?'primary':''}"
+    onclick="setTab('calisma')">
+
+    ÇALIŞMA
+
+   </button>
+
+   <button
+    class="btn ${tab==='hmi'?'primary':''}"
+    onclick="setTab('hmi')">
+
+    HMI / PLC
+
+   </button>
+
+   <button
+    class="btn ${tab==='parametre'?'primary':''}"
+    onclick="setTab('parametre')">
+
+    PARAMETRELER
+
+   </button>
+
+   <button
+    class="btn ${tab==='fault'?'primary':''}"
+    onclick="setTab('fault')">
+
+    ARIZA
+
+   </button>
+
+   <button
+    class="btn ${tab==='history'?'primary':''}"
+    onclick="setTab('history')">
+
+    GEÇMİŞ
+
+   </button>
+
+   <button
+    class="btn ${tab==='photo'?'primary':''}"
+    onclick="setTab('photo')">
+
+    FOTOĞRAF
+
+   </button>
+
+   <button
+    class="btn ${tab==='reference'?'primary':''}"
+    onclick="setTab('reference')">
+
+    REFERANS
+
+   </button>
 
    ${
     edit
     ?
     `
     <button
-     class="btn"
-     onclick="showSettings()">
+     class="btn bad"
+     onclick="deleteTerfi()">
 
-     ⚙ AYARLAR
+     🗑 TERFİYİ SİL
 
     </button>
     `
@@ -2995,201 +3223,41 @@ function render(){
    }
 
    <button
-    class="btn ${edit?'warn':'on'}"
-    onclick="requestAdmin()">
+    class="btn ok"
+    onclick="makePDF()">
 
-    ${edit?
-     '🔒 KİLİTLE':
-     '🔐 YÖNETİCİ'
-    }
+    📄 PDF
 
    </button>
 
-  </div>
-
- </div>
-
- ${
-  edit
-  ?
-  `
-  <div style="margin-top:7px">
-
-   <span class="admin-status">
-
-    🔓 Yönetici oturumu açık
-
-    ·
-
-    30 dk hareketsizlikte otomatik kilitlenir
-
-   </span>
-
-  </div>
-  `
-  :
-  ''
- }
-
- <div class="tabs">
-
-  <button
-   class="btn ${tab==='terfi'?'on':''}"
-   onclick="setTab('terfi')">
-
-   TERFİ
-
-  </button>
-
-  <button
-   class="btn ${tab==='ssr'?'on':''}"
-   onclick="setTab('ssr')">
-
-   SSR / SEVİYE
-
-  </button>
-
-  <button
-   class="btn ${tab==='motor'?'on':''}"
-   onclick="setTab('motor')">
-
-   MOTORLAR
-
-  </button>
-
-  <button
-   class="btn ${tab==='surucu'?'on':''}"
-   onclick="setTab('surucu')">
-
-   SÜRÜCÜLER
-
-  </button>
-
-  <button
-   class="btn ${tab==='box'?'on':''}"
-   onclick="setTab('box')">
-
-   BOX / KABLO
-
-  </button>
-
-  <button
-   class="btn ${tab==='pompa'?'on':''}"
-   onclick="setTab('pompa')">
-
-   POMPA
-
-  </button>
-
-  <button
-   class="btn ${tab==='calisma'?'on':''}"
-   onclick="setTab('calisma')">
-
-   ÇALIŞMA
-
-  </button>
-
-  <button
-   class="btn ${tab==='hmi'?'on':''}"
-   onclick="setTab('hmi')">
-
-   HMI / PLC
-
-  </button>
-
-  <button
-   class="btn ${tab==='parametre'?'on':''}"
-   onclick="setTab('parametre')">
-
-   PARAMETRELER
-
-  </button>
-
-  <button
-   class="btn ${tab==='fault'?'on':''}"
-   onclick="setTab('fault')">
-
-   ARIZA KÜTÜPHANESİ
-
-  </button>
-
-  <button
-   class="btn ${tab==='history'?'on':''}"
-   onclick="setTab('history')">
-
-   GEÇMİŞ
-
-  </button>
-
-  <button
-   class="btn ${tab==='photo'?'on':''}"
-   onclick="setTab('photo')">
-
-   FOTOĞRAFLAR
-
-  </button>
-
-  <button
-   class="btn ${tab==='reference'?'on':''}"
-   onclick="setTab('reference')">
-
-   REFERANSLAR
-
-  </button>
-
-  ${
-   edit
-   ?
-   `
    <button
-    class="btn bad"
-    onclick="deleteTerfi()">
+    class="btn"
+    onclick="exportCSV()">
 
-    🗑 TERFİYİ SİL
+    📊 CSV
 
    </button>
-   `
-   :
-   ''
-  }
 
-  <button
-   class="btn ok"
-   onclick="makePDF()">
+  </nav>
 
-   📄 PDF
+  <div id="body">
 
-  </button>
+   ${body()}
 
-  <button
-   class="btn"
-   onclick="exportCSV()">
+  </div>
 
-   📊 EXCEL/CSV
-
-  </button>
-
-  <button
-   class="btn"
-   onclick="home()">
-
-   ← TERFİLER
-
-  </button>
-
- </div>
-
- <div id="body">
-  ${body()}
  </div>
 
  `;
 
 }
 
-function setTab(x){
+function setTab(
+ x
+){
 
- touchAdminSession();
+ if(edit)
+  touchAdminSession();
 
  tab=x;
 
@@ -3254,7 +3322,7 @@ function body(){
 
 
 /* =========================================================
-   INPUT
+   INPUT HELPER
 ========================================================= */
 
 function input(
@@ -3276,7 +3344,8 @@ function input(
    id="${id}"
    type="${type}"
    value="${esc(value??'')}"
-   ${type==='number'
+   ${
+    type==='number'
     ?
     'inputmode="decimal"'
     :
@@ -3297,7 +3366,8 @@ function input(
 
 function stationBody(){
 
- const s=current.s;
+ const s=
+  current.s;
 
  return `
 
@@ -3355,9 +3425,9 @@ function stationBody(){
     Açıklama
    </label>
 
-   <textarea id="s_aciklama">
-${esc(s.aciklama||'')}
-   </textarea>
+   <textarea id="s_aciklama">${esc(
+    s.aciklama||''
+   )}</textarea>
 
   </div>
 
@@ -3372,83 +3442,41 @@ ${esc(s.aciklama||'')}
   <div class="summary">
 
    <div class="stat">
-
-    <div class="stat-label">
-     Motor
-    </div>
-
+    <div class="stat-label">Motor</div>
     <div class="stat-value">
      ${current.m.length}
     </div>
-
-    <div class="stat-unit">
-     adet
-    </div>
-
+    <div class="stat-unit">adet</div>
    </div>
 
    <div class="stat">
-
-    <div class="stat-label">
-     Pompa
-    </div>
-
+    <div class="stat-label">Pompa</div>
     <div class="stat-value">
      ${current.p.length}
     </div>
-
-    <div class="stat-unit">
-     adet
-    </div>
-
+    <div class="stat-unit">adet</div>
    </div>
 
    <div class="stat">
-
-    <div class="stat-label">
-     Sürücü
-    </div>
-
+    <div class="stat-label">Sürücü</div>
     <div class="stat-value">
      ${current.d.length}
     </div>
-
-    <div class="stat-unit">
-     adet
-    </div>
-
+    <div class="stat-unit">adet</div>
    </div>
 
    <div class="stat">
-
-    <div class="stat-label">
-     HMI
-    </div>
-
-    <div class="stat-value">
-     5
-    </div>
-
-    <div class="stat-unit">
-     sayfa
-    </div>
-
+    <div class="stat-label">HMI</div>
+    <div class="stat-value">5</div>
+    <div class="stat-unit">sayfa</div>
    </div>
 
    <div class="stat">
-
-    <div class="stat-label">
-     Çalışma
-    </div>
-
+    <div class="stat-label">Çalışma</div>
     <div class="stat-value">
      ${current.w.length}
     </div>
-
-    <div class="stat-unit">
-     kayıt
-    </div>
-
+    <div class="stat-unit">kayıt</div>
    </div>
 
   </div>
@@ -3464,48 +3492,27 @@ ${esc(s.aciklama||'')}
   <div class="grid3">
 
    <div class="workbox">
-
-    <h4>
-     SSR
-    </h4>
-
-    <b>
-     ${esc(
-      current.ssr?.level||
-      '—'
-     )}
-    </b>
-
+    <h4>SSR</h4>
+    <b>${esc(
+     current.ssr.level||
+     '—'
+    )}</b>
    </div>
 
    <div class="workbox">
-
-    <h4>
-     ALT SEVİYE
-    </h4>
-
-    <b>
-     ${esc(
-      current.ssr?.low||
-      '—'
-     )}
-    </b>
-
+    <h4>ALT SEVİYE</h4>
+    <b>${esc(
+     current.ssr.low||
+     '—'
+    )}</b>
    </div>
 
    <div class="workbox">
-
-    <h4>
-     ÜST SEVİYE
-    </h4>
-
-    <b>
-     ${esc(
-      current.ssr?.high||
-      '—'
-     )}
-    </b>
-
+    <h4>ÜST SEVİYE</h4>
+    <b>${esc(
+     current.ssr.high||
+     '—'
+    )}</b>
    </div>
 
   </div>
@@ -3522,8 +3529,6 @@ ${esc(s.aciklama||'')}
 ========================================================= */
 
 function ssrBody(){
-
- current.ssr ||= {};
 
  return `
 
@@ -3566,9 +3571,9 @@ function ssrBody(){
     Seviye Notu
    </label>
 
-   <textarea id="ssr_note">
-${esc(current.ssr.note||'')}
-   </textarea>
+   <textarea id="ssr_note">${esc(
+    current.ssr.note||''
+   )}</textarea>
 
   </div>
 
@@ -3598,9 +3603,8 @@ function motorBody(){
     </h2>
 
     <div class="section-sub">
-
-     Motor sayısı sınırsızdır. Her motor bağımsız kayıt altında tutulur.
-
+     Motor sayısı sınırsızdır.
+     Her motor bağımsız kayıt altında tutulur.
     </div>
 
    </div>
@@ -3631,7 +3635,10 @@ function motorBody(){
   current.m
    .map(
     (m,i)=>
-     motorCard(m,i)
+     motorCard(
+      m,
+      i
+     )
    )
    .join('')
   :
@@ -3692,9 +3699,13 @@ function motorCard(
     `
     <button
      class="btn bad"
-     onclick="deleteMotor('${m.id}')">
+     onclick="
+      deleteMotor(
+       '${m.id}'
+      )
+     ">
 
-     Motoru Sil
+     🗑 Motoru Sil
 
     </button>
     `
@@ -3804,9 +3815,9 @@ function motorCard(
     Etiket / Teknik Not
    </label>
 
-   <textarea id="m_${m.id}_not">
-${esc(m.etiket_notu||'')}
-   </textarea>
+   <textarea id="m_${m.id}_not">${esc(
+    m.etiket_notu||''
+   )}</textarea>
 
   </div>
 
@@ -3828,20 +3839,36 @@ ${esc(m.etiket_notu||'')}
       ?
       `
       <b>
+       ${esc(
+        d.ad||
+        'Sürücü'
+       )}
 
-       ${esc(d.ad||'Sürücü')}
        ·
-       ${esc(d.marka||'')}
+
+       ${esc(
+        d.marka||
+        ''
+       )}
+
        ·
-       ${esc(d.model||'')}
+
+       ${esc(
+        d.model||
+        ''
+       )}
+
        ·
+
        ${d.guc_kw??'—'} kW
 
       </b>
       `
       :
       `
-      <span class="muted">
+      <span style="
+       color:var(--muted)
+      ">
        Bu motora sürücü bağlanmamış.
       </span>
       `;
@@ -3873,17 +3900,22 @@ async function addMotor(){
   await db
    .from('motorlar')
    .insert({
+
     terfi_id:
      current.s.id,
+
     ad:
      `${current.m.length+1}. Motor`
+
    })
    .select()
    .single();
 
  if(r.error){
 
-  alert(r.error.message);
+  alert(
+   r.error.message
+  );
 
   return;
 
@@ -3900,7 +3932,9 @@ async function addMotor(){
 
 }
 
-async function deleteMotor(id){
+async function deleteMotor(
+ id
+){
 
  if(!edit){
 
@@ -3913,8 +3947,9 @@ async function deleteMotor(id){
  touchAdminSession();
 
  if(!confirm(
-  'Bu motor ve bağlı bilgiler silinsin mi?'
- ))return;
+  'Bu motor ve bağlı sürücü ilişkisi silinsin mi?'
+ ))
+  return;
 
  const d=
   current.d.find(
@@ -4003,7 +4038,7 @@ function driverBody(){
     </h2>
 
     <div class="section-sub">
-     Marka, model, kW ve bağlı motor bilgileri burada tutulur.
+     Marka, model, kW ve bağlı motor bilgileri.
     </div>
 
    </div>
@@ -4063,9 +4098,11 @@ function driverCard(
    <div>
 
     <h3>
-     ${i+1}. SÜRÜCÜ
-     ·
-     ${esc(d.ad||'')}
+     ${i+1}. SÜRÜCÜ ·
+     ${esc(
+      d.ad||
+      `${i+1}. Sürücü`
+     )}
     </h3>
 
     <span class="badge">
@@ -4093,9 +4130,13 @@ function driverCard(
     `
     <button
      class="btn bad"
-     onclick="deleteDriver('${d.id}')">
+     onclick="
+      deleteDriver(
+       '${d.id}'
+      )
+     ">
 
-     Sürücüyü Sil
+     🗑 Sürücüyü Sil
 
     </button>
     `
@@ -4163,6 +4204,7 @@ function driverCard(
       current.m
        .map(
         m=>`
+
         <option
          value="${m.id}"
          ${d.motor_id===m.id?'selected':''}>
@@ -4173,6 +4215,7 @@ function driverCard(
          )}
 
         </option>
+
         `
        )
        .join('')
@@ -4192,9 +4235,9 @@ function driverCard(
     Notlar
    </label>
 
-   <textarea id="d_${d.id}_not">
-${esc(d.notlar||'')}
-   </textarea>
+   <textarea id="d_${d.id}_not">${esc(
+    d.notlar||''
+   )}</textarea>
 
   </div>
 
@@ -4239,10 +4282,13 @@ async function addDriver(){
   await db
    .from('suruculer')
    .insert({
+
     terfi_id:
      current.s.id,
+
     ad:
      `${current.d.length+1}. Sürücü`
+
    })
    .select()
    .single();
@@ -4268,7 +4314,9 @@ async function addDriver(){
 
 }
 
-async function deleteDriver(id){
+async function deleteDriver(
+ id
+){
 
  if(!edit){
 
@@ -4282,7 +4330,8 @@ async function deleteDriver(id){
 
  if(!confirm(
   'Sürücü silinsin mi?'
- ))return;
+ ))
+  return;
 
  const r=
   await db
@@ -4316,77 +4365,489 @@ async function deleteDriver(id){
 
 
 /* =========================================================
-   BOX / KABLO
+   BOX / MOTOR / SÜRÜCÜ
 ========================================================= */
+
+function blankTerm(){
+
+ return {
+  renk:'',
+  detay:'',
+  etiket:''
+ };
+
+}
 
 function defaultBox(){
 
  return {
 
-  l1:{
-   bara:'1. Bara',
-   damar:'1',
-   renk:'',
-   detay:'',
-   hedef:'Motor',
-   etiket:''
+  motor:{
+   u:blankTerm(),
+   v:blankTerm(),
+   w:blankTerm()
   },
 
-  l2:{
-   bara:'2. Bara',
-   damar:'2',
-   renk:'',
-   detay:'',
-   hedef:'Motor',
-   etiket:''
+  box_motor:{
+   u:blankTerm(),
+   v:blankTerm(),
+   w:blankTerm()
   },
 
-  l3:{
-   bara:'3. Bara',
-   damar:'3',
-   renk:'',
-   detay:'',
-   hedef:'Motor',
-   etiket:''
+  box_surucu:{
+   u:blankTerm(),
+   v:blankTerm(),
+   w:blankTerm()
   },
 
-  t4:{
-   bara:'4. Bara',
-   damar:'4',
-   renk:'',
-   detay:'',
-   hedef:'Motor',
-   etiket:''
-  },
-
-  t5:{
-   bara:'5. Bara',
-   damar:'5',
-   renk:'',
-   detay:'',
-   hedef:'Motor',
-   etiket:''
-  },
-
-  t6:{
-   bara:'6. Bara',
-   damar:'6',
-   renk:'',
-   detay:'',
-   hedef:'Motor',
-   etiket:''
+  surucu:{
+   u:blankTerm(),
+   v:blankTerm(),
+   w:blankTerm()
   }
 
  };
 
 }
 
-function getBox(id){
+function normalizeBox(
+ b
+){
 
- localBoxes[id] ||=
+ const d=
   defaultBox();
 
+ return {
+
+  motor:{
+   u:{...d.motor.u,...(b?.motor?.u||{})},
+   v:{...d.motor.v,...(b?.motor?.v||{})},
+   w:{...d.motor.w,...(b?.motor?.w||{})}
+  },
+
+  box_motor:{
+   u:{...d.box_motor.u,...(b?.box_motor?.u||{})},
+   v:{...d.box_motor.v,...(b?.box_motor?.v||{})},
+   w:{...d.box_motor.w,...(b?.box_motor?.w||{})}
+  },
+
+  box_surucu:{
+   u:{...d.box_surucu.u,...(b?.box_surucu?.u||{})},
+   v:{...d.box_surucu.v,...(b?.box_surucu?.v||{})},
+   w:{...d.box_surucu.w,...(b?.box_surucu?.w||{})}
+  },
+
+  surucu:{
+   u:{...d.surucu.u,...(b?.surucu?.u||{})},
+   v:{...d.surucu.v,...(b?.surucu?.v||{})},
+   w:{...d.surucu.w,...(b?.surucu?.w||{})}
+  }
+
+ };
+
+}
+
+function getBox(
+ id
+){
+
+ localBoxes[id]=
+  normalizeBox(
+   localBoxes[id]
+  );
+
  return localBoxes[id];
+
+}
+
+function boxInput(
+ motor,
+ section,
+ terminal,
+ title
+){
+
+ const b=
+  getBox(motor.id);
+
+ const x=
+  b[section][terminal];
+
+ return `
+
+ <h4>
+  ${esc(title)}
+ </h4>
+
+ ${
+  edit
+  ?
+  `
+
+  <div class="field">
+
+   <label>
+    Kablo Rengi
+   </label>
+
+   <input
+    value="${esc(
+     x.renk||''
+    )}"
+    placeholder="
+     Örn: Kahverengi
+    "
+    onchange="
+     boxChange(
+      '${motor.id}',
+      '${section}',
+      '${terminal}',
+      'renk',
+      this.value
+     )
+    "
+   >
+
+  </div>
+
+  <div
+   class="field"
+   style="margin-top:8px">
+
+   <label>
+    Renk Detayı
+   </label>
+
+   <input
+    value="${esc(
+     x.detay||''
+    )}"
+    placeholder="
+     Örn: Kahve/Beyaz
+    "
+    onchange="
+     boxChange(
+      '${motor.id}',
+      '${section}',
+      '${terminal}',
+      'detay',
+      this.value
+     )
+    "
+   >
+
+  </div>
+
+  <div
+   class="field"
+   style="margin-top:8px">
+
+   <label>
+    Etiket / U-V-W
+   </label>
+
+   <input
+    value="${esc(
+     x.etiket||
+     terminal.toUpperCase()
+    )}"
+    onchange="
+     boxChange(
+      '${motor.id}',
+      '${section}',
+      '${terminal}',
+      'etiket',
+      this.value
+     )
+    "
+   >
+
+  </div>
+
+  `
+  :
+  `
+
+  <div style="
+   font-size:18px;
+   font-weight:950;
+   color:#67c9ff
+  ">
+
+   ${terminal.toUpperCase()}
+
+  </div>
+
+  <div style="
+   margin-top:8px;
+   color:#9fc2d2
+  ">
+
+   Renk:
+   <strong>
+    ${esc(
+     x.renk||
+     '—'
+    )}
+   </strong>
+
+  </div>
+
+  <div style="
+   margin-top:5px;
+   font-size:11px;
+   color:#7f9cad
+  ">
+
+   Detay:
+   ${esc(
+    x.detay||
+    '—'
+   )}
+
+  </div>
+
+  <div style="
+   margin-top:5px;
+   font-size:11px;
+   color:#7f9cad
+  ">
+
+   Etiket:
+   ${esc(
+    x.etiket||
+    terminal.toUpperCase()
+   )}
+
+  </div>
+
+  `
+ }
+
+ `;
+
+}
+
+function boxTable(
+ motor,
+ section,
+ title,
+ subtitle,
+ leftTitle
+){
+
+ const b=
+  getBox(motor.id);
+
+ return `
+
+ <div class="card">
+
+  <div class="section-title">
+   ${title}
+  </div>
+
+  <div class="section-sub">
+   ${subtitle}
+  </div>
+
+  <div
+   style="
+    overflow:auto;
+    margin-top:10px
+   ">
+
+   <table class="box-table">
+
+    <thead>
+
+     <tr>
+
+      <th>
+       ${leftTitle}
+      </th>
+
+      <th>
+       U
+      </th>
+
+      <th>
+       V
+      </th>
+
+      <th>
+       W
+      </th>
+
+     </tr>
+
+    </thead>
+
+    <tbody>
+
+     <tr>
+
+      <td>
+       Kablo Rengi
+      </td>
+
+      ${
+       ['u','v','w']
+        .map(
+         k=>`
+
+         <td>
+
+          ${
+           edit
+           ?
+           `
+           <input
+            value="${esc(
+             b[section][k].renk||
+             ''
+            )}"
+            placeholder="Renk"
+            onchange="
+             boxChange(
+              '${motor.id}',
+              '${section}',
+              '${k}',
+              'renk',
+              this.value
+             )
+            "
+           >
+           `
+           :
+           `
+           <strong>
+            ${esc(
+             b[section][k].renk||
+             '—'
+            )}
+           </strong>
+           `
+          }
+
+         </td>
+
+         `
+        )
+        .join('')
+      }
+
+     </tr>
+
+     <tr>
+
+      <td>
+       Renk Detayı
+      </td>
+
+      ${
+       ['u','v','w']
+        .map(
+         k=>`
+
+         <td>
+
+          ${
+           edit
+           ?
+           `
+           <input
+            value="${esc(
+             b[section][k].detay||
+             ''
+            )}"
+            placeholder="Detay"
+            onchange="
+             boxChange(
+              '${motor.id}',
+              '${section}',
+              '${k}',
+              'detay',
+              this.value
+             )
+            "
+           >
+           `
+           :
+           esc(
+            b[section][k].detay||
+            '—'
+           )
+          }
+
+         </td>
+
+         `
+        )
+        .join('')
+      }
+
+     </tr>
+
+     <tr>
+
+      <td>
+       Etiket
+      </td>
+
+      ${
+       ['u','v','w']
+        .map(
+         k=>`
+
+         <td>
+
+          ${
+           edit
+           ?
+           `
+           <input
+            value="${esc(
+             b[section][k].etiket||
+             k.toUpperCase()
+            )}"
+            placeholder="U / V / W"
+            onchange="
+             boxChange(
+              '${motor.id}',
+              '${section}',
+              '${k}',
+              'etiket',
+              this.value
+             )
+            "
+           >
+           `
+           :
+           esc(
+            b[section][k].etiket||
+            k.toUpperCase()
+           )
+          }
+
+         </td>
+
+         `
+        )
+        .join('')
+      }
+
+     </tr>
+
+    </tbody>
+
+   </table>
+
+  </div>
+
+ </div>
+
+ `;
 
 }
 
@@ -4397,30 +4858,25 @@ function boxBody(){
   return `
 
   <div class="empty">
-
    Önce motor ekleyin.
-
   </div>
 
   `;
 
  }
 
- if(!subView.boxMotor)
-  subView.boxMotor=
-   current.m[0].id;
-
- const m=
+ let m=
   current.m.find(
-   x=>x.id===subView.boxMotor
+   x=>x.id===selectedMotorId
   )||
   current.m[0];
 
- subView.boxMotor=
+ selectedMotorId=
   m.id;
 
- const b=
-  getBox(m.id);
+ getBox(
+  m.id
+ );
 
  return `
 
@@ -4431,55 +4887,66 @@ function boxBody(){
    <div>
 
     <h2>
-     BOX / KABLO BAĞLANTISI
+     BOX / MOTOR KABLO
     </h2>
 
     <div class="section-sub">
 
-     Motorun önündeki BOX içerisindeki
-     bara, damar, renk, renk detayı,
-     hedef ve etiket bilgileri.
+     <b>
+      Motor → BOX → Sürücü
+     </b>
+
+     zincirini U/V/W olarak
+     ayrı ayrı kayıt et.
 
     </div>
 
    </div>
 
-  </div>
+   <div
+    class="field"
+    style="min-width:240px">
 
-  <div
-   class="field"
-   style="margin-top:10px">
+    <label>
+     Motor
+    </label>
 
-   <label>
-    Motor
-   </label>
+    <select
+     onchange="
+      selectedMotorId=this.value;
+      render();
+     ">
 
-   <select
-    onchange="
-     subView.boxMotor=this.value;
-     render();
-    ">
+     ${
+      current.m
+       .map(
+        x=>`
 
-    ${
-     current.m
-      .map(
-       x=>`
-       <option
-        value="${x.id}"
-        ${x.id===m.id?'selected':''}>
+        <option
+         value="${x.id}"
+         ${
+          x.id===m.id
+          ?
+          'selected'
+          :
+          ''
+         }>
 
-        ${esc(
-         x.ad||
-         'Motor'
-        )}
+         ${esc(
+          x.ad||
+          'Motor'
+         )}
 
-       </option>
-       `
-      )
-      .join('')
-    }
+        </option>
 
-   </select>
+        `
+       )
+       .join('')
+     }
+
+    </select>
+
+   </div>
 
   </div>
 
@@ -4487,224 +4954,95 @@ function boxBody(){
 
  <div class="card">
 
-  <table class="box-table">
+  <div class="section-title">
+   🔵 MOTOR · U / V / W
+  </div>
 
-   <thead>
+  <div class="section-sub">
+   Motor klemensindeki gerçek kablo renkleri.
+  </div>
 
-    <tr>
-     <th>Bara</th>
-     <th>Damar</th>
-     <th>Renk</th>
-     <th>Renk Detayı</th>
-     <th>Hedef</th>
-     <th>Etiket</th>
-    </tr>
+  <div
+   class="box-grid"
+   style="margin-top:10px">
 
-   </thead>
-
-   <tbody>
-
-    ${
-     [
-      ['l1','L1'],
-      ['l2','L2'],
-      ['l3','L3'],
-      ['t4','T4'],
-      ['t5','T5'],
-      ['t6','T6']
-     ]
+   ${
+    ['u','v','w']
      .map(
-      ([key,label])=>`
+      k=>`
 
-       <tr>
+      <div class="box-node">
 
-        <td>
+       ${boxInput(
+        m,
+        'motor',
+        k,
+        'MOTOR '+k.toUpperCase()
+       )}
 
-         ${
-          edit
-          ?
-          `
-          <input
-           value="${esc(
-            b[key].bara||
-            ''
-           )}"
-           onchange="
-            boxChange(
-             '${m.id}',
-             '${key}',
-             'bara',
-             this.value
-            )
-           ">
-          `
-          :
-          esc(
-           b[key].bara||
-           '—'
-          )
-         }
-
-        </td>
-
-        <td>
-
-         ${
-          edit
-          ?
-          `
-          <input
-           value="${esc(
-            b[key].damar||
-            ''
-           )}"
-           onchange="
-            boxChange(
-             '${m.id}',
-             '${key}',
-             'damar',
-             this.value
-            )
-           ">
-          `
-          :
-          esc(
-           b[key].damar||
-           '—'
-          )
-         }
-
-        </td>
-
-        <td>
-
-         ${
-          edit
-          ?
-          `
-          <input
-           value="${esc(
-            b[key].renk||
-            ''
-           )}"
-           placeholder="
-            Kahve / Mavi / Gri...
-           "
-           onchange="
-            boxChange(
-             '${m.id}',
-             '${key}',
-             'renk',
-             this.value
-            )
-           ">
-          `
-          :
-          esc(
-           b[key].renk||
-           '—'
-          )
-         }
-
-        </td>
-
-        <td>
-
-         ${
-          edit
-          ?
-          `
-          <input
-           value="${esc(
-            b[key].detay||
-            ''
-           )}"
-           onchange="
-            boxChange(
-             '${m.id}',
-             '${key}',
-             'detay',
-             this.value
-            )
-           ">
-          `
-          :
-          esc(
-           b[key].detay||
-           '—'
-          )
-         }
-
-        </td>
-
-        <td>
-
-         ${
-          edit
-          ?
-          `
-          <input
-           value="${esc(
-            b[key].hedef||
-            ''
-           )}"
-           onchange="
-            boxChange(
-             '${m.id}',
-             '${key}',
-             'hedef',
-             this.value
-            )
-           ">
-          `
-          :
-          esc(
-           b[key].hedef||
-           '—'
-          )
-         }
-
-        </td>
-
-        <td>
-
-         ${
-          edit
-          ?
-          `
-          <input
-           value="${esc(
-            b[key].etiket||
-            ''
-           )}"
-           onchange="
-            boxChange(
-             '${m.id}',
-             '${key}',
-             'etiket',
-             this.value
-            )
-           ">
-          `
-          :
-          esc(
-           b[key].etiket||
-           '—'
-          )
-         }
-
-        </td>
-
-       </tr>
+      </div>
 
       `
      )
      .join('')
-    }
+   }
 
-   </tbody>
+  </div>
 
-  </table>
+ </div>
+
+ ${boxTable(
+  m,
+  'box_motor',
+  '🟢 BOX · MOTOR GİRİŞİ',
+  'Motordan BOX’a gelen U/V/W kabloları.',
+  'Motor U/V/W'
+ )}
+
+ ${boxTable(
+  m,
+  'box_surucu',
+  '🟡 BOX · SÜRÜCÜ ÇIKIŞI',
+  'BOX’tan sürücüye giden U/V/W kabloları.',
+  'BOX U/V/W'
+ )}
+
+ <div class="card">
+
+  <div class="section-title">
+   🔴 SÜRÜCÜ · U / V / W
+  </div>
+
+  <div class="section-sub">
+   Sürücü çıkış terminallerindeki kablo renkleri.
+  </div>
+
+  <div
+   class="box-grid"
+   style="margin-top:10px">
+
+   ${
+    ['u','v','w']
+     .map(
+      k=>`
+
+      <div class="box-node">
+
+       ${boxInput(
+        m,
+        'surucu',
+        k,
+        'SÜRÜCÜ '+k.toUpperCase()
+       )}
+
+      </div>
+
+      `
+     )
+     .join('')
+   }
+
+  </div>
 
  </div>
 
@@ -4714,7 +5052,8 @@ function boxBody(){
 
 function boxChange(
  motorId,
- line,
+ section,
+ terminal,
  key,
  value
 ){
@@ -4729,13 +5068,12 @@ function boxChange(
 
  touchAdminSession();
 
- localBoxes[motorId] ||=
-  defaultBox();
+ const b=
+  getBox(
+   motorId
+  );
 
- localBoxes[motorId][line] ||=
-  {};
-
- localBoxes[motorId][line][key]=
+ b[section][terminal][key]=
   value;
 
  saveLocal(
@@ -4747,7 +5085,7 @@ function boxChange(
 
 
 /* =========================================================
-   POMPA
+   POMPALAR
 ========================================================= */
 
 function pumpBody(){
@@ -4793,135 +5131,135 @@ function pumpBody(){
  ${
   current.p.length
   ?
-  current.p
-   .map(
-    (p,i)=>`
+  current.p.map(
+   (p,i)=>`
 
-     <div class="pump-card">
+   <div class="pump-card">
 
-      <div class="pump-header">
+    <div class="pump-header">
 
-       <h3>
+     <h3>
+      ${i+1}. POMPA ·
+      ${esc(p.ad||'')}
+     </h3>
 
-        ${i+1}. POMPA ·
-        ${esc(p.ad||'')}
+     ${
+      edit
+      ?
+      `
+      <button
+       class="btn bad"
+       onclick="
+        deletePump(
+         '${p.id}'
+        )
+       ">
 
-       </h3>
+       🗑 Pompayı Sil
 
-       ${
-        edit
-        ?
-        `
-        <button
-         class="btn bad"
-         onclick="deletePump('${p.id}')">
+      </button>
+      `
+      :
+      ''
+     }
 
-         Pompayı Sil
+    </div>
 
-        </button>
-        `
-        :
-        ''
-       }
+    <div class="grid3">
 
-      </div>
+     ${input(
+      'Pompa Adı',
+      `p_${p.id}_ad`,
+      p.ad||
+      `${i+1}. Pompa`
+     )}
 
-      <div class="grid3">
+     ${input(
+      'Marka',
+      `p_${p.id}_marka`,
+      p.marka||''
+     )}
 
-       ${input(
-        'Pompa Adı',
-        `p_${p.id}_ad`,
-        p.ad||
-        `${i+1}. Pompa`
-       )}
+     ${input(
+      'Model',
+      `p_${p.id}_model`,
+      p.model||''
+     )}
 
-       ${input(
-        'Marka',
-        `p_${p.id}_marka`,
-        p.marka||''
-       )}
+     ${input(
+      'Tip',
+      `p_${p.id}_tip`,
+      p.tip||''
+     )}
 
-       ${input(
-        'Model',
-        `p_${p.id}_model`,
-        p.model||''
-       )}
+     ${input(
+      'Seri No',
+      `p_${p.id}_seri`,
+      p.seri_no||''
+     )}
 
-       ${input(
-        'Tip',
-        `p_${p.id}_tip`,
-        p.tip||''
-       )}
+     ${input(
+      'Güç [kW]',
+      `p_${p.id}_kw`,
+      p.guc_kw??'',
+      'number'
+     )}
 
-       ${input(
-        'Seri No',
-        `p_${p.id}_seri`,
-        p.seri_no||''
-       )}
+     ${input(
+      'Güç [HP]',
+      `p_${p.id}_hp`,
+      p.guc_hp??'',
+      'number'
+     )}
 
-       ${input(
-        'Güç [kW]',
-        `p_${p.id}_kw`,
-        p.guc_kw??'',
-        'number'
-       )}
+     ${input(
+      'Q Min [m³/h]',
+      `p_${p.id}_qmin`,
+      p.q_min_m3h??'',
+      'number'
+     )}
 
-       ${input(
-        'Güç [HP]',
-        `p_${p.id}_hp`,
-        p.guc_hp??'',
-        'number'
-       )}
+     ${input(
+      'Q Max [m³/h]',
+      `p_${p.id}_qmax`,
+      p.q_max_m3h??'',
+      'number'
+     )}
 
-       ${input(
-        'Q Min [m³/h]',
-        `p_${p.id}_qmin`,
-        p.q_min_m3h??'',
-        'number'
-       )}
+     ${input(
+      'H Min [m]',
+      `p_${p.id}_hmin`,
+      p.h_min_m??'',
+      'number'
+     )}
 
-       ${input(
-        'Q Max [m³/h]',
-        `p_${p.id}_qmax`,
-        p.q_max_m3h??'',
-        'number'
-       )}
+     ${input(
+      'H Max [m]',
+      `p_${p.id}_hmax`,
+      p.h_max_m??'',
+      'number'
+     )}
 
-       ${input(
-        'H Min [m]',
-        `p_${p.id}_hmin`,
-        p.h_min_m??'',
-        'number'
-       )}
+    </div>
 
-       ${input(
-        'H Max [m]',
-        `p_${p.id}_hmax`,
-        p.h_max_m??'',
-        'number'
-       )}
+    <div
+     class="field"
+     style="margin-top:10px">
 
-      </div>
+     <label>
+      Etiket Notu
+     </label>
 
-      <div
-       class="field"
-       style="margin-top:10px">
+     <textarea id="p_${p.id}_not">${esc(
+      p.etiket_notu||''
+     )}</textarea>
 
-       <label>
-        Etiket Notu
-       </label>
+    </div>
 
-       <textarea id="p_${p.id}_not">
-${esc(p.etiket_notu||'')}
-       </textarea>
+   </div>
 
-      </div>
-
-     </div>
-
-    `
-   )
-   .join('')
+   `
+  ).join('')
   :
   `
   <div class="empty">
@@ -4950,10 +5288,13 @@ async function addPump(){
   await db
    .from('pompalar')
    .insert({
+
     terfi_id:
      current.s.id,
+
     ad:
      `${current.p.length+1}. Pompa`
+
    });
 
  if(r.error){
@@ -4977,7 +5318,9 @@ async function addPump(){
 
 }
 
-async function deletePump(id){
+async function deletePump(
+ id
+){
 
  if(!edit){
 
@@ -4991,7 +5334,8 @@ async function deletePump(id){
 
  if(!confirm(
   'Pompa silinsin mi?'
- ))return;
+ ))
+  return;
 
  const r=
   await db
@@ -5033,19 +5377,14 @@ function workBody(){
  if(!current.m.length){
 
   return `
-
   <div class="empty">
-
    Önce motor ekleyin.
-
   </div>
-
   `;
 
  }
 
  if(!workMotor)
-
   workMotor=
    current.m[0].id;
 
@@ -5063,10 +5402,8 @@ function workBody(){
   </div>
 
   <div class="section-sub">
-
    HMI üzerinde görülen gerçek saha
    çalışma değerlerini kaydet.
-
   </div>
 
   <div
@@ -5089,7 +5426,13 @@ function workBody(){
 
       <option
        value="${m.id}"
-       ${m.id===workMotor?'selected':''}>
+       ${
+        m.id===workMotor
+        ?
+        'selected'
+        :
+        ''
+       }>
 
        ${esc(
         m.ad||
@@ -5150,9 +5493,9 @@ function workBody(){
     Teknik Not
    </label>
 
-   <textarea id="w_notlar">
-${esc(last.notlar||'')}
-   </textarea>
+   <textarea id="w_notlar">${esc(
+    last.notlar||''
+   )}</textarea>
 
   </div>
 
@@ -5212,12 +5555,10 @@ ${esc(last.notlar||'')}
       </span>
 
       <span>
-
        ${w.set_basinci_bar??'—'}
        /
        ${w.calisma_basinci_bar??'—'}
        bar
-
       </span>
 
      </div>
@@ -5227,10 +5568,14 @@ ${esc(last.notlar||'')}
       ?
       `
       <div
-       class="muted"
-       style="margin-top:6px">
+       style="
+        margin-top:6px;
+        color:var(--muted)
+       ">
 
-       ${esc(w.notlar)}
+       ${esc(
+        w.notlar
+       )}
 
       </div>
       `
@@ -5265,11 +5610,14 @@ function hmiBody(){
 
  const rec=
   current.h.find(
-   x=>x.ekran_no===hmiPage
+   x=>
+    x.ekran_no===
+    hmiPage
   );
 
  const values=
-  rec?.degerler||{};
+  rec?.degerler||
+  {};
 
  return `
 
@@ -5281,8 +5629,9 @@ function hmiBody(){
 
   <div class="section-sub">
 
-   Weintek HMI'nin 5 ekranı bağımsız olarak kayıt edilir.
-   Ekranda hangi sayfa açık olursa olsun PDF tüm 5 sayfayı alır.
+   Weintek HMI'nin 5 ekranı
+   bağımsız olarak kayıt edilir.
+   PDF tüm 5 sayfayı alır.
 
   </div>
 
@@ -5329,21 +5678,21 @@ function hmiBody(){
      .map(
       (label,i)=>`
 
-       <div class="hmi-field">
+      <div class="hmi-field">
 
-        <label>
-         ${esc(label)}
-        </label>
+       <label>
+        ${esc(label)}
+       </label>
 
-        <input
-         id="hmi_${hmiPage}_${i}"
-         value="${esc(
-          values[i]??''
-         )}"
-         inputmode="decimal"
-        >
+       <input
+        id="hmi_${hmiPage}_${i}"
+        value="${esc(
+         values[i]??''
+        )}"
+        inputmode="decimal"
+       >
 
-       </div>
+      </div>
 
       `
      ).join('')
@@ -5410,10 +5759,12 @@ function parameterBody(){
     width:100%;
     margin-top:10px;
     padding:12px;
-    border-radius:9px;
+    border-radius:10px;
     border:1px solid var(--line);
-    background:#071a2f;
-    color:#fff
+    background:#061a2d;
+    color:#fff;
+    outline:none;
+    min-height:46px
    "
   >
 
@@ -5424,92 +5775,90 @@ function parameterBody(){
   class="library-grid">
 
   ${
-   params()
-    .map(
-     p=>`
+   params().map(
+    p=>`
 
-      <div
-       class="library-card"
-       data-param="${esc(
-        (
-         p.code+
-         ' '+
-         p.name+
-         ' '+
-         p.desc
-        ).toLowerCase()
-       )}">
+    <div
+     class="library-card"
+     data-param="${esc(
+      (
+       p.code+
+       ' '+
+       p.name+
+       ' '+
+       p.desc
+      ).toLowerCase()
+     )}">
 
-       <div
-        onclick="
-         openParamDetail(
-          '${esc(p.code)}'
-         )
-        ">
+     <div
+      onclick="
+       openParamDetail(
+        '${esc(p.code)}'
+       )
+      ">
 
-        <div class="library-code">
-         ${esc(p.code)}
-        </div>
-
-        <div class="library-name">
-         ${esc(p.name)}
-        </div>
-
-        <div class="library-desc">
-         ${esc(p.desc)}
-        </div>
-
-        <div class="library-source">
-         ${esc(p.source)}
-         ·
-         ${esc(p.unit)}
-        </div>
-
-       </div>
-
-       ${
-        edit
-        ?
-        `
-        <div class="library-actions">
-
-         <button
-          class="btn"
-          onclick="
-           event.stopPropagation();
-           editParam(
-            '${esc(p.code)}'
-           );
-          ">
-
-          ✏ DÜZENLE
-
-         </button>
-
-         <button
-          class="btn bad"
-          onclick="
-           event.stopPropagation();
-           deleteParam(
-            '${esc(p.code)}'
-           );
-          ">
-
-          🗑 SİL
-
-         </button>
-
-        </div>
-        `
-        :
-        ''
-       }
-
+      <div class="library-code">
+       ${esc(p.code)}
       </div>
 
-     `
-    )
-    .join('')
+      <div class="library-name">
+       ${esc(p.name)}
+      </div>
+
+      <div class="library-desc">
+       ${esc(p.desc)}
+      </div>
+
+      <div class="library-source">
+       ${esc(p.source)}
+       ·
+       ${esc(p.unit)}
+      </div>
+
+     </div>
+
+     ${
+      edit
+      ?
+      `
+      <div class="library-actions">
+
+       <button
+        class="btn"
+        onclick="
+         event.stopPropagation();
+         editParam(
+          '${esc(p.code)}'
+         );
+        ">
+
+        ✏ DÜZENLE
+
+       </button>
+
+       <button
+        class="btn bad"
+        onclick="
+         event.stopPropagation();
+         deleteParam(
+          '${esc(p.code)}'
+         );
+        ">
+
+        🗑 SİL
+
+       </button>
+
+      </div>
+      `
+      :
+      ''
+     }
+
+    </div>
+
+    `
+   ).join('')
   }
 
  </div>
@@ -5548,7 +5897,10 @@ function parameterBody(){
 
        </b>
 
-       <div style="margin-top:5px">
+       <div
+        style="
+         margin-top:5px
+        ">
 
         Değer:
 
@@ -5567,8 +5919,10 @@ function parameterBody(){
        </div>
 
        <div
-        class="muted"
-        style="margin-top:4px">
+        style="
+         margin-top:4px;
+         color:var(--muted)
+        ">
 
         ${esc(
          x.aciklama||
@@ -5719,22 +6073,22 @@ function filterParams(){
   .querySelectorAll(
    '#paramGrid .library-card'
   )
-  .forEach(x=>{
-
-   x.style.display=
-    x.dataset.param.includes(q)
-    ?
-    'block'
-    :
-    'none';
-
-  });
+  .forEach(
+   x=>{
+    x.style.display=
+     x.dataset.param.includes(q)
+     ?
+     'block'
+     :
+     'none';
+   }
+  );
 
 }
 
 
 /* =========================================================
-   PARAMETRE DETAY
+   PARAMETRE DETAY / EKLE / DÜZENLE / SİL
 ========================================================= */
 
 function openParamDetail(
@@ -5776,7 +6130,10 @@ function openParamDetail(
    </h4>
 
    <div>
-    ${esc(p.unit||'—')}
+    ${esc(
+     p.unit||
+     '—'
+    )}
    </div>
 
   </div>
@@ -5788,7 +6145,10 @@ function openParamDetail(
    </h4>
 
    <div>
-    ${esc(p.source||'—')}
+    ${esc(
+     p.source||
+     '—'
+    )}
    </div>
 
   </div>
@@ -5835,11 +6195,6 @@ function openParamDetail(
 
 }
 
-
-/* =========================================================
-   PARAMETRE EKLE / DÜZENLE / SİL
-========================================================= */
-
 function newParam(){
 
  if(!edit){
@@ -5862,20 +6217,17 @@ function newParam(){
 
    ${input(
     'Parametre Kodu',
-    'param_edit_code',
-    ''
+    'param_edit_code'
    )}
 
    ${input(
     'Parametre Adı',
-    'param_edit_name',
-    ''
+    'param_edit_name'
    )}
 
    ${input(
     'Birim',
-    'param_edit_unit',
-    ''
+    'param_edit_unit'
    )}
 
    ${input(
@@ -5910,7 +6262,9 @@ function newParam(){
 
    <button
     class="btn ok"
-    onclick="saveParamEditor(false)">
+    onclick="
+     saveParamEditor(false)
+    ">
 
     KAYDET
 
@@ -6010,7 +6364,9 @@ function editParam(
 
    <button
     class="btn ok"
-    onclick="saveParamEditor(true)">
+    onclick="
+     saveParamEditor(true)
+    ">
 
     DEĞİŞİKLİKLERİ KAYDET
 
@@ -6039,24 +6395,36 @@ function saveParamEditor(
  const original=
   isEdit
   ?
-  val('param_original_code')
+  val(
+   'param_original_code'
+  )
   :
   '';
 
  const code=
-  val('param_edit_code').trim();
+  val(
+   'param_edit_code'
+  ).trim();
 
  const name=
-  val('param_edit_name').trim();
+  val(
+   'param_edit_name'
+  ).trim();
 
  const unit=
-  val('param_edit_unit').trim();
+  val(
+   'param_edit_unit'
+  ).trim();
 
  const desc=
-  val('param_edit_desc').trim();
+  val(
+   'param_edit_desc'
+  ).trim();
 
  const source=
-  val('param_edit_source').trim();
+  val(
+   'param_edit_source'
+  ).trim();
 
  if(!code){
 
@@ -6102,26 +6470,9 @@ function saveParamEditor(
    original!==code
   ){
 
-   delete paramEdits[original];
-
-   /*
-     Eski varsayılan kodun silinmiş
-     durumu varsa yeni kodda görünürlük
-     problemini önlüyoruz.
-   */
-
-   if(
-    !paramDeleted.includes(
-     code
-    )
-   ){
-
-    paramDeleted=
-     paramDeleted.filter(
-      x=>x!==original
-     );
-
-   }
+   delete paramEdits[
+    original
+   ];
 
   }
 
@@ -6142,8 +6493,7 @@ function saveParamEditor(
 
   const customIndex=
    customParams.findIndex(
-    x=>
-     x.code===original
+    x=>x.code===original
    );
 
   if(customIndex>=0){
@@ -6276,7 +6626,8 @@ function deleteParam(
 
  if(!confirm(
   `${code} · ${p.name}\n\nBu parametre silinsin mi?`
- ))return;
+ ))
+  return;
 
  if(
   DEFAULT_PARAMS.some(
@@ -6288,11 +6639,10 @@ function deleteParam(
    !paramDeleted.includes(
     code
    )
-  ){
-
-   paramDeleted.push(code);
-
-  }
+  )
+   paramDeleted.push(
+    code
+   );
 
   delete paramEdits[code];
 
@@ -6342,7 +6692,7 @@ function deleteParam(
 
 
 /* =========================================================
-   ARIZA
+   ARIZA KÜTÜPHANESİ
 ========================================================= */
 
 function faultBody(){
@@ -6393,10 +6743,12 @@ function faultBody(){
     width:100%;
     margin-top:10px;
     padding:12px;
-    border-radius:9px;
+    border-radius:10px;
     border:1px solid var(--line);
-    background:#071a2f;
-    color:#fff
+    background:#061a2d;
+    color:#fff;
+    outline:none;
+    min-height:46px
    "
   >
 
@@ -6407,93 +6759,91 @@ function faultBody(){
   class="library-grid">
 
   ${
-   faults()
-    .map(
-     f=>`
+   faults().map(
+    f=>`
 
-      <div
-       class="library-card"
-       data-fault="${esc(
-        (
-         f.code+
-         ' '+
-         f.name+
-         ' '+
-         f.cause+
-         ' '+
-         f.solution
-        ).toLowerCase()
-       )}">
+    <div
+     class="library-card"
+     data-fault="${esc(
+      (
+       f.code+
+       ' '+
+       f.name+
+       ' '+
+       f.cause+
+       ' '+
+       f.solution
+      ).toLowerCase()
+     )}">
 
-       <div
-        onclick="
-         faultDetail(
-          '${esc(f.code)}'
-         )
-        ">
+     <div
+      onclick="
+       faultDetail(
+        '${esc(f.code)}'
+       )
+      ">
 
-        <div class="library-code">
-         ${esc(f.code)}
-        </div>
-
-        <div class="library-name">
-         ${esc(f.name)}
-        </div>
-
-        <div class="library-desc">
-         ${esc(f.cause)}
-        </div>
-
-        <div class="library-source">
-         Kaynak:
-         ${esc(f.source)}
-        </div>
-
-       </div>
-
-       ${
-        edit
-        ?
-        `
-        <div class="library-actions">
-
-         <button
-          class="btn"
-          onclick="
-           event.stopPropagation();
-           editFault(
-            '${esc(f.code)}'
-           );
-          ">
-
-          ✏ DÜZENLE
-
-         </button>
-
-         <button
-          class="btn bad"
-          onclick="
-           event.stopPropagation();
-           deleteFault(
-            '${esc(f.code)}'
-           );
-          ">
-
-          🗑 SİL
-
-         </button>
-
-        </div>
-        `
-        :
-        ''
-       }
-
+      <div class="library-code">
+       ${esc(f.code)}
       </div>
 
-     `
-    )
-    .join('')
+      <div class="library-name">
+       ${esc(f.name)}
+      </div>
+
+      <div class="library-desc">
+       ${esc(f.cause)}
+      </div>
+
+      <div class="library-source">
+       Kaynak:
+       ${esc(f.source)}
+      </div>
+
+     </div>
+
+     ${
+      edit
+      ?
+      `
+      <div class="library-actions">
+
+       <button
+        class="btn"
+        onclick="
+         event.stopPropagation();
+         editFault(
+          '${esc(f.code)}'
+         );
+        ">
+
+        ✏ DÜZENLE
+
+       </button>
+
+       <button
+        class="btn bad"
+        onclick="
+         event.stopPropagation();
+         deleteFault(
+          '${esc(f.code)}'
+         );
+        ">
+
+        🗑 SİL
+
+       </button>
+
+      </div>
+      `
+      :
+      ''
+     }
+
+    </div>
+
+    `
+   ).join('')
   }
 
  </div>
@@ -6567,6 +6917,7 @@ function faultBody(){
     ARIZA KAYDINI EKLE
 
    </button>
+
    `
    :
    ''
@@ -6602,16 +6953,16 @@ function filterFaults(){
   .querySelectorAll(
    '#faultGrid .library-card'
   )
-  .forEach(x=>{
-
-   x.style.display=
-    x.dataset.fault.includes(q)
-    ?
-    'block'
-    :
-    'none';
-
-  });
+  .forEach(
+   x=>{
+    x.style.display=
+     x.dataset.fault.includes(q)
+     ?
+     'block'
+     :
+     'none';
+   }
+  );
 
 }
 
@@ -6735,14 +7086,12 @@ function newFault(){
 
    ${input(
     'Hata Kodu',
-    'fault_edit_code',
-    ''
+    'fault_edit_code'
    )}
 
    ${input(
     'Başlık',
-    'fault_edit_name',
-    ''
+    'fault_edit_name'
    )}
 
   </div>
@@ -6798,7 +7147,9 @@ function newFault(){
 
    <button
     class="btn ok"
-    onclick="saveFaultEditor(false)">
+    onclick="
+     saveFaultEditor(false)
+    ">
 
     KAYDET
 
@@ -6915,7 +7266,9 @@ function editFault(
 
    <button
     class="btn ok"
-    onclick="saveFaultEditor(true)">
+    onclick="
+     saveFaultEditor(true)
+    ">
 
     DEĞİŞİKLİKLERİ KAYDET
 
@@ -6944,24 +7297,36 @@ function saveFaultEditor(
  const original=
   isEdit
   ?
-  val('fault_original_code')
+  val(
+   'fault_original_code'
+  )
   :
   '';
 
  const code=
-  val('fault_edit_code').trim();
+  val(
+   'fault_edit_code'
+  ).trim();
 
  const name=
-  val('fault_edit_name').trim();
+  val(
+   'fault_edit_name'
+  ).trim();
 
  const cause=
-  val('fault_edit_cause').trim();
+  val(
+   'fault_edit_cause'
+  ).trim();
 
  const solution=
-  val('fault_edit_solution').trim();
+  val(
+   'fault_edit_solution'
+  ).trim();
 
  const source=
-  val('fault_edit_source').trim();
+  val(
+   'fault_edit_source'
+  ).trim();
 
  if(!code){
 
@@ -7030,8 +7395,7 @@ function saveFaultEditor(
 
   const customIndex=
    customFaults.findIndex(
-    x=>
-     x.code===original
+    x=>x.code===original
    );
 
   if(customIndex>=0){
@@ -7164,7 +7528,8 @@ function deleteFault(
 
  if(!confirm(
   `${code} · ${f.name}\n\nBu arıza kaydı kütüphaneden silinsin mi?`
- ))return;
+ ))
+  return;
 
  if(
   DEFAULT_FAULTS.some(
@@ -7176,11 +7541,10 @@ function deleteFault(
    !faultDeleted.includes(
     code
    )
-  ){
-
-   faultDeleted.push(code);
-
-  }
+  )
+   faultDeleted.push(
+    code
+   );
 
   delete faultEdits[code];
 
@@ -7246,13 +7610,9 @@ function renderLocalFaultHistory(){
  if(!arr.length){
 
   return `
-
    <div class="empty">
-
     Bu terfi için yerel arıza kaydı yok.
-
    </div>
-
   `;
 
  }
@@ -7366,10 +7726,8 @@ function historyBody(){
     </h2>
 
     <div class="section-sub">
-
      Bu cihazdaki yönetici işlemleri
      ve saha kayıtları.
-
     </div>
 
    </div>
@@ -7415,9 +7773,7 @@ function historyBody(){
       </div>
 
       <div class="history-title">
-
        ${esc(x.action)}
-
       </div>
 
       <div style="margin-top:5px">
@@ -7463,7 +7819,8 @@ function clearHistory(){
 
  if(!confirm(
   'Bu cihazdaki değişiklik geçmişi temizlensin mi?'
- ))return;
+ ))
+  return;
 
  changeHistory=
   changeHistory.filter(
@@ -7569,7 +7926,11 @@ function photoBody(){
 
        <button
         class="btn bad"
-        onclick="deletePhoto(${i})">
+        onclick="
+         deletePhoto(
+          ${i}
+         )
+        ">
 
         Sil
 
@@ -7599,7 +7960,9 @@ function photoBody(){
 
 }
 
-function addPhotos(event){
+function addPhotos(
+ event
+){
 
  if(!edit){
 
@@ -7632,19 +7995,17 @@ function addPhotos(event){
 
      localPhotos[
       current.s.id
-     ] ||= [];
+     ] ||=
+      [];
 
      localPhotos[
       current.s.id
      ].push({
 
       name:file.name,
-
       type:file.type,
-
       data:reader.result,
-
-      date:nowText()
+      date:now()
 
      });
 
@@ -7693,7 +8054,8 @@ function deletePhoto(
 
  if(!confirm(
   'Fotoğraf silinsin mi?'
- ))return;
+ ))
+  return;
 
  localPhotos[
   current.s.id
@@ -7844,8 +8206,8 @@ function referenceBody(){
 
     <div class="library-desc">
 
-     Bara · damar · renk · renk detayı
-     · hedef · etiket bilgisi saklanır.
+     Motor U/V/W → BOX → Sürücü
+     bağlantısı ve kablo renkleri.
 
     </div>
 
@@ -8041,24 +8403,8 @@ function settingsMarkup(){
   </h4>
 
   Yönetici şifresi tekrar tekrar sorulmaz.
-  Aynı tarayıcı sekmesi içindeki çalışma boyunca
-  yetki devam eder. 30 dakika hiçbir işlem yapılmazsa
-  sistem otomatik olarak kilitlenir.
-  Tarayıcı sekmesi kapatıldığında yönetici oturumu sona erer.
-
- </div>
-
- <div
-  class="workbox"
-  style="margin-top:12px">
-
-  <h4>
-   YÖNETİCİ NOTU
-  </h4>
-
-  Buradaki değişiklikler bu tarayıcı cihazında saklanır.
-  Supabase verileri ise terfi/motor/pompa/sürücü gibi mevcut
-  merkezi tablolarda tutulmaya devam eder.
+  Aynı sekmedeki çalışma boyunca yetki devam eder.
+  30 dakika hiçbir işlem yapılmazsa sistem kilitlenir.
 
  </div>
 
@@ -8143,19 +8489,27 @@ function saveSettings(){
  }
 
  prefs.theme=
-  val('prefTheme')||
+  val(
+   'prefTheme'
+  )||
   'dark';
 
  prefs.zoom=
-  val('prefZoom')||
+  val(
+   'prefZoom'
+  )||
   'normal';
 
  prefs.labels.title=
-  val('prefTitle')||
+  val(
+   'prefTitle'
+  )||
   'MESKİ TERFİ ARŞİVİM';
 
  prefs.labels.subtitle=
-  val('prefSubtitle')||
+  val(
+   'prefSubtitle'
+  )||
   'Merkezi saha teknik arşivi';
 
  savePrefs();
@@ -8191,15 +8545,7 @@ function requestAdmin(){
    ''
   );
 
-  if(current){
-
-   render();
-
-  }else{
-
-   home();
-
-  }
+  render();
 
   toast(
    'Yönetici modu kilitlendi.'
@@ -8288,11 +8634,14 @@ function checkAdmin(){
    'adminPasswordBox'
   );
 
- if(p===prefs.adminPassword){
+ if(
+  p===
+  prefs.adminPassword
+ ){
 
   edit=true;
 
-  setAdminSession();
+  setSession();
 
   closeModal();
 
@@ -8509,8 +8858,6 @@ async function saveActive(){
 
  try{
 
-  /* TERFİ */
-
   if(tab==='terfi'){
 
    const r=
@@ -8551,8 +8898,6 @@ async function saveActive(){
   }
 
 
-  /* SSR */
-
   if(tab==='ssr'){
 
    current.ssr={
@@ -8589,8 +8934,6 @@ async function saveActive(){
 
   }
 
-
-  /* MOTOR */
 
   if(tab==='motor'){
 
@@ -8703,8 +9046,6 @@ async function saveActive(){
   }
 
 
-  /* BOX */
-
   if(tab==='box'){
 
    saveLocal(
@@ -8714,8 +9055,6 @@ async function saveActive(){
 
   }
 
-
-  /* POMPA */
 
   if(tab==='pompa'){
 
@@ -8814,8 +9153,6 @@ async function saveActive(){
   }
 
 
-  /* SÜRÜCÜ */
-
   if(tab==='surucu'){
 
    for(
@@ -8886,8 +9223,6 @@ async function saveActive(){
   }
 
 
-  /* HMI */
-
   if(tab==='hmi'){
 
    for(
@@ -8898,12 +9233,11 @@ async function saveActive(){
 
     const old=
      current.h.find(
-      x=>
-       x.ekran_no===page
+      x=>x.ekran_no===page
      );
 
     if(
-     page===hmiPage ||
+     page===hmiPage||
      !old
     ){
 
@@ -8911,14 +9245,12 @@ async function saveActive(){
       old?.degerler||
       {};
 
-     if(
-      page===hmiPage
-     ){
+     if(page===hmiPage){
 
       HMI[
        page-1
       ].forEach(
-       (label,i)=>{
+       (_,i)=>{
 
         values[i]=
          val(
@@ -8938,8 +9270,10 @@ async function saveActive(){
          'hmi_kayitlari'
         )
         .update({
+
          degerler:
           values
+
         })
         .eq(
          'id',
@@ -8981,14 +9315,15 @@ async function saveActive(){
   }
 
 
-  /* ÇALIŞMA */
-
   if(tab==='calisma'){
 
-   if(!workMotor)
+   if(!workMotor){
+
     throw new Error(
      'Motor seçilmedi.'
     );
+
+   }
 
    const patch={
 
@@ -9294,7 +9629,9 @@ function editTerfiParam(
 
    <textarea
     id="edit_tp_aciklama"
-   >${esc(p.aciklama||'')}</textarea>
+   >${esc(
+    p.aciklama||''
+   )}</textarea>
 
   </div>
 
@@ -9310,7 +9647,9 @@ function editTerfiParam(
 
    <button
     class="btn ok"
-    onclick="saveEditedTerfiParam()">
+    onclick="
+     saveEditedTerfiParam()
+    ">
 
     KAYDET
 
@@ -9335,27 +9674,41 @@ async function saveEditedTerfiParam(){
  touchAdminSession();
 
  const id=
-  val('edit_tp_id');
+  val(
+   'edit_tp_id'
+  );
 
  const data={
 
   ekran_adi:
-   val('edit_tp_ekran'),
+   val(
+    'edit_tp_ekran'
+   ),
 
   parametre_adi:
-   val('edit_tp_ad'),
+   val(
+    'edit_tp_ad'
+   ),
 
   deger:
-   val('edit_tp_deger'),
+   val(
+    'edit_tp_deger'
+   ),
 
   birim:
-   val('edit_tp_birim'),
+   val(
+    'edit_tp_birim'
+   ),
 
   kaynak:
-   val('edit_tp_kaynak'),
+   val(
+    'edit_tp_kaynak'
+   ),
 
   aciklama:
-   val('edit_tp_aciklama')
+   val(
+    'edit_tp_aciklama'
+   )
 
  };
 
@@ -9425,7 +9778,8 @@ async function deleteTerfiParam(
 
  if(!confirm(
   `"${p.parametre_adi||'Parametre'}" silinsin mi?`
- ))return;
+ ))
+  return;
 
  const r=
   await db
@@ -9572,27 +9926,18 @@ async function deleteTerfi(){
  const s=
   current.s;
 
- const sure=
-  confirm(
-
-   `"${s.ad||'Bu terfi'}" tamamen silinsin mi?\n\n`+
-
-   `Bu işlem terfinin bağlı motor, pompa, sürücü, HMI, çalışma, `+
-   `parametre ve diğer kayıtlarını da silmeyi deneyecek.\n\n`+
-
-   `GERİ ALINAMAZ.`
-
-  );
-
- if(!sure)
+ if(!confirm(
+  `"${s.ad||'Bu terfi'}" tamamen silinsin mi?\n\n`+
+  `Bağlı motor, pompa, sürücü, HMI, çalışma `+
+  `ve terfi parametre kayıtları da silinebilir.\n\n`+
+  `GERİ ALINAMAZ.`
+ ))
   return;
 
  const id=
   s.id;
 
  try{
-
-  /* Motorlar */
 
   const mr=
    await db
@@ -9612,8 +9957,6 @@ async function deleteTerfi(){
      x=>x.id
     );
 
-  /* Motor bağlı BOX */
-
   for(
    const mid of motorIds
   ){
@@ -9627,8 +9970,6 @@ async function deleteTerfi(){
    localBoxes
   );
 
-
-  /* Terfi bazlı bilinen tablolar */
 
   const terfiTables=[
 
@@ -9657,7 +9998,8 @@ async function deleteTerfi(){
    const table of terfiTables
   ){
 
-   const r=
+   try{
+
     await db
      .from(table)
      .delete()
@@ -9666,20 +10008,18 @@ async function deleteTerfi(){
       id
      );
 
-   if(r.error){
+   }catch(e){
 
     console.warn(
-     'Silme atlandı:',
+     'Tablo silme atlandı:',
      table,
-     r.error.message
+     e
     );
 
    }
 
   }
 
-
-  /* Sürücüler */
 
   const dr=
    await db
@@ -9697,25 +10037,33 @@ async function deleteTerfi(){
    const d of dr.data||[]
   ){
 
-   await db
-    .from(
-     'surucu_ariza_kayitlari'
-    )
-    .delete()
-    .eq(
-     'surucu_id',
-     d.id
-    );
+   try{
 
-   await db
-    .from(
-     'surucu_parametre_kayitlari'
-    )
-    .delete()
-    .eq(
-     'surucu_id',
-     d.id
-    );
+    await db
+     .from(
+      'surucu_ariza_kayitlari'
+     )
+     .delete()
+     .eq(
+      'surucu_id',
+      d.id
+     );
+
+   }catch(e){}
+
+   try{
+
+    await db
+     .from(
+      'surucu_parametre_kayitlari'
+     )
+     .delete()
+     .eq(
+      'surucu_id',
+      d.id
+     );
+
+   }catch(e){}
 
    const r=
     await db
@@ -9731,8 +10079,6 @@ async function deleteTerfi(){
 
   }
 
-
-  /* Motorlar */
 
   for(
    const mid of motorIds
@@ -9752,8 +10098,6 @@ async function deleteTerfi(){
 
   }
 
-
-  /* Pompalar */
 
   const pumps=
    await db
@@ -9786,8 +10130,6 @@ async function deleteTerfi(){
   }
 
 
-  /* ANA TERFİ */
-
   const finalDelete=
    await db
     .from('terfiler')
@@ -9800,8 +10142,6 @@ async function deleteTerfi(){
   if(finalDelete.error)
    throw finalDelete.error;
 
-
-  /* Yerel foto / geçmiş */
 
   delete localPhotos[id];
 
@@ -9884,7 +10224,7 @@ function logout(){
    PDF
 ========================================================= */
 
-function printCell(
+function pc(
  label,
  value
 ){
@@ -9902,7 +10242,7 @@ function printCell(
    ${
     value===null||
     value===undefined||
-    value==='' 
+    value===''
     ?
     '—'
     :
@@ -9917,69 +10257,68 @@ function printCell(
 
 }
 
-function printHmi(
- pageIndex
+function pdfBoxRow(
+ motor,
+ section,
+ title
 ){
 
- const rec=
-  current.h.find(
-   x=>
-    x.ekran_no===
-    pageIndex
+ const b=
+  getBox(
+   motor.id
   );
-
- const v=
-  rec?.degerler||
-  {};
 
  return `
 
- <div class="print-hmi">
+ <div class="print-box">
 
-  <div class="print-hmi-title">
+  <div class="print-box-title">
 
-   <span>
-    HMI SAYFA ${pageIndex} / 5
-   </span>
+   ${title}
 
-   <span>
-    WEINTEK HMI PARAMETRE ARŞİVİ
-   </span>
+   ·
+
+   ${esc(
+    motor.ad||
+    'Motor'
+   )}
 
   </div>
 
-  <div class="print-hmi-grid">
+  <div class="print-grid">
 
-   ${
-    HMI[pageIndex-1]
-     .map(
-      (label,i)=>`
+   ${pc(
+    'U',
+    [
+     b[section].u.renk,
+     b[section].u.detay,
+     b[section].u.etiket
+    ]
+    .filter(Boolean)
+    .join(' · ')
+   )}
 
-       <div class="print-hmi-cell">
+   ${pc(
+    'V',
+    [
+     b[section].v.renk,
+     b[section].v.detay,
+     b[section].v.etiket
+    ]
+    .filter(Boolean)
+    .join(' · ')
+   )}
 
-        <b>
-         ${esc(label)}
-        </b>
-
-        <span>
-
-         ${esc(
-          v[i]===''||
-          v[i]===undefined||
-          v[i]===null
-          ?
-          '—'
-          :
-          v[i]
-         )}
-
-        </span>
-
-       </div>
-
-      `
-     ).join('')
-   }
+   ${pc(
+    'W',
+    [
+     b[section].w.renk,
+     b[section].w.detay,
+     b[section].w.etiket
+    ]
+    .filter(Boolean)
+    .join(' · ')
+   )}
 
   </div>
 
@@ -9994,29 +10333,29 @@ function reportHTML(){
  const s=
   current.s;
 
- const ssrMap=
+ const ssr=
   localJSON(
    LOCAL_SSR_KEY,
    {}
-  );
-
- const ssr=
-  ssrMap[s.id]||
+  )[s.id]||
   current.ssr||
   {};
 
- const history=
+ const hist=
   changeHistory.filter(
    x=>
     x.terfi_id===
     s.id
+  ).slice(
+   0,
+   8
   );
 
  return `
 
  <div class="print-page">
 
-  <div class="print-header">
+  <div class="print-head">
 
    <div>
 
@@ -10050,7 +10389,11 @@ function reportHTML(){
 
    </div>
 
-   <div class="print-right">
+   <div
+    style="
+     text-align:right;
+     font-size:5pt
+    ">
 
     ${esc(
      s.adres||
@@ -10059,20 +10402,17 @@ function reportHTML(){
 
     <br>
 
-    ${new Date()
-     .toLocaleString(
-      'tr-TR'
-     )}
+    ${now()}
 
    </div>
 
   </div>
 
-  <div class="print-columns">
+  <div class="print-cols">
 
    <div>
 
-    <div class="print-section">
+    <div class="print-sec">
 
      <h2>
       TERFİ BİLGİLERİ
@@ -10080,33 +10420,33 @@ function reportHTML(){
 
      <div class="print-grid">
 
-      ${printCell(
+      ${pc(
        'Terfi',
        s.ad
       )}
 
-      ${printCell(
+      ${pc(
        'Terfi No',
        s.terfi_no||
        s.kod
       )}
 
-      ${printCell(
+      ${pc(
        'Kod',
        s.kod
       )}
 
-      ${printCell(
+      ${pc(
        'Bölge',
        s.bolge
       )}
 
-      ${printCell(
+      ${pc(
        'Adres',
        s.adres
       )}
 
-      ${printCell(
+      ${pc(
        'Açıklama',
        s.aciklama
       )}
@@ -10115,7 +10455,7 @@ function reportHTML(){
 
     </div>
 
-    <div class="print-section">
+    <div class="print-sec">
 
      <h2>
       SSR / SEVİYE
@@ -10123,22 +10463,22 @@ function reportHTML(){
 
      <div class="print-grid">
 
-      ${printCell(
+      ${pc(
        'SSR',
        ssr.level
       )}
 
-      ${printCell(
+      ${pc(
        'Alt',
        ssr.low
       )}
 
-      ${printCell(
+      ${pc(
        'Üst',
        ssr.high
       )}
 
-      ${printCell(
+      ${pc(
        'Not',
        ssr.note
       )}
@@ -10147,7 +10487,7 @@ function reportHTML(){
 
     </div>
 
-    <div class="print-section">
+    <div class="print-sec">
 
      <h2>
       MOTORLAR
@@ -10157,9 +10497,9 @@ function reportHTML(){
       current.m.map(
        (m,i)=>`
 
-       <div class="print-motor">
+       <div class="print-box">
 
-        <div class="print-motor-title">
+        <div class="print-box-title">
 
          ${i+1}. MOTOR ·
          ${esc(
@@ -10169,49 +10509,49 @@ function reportHTML(){
 
         </div>
 
-        <div class="print-grid3">
+        <div class="print-grid">
 
-         ${printCell(
+         ${pc(
           'Marka',
           m.marka
          )}
 
-         ${printCell(
+         ${pc(
           'Model',
           m.model
          )}
 
-         ${printCell(
+         ${pc(
           'Seri',
           m.seri_no
          )}
 
-         ${printCell(
+         ${pc(
           'Güç',
-          `${m.guc_kw??'—'} kW / ${m.guc_hp??'—'} HP`
+          `${m.guc_kw??'—'} kW`
          )}
 
-         ${printCell(
+         ${pc(
           'Gerilim',
           `${m.gerilim_v??'—'} V`
          )}
 
-         ${printCell(
+         ${pc(
           'Akım',
           `${m.nominal_akim_a??'—'} A`
          )}
 
-         ${printCell(
+         ${pc(
           'Frekans',
           `${m.frekans_hz??'—'} Hz`
          )}
 
-         ${printCell(
+         ${pc(
           'Devir',
           `${m.devir_rpm??'—'} RPM`
          )}
 
-         ${printCell(
+         ${pc(
           'cosφ',
           m.cos_phi
          )}
@@ -10223,130 +10563,59 @@ function reportHTML(){
        `
       ).join('')||
 
-      `
-      <div class="print-small">
-       Motor kaydı yok.
-      </div>
-      `
+      '<div class="print-small">Motor yok.</div>'
      }
 
     </div>
 
-    <div class="print-section">
-
-     <h2>
-      BOX / MOTOR KABLO
-     </h2>
-
-     ${
-      current.m.map(
-       m=>{
-
-        const b=
-         getBox(m.id);
-
-        return `
-
-        <div class="print-motor">
-
-         <div class="print-motor-title">
-
-          ${esc(
-           m.ad||
-           'Motor'
-          )}
-
-         </div>
-
-         <div class="print-grid3">
-
-          ${
-           [
-            ['L1',b.l1],
-            ['L2',b.l2],
-            ['L3',b.l3],
-            ['T4',b.t4],
-            ['T5',b.t5],
-            ['T6',b.t6]
-           ]
-           .map(
-            x=>
-             printCell(
-              x[0],
-              [
-               x[1]?.bara,
-               x[1]?.damar,
-               x[1]?.renk,
-               x[1]?.detay,
-               x[1]?.hedef,
-               x[1]?.etiket
-              ]
-              .filter(
-               Boolean
-              )
-              .join(
-               ' · '
-              )
-             )
-           )
-           .join('')
-          }
-
-         </div>
-
-        </div>
-
-        `;
-
-       }
-      ).join('')
-     }
-
-    </div>
+    ${
+     current.m.map(
+      m=>
+       pdfBoxRow(
+        m,
+        'motor',
+        '🔵 MOTOR'
+       )
+     ).join('')
+    }
 
    </div>
 
-
    <div>
 
-    <div class="print-section">
+    <div class="print-sec">
 
      <h2>
       POMPALAR
      </h2>
 
-     <div class="print-grid3">
+     <div class="print-grid">
 
       ${
        current.p.flatMap(
         (p,i)=>[
 
-         printCell(
+         pc(
           `${i+1}. Pompa`,
           p.ad
          ),
 
-         printCell(
+         pc(
           'Marka / Model',
           `${p.marka||'—'} / ${p.model||'—'}`
          ),
 
-         printCell(
-          'Tip',
-          p.tip
-         ),
-
-         printCell(
+         pc(
           'Güç',
           `${p.guc_kw??'—'} kW`
          ),
 
-         printCell(
+         pc(
           'Q',
           `${p.q_min_m3h??'—'}–${p.q_max_m3h??'—'} m³/h`
          ),
 
-         printCell(
+         pc(
           'H',
           `${p.h_min_m??'—'}–${p.h_max_m??'—'} m`
          )
@@ -10359,39 +10628,39 @@ function reportHTML(){
 
     </div>
 
-    <div class="print-section">
+    <div class="print-sec">
 
      <h2>
       SÜRÜCÜLER
      </h2>
 
-     <div class="print-grid3">
+     <div class="print-grid">
 
       ${
        current.d.flatMap(
         (d,i)=>[
 
-         printCell(
+         pc(
           `${i+1}. Sürücü`,
           d.ad
          ),
 
-         printCell(
+         pc(
           'Marka / Model',
           `${d.marka||'—'} / ${d.model||'—'}`
          ),
 
-         printCell(
+         pc(
           'Güç',
           `${d.guc_kw??'—'} kW`
          ),
 
-         printCell(
+         pc(
           'Besleme',
           `${d.besleme_v??'—'} V`
          ),
 
-         printCell(
+         pc(
           'Motor',
           current.m.find(
            m=>
@@ -10401,7 +10670,7 @@ function reportHTML(){
           '—'
          ),
 
-         printCell(
+         pc(
           'Seri',
           d.seri_no
          )
@@ -10414,7 +10683,40 @@ function reportHTML(){
 
     </div>
 
-    <div class="print-section">
+    ${
+     current.m.map(
+      m=>
+       pdfBoxRow(
+        m,
+        'box_motor',
+        '🟢 BOX MOTOR GİRİŞİ'
+       )
+     ).join('')
+    }
+
+    ${
+     current.m.map(
+      m=>
+       pdfBoxRow(
+        m,
+        'box_surucu',
+        '🟡 BOX SÜRÜCÜ ÇIKIŞI'
+       )
+     ).join('')
+    }
+
+    ${
+     current.m.map(
+      m=>
+       pdfBoxRow(
+        m,
+        'surucu',
+        '🔴 SÜRÜCÜ'
+       )
+     ).join('')
+    }
+
+    <div class="print-sec">
 
      <h2>
       ANLIK ÇALIŞMA / SON KAYITLAR
@@ -10422,22 +10724,17 @@ function reportHTML(){
 
      ${
       current.w
-       .slice(
-        0,
-        6
-       )
+       .slice(0,6)
        .map(
         w=>`
 
-        <div class="print-motor">
+        <div class="print-box">
 
-         <div class="print-motor-title">
+         <div class="print-box-title">
 
           ${
            current.m.find(
-            m=>
-             m.id===
-             w.motor_id
+            m=>m.id===w.motor_id
            )?.ad||
            'Motor'
           }
@@ -10452,34 +10749,34 @@ function reportHTML(){
 
          </div>
 
-         <div class="print-grid3">
+         <div class="print-grid">
 
-          ${printCell(
+          ${pc(
            'Hz',
            w.frekans_hz
           )}
 
-          ${printCell(
+          ${pc(
            'A',
            w.akim_a
           )}
 
-          ${printCell(
+          ${pc(
            'kW',
            w.guc_kw
           )}
 
-          ${printCell(
+          ${pc(
            'V',
            w.gerilim_v
           )}
 
-          ${printCell(
+          ${pc(
            'Basınç',
            `${w.set_basinci_bar??'—'} / ${w.calisma_basinci_bar??'—'}`
           )}
 
-          ${printCell(
+          ${pc(
            'Durum',
            w.durum
           )}
@@ -10491,199 +10788,172 @@ function reportHTML(){
         `
        ).join('')
       ||
-      `
-      <div class="print-small">
-       Çalışma kaydı yok.
-      </div>
-      `
+      '<div class="print-small">Çalışma kaydı yok.</div>'
      }
 
     </div>
 
-    <div class="print-section">
+    <div class="print-sec">
 
      <h2>
       TERFİYE ÖZEL PARAMETRELER
      </h2>
 
-     <div class="print-grid3">
+     <div class="print-grid">
 
       ${
        current.tp.map(
         x=>
-         printCell(
+         pc(
           `${x.ekran_adi||''} · ${x.parametre_adi||''}`,
           `${x.deger||'—'} ${x.birim||''}`
          )
-       ).join('')
-       ||
-       `
-       <div class="print-small">
-        Özel parametre yok.
-       </div>
-       `
+       ).join('')||
+       '<div class="print-small">Özel parametre yok.</div>'
       }
 
      </div>
 
     </div>
 
-    <div class="print-section">
-
-     <h2>
-      SON DEĞİŞİKLİKLER
-     </h2>
-
-     ${
-      history
-       .slice(
-        0,
-        8
-       )
-       .map(
-        x=>`
-
-        <div class="print-item">
-
-         <div class="print-small">
-
-          ${new Date(
-           x.date
-          ).toLocaleString(
-           'tr-TR'
-          )}
-
-         </div>
-
-         <div class="print-small">
-
-          <b>
-           ${esc(x.action)}
-          </b>
-
-          ·
-
-          ${esc(
-           x.detail||
-           ''
-          )}
-
-         </div>
-
-        </div>
-
-        `
-       ).join('')
-       ||
-       `
-       <div class="print-small">
-        Geçmiş yok.
-       </div>
-       `
-     }
-
-    </div>
-
    </div>
-
 
    <div>
 
-    <div class="print-section">
+    <div class="print-sec">
 
      <h2>
       HMI / PLC · TÜM 5 SAYFA
      </h2>
 
      ${
-      [
-       1,
-       2,
-       3,
-       4,
-       5
-      ]
-      .map(printHmi)
-      .join('')
-     }
+      [1,2,3,4,5].map(
+       page=>{
 
-    </div>
+        const r=
+         current.h.find(
+          x=>x.ekran_no===page
+         );
 
-    <div class="print-section">
+        const v=
+         r?.degerler||
+         {};
 
-     <h2>
-      ARIZA KÜTÜPHANESİ / SON KAYITLAR
-     </h2>
+        return `
 
-     ${
-      faults()
-       .slice(
-        0,
-        12
-       )
-       .map(
-        f=>`
+        <div class="print-sec">
 
-        <div class="print-item">
+         <h2>
+          HMI ${page} / 5
+         </h2>
 
-         <div class="print-small">
+         <div class="print-grid">
 
-          <b>
-           ${esc(f.code)}
-          </b>
-
-          ·
-
-          ${esc(f.name)}
-
-         </div>
-
-         <div class="print-small">
-
-          ${esc(
-           f.solution
-          )}
+          ${
+           HMI[page-1]
+            .map(
+             (label,i)=>
+              pc(
+               label,
+               v[i]
+              )
+            ).join('')
+          }
 
          </div>
 
         </div>
 
-        `
-       )
-       .join('')
+        `;
+
+       }
+      ).join('')
      }
 
     </div>
 
-    <div class="print-section">
+    <div class="print-sec">
 
      <h2>
-      TEKNİK REFERANS
+      SON DEĞİŞİKLİKLER
      </h2>
 
-     <div class="print-grid">
+     ${
+      hist.map(
+       x=>`
 
-      ${printCell(
-       'Motor',
-       'V · A · kW · Hz · RPM'
-      )}
+       <div
+        style="
+         margin-bottom:1mm;
+         font-size:4pt
+        ">
 
-      ${printCell(
-       'PID',
-       'Set / Feedback / Uyku'
-      )}
+        <b>
+         ${esc(
+          new Date(
+           x.date
+          ).toLocaleString(
+           'tr-TR'
+          )
+         )}
+        </b>
 
-      ${printCell(
-       'HMI',
-       '5 sayfa'
-      )}
+        ·
 
-      ${printCell(
-       'BOX',
-       '6 damar'
-      )}
+        ${esc(
+         x.action
+        )}
 
-     </div>
+        ·
+
+        ${esc(
+         x.detail||''
+        )}
+
+       </div>
+
+       `
+      ).join('')||
+      '<div class="print-small">Geçmiş yok.</div>'
+     }
+
+    </div>
+
+    <div class="print-sec">
+
+     <h2>
+      ARIZA KÜTÜPHANESİ
+     </h2>
+
+     ${
+      faults()
+       .slice(0,12)
+       .map(
+        f=>`
+
+        <div
+         style="
+          margin-bottom:1mm;
+          font-size:4pt
+         ">
+
+         <b>
+          ${esc(f.code)}
+         </b>
+
+         ·
+
+         ${esc(f.name)}
+
+         <br>
+
+         ${esc(f.solution)}
+
+        </div>
+
+        `
+       ).join('')
+     }
 
     </div>
 
@@ -10691,7 +10961,7 @@ function reportHTML(){
 
   </div>
 
-  <div class="print-footer">
+  <div class="print-foot">
 
    <span>
     MESKİ · TERFİ ARŞİVİM
@@ -10715,7 +10985,7 @@ function reportHTML(){
    </span>
 
    <span>
-    HMI 1/5 · 2/5 · 3/5 · 4/5 · 5/5
+    U/V/W · HMI 1/5–5/5
    </span>
 
   </div>
@@ -10769,7 +11039,7 @@ function makePDF(){
 
  recordHistory(
   'PDF OLUŞTURULDU',
-  'Tek sayfalık teknik arşiv raporu'
+  'Teknik arşiv raporu'
  );
 
  setTimeout(
@@ -10783,7 +11053,7 @@ function makePDF(){
 
 
 /* =========================================================
-   CSV / EXCEL
+   CSV
 ========================================================= */
 
 function csvEscape(
@@ -10879,6 +11149,61 @@ function exportCSV(){
     m.devir_rpm
 
    ]);
+
+  }
+ );
+
+ rows.push([]);
+
+ rows.push([
+  'MOTOR · BOX · SÜRÜCÜ U/V/W'
+ ]);
+
+ rows.push([
+  'Motor',
+  'Bölüm',
+  'Terminal',
+  'Renk',
+  'Detay',
+  'Etiket'
+ ]);
+
+ current.m.forEach(
+  m=>{
+
+   const b=
+    getBox(
+     m.id
+    );
+
+   [
+    ['MOTOR','motor'],
+    ['BOX MOTOR GİRİŞİ','box_motor'],
+    ['BOX SÜRÜCÜ ÇIKIŞI','box_surucu'],
+    ['SÜRÜCÜ','surucu']
+   ].forEach(
+    ([title,section])=>{
+
+     ['u','v','w']
+      .forEach(
+       k=>{
+
+        rows.push([
+
+         m.ad,
+         title,
+         k.toUpperCase(),
+         b[section][k].renk,
+         b[section][k].detay,
+         b[section][k].etiket
+
+        ]);
+
+       }
+      );
+
+    }
+   );
 
   }
  );
@@ -11002,6 +11327,38 @@ function exportCSV(){
 
  }
 
+ rows.push([]);
+
+ rows.push([
+  'TERFİYE ÖZEL PARAMETRELER'
+ ]);
+
+ rows.push([
+  'Ekran',
+  'Parametre',
+  'Değer',
+  'Birim',
+  'Açıklama',
+  'Kaynak'
+ ]);
+
+ current.tp.forEach(
+  x=>{
+
+   rows.push([
+
+    x.ekran_adi,
+    x.parametre_adi,
+    x.deger,
+    x.birim,
+    x.aciklama,
+    x.kaynak
+
+   ]);
+
+  }
+ );
+
  const csv=
   '\ufeff'+
   rows
@@ -11042,8 +11399,13 @@ function exportCSV(){
 
  a.click();
 
- URL.revokeObjectURL(
-  url
+ setTimeout(
+  ()=>{
+   URL.revokeObjectURL(
+    url
+   );
+  },
+  500
  );
 
  recordHistory(
