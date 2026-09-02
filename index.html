@@ -305,6 +305,11 @@ h4{
  color:#ffd87c
 }
 
+.badge.location{
+ background:#163d54;
+ color:#7fd9ff
+}
+
 .admin-status{
  display:inline-block;
  padding:7px 9px;
@@ -369,9 +374,16 @@ h4{
  margin-top:4px
 }
 
+.station-badges{
+ display:flex;
+ gap:6px;
+ flex-wrap:wrap;
+ margin-top:9px
+}
+
 .summary{
  display:grid;
- grid-template-columns:repeat(5,1fr);
+ grid-template-columns:repeat(6,1fr);
  gap:10px
 }
 
@@ -563,14 +575,29 @@ h4{
 .hmi-fields{
  display:grid;
  grid-template-columns:repeat(3,minmax(0,1fr));
- gap:9px
+ gap:10px;
+ align-items:start;
+ margin-top:12px
+}
+
+.hmi-column{
+ min-width:0
+}
+
+.hmi-column-title{
+ color:#8cb9c9;
+ font-size:10px;
+ font-weight:900;
+ margin:0 0 7px 2px;
+ text-transform:uppercase
 }
 
 .hmi-field{
  background:#0b222c;
  border:1px solid #264c5a;
  border-radius:10px;
- padding:9px
+ padding:9px;
+ margin-bottom:8px
 }
 
 .hmi-field label{
@@ -578,7 +605,8 @@ h4{
  color:#a6c6d3;
  font-size:10px;
  font-weight:800;
- margin-bottom:5px
+ margin-bottom:5px;
+ line-height:1.35
 }
 
 .hmi-field input{
@@ -589,6 +617,16 @@ h4{
  border:1px solid #597885;
  background:#f5f9fb;
  color:#061828
+}
+
+.hmi-layout-note{
+ margin-top:10px;
+ padding:9px;
+ border:1px dashed #396273;
+ border-radius:9px;
+ color:#86abba;
+ font-size:10px;
+ line-height:1.5
 }
 
 .box-grid{
@@ -665,6 +703,103 @@ h4{
  font-size:10px;
  color:var(--muted);
  line-height:1.45
+}
+
+.location-card{
+ border:1px solid #23536b;
+ border-radius:14px;
+ background:
+  radial-gradient(circle at top right,rgba(46,172,239,.09),transparent 40%),
+  #081d30;
+ padding:13px
+}
+
+.location-main{
+ display:flex;
+ align-items:flex-start;
+ justify-content:space-between;
+ gap:12px;
+ flex-wrap:wrap
+}
+
+.location-coords{
+ font-size:13px;
+ font-weight:900;
+ color:#77d4ff;
+ line-height:1.55
+}
+
+.location-meta{
+ color:var(--muted);
+ font-size:10px;
+ margin-top:4px
+}
+
+.location-actions{
+ display:flex;
+ flex-wrap:wrap;
+ gap:5px
+}
+
+.location-actions .btn{
+ margin:0
+}
+
+.tag-grid{
+ display:flex;
+ gap:7px;
+ flex-wrap:wrap;
+ margin-top:8px
+}
+
+.tag{
+ border:1px solid #34566c;
+ background:#102b40;
+ color:#a9c9d8;
+ padding:7px 9px;
+ border-radius:999px;
+ font-size:10px;
+ font-weight:800
+}
+
+.tag.active{
+ border-color:#2bbf91;
+ color:#8bf0bf;
+ background:#104b39
+}
+
+.detail-banner{
+ background:linear-gradient(145deg,#0a2842,#0a2137);
+ border:1px solid #2b5873;
+ border-radius:13px;
+ padding:12px
+}
+
+.detail-grid{
+ display:grid;
+ grid-template-columns:repeat(4,minmax(0,1fr));
+ gap:9px
+}
+
+.detail-card{
+ background:#091827;
+ border:1px solid #203b56;
+ border-radius:12px;
+ padding:11px
+}
+
+.detail-label{
+ font-size:10px;
+ color:#7996a7;
+ text-transform:uppercase;
+ font-weight:800
+}
+
+.detail-value{
+ font-size:14px;
+ font-weight:900;
+ margin-top:5px;
+ color:#dff5ff
 }
 
 .bottom-save{
@@ -896,11 +1031,19 @@ h4{
  display:none
 }
 
-@media(max-width:900px){
+@media(max-width:1100px){
 
  .summary{
   grid-template-columns:repeat(3,1fr)
  }
+
+ .detail-grid{
+  grid-template-columns:repeat(2,1fr)
+ }
+
+}
+
+@media(max-width:900px){
 
  .grid4{
   grid-template-columns:repeat(2,1fr)
@@ -911,6 +1054,10 @@ h4{
  }
 
  .box-grid{
+  grid-template-columns:repeat(2,minmax(0,1fr))
+ }
+
+ .hmi-fields{
   grid-template-columns:repeat(2,minmax(0,1fr))
  }
 
@@ -952,6 +1099,10 @@ h4{
  }
 
  .box-grid{
+  grid-template-columns:1fr
+ }
+
+ .detail-grid{
   grid-template-columns:1fr
  }
 
@@ -1139,6 +1290,7 @@ const db =
   SUPABASE_KEY
  );
 
+
 /* =========================================================
    AYARLAR / ANAHTARLAR
 ========================================================= */
@@ -1146,7 +1298,7 @@ const db =
 const DEFAULT_SITE_PASSWORD='2468';
 const DEFAULT_ADMIN_PASSWORD='6872';
 
-const APP_PREF_KEY='meski_terfi_preferences_v10';
+const APP_PREF_KEY='meski_terfi_preferences_v11';
 
 const LOCAL_BOX_KEY='meski_motor_box_v10';
 const LOCAL_FAULT_KEY='meski_fault_library_v10';
@@ -1160,6 +1312,11 @@ const LOCAL_FAULT_DELETE_KEY='meski_fault_deleted_v11';
 
 const LOCAL_PARAM_EDIT_KEY='meski_param_edits_v11';
 const LOCAL_PARAM_DELETE_KEY='meski_param_deleted_v11';
+
+const LOCAL_LOCATION_KEY='meski_terfi_locations_v1';
+const LOCAL_TERFI_DETAIL_KEY='meski_terfi_details_v1';
+
+const LOCAL_GENERAL_LIBRARY_KEY='meski_general_library_v1';
 
 const ADMIN_SESSION_KEY='meski_admin_session_v11';
 const ADMIN_IDLE_MS=30*60*1000;
@@ -1176,97 +1333,195 @@ let adminTimer=null;
 
 /* =========================================================
    HMI
+   FOTOĞRAFLARDAKİ GERÇEK EKRAN SIRASINA GÖRE
 ========================================================= */
 
 const HMI=[
 
- [
-  'Motor Termik Kontrol',
-  'Oto. Reset Sayısı',
-  'Top. Reset Süresi [Saniye]',
-  'Reset Gecikme Süresi',
-  'Sensör Hata',
-  '[AI1] Min. Sensör Kalibrasyonu',
-  '[AI1] Max. Sensör Kalibrasyonu',
-  'Motor Gürültü Seviyesi',
-  'Panel Hata',
-  'Aşırı Gerilim',
-  'Düşük Gerilim',
-  'Sensör Tipi',
-  'Sensör Giriş Port',
-  'Sensör Giriş Hata',
-  'Aşırı Akım',
-  'Toprak Hata',
-  'Set Değer Seçimi'
- ],
+ {
+  title:'Motor Termik / Hata',
 
- [
-  'Röle 1 Yapılandırma',
-  'Röle 2 Yapılandırma',
-  'Röle 3 Yapılandırma',
-  'Röle 4 Yapılandırma',
-  'Dijital Röle',
-  'Kilitleme [DI1-DI5]',
-  'Çalışma Süresi [h]',
-  'Otomatik Değişim Aralığı',
-  'Oto Değişim Seviyesi [%]',
-  'Alçak Basınç Koruması Min. Değer [bar]',
-  'Alçak Basınç Koruması Pompa Giriş Basıncı [bar]',
-  'Yüksek Basınç Koruması Max. Değer [bar]',
-  'Alçak Basınç Koruma Girme Zamanı [sn]',
-  'Yüksek Basınç Koruma Girme Zamanı [sn]',
-  'Alçak Basınç Koruma Çıkma Zamanı [sn]',
-  'Yüksek Basınç Koruma Çıkma Zamanı [sn]'
- ],
+  labels:[
+   'Motor Termik Kontrol',
+   'Oto. Reset Sayısı',
+   'Top. Reset Süresi [Saniye]',
+   'Reset Gecikme Süresi',
+   'Sensör Hata',
+   '[AI1] Min. Sensör Kalibrasyonu',
+   '[AI1] Max. Sensör Kalibrasyonu',
 
- [
-  'Motor Voltajı [V]',
-  'Motor Akımı [A]',
-  'Motor Gücü [kW]',
-  'Motor Frekansı [Hz]',
-  'Motor Devir [RPM]',
-  'Sensör [AI1] Min.',
-  'Nominal Akım [A] x1.5',
-  'Min. Sensör Range',
-  'Max. Sensör Range',
-  'Sensör [AI2] Min.',
-  'Sensör [AI2] Maks.',
-  'Hızlanma Rampası [sn]',
-  'Yavaşlama Rampası [sn]',
-  'PID Kazanç',
-  'Osilasyon',
-  'Ters / Düz Çalıştırma',
-  'Sensör [AI1] Maks.'
- ],
+   'Motor Gürültü Seviyesi',
+   'Panel Hata',
+   'Aşırı Gerilim',
+   'Düşük Gerilim',
+   'Sensör Tipi',
 
- [
-  'Minimum Frekans',
-  'Maksimum Frekans',
-  'Minimum Frekans 1',
-  'Maksimum Frekans -1',
-  'Minimum Frekans 2',
-  'Maksimum Frekans -1 / 2',
-  'Minimum Frekans 3',
-  'Maksimum Frekans -1 / 3',
-  'Minimum Frekans +1',
-  'Tolerans [bar.]',
-  'Top. Motor Sayısı',
-  'Uyanma süresi [Sn.]',
-  'Maks. Frekans Bekleme süresi [Sn]',
-  'Yard. motor Stop zamanı [sn]',
-  'Uyku İptal',
-  'Uyku Zamanı',
-  'Yard. Motor Sayısı'
- ],
+   'Sensör Giriş Port',
+   'Sensör Giriş Hata',
+   'Aşırı Akım',
+   'Toprak Hata',
+   'Set Değer Seçimi',
+   '[AI2] Min. Sensör Kalibrasyonu',
+   '[AI2] Max. Sensör Kalibrasyonu'
+  ],
 
- [
-  'Set Ayarı',
-  'Çalışma Ayarı',
-  'AI 1 Durum',
-  'AI 2 Durum',
-  'INV AO1'
- ]
+  columns:[
+   {
+    title:'SOL',
+    indexes:[0,1,2,3,4,5,6]
+   },
+   {
+    title:'ORTA',
+    indexes:[7,8,9,10,11]
+   },
+   {
+    title:'SAĞ',
+    indexes:[12,13,14,15,16,17,18]
+   }
+  ]
+ },
 
+ {
+  title:'Röle / Basınç Koruma',
+
+  labels:[
+   'Röle 1 Yapılandırma',
+   'Röle 2 Yapılandırma',
+   'Röle 3 Yapılandırma',
+   'Röle 4 Yapılandırma',
+   'Dijital Röle',
+   'Kilitleme [DI1-DI5]',
+   'Çalışma Süresi [h]',
+   'Otomatik Değişim Aralığı',
+   'Oto Değişim Seviyesi [%]',
+   'Alçak Basınç Koruması Min. Değer [bar]',
+   'Alçak Basınç Koruması Pompa Giriş Basıncı [bar]',
+   'Yüksek Basınç Koruması Max. Değer [bar]',
+   'Alçak Basınç Koruma Girme Zamanı [sn]',
+   'Yüksek Basınç Koruma Girme Zamanı [sn]',
+   'Alçak Basınç Koruma Çıkma Zamanı [sn]',
+   'Yüksek Basınç Koruma Çıkma Zamanı [sn]'
+  ],
+
+  columns:[
+   {
+    title:'SOL / ÜST',
+    indexes:[0,1,2,3,9,10,11]
+   },
+   {
+    title:'ORTA / ÜST',
+    indexes:[5,6,7,8,12,13]
+   },
+   {
+    title:'SAĞ / ALT',
+    indexes:[4,14,15]
+   }
+  ],
+
+  note:
+   'HMI fotoğraflarındaki röle, basınç koruma ve zaman ayarları birlikte tutulur.'
+ },
+
+ {
+  title:'Motor Teknik Değerleri',
+
+  labels:[
+   'Motor Voltajı [V]',
+   'Motor Akımı [A]',
+   'Motor Gücü [kW]',
+   'Motor Frekansı [Hz]',
+   'Motor Devir [RPM]',
+   'Sensör [AI1] Min.',
+   'Nominal Akım [A] x1.5',
+   'Min. Sensör Range',
+   'Max. Sensör Range',
+   'Sensör [AI2] Min.',
+   'Sensör [AI2] Maks.',
+   'Hızlanma Rampası [sn]',
+   'Yavaşlama Rampası [sn]',
+   'PID Kazanç',
+   'Osilasyon',
+   'Ters / Düz Çalıştırma',
+   'Sensör [AI1] Maks.'
+  ],
+
+  columns:[
+   {
+    title:'SOL',
+    indexes:[0,1,2,3,4,5]
+   },
+   {
+    title:'ORTA',
+    indexes:[6,7,8,9,10]
+   },
+   {
+    title:'SAĞ',
+    indexes:[11,12,13,14,15,16]
+   }
+  ]
+ },
+
+ {
+  title:'Frekans / Uyku / Pompa Yönetimi',
+
+  labels:[
+   'Minimum Frekans',
+   'Maksimum Frekans',
+   'Minimum Frekans 1',
+   'Maksimum Frekans -1',
+   'Minimum Frekans 2',
+   'Maksimum Frekans -1 / 2',
+   'Minimum Frekans 3',
+   'Maksimum Frekans -1 / 3',
+   'Minimum Frekans +1',
+   'Tolerans [bar.]',
+   'Top. Motor Sayısı',
+   'Uyanma Süresi [sn.] 2',
+   'Maks. Frekans Bekleme Süresi [sn]',
+   'Yard. Motor Stop Zamanı [sn]',
+   'Uyku İptal',
+   'Uyku Zamanı',
+   'Yard. Motor Sayısı'
+  ],
+
+  columns:[
+   {
+    title:'SOL',
+    indexes:[0,2,4,6,8,10]
+   },
+   {
+    title:'ORTA',
+    indexes:[1,3,5,7,9,11]
+   },
+   {
+    title:'SAĞ',
+    indexes:[12,13,14,15,16]
+   }
+  ]
+ },
+
+ {
+  title:'Basınç Ayarı / Analoglar',
+
+  labels:[
+   'Set Basıncı',
+   'Çalışma Basıncı',
+   'AI 1 Durum [%]',
+   'AI 2 Durum [%]',
+   'INV AO1 [mA]'
+  ],
+
+  columns:[
+   {
+    title:'BASINÇ',
+    indexes:[0,1]
+   },
+   {
+    title:'ANALOG',
+    indexes:[2,3,4]
+   }
+  ]
+ }
 ];
 
 
@@ -1369,7 +1624,7 @@ const DEFAULT_FAULTS=[
   code:'F0016',
   name:'Motor Fazı',
   cause:'Motor çıkış fazlarından birinde problem.',
-  solution:'Motor kablosunu, kontaktörleri ve motor bağlantılarını kontrol edin.',
+  solution:'Motor kablosunu, bağlantıları ve motoru kontrol edin.',
   source:'ABB Hidrofor / saha teknik notu'
  },
 
@@ -1412,7 +1667,6 @@ const DEFAULT_FAULTS=[
   solution:'Motor kablosunu, ortam koşullarını, hava akışını, fanı ve soğutucu kanatlarını kontrol edin.',
   source:'ABB ACS580'
  }
-
 ];
 
 
@@ -1475,6 +1729,84 @@ const DEFAULT_PARAMS=[
  desc:x[3],
  source:x[4]
 }));
+
+
+/* =========================================================
+   GENEL TEKNİK KÜTÜPHANE
+========================================================= */
+
+const DEFAULT_GENERAL_LIBRARY=[
+
+ {
+  id:'motor',
+  code:'MOTOR',
+  name:'Motor Teknik Bilgi',
+  desc:'Motor plakasındaki değerler ve sahada değerlendirme başlıkları.',
+  source:'MESKİ saha arşivi',
+  body:
+   'Nominal gerilim, nominal akım, güç, frekans, devir ve cosφ birlikte değerlendirilir. HMI üzerinde görülen gerçek akım, gerilim, frekans ve devir ayrıca ÇALIŞMA bölümüne kaydedilir.'
+ },
+
+ {
+  id:'pompa',
+  code:'POMPA',
+  name:'Pompa Tipi / Çalışma Şekli',
+  desc:'Dalgıç, dik milli, yatay ve hidrofor sistemlerini ayır.',
+  source:'MESKİ saha arşivi',
+  body:
+   'Fiziksel pompa tipi ile çalışma şekli birbirinden bağımsız tutulur. Örnek: Dalgıç + Hidrofor, Dik Milli + Depoya Basma, Yatay + Depoya Basma veya Dik Milli + Hidrofor.'
+ },
+
+ {
+  id:'surucu',
+  code:'SÜRÜCÜ',
+  name:'ABB Sürücü Teknik Bilgi',
+  desc:'Motor parametreleri, rampa, PID, akım ve koruma ayarları.',
+  source:'ABB / saha referansı',
+  body:
+   'Motor nominal değerleri, minimum-maksimum frekans, hız/frekans rampaları, PID ayarları, maksimum akım ve arıza kayıtları birlikte takip edilir.'
+ },
+
+ {
+  id:'hmi',
+  code:'HMI / PLC',
+  name:'Weintek HMI Arşivi',
+  desc:'HMI üzerindeki gerçek ekran değerleri, sayfa sırası korunarak kaydedilir.',
+  source:'MESKİ saha arşivi',
+  body:
+   'HMI 1-5 sayfaları fotoğraflardaki yerleşime göre düzenlenmiştir. AI1/AI2, röle, basınç koruma, PID, frekans, uyku/uyanma ve analog değerler ayrı alanlarda tutulur.'
+ },
+
+ {
+  id:'basinc',
+  code:'BASINÇ',
+  name:'Basınç / Seviye',
+  desc:'Set basıncı, çalışma basıncı, üst-alt koruma ve seviye bilgileri.',
+  source:'MESKİ saha arşivi',
+  body:
+   'Set basıncı ile gerçek çalışma basıncı ayrı tutulur. Alçak/yüksek basınç koruma sınırları ve bunların girme-çıkma süreleri HMI kayıtlarıyla birlikte değerlendirilir.'
+ },
+
+ {
+  id:'ariza',
+  code:'ARIZA',
+  name:'Arıza Teşhis',
+  desc:'Sürücü, motor, pompa ve HMI arızalarını aynı teknik arşiv altında incele.',
+  source:'MESKİ saha arşivi',
+  body:
+   'Arıza kodu, ekipman, sahadaki tespit, yapılan işlem ve sonuç ayrı ayrı kayıt altına alınır. Hazır arıza kütüphanesiyle gerçek saha arızası birbirinden ayrıdır.'
+ },
+
+ {
+  id:'box',
+  code:'BOX',
+  name:'Motor / BOX / Sürücü',
+  desc:'U-V-W kablo zinciri ve saha bağlantı kimliği.',
+  source:'MESKİ saha arşivi',
+  body:
+   'Motor → BOX → Sürücü güzergâhında U/V/W kabloları, renkleri, detayları ve etiketleri ayrı ayrı tutulur.'
+ }
+];
 
 
 /* =========================================================
@@ -1662,6 +1994,24 @@ let localPhotos=
   {}
 );
 
+let terfiLocations=
+ localJSON(
+  LOCAL_LOCATION_KEY,
+  {}
+);
+
+let terfiDetails=
+ localJSON(
+  LOCAL_TERFI_DETAIL_KEY,
+  {}
+);
+
+let customGeneralLibrary=
+ localJSON(
+  LOCAL_GENERAL_LIBRARY_KEY,
+  []
+);
+
 
 /* =========================================================
    HELPERS
@@ -1713,6 +2063,55 @@ function now(){
   .toLocaleString(
    'tr-TR'
   );
+
+}
+
+function stationDetailDefaults(){
+
+ return {
+  pompa_tipi:'',
+  calisma_sekli:'',
+  emiş_kaynagi:'',
+  basma_noktasi:'',
+  sistem_aciklama:''
+ };
+
+}
+
+function getTerfiDetail(
+ id
+){
+
+ return {
+  ...stationDetailDefaults(),
+  ...(terfiDetails[id]||{})
+ };
+
+}
+
+function saveTerfiDetail(
+ id,
+ detail
+){
+
+ terfiDetails[id]={
+  ...stationDetailDefaults(),
+  ...(detail||{})
+ };
+
+ saveLocal(
+  LOCAL_TERFI_DETAIL_KEY,
+  terfiDetails
+ );
+
+}
+
+function getLocation(
+ id
+){
+
+ return terfiLocations[id]||
+  null;
 
 }
 
@@ -1842,6 +2241,15 @@ function params(){
    ...(paramEdits[p.code]||{})
   })
  );
+
+}
+
+function generalLibrary(){
+
+ return [
+  ...DEFAULT_GENERAL_LIBRARY,
+  ...customGeneralLibrary
+ ];
 
 }
 
@@ -2352,6 +2760,11 @@ async function home(){
    ids
   );
 
+ const locationCount=
+  rows.filter(
+   x=>!!getLocation(x.id)
+  ).length;
+
  app.innerHTML=`
 
  <div class="wrap">
@@ -2534,6 +2947,22 @@ async function home(){
     <div class="stat">
 
      <div class="stat-label">
+      Konum
+     </div>
+
+     <div class="stat-value">
+      ${locationCount}
+     </div>
+
+     <div class="stat-unit">
+      kayıtlı
+     </div>
+
+    </div>
+
+    <div class="stat">
+
+     <div class="stat-label">
       Arşiv
      </div>
 
@@ -2564,7 +2993,8 @@ async function home(){
      <div class="section-sub">
 
       Terfiyi açarak bütün teknik sekmelere
-      ulaş.
+      ulaş. Konum, pompa tipi ve çalışma şekli
+      de artık terfi kaydının içinde tutulur.
 
      </div>
 
@@ -2593,7 +3023,7 @@ async function home(){
     <input
      id="search"
      placeholder="
-      Terfi adı, kod, bölge veya adres ara...
+      Terfi adı, kod, bölge, adres, pompa tipi veya çalışma şekli ara...
      "
      oninput="filterStations()"
      style="
@@ -2617,6 +3047,8 @@ async function home(){
    </div>
 
   </div>
+
+  ${globalLibraryBody()}
 
  </div>
 
@@ -2655,76 +3087,142 @@ function renderStationMarkup(
 ){
 
  return rows.map(
-  x=>`
+  x=>{
 
-  <div
-   class="station"
-   data-search="${esc(
-    (
-     `${x.ad||''} `+
-     `${x.kod||''} `+
-     `${x.terfi_no||''} `+
-     `${x.bolge||''} `+
-     `${x.adres||''}`
-    ).toLowerCase()
-   )}"
-   onclick="
-    openStation(
-     '${x.id}'
-    )
-   ">
+   const loc=
+    getLocation(x.id);
 
-   <div class="top">
+   const detail=
+    getTerfiDetail(x.id);
 
-    <div>
+   return `
 
-     <div class="station-title">
+   <div
+    class="station"
+    data-search="${esc(
+     (
+      `${x.ad||''} `+
+      `${x.kod||''} `+
+      `${x.terfi_no||''} `+
+      `${x.bolge||''} `+
+      `${x.adres||''} `+
+      `${detail.pompa_tipi||''} `+
+      `${detail.calisma_sekli||''} `+
+      `${detail.emiş_kaynagi||''} `+
+      `${detail.basma_noktasi||''}`
+     ).toLowerCase()
+    )}"
+    onclick="
+     openStation(
+      '${x.id}'
+     )
+    ">
 
-      ${esc(
-       x.ad||
-       'İsimsiz Terfi'
-      )}
+    <div class="top">
+
+     <div>
+
+      <div class="station-title">
+
+       ${esc(
+        x.ad||
+        'İsimsiz Terfi'
+       )}
+
+      </div>
+
+      <div class="station-meta">
+
+       ${esc(
+        x.terfi_no||
+        x.kod||
+        ''
+       )}
+
+       ${
+        x.bolge
+        ?
+        ' · '+esc(x.bolge)
+        :
+        ''
+       }
+
+      </div>
+
+      <div class="station-meta">
+
+       ${esc(
+        x.adres||
+        'Adres girilmemiş'
+       )}
+
+      </div>
 
      </div>
 
-     <div class="station-meta">
-
-      ${esc(
-       x.terfi_no||
-       x.kod||
-       ''
-      )}
-
-      ${
-       x.bolge
-       ?
-       ' · '+esc(x.bolge)
-       :
-       ''
-      }
-
-     </div>
-
-     <div class="station-meta">
-
-      ${esc(
-       x.adres||
-       'Adres girilmemiş'
-      )}
-
-     </div>
+     <span class="badge ok">
+      TEKNİK KAYIT
+     </span>
 
     </div>
 
-    <span class="badge ok">
-     TEKNİK KAYIT
-    </span>
+    <div class="station-badges">
+
+     ${
+      detail.pompa_tipi
+      ?
+      `
+      <span class="badge">
+       ⚙ ${esc(detail.pompa_tipi)}
+      </span>
+      `
+      :
+      ''
+     }
+
+     ${
+      detail.calisma_sekli
+      ?
+      `
+      <span class="badge">
+       💧 ${esc(detail.calisma_sekli)}
+      </span>
+      `
+      :
+      ''
+     }
+
+     ${
+      detail.basma_noktasi
+      ?
+      `
+      <span class="badge">
+       ➜ ${esc(detail.basma_noktasi)}
+      </span>
+      `
+      :
+      ''
+     }
+
+     ${
+      loc
+      ?
+      `
+      <span class="badge location">
+       📍 KONUM KAYITLI
+      </span>
+      `
+      :
+      ''
+     }
+
+    </div>
 
    </div>
 
-  </div>
+   `;
 
-  `
+  }
  ).join('')||
  `<div class="empty">
   Henüz terfi kaydı yok.
@@ -2758,6 +3256,652 @@ function filterStations(){
      'none';
    }
   );
+
+}
+
+
+/* =========================================================
+   GENEL TEKNİK KÜTÜPHANE
+========================================================= */
+
+function globalLibraryBody(){
+
+ return `
+
+ <div
+  class="card"
+  id="globalLibrary">
+
+  <div class="top">
+
+   <div>
+
+    <h2>
+     🧰 GENEL TEKNİK KÜTÜPHANE
+    </h2>
+
+    <div class="section-sub">
+
+     Tüm terfiler için ortak kullanılacak
+     motor, pompa, sürücü, HMI/PLC,
+     basınç/seviye, arıza ve BOX bilgileri.
+
+    </div>
+
+   </div>
+
+   ${
+    edit
+    ?
+    `
+    <button
+     class="btn ok"
+     onclick="newGeneralLibraryItem()">
+
+     + TEKNİK BİLGİ EKLE
+
+    </button>
+    `
+    :
+    ''
+   }
+
+  </div>
+
+  <input
+   id="generalLibrarySearch"
+   placeholder="
+    Motor, pompa, sürücü, HMI, basınç, arıza ara...
+   "
+   oninput="filterGeneralLibrary()"
+   style="
+    width:100%;
+    margin-top:10px;
+    padding:12px;
+    border-radius:10px;
+    border:1px solid var(--line);
+    background:#061a2d;
+    color:#fff;
+    outline:none;
+    min-height:46px
+   "
+  >
+
+  <div
+   id="generalLibraryGrid"
+   class="library-grid"
+   style="margin-top:10px">
+
+   ${renderGeneralLibraryCards()}
+
+  </div>
+
+ </div>
+
+ `;
+
+}
+
+function renderGeneralLibraryCards(){
+
+ return generalLibrary().map(
+  item=>`
+
+  <div
+   class="library-card"
+   data-general-library="${esc(
+    (
+     `${item.code||''} `+
+     `${item.name||''} `+
+     `${item.desc||''} `+
+     `${item.body||''}`
+    ).toLowerCase()
+   )}">
+
+   <div
+    onclick="
+     openGeneralLibraryDetail(
+      '${esc(item.id)}'
+     )
+    ">
+
+    <div class="library-code">
+     ${esc(item.code)}
+    </div>
+
+    <div class="library-name">
+     ${esc(item.name)}
+    </div>
+
+    <div class="library-desc">
+     ${esc(item.desc)}
+    </div>
+
+    <div class="library-source">
+     ${esc(item.source||'')}
+    </div>
+
+   </div>
+
+   ${
+    edit &&
+    !DEFAULT_GENERAL_LIBRARY.some(
+     x=>x.id===item.id
+    )
+    ?
+    `
+    <div class="library-actions">
+
+     <button
+      class="btn"
+      onclick="
+       event.stopPropagation();
+       editGeneralLibraryItem(
+        '${esc(item.id)}'
+       );
+      ">
+
+      ✏ DÜZENLE
+
+     </button>
+
+     <button
+      class="btn bad"
+      onclick="
+       event.stopPropagation();
+       deleteGeneralLibraryItem(
+        '${esc(item.id)}'
+       );
+      ">
+
+      🗑 SİL
+
+     </button>
+
+    </div>
+    `
+    :
+    ''
+   }
+
+  </div>
+
+  `
+ ).join('');
+}
+
+function filterGeneralLibrary(){
+
+ const q=
+  (
+   document
+    .getElementById(
+     'generalLibrarySearch'
+    )
+    ?.value||
+   ''
+  ).toLowerCase();
+
+ document
+  .querySelectorAll(
+   '#generalLibraryGrid .library-card'
+  )
+  .forEach(
+   x=>{
+    x.style.display=
+     x.dataset.generalLibrary.includes(q)
+     ?
+     'block'
+     :
+     'none';
+   }
+  );
+
+}
+
+function openGeneralLibraryDetail(
+ id
+){
+
+ const item=
+  generalLibrary().find(
+   x=>String(x.id)===String(id)
+  );
+
+ if(!item)
+  return;
+
+ openModal(`
+
+  <h2>
+   ${esc(item.code)}
+   ·
+   ${esc(item.name)}
+  </h2>
+
+  <div class="workbox">
+
+   <h4>
+    GENEL BİLGİ
+   </h4>
+
+   <div style="line-height:1.6">
+
+    ${esc(item.body||item.desc||'')}
+
+   </div>
+
+  </div>
+
+  <div class="workbox">
+
+   <h4>
+    AÇIKLAMA
+   </h4>
+
+   <div>
+    ${esc(item.desc||'—')}
+   </div>
+
+  </div>
+
+  <div class="workbox">
+
+   <h4>
+    KAYNAK
+   </h4>
+
+   <div>
+    ${esc(item.source||'—')}
+   </div>
+
+  </div>
+
+  ${
+   edit &&
+   !DEFAULT_GENERAL_LIBRARY.some(
+    x=>x.id===item.id
+   )
+   ?
+   `
+   <div class="modal-actions">
+
+    <button
+     class="btn"
+     onclick="
+      closeModal();
+      editGeneralLibraryItem(
+       '${esc(item.id)}'
+      );
+     ">
+
+     ✏ DÜZENLE
+
+    </button>
+
+    <button
+     class="btn bad"
+     onclick="
+      closeModal();
+      deleteGeneralLibraryItem(
+       '${esc(item.id)}'
+      );
+     ">
+
+     🗑 SİL
+
+    </button>
+
+   </div>
+   `
+   :
+   ''
+  }
+
+ `);
+
+}
+
+function newGeneralLibraryItem(){
+
+ if(!edit){
+
+  requestAdmin();
+
+  return;
+
+ }
+
+ touchAdminSession();
+
+ openModal(`
+
+  <h2>
+   + GENEL TEKNİK BİLGİ
+  </h2>
+
+  <div class="grid2">
+
+   ${input(
+    'Kısa Kod',
+    'gl_code'
+   )}
+
+   ${input(
+    'Başlık',
+    'gl_name'
+   )}
+
+   ${input(
+    'Kaynak',
+    'gl_source',
+    'Kullanıcı kaydı'
+   )}
+
+  </div>
+
+  <div
+   class="field"
+   style="margin-top:10px">
+
+   <label>
+    Kısa Açıklama
+   </label>
+
+   <textarea id="gl_desc"></textarea>
+
+  </div>
+
+  <div
+   class="field"
+   style="margin-top:10px">
+
+   <label>
+    Teknik Bilgi
+   </label>
+
+   <textarea id="gl_body"></textarea>
+
+  </div>
+
+  <div class="modal-actions">
+
+   <button
+    class="btn"
+    onclick="closeModal()">
+
+    İPTAL
+
+   </button>
+
+   <button
+    class="btn ok"
+    onclick="
+     saveGeneralLibraryItem(false)
+    ">
+
+    KAYDET
+
+   </button>
+
+  </div>
+
+ `);
+
+}
+
+function editGeneralLibraryItem(
+ id
+){
+
+ if(!edit){
+
+  requestAdmin();
+
+  return;
+
+ }
+
+ touchAdminSession();
+
+ const item=
+  generalLibrary().find(
+   x=>String(x.id)===String(id)
+  );
+
+ if(!item)
+  return;
+
+ openModal(`
+
+  <h2>
+   ✏ TEKNİK BİLGİ DÜZENLE
+  </h2>
+
+  <input
+   id="gl_id"
+   type="hidden"
+   value="${esc(item.id)}"
+  >
+
+  <div class="grid2">
+
+   ${input(
+    'Kısa Kod',
+    'gl_code',
+    item.code
+   )}
+
+   ${input(
+    'Başlık',
+    'gl_name',
+    item.name
+   )}
+
+   ${input(
+    'Kaynak',
+    'gl_source',
+    item.source
+   )}
+
+  </div>
+
+  <div
+   class="field"
+   style="margin-top:10px">
+
+   <label>
+    Kısa Açıklama
+   </label>
+
+   <textarea id="gl_desc">${esc(item.desc||'')}</textarea>
+
+  </div>
+
+  <div
+   class="field"
+   style="margin-top:10px">
+
+   <label>
+    Teknik Bilgi
+   </label>
+
+   <textarea id="gl_body">${esc(item.body||'')}</textarea>
+
+  </div>
+
+  <div class="modal-actions">
+
+   <button
+    class="btn"
+    onclick="closeModal()">
+
+    İPTAL
+
+   </button>
+
+   <button
+    class="btn ok"
+    onclick="
+     saveGeneralLibraryItem(true)
+    ">
+
+    DEĞİŞİKLİKLERİ KAYDET
+
+   </button>
+
+  </div>
+
+ `);
+
+}
+
+function saveGeneralLibraryItem(
+ isEdit
+){
+
+ if(!edit){
+
+  requestAdmin();
+
+  return;
+
+ }
+
+ touchAdminSession();
+
+ const code=
+  val('gl_code').trim();
+
+ const name=
+  val('gl_name').trim();
+
+ const desc=
+  val('gl_desc').trim();
+
+ const body=
+  val('gl_body').trim();
+
+ const source=
+  val('gl_source').trim();
+
+ if(!code||!name){
+
+  toast(
+   'Kod ve başlık boş bırakılamaz.'
+  );
+
+  return;
+
+ }
+
+ if(isEdit){
+
+  const id=
+   val('gl_id');
+
+  const idx=
+   customGeneralLibrary.findIndex(
+    x=>String(x.id)===String(id)
+   );
+
+  if(idx<0){
+
+   toast(
+    'Bu kayıt düzenlenemedi.'
+   );
+
+   return;
+
+  }
+
+  customGeneralLibrary[idx]={
+
+   ...customGeneralLibrary[idx],
+
+   code,
+   name,
+   desc,
+   body,
+   source
+
+  };
+
+ }else{
+
+  customGeneralLibrary.push({
+
+   id:
+    'custom_'+
+    Date.now()+
+    '_'+
+    Math.random()
+     .toString(36)
+     .slice(2,8),
+
+   code,
+   name,
+   desc,
+   body,
+   source
+
+  });
+
+ }
+
+ saveLocal(
+  LOCAL_GENERAL_LIBRARY_KEY,
+  customGeneralLibrary
+ );
+
+ closeModal();
+
+ home();
+
+ toast(
+  isEdit
+  ?
+  'Teknik bilgi güncellendi.'
+  :
+  'Yeni teknik bilgi eklendi.'
+ );
+
+}
+
+function deleteGeneralLibraryItem(
+ id
+){
+
+ if(!edit){
+
+  requestAdmin();
+
+  return;
+
+ }
+
+ touchAdminSession();
+
+ if(!confirm(
+  'Bu genel teknik bilgi silinsin mi?'
+ ))
+  return;
+
+ customGeneralLibrary=
+  customGeneralLibrary.filter(
+   x=>String(x.id)!==String(id)
+  );
+
+ saveLocal(
+  LOCAL_GENERAL_LIBRARY_KEY,
+  customGeneralLibrary
+ );
+
+ home();
+
+ toast(
+  'Teknik bilgi silindi.'
+ );
 
 }
 
@@ -2879,6 +4023,13 @@ async function openStation(
   h:h.data||[],
   w:w.data||[],
   tp:tp.data||[],
+
+  detail:
+   getTerfiDetail(id),
+
+  location:
+   getLocation(id),
+
   ssr:{
    level:'',
    low:'',
@@ -3361,6 +4512,429 @@ function input(
 
 
 /* =========================================================
+   SELECT HELPER
+========================================================= */
+
+function selectField(
+ label,
+ id,
+ value,
+ options
+){
+
+ return `
+
+ <div class="field">
+
+  <label>
+   ${esc(label)}
+  </label>
+
+  <select id="${id}">
+
+   <option value="">
+    Seçilmedi
+   </option>
+
+   ${
+    options.map(
+     x=>`
+
+     <option
+      value="${esc(x)}"
+      ${String(value||'')===String(x)?'selected':''}>
+
+      ${esc(x)}
+
+     </option>
+
+     `
+    ).join('')
+   }
+
+  </select>
+
+ </div>
+
+ `;
+
+}
+
+
+/* =========================================================
+   KONUM
+========================================================= */
+
+function locationBody(){
+
+ const loc=
+  current.location||
+  getLocation(current.s.id);
+
+ if(!loc){
+
+  return `
+
+  <div class="location-card">
+
+   <div class="section-title">
+    📍 TERFİ KONUMU
+   </div>
+
+   <div class="section-sub">
+
+    Bu terfinin bulunduğun konumunu GPS ile
+    alıp kaydet. Konum kaydedildikten sonra
+    doğrudan haritaya gidebilirsin.
+
+   </div>
+
+   <div
+    class="location-actions"
+    style="margin-top:10px">
+
+    ${
+     edit
+     ?
+     `
+     <button
+      class="btn ok"
+      onclick="requestLocation()">
+
+      📍 BULUNDUĞUM KONUMU AL
+
+     </button>
+     `
+     :
+     `
+     <span class="badge warn">
+      Yönetici modu olmadan konum kaydedilemez.
+     </span>
+     `
+    }
+
+   </div>
+
+  </div>
+
+  `;
+
+ }
+
+ return `
+
+ <div class="location-card">
+
+  <div class="location-main">
+
+   <div>
+
+    <div class="section-title">
+     📍 KAYITLI TERFİ KONUMU
+    </div>
+
+    <div class="location-coords">
+
+     ${Number(loc.lat).toFixed(6)}
+     ,
+     ${Number(loc.lng).toFixed(6)}
+
+    </div>
+
+    <div class="location-meta">
+
+     Doğruluk:
+     ±${Math.round(
+      Number(loc.accuracy||0)
+     )} m
+
+     ·
+
+     Kayıt:
+     ${esc(
+      loc.date||'—'
+     )}
+
+    </div>
+
+   </div>
+
+   <div class="location-actions">
+
+    <button
+     class="btn primary"
+     onclick="openGoogleMaps()">
+
+     🗺️ KONUMA GİT
+
+    </button>
+
+    <button
+     class="btn"
+     onclick="openAppleMaps()">
+
+     🍎 APPLE MAPS
+
+    </button>
+
+    ${
+     edit
+     ?
+     `
+     <button
+      class="btn ok"
+      onclick="requestLocation()">
+
+      📍 KONUMU YENİLE
+
+     </button>
+
+     <button
+      class="btn bad"
+      onclick="deleteLocation()">
+
+      🗑 KONUMU SİL
+
+     </button>
+     `
+     :
+     ''
+    }
+
+   </div>
+
+  </div>
+
+ </div>
+
+ `;
+
+}
+
+function requestLocation(){
+
+ if(!edit){
+
+  requestAdmin();
+
+  return;
+
+ }
+
+ touchAdminSession();
+
+ if(!navigator.geolocation){
+
+  toast(
+   'Bu cihazda GPS konumu desteklenmiyor.'
+  );
+
+  return;
+
+ }
+
+ toast(
+  'Konum alınıyor...'
+ );
+
+ navigator.geolocation.getCurrentPosition(
+
+  position=>{
+
+   const lat=
+    Number(
+     position.coords.latitude
+    );
+
+   const lng=
+    Number(
+     position.coords.longitude
+    );
+
+   const accuracy=
+    Number(
+     position.coords.accuracy||0
+    );
+
+   const loc={
+
+    lat,
+    lng,
+    accuracy,
+
+    date:
+     now(),
+
+    iso:
+     new Date().toISOString()
+
+   };
+
+   terfiLocations[
+    current.s.id
+   ]=
+    loc;
+
+   saveLocal(
+    LOCAL_LOCATION_KEY,
+    terfiLocations
+   );
+
+   current.location=
+    loc;
+
+   recordHistory(
+    'KONUM KAYDEDİLDİ',
+    `${lat.toFixed(6)}, ${lng.toFixed(6)} · ±${Math.round(accuracy)} m`
+   );
+
+   render();
+
+   toast(
+    'Terfi konumu kaydedildi.'
+   );
+
+  },
+
+  error=>{
+
+   let message=
+    'Konum alınamadı.';
+
+   if(error?.code===1){
+
+    message=
+     'Konum izni verilmedi. Safari/Chrome konum iznini aç.';
+
+   }
+
+   if(error?.code===2){
+
+    message=
+     'Konum bilgisi alınamadı. GPS/Wi-Fi konumunu kontrol et.';
+
+   }
+
+   if(error?.code===3){
+
+    message=
+     'Konum alma zaman aşımına uğradı. Tekrar dene.';
+
+   }
+
+   toast(
+    message
+   );
+
+  },
+
+  {
+   enableHighAccuracy:true,
+   timeout:15000,
+   maximumAge:0
+  }
+
+ );
+
+}
+
+function openGoogleMaps(){
+
+ const loc=
+  current?.location||
+  getLocation(
+   current?.s?.id
+  );
+
+ if(!loc)
+  return;
+
+ const url=
+  'https://www.google.com/maps/search/?api=1&query='+
+  encodeURIComponent(
+   `${loc.lat},${loc.lng}`
+  );
+
+ window.open(
+  url,
+  '_blank'
+ );
+
+}
+
+function openAppleMaps(){
+
+ const loc=
+  current?.location||
+  getLocation(
+   current?.s?.id
+  );
+
+ if(!loc)
+  return;
+
+ const url=
+  'https://maps.apple.com/?ll='+
+  encodeURIComponent(
+   `${loc.lat},${loc.lng}`
+  )+
+  '&q='+
+  encodeURIComponent(
+   current?.s?.ad||
+   'MESKİ Terfi'
+  );
+
+ window.open(
+  url,
+  '_blank'
+ );
+
+}
+
+function deleteLocation(){
+
+ if(!edit){
+
+  requestAdmin();
+
+  return;
+
+ }
+
+ touchAdminSession();
+
+ if(!confirm(
+  'Bu terfinin kayıtlı konumu silinsin mi?'
+ ))
+  return;
+
+ delete terfiLocations[
+  current.s.id
+ ];
+
+ saveLocal(
+  LOCAL_LOCATION_KEY,
+  terfiLocations
+ );
+
+ current.location=
+  null;
+
+ recordHistory(
+  'TERFİ KONUMU SİLİNDİ',
+  ''
+ );
+
+ render();
+
+ toast(
+  'Konum kaydı silindi.'
+ );
+
+}
+
+
+/* =========================================================
    TERFİ
 ========================================================= */
 
@@ -3368,6 +4942,10 @@ function stationBody(){
 
  const s=
   current.s;
+
+ const d=
+  current.detail||
+  getTerfiDetail(s.id);
 
  return `
 
@@ -3436,6 +5014,142 @@ function stationBody(){
  <div class="card">
 
   <div class="section-title">
+   POMPA / SİSTEM TİPİ
+  </div>
+
+  <div class="section-sub">
+
+   Fiziksel pompa tipini ve sistemin nasıl
+   çalıştığını ayrı ayrı belirleyebilirsin.
+   Böylece örneğin “Dalgıç + Hidrofor”
+   veya “Dik Milli + Depoya Basma” şeklinde
+   net kayıt tutulur.
+
+  </div>
+
+  <div
+   class="grid3"
+   style="margin-top:12px">
+
+   ${selectField(
+    'Pompa Tipi',
+    's_pompa_tipi',
+    d.pompa_tipi,
+    [
+     'Dalgıç',
+     'Dik Milli',
+     'Yatay',
+     'Hidrofor',
+     'Diğer'
+    ]
+   )}
+
+   ${selectField(
+    'Sistem Çalışma Şekli',
+    's_calisma_sekli',
+    d.calisma_sekli,
+    [
+     'Hidrofor',
+     'Depoya Basma',
+     'Şebekeye Basma',
+     'Terfi Hattı',
+     'Diğer'
+    ]
+   )}
+
+   ${input(
+    'Emiş / Kaynak',
+    's_emis',
+    d.emiş_kaynagi||''
+   )}
+
+   ${input(
+    'Basma Noktası',
+    's_basma',
+    d.basma_noktasi||''
+   )}
+
+  </div>
+
+  <div
+   class="field"
+   style="margin-top:10px">
+
+   <label>
+    Sistem Açıklaması
+   </label>
+
+   <textarea id="s_sistem_aciklama">${esc(
+    d.sistem_aciklama||''
+   )}</textarea>
+
+  </div>
+
+  <div
+   class="detail-banner"
+   style="margin-top:10px">
+
+   <div class="tag-grid">
+
+    ${
+     d.pompa_tipi
+     ?
+     `
+     <span class="tag active">
+      ⚙ ${esc(d.pompa_tipi)}
+     </span>
+     `
+     :
+     ''
+    }
+
+    ${
+     d.calisma_sekli
+     ?
+     `
+     <span class="tag active">
+      💧 ${esc(d.calisma_sekli)}
+     </span>
+     `
+     :
+     ''
+    }
+
+    ${
+     d.emiş_kaynagi
+     ?
+     `
+     <span class="tag">
+      ⬅ ${esc(d.emiş_kaynagi)}
+     </span>
+     `
+     :
+     ''
+    }
+
+    ${
+     d.basma_noktasi
+     ?
+     `
+     <span class="tag">
+      ➜ ${esc(d.basma_noktasi)}
+     </span>
+     `
+     :
+     ''
+    }
+
+   </div>
+
+  </div>
+
+ </div>
+
+ ${locationBody()}
+
+ <div class="card">
+
+  <div class="section-title">
    TERFİ ÖZETİ
   </div>
 
@@ -3477,6 +5191,20 @@ function stationBody(){
      ${current.w.length}
     </div>
     <div class="stat-unit">kayıt</div>
+   </div>
+
+   <div class="stat">
+    <div class="stat-label">Konum</div>
+    <div class="stat-value">
+     ${
+      current.location
+      ?
+      'VAR'
+      :
+      'YOK'
+     }
+    </div>
+    <div class="stat-unit">GPS</div>
    </div>
 
   </div>
@@ -5619,6 +7347,9 @@ function hmiBody(){
   rec?.degerler||
   {};
 
+ const page=
+  HMI[hmiPage-1];
+
  return `
 
  <div class="card hmi-shell">
@@ -5631,7 +7362,8 @@ function hmiBody(){
 
    Weintek HMI'nin 5 ekranı
    bağımsız olarak kayıt edilir.
-   PDF tüm 5 sayfayı alır.
+   Fotoğraflardaki başlık ve alan
+   yerleşimi korunmuştur.
 
   </div>
 
@@ -5641,7 +7373,7 @@ function hmiBody(){
 
    ${
     HMI.map(
-     (_,i)=>`
+     (x,i)=>`
 
      <button
       class="
@@ -5653,7 +7385,8 @@ function hmiBody(){
        render();
       ">
 
-      SAYFA ${i+1}
+      ${i+1} ·
+      ${esc(x.title)}
 
      </button>
 
@@ -5666,7 +7399,9 @@ function hmiBody(){
   <div style="margin-top:10px">
 
    <h3>
-    HMI SAYFA ${hmiPage} / 5
+    HMI ${hmiPage} / ${HMI.length}
+    ·
+    ${esc(page.title)}
    </h3>
 
   </div>
@@ -5674,31 +7409,60 @@ function hmiBody(){
   <div class="hmi-fields">
 
    ${
-    HMI[hmiPage-1]
-     .map(
-      (label,i)=>`
+    page.columns.map(
+     col=>`
 
-      <div class="hmi-field">
+     <div class="hmi-column">
 
-       <label>
-        ${esc(label)}
-       </label>
-
-       <input
-        id="hmi_${hmiPage}_${i}"
-        value="${esc(
-         values[i]??''
-        )}"
-        inputmode="decimal"
-       >
-
+      <div class="hmi-column-title">
+       ${esc(col.title)}
       </div>
 
-      `
-     ).join('')
+      ${
+       col.indexes.map(
+        i=>`
+
+        <div class="hmi-field">
+
+         <label>
+          ${esc(
+           page.labels[i]
+          )}
+         </label>
+
+         <input
+          id="hmi_${hmiPage}_${i}"
+          value="${esc(
+           values[i]??''
+          )}"
+          inputmode="decimal"
+         >
+
+        </div>
+
+        `
+       ).join('')
+      }
+
+     </div>
+
+     `
+    ).join('')
    }
 
   </div>
+
+  ${
+   page.note
+   ?
+   `
+   <div class="hmi-layout-note">
+    ${esc(page.note)}
+   </div>
+   `
+   :
+   ''
+  }
 
  </div>
 
@@ -8117,26 +9881,6 @@ function referenceBody(){
    <div class="library-card">
 
     <div class="library-code">
-     İZOLASYON
-    </div>
-
-    <div class="library-name">
-     MΩ / GΩ
-    </div>
-
-    <div class="library-desc">
-
-     Tek anlık değerin yanı sıra
-     ölçümün zamana bağlı davranışı
-     da değerlendirilir.
-
-    </div>
-
-   </div>
-
-   <div class="library-card">
-
-    <div class="library-code">
      PID
     </div>
 
@@ -8167,8 +9911,8 @@ function referenceBody(){
     <div class="library-desc">
 
      Weintek ekranları ayrı ayrı
-     kaydedilir; PDF'de beş sayfanın
-     tamamı bulunur.
+     kaydedilir; fotoğraflardaki
+     sıraya göre düzenlenmiştir.
 
     </div>
 
@@ -8197,17 +9941,38 @@ function referenceBody(){
    <div class="library-card">
 
     <div class="library-code">
-     BOX
+     SİSTEM
     </div>
 
     <div class="library-name">
-     Kablo Kimliği
+     Tip / Çalışma Şekli
     </div>
 
     <div class="library-desc">
 
-     Motor U/V/W → BOX → Sürücü
-     bağlantısı ve kablo renkleri.
+     Dalgıç, dik milli, yatay,
+     hidrofor ve depoya/şebekeye
+     basma kombinasyonlarını belirle.
+
+    </div>
+
+   </div>
+
+   <div class="library-card">
+
+    <div class="library-code">
+     KONUM
+    </div>
+
+    <div class="library-name">
+     GPS Terfi Konumu
+    </div>
+
+    <div class="library-desc">
+
+     Terfide GPS koordinatını kaydet,
+     ardından harita üzerinden doğrudan
+     tesise git.
 
     </div>
 
@@ -8895,6 +10660,43 @@ async function saveActive(){
    if(r.error)
     throw r.error;
 
+   const detail={
+
+    pompa_tipi:
+     val(
+      's_pompa_tipi'
+     ),
+
+    calisma_sekli:
+     val(
+      's_calisma_sekli'
+     ),
+
+    emiş_kaynagi:
+     val(
+      's_emis'
+     ),
+
+    basma_noktasi:
+     val(
+      's_basma'
+     ),
+
+    sistem_aciklama:
+     val(
+      's_sistem_aciklama'
+     )
+
+   };
+
+   saveTerfiDetail(
+    current.s.id,
+    detail
+   );
+
+   current.detail=
+    detail;
+
   }
 
 
@@ -9195,7 +10997,7 @@ async function saveActive(){
         num(
          val(
           `d_${d.id}_v`
-         )
+        )
         ),
 
        motor_id:
@@ -9226,18 +11028,23 @@ async function saveActive(){
   if(tab==='hmi'){
 
    for(
-    let page=1;
-    page<=5;
-    page++
+    let pageNo=1;
+    pageNo<=HMI.length;
+    pageNo++
    ){
+
+    const page=
+     HMI[
+      pageNo-1
+     ];
 
     const old=
      current.h.find(
-      x=>x.ekran_no===page
+      x=>x.ekran_no===pageNo
      );
 
     if(
-     page===hmiPage||
+     pageNo===hmiPage||
      !old
     ){
 
@@ -9245,16 +11052,14 @@ async function saveActive(){
       old?.degerler||
       {};
 
-     if(page===hmiPage){
+     if(pageNo===hmiPage){
 
-      HMI[
-       page-1
-      ].forEach(
+      page.labels.forEach(
        (_,i)=>{
 
         values[i]=
          val(
-          `hmi_${page}_${i}`
+          `hmi_${pageNo}_${i}`
          );
 
        }
@@ -9296,7 +11101,7 @@ async function saveActive(){
           current.s.id,
 
          ekran_no:
-          page,
+          pageNo,
 
          degerler:
           values
@@ -9870,6 +11675,11 @@ async function newStation(){
 
  }
 
+ saveTerfiDetail(
+  r.data.id,
+  stationDetailDefaults()
+ );
+
  current={
 
   s:r.data,
@@ -9879,6 +11689,13 @@ async function newStation(){
   h:[],
   w:[],
   tp:[],
+
+  detail:
+   stationDetailDefaults(),
+
+  location:
+   null,
+
   ssr:{
    level:'',
    low:'',
@@ -10145,6 +11962,10 @@ async function deleteTerfi(){
 
   delete localPhotos[id];
 
+  delete terfiLocations[id];
+
+  delete terfiDetails[id];
+
   changeHistory=
    changeHistory.filter(
     x=>
@@ -10162,6 +11983,16 @@ async function deleteTerfi(){
   saveLocal(
    LOCAL_PHOTO_KEY,
    localPhotos
+  );
+
+  saveLocal(
+   LOCAL_LOCATION_KEY,
+   terfiLocations
+  );
+
+  saveLocal(
+   LOCAL_TERFI_DETAIL_KEY,
+   terfiDetails
   );
 
   saveLocal(
@@ -10333,6 +12164,18 @@ function reportHTML(){
  const s=
   current.s;
 
+ const detail=
+  current.detail||
+  getTerfiDetail(
+   s.id
+  );
+
+ const loc=
+  current.location||
+  getLocation(
+   s.id
+  );
+
  const ssr=
   localJSON(
    LOCAL_SSR_KEY,
@@ -10449,6 +12292,40 @@ function reportHTML(){
       ${pc(
        'Açıklama',
        s.aciklama
+      )}
+
+      ${pc(
+       'Pompa Tipi',
+       detail.pompa_tipi
+      )}
+
+      ${pc(
+       'Çalışma Şekli',
+       detail.calisma_sekli
+      )}
+
+      ${pc(
+       'Emiş / Kaynak',
+       detail.emiş_kaynagi
+      )}
+
+      ${pc(
+       'Basma Noktası',
+       detail.basma_noktasi
+      )}
+
+      ${pc(
+       'Sistem Açıklaması',
+       detail.sistem_aciklama
+      )}
+
+      ${pc(
+       'GPS',
+       loc
+       ?
+       `${Number(loc.lat).toFixed(6)}, ${Number(loc.lng).toFixed(6)}`
+       :
+       'Kayıt yok'
       )}
 
      </div>
@@ -10827,12 +12704,15 @@ function reportHTML(){
      </h2>
 
      ${
-      [1,2,3,4,5].map(
-       page=>{
+      HMI.map(
+       (page,pageIndex)=>{
+
+        const pageNo=
+         pageIndex+1;
 
         const r=
          current.h.find(
-          x=>x.ekran_no===page
+          x=>x.ekran_no===pageNo
          );
 
         const v=
@@ -10844,13 +12724,15 @@ function reportHTML(){
         <div class="print-sec">
 
          <h2>
-          HMI ${page} / 5
+          HMI ${pageNo} / ${HMI.length}
+          ·
+          ${esc(page.title)}
          </h2>
 
          <div class="print-grid">
 
           ${
-           HMI[page-1]
+           page.labels
             .map(
              (label,i)=>
               pc(
@@ -10869,6 +12751,50 @@ function reportHTML(){
        }
       ).join('')
      }
+
+    </div>
+
+    <div class="print-sec">
+
+     <h2>
+      KONUM
+     </h2>
+
+     <div class="print-grid">
+
+      ${pc(
+       'Enlem',
+       loc
+       ?
+       Number(loc.lat).toFixed(6)
+       :
+       ''
+      )}
+
+      ${pc(
+       'Boylam',
+       loc
+       ?
+       Number(loc.lng).toFixed(6)
+       :
+       ''
+      )}
+
+      ${pc(
+       'Doğruluk',
+       loc
+       ?
+       `±${Math.round(Number(loc.accuracy||0))} m`
+       :
+       ''
+      )}
+
+      ${pc(
+       'Kayıt',
+       loc?.date||''
+      )}
+
+     </div>
 
     </div>
 
@@ -11084,6 +13010,18 @@ function exportCSV(){
  if(edit)
   touchAdminSession();
 
+ const detail=
+  current.detail||
+  getTerfiDetail(
+   current.s.id
+  );
+
+ const loc=
+  current.location||
+  getLocation(
+   current.s.id
+  );
+
  const rows=[
 
   [
@@ -11112,6 +13050,48 @@ function exportCSV(){
   [
    'Adres',
    current.s.adres||
+   ''
+  ],
+
+  [
+   'Pompa Tipi',
+   detail.pompa_tipi||
+   ''
+  ],
+
+  [
+   'Çalışma Şekli',
+   detail.calisma_sekli||
+   ''
+  ],
+
+  [
+   'Emiş / Kaynak',
+   detail.emiş_kaynagi||
+   ''
+  ],
+
+  [
+   'Basma Noktası',
+   detail.basma_noktasi||
+   ''
+  ],
+
+  [
+   'GPS Enlem',
+   loc?.lat||
+   ''
+  ],
+
+  [
+   'GPS Boylam',
+   loc?.lng||
+   ''
+  ],
+
+  [
+   'GPS Doğruluk',
+   loc?.accuracy||
    ''
   ],
 
@@ -11292,40 +13272,40 @@ function exportCSV(){
   'HMI SAYFALARI'
  ]);
 
- for(
-  let page=1;
-  page<=5;
-  page++
- ){
+ HMI.forEach(
+  (page,pageIndex)=>{
 
-  const r=
-   current.h.find(
-    x=>
-     x.ekran_no===
-     page
+   const pageNo=
+    pageIndex+1;
+
+   const r=
+    current.h.find(
+     x=>
+      x.ekran_no===
+      pageNo
+    );
+
+   const values=
+    r?.degerler||
+    {};
+
+   page.labels.forEach(
+    (label,i)=>{
+
+     rows.push([
+
+      `HMI ${pageNo}`,
+      page.title,
+      label,
+      values[i]??''
+
+     ]);
+
+    }
    );
 
-  const values=
-   r?.degerler||
-   {};
-
-  HMI[
-   page-1
-  ].forEach(
-   (label,i)=>{
-
-    rows.push([
-
-     `HMI ${page}`,
-     label,
-     values[i]??''
-
-    ]);
-
-   }
-  );
-
- }
+  }
+ );
 
  rows.push([]);
 
