@@ -774,6 +774,15 @@ h1,h2,h3,h4{
  color:#9fc2d2;
 }
 
+.admin-status{
+ font-size:10px;
+ padding:5px 8px;
+ border-radius:999px;
+ background:#104b39;
+ color:#8bf0bf;
+ display:inline-block;
+}
+
 /* ---------------- PRINT ---------------- */
 
 .print-only{
@@ -1000,8 +1009,9 @@ h1,h2,h3,h4{
 <div class="toast" id="toast"></div>
 
 <script>
+
 /* =========================================================
-   MESKİ TERFİ ARŞİVİM - ANA SÜRÜM
+   MESKİ TERFİ ARŞİVİM
 ========================================================= */
 
 const SUPABASE_URL =
@@ -1015,12 +1025,10 @@ const db = supabase.createClient(
  SUPABASE_KEY
 );
 
-/*
-  NOT:
-  Tarayıcı tarafındaki şifre kontrolü gerçek sunucu güvenliği değildir.
-  Gerçek kullanıcı/yönetici güvenliği için Supabase Auth + RLS gerekir.
-  Bu sürüm mevcut uygulamanın çalışma yapısını bozmadan giriş katmanı sağlar.
-*/
+
+/* =========================================================
+   ŞİFRELER
+========================================================= */
 
 const DEFAULT_SITE_PASSWORD='2468';
 const DEFAULT_ADMIN_PASSWORD='6872';
@@ -1032,6 +1040,17 @@ const LOCAL_FAULT_KEY='meski_fault_library_v10';
 const LOCAL_PARAM_KEY='meski_param_library_v10';
 const LOCAL_HISTORY_KEY='meski_history_v10';
 const LOCAL_PHOTO_KEY='meski_photos_v10';
+const LOCAL_SSR_KEY='meski_ssr_v10';
+
+/*
+  Yönetici oturumu:
+  sessionStorage kullanılır.
+  Aynı tarayıcı sekmesi/oturumu boyunca devam eder.
+  Sekme kapatıldığında gider.
+  Ayrıca 30 dakika işlem yapılmazsa otomatik kilitlenir.
+*/
+const ADMIN_SESSION_KEY='meski_admin_session_v11';
+const ADMIN_IDLE_MS=30*60*1000;
 
 let edit=false;
 let loggedIn=false;
@@ -1040,6 +1059,7 @@ let tab='terfi';
 let hmiPage=1;
 let workMotor=null;
 let subView={};
+let adminTimer=null;
 
 
 /* =========================================================
@@ -1350,6 +1370,7 @@ const DEFAULT_PARAMS=[
 function loadPrefs(){
 
  try{
+
   const x=JSON.parse(
    localStorage.getItem(APP_PREF_KEY)||'{}'
   );
@@ -1392,6 +1413,7 @@ function savePrefs(){
  );
 
  applyPrefs();
+
 }
 
 function applyPrefs(){
@@ -1406,6 +1428,7 @@ function applyPrefs(){
 
  if(prefs.zoom==='large')
   document.body.classList.add('zoom-large');
+
 }
 
 
@@ -1416,12 +1439,18 @@ function applyPrefs(){
 function localJSON(key,fallback){
 
  try{
+
   return JSON.parse(
-   localStorage.getItem(key)||JSON.stringify(fallback)
+   localStorage.getItem(key)||
+   JSON.stringify(fallback)
   );
+
  }catch(e){
+
   return fallback;
+
  }
+
 }
 
 function saveLocal(key,value){
@@ -1430,13 +1459,38 @@ function saveLocal(key,value){
   key,
   JSON.stringify(value)
  );
+
 }
 
-let customFaults=localJSON(LOCAL_FAULT_KEY,[]);
-let customParams=localJSON(LOCAL_PARAM_KEY,[]);
-let changeHistory=localJSON(LOCAL_HISTORY_KEY,[]);
-let localBoxes=localJSON(LOCAL_BOX_KEY,{});
-let localPhotos=localJSON(LOCAL_PHOTO_KEY,{});
+let customFaults=
+ localJSON(
+  LOCAL_FAULT_KEY,
+  []
+ );
+
+let customParams=
+ localJSON(
+  LOCAL_PARAM_KEY,
+  []
+ );
+
+let changeHistory=
+ localJSON(
+  LOCAL_HISTORY_KEY,
+  []
+ );
+
+let localBoxes=
+ localJSON(
+  LOCAL_BOX_KEY,
+  {}
+ );
+
+let localPhotos=
+ localJSON(
+  LOCAL_PHOTO_KEY,
+  {}
+ );
 
 
 /* =========================================================
@@ -1451,24 +1505,34 @@ function esc(v){
   .replaceAll('>','&gt;')
   .replaceAll('"','&quot;')
   .replaceAll("'","&#39;");
+
 }
 
 function val(id){
 
- const e=document.getElementById(id);
+ const e=
+  document.getElementById(id);
 
  return e?e.value:'';
+
 }
 
 function num(v){
 
- if(v===null||v===undefined||v==='')return null;
+ if(
+  v===null||
+  v===undefined||
+  v===''
+ )
+  return null;
 
- const n=Number(
-  String(v).replace(',','.')
- );
+ const n=
+  Number(
+   String(v).replace(',','.')
+  );
 
  return Number.isFinite(n)?n:null;
+
 }
 
 function nowText(){
@@ -1477,9 +1541,15 @@ function nowText(){
 
 }
 
+
+/* =========================================================
+   TOAST
+========================================================= */
+
 function toast(message){
 
- const t=document.getElementById('toast');
+ const t=
+  document.getElementById('toast');
 
  if(!t)return;
 
@@ -1487,34 +1557,63 @@ function toast(message){
 
  t.classList.add('show');
 
- clearTimeout(window.__toast);
-
- window.__toast=setTimeout(
-  ()=>t.classList.remove('show'),
-  2200
+ clearTimeout(
+  window.__toast
  );
+
+ window.__toast=
+  setTimeout(
+   ()=>t.classList.remove('show'),
+   2200
+  );
 
 }
 
+
+/* =========================================================
+   GEÇMİŞ
+========================================================= */
+
 function recordHistory(action,detail){
 
- if(!current?.s?.id)return;
+ if(!current?.s?.id)
+  return;
 
  changeHistory.unshift({
-  id:Date.now()+Math.random(),
-  terfi_id:current.s.id,
+
+  id:
+   Date.now()+
+   Math.random(),
+
+  terfi_id:
+   current.s.id,
+
   action,
+
   detail,
-  date:new Date().toISOString()
+
+  date:
+   new Date().toISOString()
+
  });
 
- changeHistory=changeHistory.slice(0,500);
+ changeHistory=
+  changeHistory.slice(
+   0,
+   500
+  );
 
  saveLocal(
   LOCAL_HISTORY_KEY,
   changeHistory
  );
+
 }
+
+
+/* =========================================================
+   ARIZA / PARAMETRELER
+========================================================= */
 
 function faults(){
 
@@ -1522,6 +1621,7 @@ function faults(){
   ...DEFAULT_FAULTS,
   ...customFaults
  ];
+
 }
 
 function params(){
@@ -1530,7 +1630,317 @@ function params(){
   ...DEFAULT_PARAMS,
   ...customParams
  ];
+
 }
+
+
+/* =========================================================
+   YÖNETİCİ OTURUM SİSTEMİ
+========================================================= */
+
+function getAdminSession(){
+
+ try{
+
+  return JSON.parse(
+   sessionStorage.getItem(
+    ADMIN_SESSION_KEY
+   )||'null'
+  );
+
+ }catch(e){
+
+  return null;
+
+ }
+
+}
+
+function setAdminSession(){
+
+ const session={
+  active:true,
+  lastActivity:Date.now()
+ };
+
+ sessionStorage.setItem(
+  ADMIN_SESSION_KEY,
+  JSON.stringify(session)
+ );
+
+ armAdminTimeout();
+
+}
+
+function touchAdminSession(){
+
+ if(!edit)
+  return;
+
+ const s=
+  getAdminSession();
+
+ if(
+  !s ||
+  !s.active
+ ){
+
+  edit=false;
+
+  return;
+
+ }
+
+ s.lastActivity=
+  Date.now();
+
+ sessionStorage.setItem(
+  ADMIN_SESSION_KEY,
+  JSON.stringify(s)
+ );
+
+ armAdminTimeout();
+
+}
+
+function clearAdminSession(){
+
+ edit=false;
+
+ clearTimeout(
+  adminTimer
+ );
+
+ adminTimer=null;
+
+ try{
+
+  sessionStorage.removeItem(
+   ADMIN_SESSION_KEY
+  );
+
+ }catch(e){}
+
+}
+
+function restoreAdminSession(){
+
+ const s=
+  getAdminSession();
+
+ if(
+  !s ||
+  !s.active
+ ){
+
+  edit=false;
+
+  return false;
+
+ }
+
+ const age=
+  Date.now()-
+  Number(
+   s.lastActivity||0
+  );
+
+ if(age>=ADMIN_IDLE_MS){
+
+  clearAdminSession();
+
+  return false;
+
+ }
+
+ edit=true;
+
+ armAdminTimeout();
+
+ return true;
+
+}
+
+function armAdminTimeout(){
+
+ clearTimeout(
+  adminTimer
+ );
+
+ if(!edit)
+  return;
+
+ const s=
+  getAdminSession();
+
+ if(!s){
+
+  edit=false;
+
+  return;
+
+ }
+
+ const remaining=
+  ADMIN_IDLE_MS-
+  (
+   Date.now()-
+   Number(
+    s.lastActivity||0
+   )
+  );
+
+ if(remaining<=0){
+
+  lockAdminForTimeout();
+
+  return;
+
+ }
+
+ adminTimer=
+  setTimeout(
+   ()=>{
+    checkAdminTimeout();
+   },
+   Math.min(
+    remaining,
+    15000
+   )
+  );
+
+}
+
+function checkAdminTimeout(){
+
+ if(!edit)
+  return;
+
+ const s=
+  getAdminSession();
+
+ if(!s){
+
+  lockAdminForTimeout();
+
+  return;
+
+ }
+
+ const age=
+  Date.now()-
+  Number(
+   s.lastActivity||0
+  );
+
+ if(age>=ADMIN_IDLE_MS){
+
+  lockAdminForTimeout();
+
+ }else{
+
+  armAdminTimeout();
+
+ }
+
+}
+
+function lockAdminForTimeout(){
+
+ clearAdminSession();
+
+ toast(
+  'Yönetici oturumu zaman aşımı nedeniyle kilitlendi.'
+ );
+
+ if(current){
+
+  render();
+
+ }else{
+
+  home();
+
+ }
+
+}
+
+
+/*
+  Kullanıcı gerçekten işlem yaptıkça yönetici oturum saatini
+  yeniliyoruz. Böylece sürekli açık kalmıyor ama çalışırken
+  tekrar şifre istemiyor.
+*/
+
+document.addEventListener(
+ 'click',
+ function(){
+
+  if(edit){
+
+   touchAdminSession();
+
+  }
+
+ },
+ true
+);
+
+document.addEventListener(
+ 'keydown',
+ function(){
+
+  if(edit){
+
+   touchAdminSession();
+
+  }
+
+ },
+ true
+);
+
+document.addEventListener(
+ 'input',
+ function(){
+
+  if(edit){
+
+   touchAdminSession();
+
+  }
+
+ },
+ true
+);
+
+
+/*
+  Sekme başka sayfaya gidip tamamen kapanırsa tarayıcı oturumunun
+  kendisi sessionStorage ile sonlandırılır. Uygulamanın SPA içindeki
+  sekme değişimleri bundan etkilenmez.
+*/
+
+window.addEventListener(
+ 'beforeunload',
+ function(){
+
+  /*
+    sessionStorage zaten sekme yaşam döngüsüne bağlıdır.
+    Burada sadece uygulama dışına çıkışta yerel admin işaretini
+    temizliyoruz.
+  */
+
+  try{
+
+   sessionStorage.removeItem(
+    ADMIN_SESSION_KEY
+   );
+
+  }catch(e){}
+
+ }
+);
 
 
 /* =========================================================
@@ -1539,8 +1949,9 @@ function params(){
 
 function showLogin(){
 
+ clearAdminSession();
+
  loggedIn=false;
- edit=false;
 
  app.innerHTML=`
 
@@ -1548,16 +1959,22 @@ function showLogin(){
 
   <div class="login-card">
 
-   <div class="login-logo">M</div>
+   <div class="login-logo">
+    M
+   </div>
 
    <div class="login-title">
     ${esc(prefs.labels.title)}
    </div>
 
    <div class="login-sub">
+
     ${esc(prefs.labels.subtitle)}
+
     <br>
+
     Yetkisiz erişimi önlemek için giriş şifresi gereklidir.
+
    </div>
 
    <div class="field">
@@ -1575,7 +1992,8 @@ function showLogin(){
      maxlength="12"
      autocomplete="off"
      onkeydown="
-      if(event.key==='Enter')loginSite();
+      if(event.key==='Enter')
+       loginSite();
      "
     >
 
@@ -1583,7 +2001,10 @@ function showLogin(){
 
    <button
     class="btn ok big"
-    style="width:100%;margin:10px 0 0"
+    style="
+     width:100%;
+     margin:10px 0 0
+    "
     onclick="loginSite()">
 
     GİRİŞ YAP
@@ -1605,17 +2026,24 @@ function showLogin(){
   </div>
 
  </div>
+
  `;
 
  setTimeout(
-  ()=>document.getElementById('sitePassword')?.focus(),
+  ()=>{
+   document
+    .getElementById('sitePassword')
+    ?.focus();
+  },
   80
  );
+
 }
 
 function loginSite(){
 
- const p=val('sitePassword');
+ const p=
+  val('sitePassword');
 
  if(p===prefs.sitePassword){
 
@@ -1625,21 +2053,30 @@ function loginSite(){
 
  }else{
 
-  toast('Giriş şifresi hatalı.');
+  toast(
+   'Giriş şifresi hatalı.'
+  );
 
-  const e=document.getElementById('sitePassword');
+  const e=
+   document.getElementById(
+    'sitePassword'
+   );
 
   if(e){
+
    e.value='';
+
    e.focus();
+
   }
 
  }
+
 }
 
 
 /* =========================================================
-   HOME
+   ANA SAYFA
 ========================================================= */
 
 async function home(){
@@ -1649,17 +2086,30 @@ async function home(){
   showLogin();
 
   return;
+
  }
 
  current=null;
- edit=false;
 
- document.getElementById('saveBar').classList.add('hidden');
+ /*
+   Ana sayfaya dönüldüğünde yönetici modu
+   devam edebilir. Kullanıcı isterse kilitleyebilir.
+ */
 
- const r=await db
-  .from('terfiler')
-  .select('*')
-  .order('created_at',{ascending:false});
+ document.getElementById(
+  'saveBar'
+ )?.classList.add(
+  'hidden'
+ );
+
+ const r=
+  await db
+   .from('terfiler')
+   .select('*')
+   .order(
+    'created_at',
+    {ascending:false}
+   );
 
  if(r.error){
 
@@ -1667,14 +2117,20 @@ async function home(){
 
    <div class="card">
 
-    <h2>Supabase bağlantısı kurulamadı</h2>
+    <h2>
+     Supabase bağlantısı kurulamadı
+    </h2>
 
     <p class="muted">
      ${esc(r.error.message)}
     </p>
 
-    <button class="btn" onclick="home()">
+    <button
+     class="btn"
+     onclick="home()">
+
      TEKRAR DENE
+
     </button>
 
    </div>
@@ -1682,24 +2138,29 @@ async function home(){
   `;
 
   return;
+
  }
 
- const rows=r.data||[];
+ const rows=
+  r.data||[];
 
- const motorCount=await countTable(
-  'motorlar',
-  rows.map(x=>x.id)
- );
+ const motorCount=
+  await countTable(
+   'motorlar',
+   rows.map(x=>x.id)
+  );
 
- const pumpCount=await countTable(
-  'pompalar',
-  rows.map(x=>x.id)
- );
+ const pumpCount=
+  await countTable(
+   'pompalar',
+   rows.map(x=>x.id)
+  );
 
- const driveCount=await countTable(
-  'suruculer',
-  rows.map(x=>x.id)
- );
+ const driveCount=
+  await countTable(
+   'suruculer',
+   rows.map(x=>x.id)
+  );
 
  app.innerHTML=`
 
@@ -1707,7 +2168,9 @@ async function home(){
 
   <div class="top-left">
 
-   <div class="logo">M</div>
+   <div class="logo">
+    M
+   </div>
 
    <div>
 
@@ -1725,7 +2188,7 @@ async function home(){
 
   <div class="top-right">
 
-   <span class="badge">
+   <span class="badge ${edit?'warn':''}">
     ${edit?'Yönetici':'Ziyaretçi'}
    </span>
 
@@ -1733,25 +2196,69 @@ async function home(){
     edit
     ?
     `
-    <button class="btn" onclick="showSettings()">
+    <button
+     class="btn"
+     onclick="showSettings()">
+
      ⚙ AYARLAR
+
     </button>
     `
     :
     ''
    }
 
-   <button class="btn on" onclick="requestAdmin()">
-    ${edit?'🔒 KİLİTLE':'🔐 YÖNETİCİ'}
-   </button>
+   ${
+    edit
+    ?
+    `
+    <button
+     class="btn warn"
+     onclick="requestAdmin()">
 
-   <button class="btn" onclick="logout()">
+     🔒 KİLİTLE
+
+    </button>
+    `
+    :
+    `
+    <button
+     class="btn on"
+     onclick="requestAdmin()">
+
+     🔐 YÖNETİCİ
+
+    </button>
+    `
+   }
+
+   <button
+    class="btn"
+    onclick="logout()">
+
     ÇIKIŞ
+
    </button>
 
   </div>
 
  </div>
+
+ ${
+  edit
+  ?
+  `
+  <div style="margin-top:7px">
+
+   <span class="admin-status">
+    🔓 Yönetici oturumu açık · 30 dk hareketsizlikte otomatik kilit
+   </span>
+
+  </div>
+  `
+  :
+  ''
+ }
 
  <div class="card">
 
@@ -1847,10 +2354,14 @@ async function home(){
 
    <div>
 
-    <h2>TERFİ KAYITLARI</h2>
+    <h2>
+     TERFİ KAYITLARI
+    </h2>
 
     <div class="section-sub">
+
      Terfiyi açarak bütün teknik sekmelere ulaş.
+
     </div>
 
    </div>
@@ -1859,8 +2370,12 @@ async function home(){
     edit
     ?
     `
-    <button class="btn ok" onclick="newStation()">
+    <button
+     class="btn ok"
+     onclick="newStation()">
+
      + YENİ TERFİ
+
     </button>
     `
     :
@@ -1888,26 +2403,38 @@ async function home(){
   </div>
 
   <div id="stations">
+
    ${renderStationMarkup(rows)}
+
   </div>
 
  </div>
+
  `;
 
 }
 
 async function countTable(table,ids){
 
- if(!ids.length)return 0;
+ if(!ids.length)
+  return 0;
 
- const r=await db
-  .from(table)
-  .select('id,terfi_id')
-  .in('terfi_id',ids);
+ const r=
+  await db
+   .from(table)
+   .select('id,terfi_id')
+   .in(
+    'terfi_id',
+    ids
+   );
 
- if(r.error)return 0;
+ if(r.error)
+  return 0;
 
- return (r.data||[]).length;
+ return (
+  r.data||[]
+ ).length;
+
 }
 
 function renderStationMarkup(rows){
@@ -1917,7 +2444,13 @@ function renderStationMarkup(rows){
  <div
   class="station"
   data-search="${esc(
-   `${x.ad||''} ${x.kod||''} ${x.terfi_no||''} ${x.bolge||''} ${x.adres||''}`.toLowerCase()
+   (
+    `${x.ad||''} `+
+    `${x.kod||''} `+
+    `${x.terfi_no||''} `+
+    `${x.bolge||''} `+
+    `${x.adres||''}`
+   ).toLowerCase()
   )}"
   onclick="openStation('${x.id}')">
 
@@ -1926,16 +2459,36 @@ function renderStationMarkup(rows){
    <div>
 
     <div class="station-title">
-     ${esc(x.ad||'İsimsiz Terfi')}
+     ${esc(
+      x.ad||'İsimsiz Terfi'
+     )}
     </div>
 
     <div class="station-meta">
-     ${esc(x.terfi_no||x.kod||'')}
-     ${x.bolge?' · '+esc(x.bolge):''}
+
+     ${esc(
+      x.terfi_no||
+      x.kod||
+      ''
+     )}
+
+     ${
+      x.bolge
+      ?
+      ' · '+esc(x.bolge)
+      :
+      ''
+     }
+
     </div>
 
     <div class="station-meta">
-     ${esc(x.adres||'Adres girilmemiş')}
+
+     ${esc(
+      x.adres||
+      'Adres girilmemiş'
+     )}
+
     </div>
 
    </div>
@@ -1948,27 +2501,36 @@ function renderStationMarkup(rows){
 
  </div>
 
- `).join('') ||
- `<div class="empty">Henüz terfi kaydı yok.</div>`;
+ `).join('')||
+
+ `<div class="empty">
+  Henüz terfi kaydı yok.
+ </div>`;
 
 }
 
 function filterStations(){
 
- const q=(
-  document.getElementById('search')?.value||''
- ).toLowerCase();
+ const q=
+  (
+   document
+    .getElementById('search')
+    ?.value||
+   ''
+  ).toLowerCase();
 
- document.querySelectorAll('.station').forEach(x=>{
+ document
+  .querySelectorAll('.station')
+  .forEach(x=>{
 
-  x.style.display=
-   x.dataset.search.includes(q)
-   ?
-   'block'
-   :
-   'none';
+   x.style.display=
+    x.dataset.search.includes(q)
+    ?
+    'block'
+    :
+    'none';
 
- });
+  });
 
 }
 
@@ -1980,48 +2542,86 @@ function filterStations(){
 async function openStation(id){
 
  const [
-  s,m,p,d,h,w,tp
- ]=await Promise.all([
+  s,
+  m,
+  p,
+  d,
+  h,
+  w,
+  tp
+ ]=
+  await Promise.all([
 
-  db.from('terfiler').select('*').eq('id',id).single(),
+   db
+    .from('terfiler')
+    .select('*')
+    .eq('id',id)
+    .single(),
 
-  db.from('motorlar')
-   .select('*')
-   .eq('terfi_id',id)
-   .order('created_at',{ascending:true}),
+   db
+    .from('motorlar')
+    .select('*')
+    .eq('terfi_id',id)
+    .order(
+     'created_at',
+     {ascending:true}
+    ),
 
-  db.from('pompalar')
-   .select('*')
-   .eq('terfi_id',id)
-   .order('created_at',{ascending:true}),
+   db
+    .from('pompalar')
+    .select('*')
+    .eq('terfi_id',id)
+    .order(
+     'created_at',
+     {ascending:true}
+    ),
 
-  db.from('suruculer')
-   .select('*')
-   .eq('terfi_id',id)
-   .order('created_at',{ascending:true}),
+   db
+    .from('suruculer')
+    .select('*')
+    .eq('terfi_id',id)
+    .order(
+     'created_at',
+     {ascending:true}
+    ),
 
-  db.from('hmi_kayitlari')
-   .select('*')
-   .eq('terfi_id',id)
-   .order('ekran_no',{ascending:true}),
+   db
+    .from('hmi_kayitlari')
+    .select('*')
+    .eq('terfi_id',id)
+    .order(
+     'ekran_no',
+     {ascending:true}
+    ),
 
-  db.from('motor_calisma_kayitlari')
-   .select('*')
-   .eq('terfi_id',id)
-   .order('captured_at',{ascending:false}),
+   db
+    .from('motor_calisma_kayitlari')
+    .select('*')
+    .eq('terfi_id',id)
+    .order(
+     'captured_at',
+     {ascending:false}
+    ),
 
-  db.from('terfi_parametreleri')
-   .select('*')
-   .eq('terfi_id',id)
-   .order('sira',{ascending:true})
+   db
+    .from('terfi_parametreleri')
+    .select('*')
+    .eq('terfi_id',id)
+    .order(
+     'sira',
+     {ascending:true}
+    )
 
- ]);
+  ]);
 
  if(s.error){
 
-  alert(s.error.message);
+  alert(
+   s.error.message
+  );
 
   return;
+
  }
 
  current={
@@ -2034,12 +2634,33 @@ async function openStation(id){
   tp:tp.data||[]
  };
 
+ /*
+   SSR cihaz tarafında saklanıyor.
+ */
+ const ssrMap=
+  localJSON(
+   LOCAL_SSR_KEY,
+   {}
+  );
+
+ current.ssr=
+  ssrMap[id]||{
+   level:'',
+   low:'',
+   high:'',
+   note:''
+  };
+
  tab='terfi';
 
  hmiPage=1;
 
  workMotor=
-  current.m[0]?.id||null;
+  current.m[0]?.id||
+  null;
+
+ if(edit)
+  touchAdminSession();
 
  recordHistory(
   'TERFİ AÇILDI',
@@ -2047,6 +2668,7 @@ async function openStation(id){
  );
 
  render();
+
 }
 
 
@@ -2061,13 +2683,47 @@ function render(){
   home();
 
   return;
+
  }
 
- document.getElementById('saveBar')
-  .classList.toggle(
-   'hidden',
-   !edit
-  );
+ if(edit){
+
+  const session=
+   getAdminSession();
+
+  if(!session){
+
+   edit=false;
+
+  }else{
+
+   const age=
+    Date.now()-
+    Number(
+     session.lastActivity||0
+    );
+
+   if(age>=ADMIN_IDLE_MS){
+
+    clearAdminSession();
+
+    home();
+
+    return;
+
+   }
+
+  }
+
+ }
+
+ document.getElementById(
+  'saveBar'
+ )
+ .classList.toggle(
+  'hidden',
+  !edit
+ );
 
  app.innerHTML=`
 
@@ -2076,15 +2732,34 @@ function render(){
   <div>
 
    <div class="page-title">
-    ${esc(current.s.ad||'Terfi')}
+    ${esc(
+     current.s.ad||
+     'Terfi'
+    )}
    </div>
 
    <div class="page-sub">
-    ${esc(current.s.terfi_no||current.s.kod||'')}
+
+    ${esc(
+     current.s.terfi_no||
+     current.s.kod||
+     ''
+    )}
+
     ·
-    ${esc(current.s.bolge||'Bölge')}
+
+    ${esc(
+     current.s.bolge||
+     'Bölge'
+    )}
+
     ·
-    ${esc(current.s.adres||'Adres')}
+
+    ${esc(
+     current.s.adres||
+     'Adres'
+    )}
+
    </div>
 
   </div>
@@ -2092,101 +2767,209 @@ function render(){
   <div class="top-right">
 
    <span class="badge ${edit?'warn':''}">
-    ${edit?'YÖNETİCİ MODU':'ZİYARETÇİ MODU'}
+    ${edit?
+     'YÖNETİCİ MODU':
+     'ZİYARETÇİ MODU'
+    }
    </span>
 
    ${
     edit
     ?
-    `<button class="btn" onclick="showSettings()">⚙ AYARLAR</button>`
+    `
+    <button
+     class="btn"
+     onclick="showSettings()">
+
+     ⚙ AYARLAR
+
+    </button>
+    `
     :
     ''
    }
 
-   <button class="btn" onclick="requestAdmin()">
-    ${edit?'🔒 KİLİTLE':'🔐 YÖNETİCİ'}
+   <button
+    class="btn ${edit?'warn':'on'}"
+    onclick="requestAdmin()">
+
+    ${edit?
+     '🔒 KİLİTLE':
+     '🔐 YÖNETİCİ'
+    }
+
    </button>
 
   </div>
 
  </div>
 
+ ${
+  edit
+  ?
+  `
+  <div style="margin-top:7px">
+
+   <span class="admin-status">
+
+    🔓 Yönetici oturumu açık
+
+    ·
+
+    30 dk hareketsizlikte otomatik kilitlenir
+
+   </span>
+
+  </div>
+  `
+  :
+  ''
+ }
+
  <div class="tabs">
 
-  <button class="btn ${tab==='terfi'?'on':''}" onclick="setTab('terfi')">
+  <button
+   class="btn ${tab==='terfi'?'on':''}"
+   onclick="setTab('terfi')">
+
    TERFİ
+
   </button>
 
-  <button class="btn ${tab==='ssr'?'on':''}" onclick="setTab('ssr')">
+  <button
+   class="btn ${tab==='ssr'?'on':''}"
+   onclick="setTab('ssr')">
+
    SSR / SEVİYE
+
   </button>
 
-  <button class="btn ${tab==='motor'?'on':''}" onclick="setTab('motor')">
+  <button
+   class="btn ${tab==='motor'?'on':''}"
+   onclick="setTab('motor')">
+
    MOTORLAR
+
   </button>
 
-  <button class="btn ${tab==='surucu'?'on':''}" onclick="setTab('surucu')">
+  <button
+   class="btn ${tab==='surucu'?'on':''}"
+   onclick="setTab('surucu')">
+
    SÜRÜCÜLER
+
   </button>
 
-  <button class="btn ${tab==='box'?'on':''}" onclick="setTab('box')">
+  <button
+   class="btn ${tab==='box'?'on':''}"
+   onclick="setTab('box')">
+
    BOX / KABLO
+
   </button>
 
-  <button class="btn ${tab==='pompa'?'on':''}" onclick="setTab('pompa')">
+  <button
+   class="btn ${tab==='pompa'?'on':''}"
+   onclick="setTab('pompa')">
+
    POMPA
+
   </button>
 
-  <button class="btn ${tab==='calisma'?'on':''}" onclick="setTab('calisma')">
+  <button
+   class="btn ${tab==='calisma'?'on':''}"
+   onclick="setTab('calisma')">
+
    ÇALIŞMA
+
   </button>
 
-  <button class="btn ${tab==='hmi'?'on':''}" onclick="setTab('hmi')">
+  <button
+   class="btn ${tab==='hmi'?'on':''}"
+   onclick="setTab('hmi')">
+
    HMI / PLC
+
   </button>
 
-  <button class="btn ${tab==='parametre'?'on':''}" onclick="setTab('parametre')">
+  <button
+   class="btn ${tab==='parametre'?'on':''}"
+   onclick="setTab('parametre')">
+
    PARAMETRELER
+
   </button>
 
-  <button class="btn ${tab==='fault'?'on':''}" onclick="setTab('fault')">
+  <button
+   class="btn ${tab==='fault'?'on':''}"
+   onclick="setTab('fault')">
+
    ARIZA KÜTÜPHANESİ
+
   </button>
 
-  <button class="btn ${tab==='history'?'on':''}" onclick="setTab('history')">
+  <button
+   class="btn ${tab==='history'?'on':''}"
+   onclick="setTab('history')">
+
    GEÇMİŞ
+
   </button>
 
-  <button class="btn ${tab==='photo'?'on':''}" onclick="setTab('photo')">
+  <button
+   class="btn ${tab==='photo'?'on':''}"
+   onclick="setTab('photo')">
+
    FOTOĞRAFLAR
+
   </button>
 
-  <button class="btn ${tab==='reference'?'on':''}" onclick="setTab('reference')">
+  <button
+   class="btn ${tab==='reference'?'on':''}"
+   onclick="setTab('reference')">
+
    REFERANSLAR
+
   </button>
 
   ${
    edit
    ?
    `
-   <button class="btn bad" onclick="deleteTerfi()">
+   <button
+    class="btn bad"
+    onclick="deleteTerfi()">
+
     🗑 TERFİYİ SİL
+
    </button>
    `
    :
    ''
   }
 
-  <button class="btn ok" onclick="makePDF()">
+  <button
+   class="btn ok"
+   onclick="makePDF()">
+
    📄 PDF
+
   </button>
 
-  <button class="btn" onclick="exportCSV()">
+  <button
+   class="btn"
+   onclick="exportCSV()">
+
    📊 EXCEL/CSV
+
   </button>
 
-  <button class="btn" onclick="home()">
+  <button
+   class="btn"
+   onclick="home()">
+
    ← TERFİLER
+
   </button>
 
  </div>
@@ -2200,6 +2983,8 @@ function render(){
 }
 
 function setTab(x){
+
+ touchAdminSession();
 
  tab=x;
 
@@ -2267,24 +3052,37 @@ function body(){
    INPUT
 ========================================================= */
 
-function input(label,id,value='',type='text'){
+function input(
+ label,
+ id,
+ value='',
+ type='text'
+){
 
  return `
+
  <div class="field">
 
-  <label>${esc(label)}</label>
+  <label>
+   ${esc(label)}
+  </label>
 
   <input
    id="${id}"
    type="${type}"
    value="${esc(value??'')}"
    ${type==='number'
-    ? 'inputmode="decimal"'
-    : ''}
+    ?
+    'inputmode="decimal"'
+    :
+    ''
+   }
   >
 
  </div>
+
  `;
+
 }
 
 
@@ -2308,7 +3106,9 @@ function stationBody(){
    Saha ve tesisin ana kimlik bilgileri.
   </div>
 
-  <div class="row" style="margin-top:12px">
+  <div
+   class="row"
+   style="margin-top:12px">
 
    ${input(
     'Terfi Adı',
@@ -2342,13 +3142,17 @@ function stationBody(){
 
   </div>
 
-  <div class="field" style="margin-top:10px">
+  <div
+   class="field"
+   style="margin-top:10px">
 
-   <label>Açıklama</label>
+   <label>
+    Açıklama
+   </label>
 
-   <textarea id="s_aciklama">${
-    esc(s.aciklama||'')
-   }</textarea>
+   <textarea id="s_aciklama">
+${esc(s.aciklama||'')}
+   </textarea>
 
   </div>
 
@@ -2363,33 +3167,63 @@ function stationBody(){
   <div class="summary">
 
    <div class="stat">
-    <div class="stat-label">Motor</div>
-    <div class="stat-value">${current.m.length}</div>
-    <div class="stat-unit">adet</div>
+    <div class="stat-label">
+     Motor
+    </div>
+    <div class="stat-value">
+     ${current.m.length}
+    </div>
+    <div class="stat-unit">
+     adet
+    </div>
    </div>
 
    <div class="stat">
-    <div class="stat-label">Pompa</div>
-    <div class="stat-value">${current.p.length}</div>
-    <div class="stat-unit">adet</div>
+    <div class="stat-label">
+     Pompa
+    </div>
+    <div class="stat-value">
+     ${current.p.length}
+    </div>
+    <div class="stat-unit">
+     adet
+    </div>
    </div>
 
    <div class="stat">
-    <div class="stat-label">Sürücü</div>
-    <div class="stat-value">${current.d.length}</div>
-    <div class="stat-unit">adet</div>
+    <div class="stat-label">
+     Sürücü
+    </div>
+    <div class="stat-value">
+     ${current.d.length}
+    </div>
+    <div class="stat-unit">
+     adet
+    </div>
    </div>
 
    <div class="stat">
-    <div class="stat-label">HMI</div>
-    <div class="stat-value">5</div>
-    <div class="stat-unit">sayfa</div>
+    <div class="stat-label">
+     HMI
+    </div>
+    <div class="stat-value">
+     5
+    </div>
+    <div class="stat-unit">
+     sayfa
+    </div>
    </div>
 
    <div class="stat">
-    <div class="stat-label">Çalışma</div>
-    <div class="stat-value">${current.w.length}</div>
-    <div class="stat-unit">kayıt</div>
+    <div class="stat-label">
+     Çalışma
+    </div>
+    <div class="stat-value">
+     ${current.w.length}
+    </div>
+    <div class="stat-unit">
+     kayıt
+    </div>
    </div>
 
   </div>
@@ -2406,17 +3240,32 @@ function stationBody(){
 
    <div class="workbox">
     <h4>SSR</h4>
-    <b>${esc(current.ssr?.level||'—')}</b>
+    <b>
+     ${esc(
+      current.ssr?.level||
+      '—'
+     )}
+    </b>
    </div>
 
    <div class="workbox">
     <h4>ALT SEVİYE</h4>
-    <b>${esc(current.ssr?.low||'—')}</b>
+    <b>
+     ${esc(
+      current.ssr?.low||
+      '—'
+     )}
+    </b>
    </div>
 
    <div class="workbox">
     <h4>ÜST SEVİYE</h4>
-    <b>${esc(current.ssr?.high||'—')}</b>
+    <b>
+     ${esc(
+      current.ssr?.high||
+      '—'
+     )}
+    </b>
    </div>
 
   </div>
@@ -2424,6 +3273,7 @@ function stationBody(){
  </div>
 
  `;
+
 }
 
 
@@ -2433,15 +3283,15 @@ function stationBody(){
 
 function ssrBody(){
 
- const s=current.s;
-
  current.ssr ||= {};
 
  return `
 
  <div class="card">
 
-  <h2>SSR / SEVİYE</h2>
+  <h2>
+   SSR / SEVİYE
+  </h2>
 
   <div class="grid3">
 
@@ -2468,19 +3318,24 @@ function ssrBody(){
 
   </div>
 
-  <div class="field" style="margin-top:10px">
+  <div
+   class="field"
+   style="margin-top:10px">
 
-   <label>Seviye Notu</label>
+   <label>
+    Seviye Notu
+   </label>
 
-   <textarea id="ssr_note">${
-    esc(current.ssr.note||'')
-   }</textarea>
+   <textarea id="ssr_note">
+${esc(current.ssr.note||'')}
+   </textarea>
 
   </div>
 
  </div>
 
  `;
+
 }
 
 
@@ -2497,18 +3352,27 @@ function motorBody(){
   <div class="top">
 
    <div>
-    <h2>MOTORLAR</h2>
+
+    <h2>
+     MOTORLAR
+    </h2>
+
     <div class="section-sub">
      Motor sayısı sınırsızdır. Her motor bağımsız kayıt altında tutulur.
     </div>
+
    </div>
 
    ${
     edit
     ?
     `
-    <button class="btn ok" onclick="addMotor()">
+    <button
+     class="btn ok"
+     onclick="addMotor()">
+
      + MOTOR EKLE
+
     </button>
     `
     :
@@ -2522,12 +3386,22 @@ function motorBody(){
  ${
   current.m.length
   ?
-  current.m.map((m,i)=>motorCard(m,i)).join('')
+  current.m
+   .map(
+    (m,i)=>
+     motorCard(m,i)
+   )
+   .join('')
   :
-  `<div class="empty">Bu terfide motor kaydı yok.</div>`
+  `
+  <div class="empty">
+   Bu terfide motor kaydı yok.
+  </div>
+  `
  }
 
  `;
+
 }
 
 function motorCard(m,i){
@@ -2539,21 +3413,44 @@ function motorCard(m,i){
   <div class="motor-header">
 
    <div>
-    <h3>${i+1}. MOTOR · ${esc(m.ad||`${i+1}. Motor`)}</h3>
+
+    <h3>
+     ${i+1}. MOTOR ·
+     ${esc(
+      m.ad||
+      `${i+1}. Motor`
+     )}
+    </h3>
 
     <span class="badge">
-     ${esc(m.marka||'Marka girilmemiş')}
-     ${m.model?' · '+esc(m.model):''}
+
+     ${esc(
+      m.marka||
+      'Marka girilmemiş'
+     )}
+
+     ${
+      m.model
+      ?
+      ' · '+esc(m.model)
+      :
+      ''
+     }
+
     </span>
+
    </div>
 
    ${
     edit
     ?
     `
-    <button class="btn bad btn-small"
+    <button
+     class="btn bad"
      onclick="deleteMotor('${m.id}')">
+
      Motoru Sil
+
     </button>
     `
     :
@@ -2567,7 +3464,8 @@ function motorCard(m,i){
    ${input(
     'Motor Adı',
     `m_${m.id}_ad`,
-    m.ad||`${i+1}. Motor`
+    m.ad||
+    `${i+1}. Motor`
    )}
 
    ${input(
@@ -2653,15 +3551,17 @@ function motorCard(m,i){
 
   </div>
 
-  <div class="field" style="margin-top:10px">
+  <div
+   class="field"
+   style="margin-top:10px">
 
    <label>
     Etiket / Teknik Not
    </label>
 
-   <textarea id="m_${m.id}_not">${
-    esc(m.etiket_notu||'')
-   }</textarea>
+   <textarea id="m_${m.id}_not">
+${esc(m.etiket_notu||'')}
+   </textarea>
 
   </div>
 
@@ -2674,14 +3574,16 @@ function motorCard(m,i){
    ${
     (()=>{
 
-     const d=current.d.find(
-      x=>x.motor_id===m.id
-     );
+     const d=
+      current.d.find(
+       x=>x.motor_id===m.id
+      );
 
      return d
       ?
       `
       <b>
+
        ${esc(d.ad||'Sürücü')}
        ·
        ${esc(d.marka||'')}
@@ -2689,10 +3591,15 @@ function motorCard(m,i){
        ${esc(d.model||'')}
        ·
        ${d.guc_kw??'—'} kW
+
       </b>
       `
       :
-      `<span class="muted">Bu motora sürücü bağlanmamış.</span>`;
+      `
+      <span class="muted">
+       Bu motora sürücü bağlanmamış.
+      </span>
+      `;
 
     })()
    }
@@ -2702,6 +3609,7 @@ function motorCard(m,i){
  </div>
 
  `;
+
 }
 
 async function addMotor(){
@@ -2711,22 +3619,29 @@ async function addMotor(){
   requestAdmin();
 
   return;
+
  }
 
- const r=await db
-  .from('motorlar')
-  .insert({
-   terfi_id:current.s.id,
-   ad:`${current.m.length+1}. Motor`
-  })
-  .select()
-  .single();
+ touchAdminSession();
+
+ const r=
+  await db
+   .from('motorlar')
+   .insert({
+    terfi_id:
+     current.s.id,
+    ad:
+     `${current.m.length+1}. Motor`
+   })
+   .select()
+   .single();
 
  if(r.error){
 
   alert(r.error.message);
 
   return;
+
  }
 
  recordHistory(
@@ -2734,7 +3649,10 @@ async function addMotor(){
   r.data?.ad||''
  );
 
- await openStation(current.s.id);
+ await openStation(
+  current.s.id
+ );
+
 }
 
 async function deleteMotor(id){
@@ -2744,34 +3662,62 @@ async function deleteMotor(id){
   requestAdmin();
 
   return;
+
  }
+
+ touchAdminSession();
 
  if(!confirm(
   'Bu motor ve bağlı bilgiler silinsin mi?'
  ))return;
 
- const d=current.d.find(
-  x=>x.motor_id===id
- );
+ const d=
+  current.d.find(
+   x=>x.motor_id===id
+  );
 
  if(d){
 
-  await db
-   .from('suruculer')
-   .update({motor_id:null})
-   .eq('id',d.id);
+  const ur=
+   await db
+    .from('suruculer')
+    .update({
+     motor_id:null
+    })
+    .eq(
+     'id',
+     d.id
+    );
+
+  if(ur.error){
+
+   alert(
+    ur.error.message
+   );
+
+   return;
+
+  }
+
  }
 
- const r=await db
-  .from('motorlar')
-  .delete()
-  .eq('id',id);
+ const r=
+  await db
+   .from('motorlar')
+   .delete()
+   .eq(
+    'id',
+    id
+   );
 
  if(r.error){
 
-  alert(r.error.message);
+  alert(
+   r.error.message
+  );
 
   return;
+
  }
 
  delete localBoxes[id];
@@ -2786,7 +3732,10 @@ async function deleteMotor(id){
   id
  );
 
- await openStation(current.s.id);
+ await openStation(
+  current.s.id
+ );
+
 }
 
 
@@ -2804,7 +3753,9 @@ function driverBody(){
 
    <div>
 
-    <h2>SÜRÜCÜLER</h2>
+    <h2>
+     SÜRÜCÜLER
+    </h2>
 
     <div class="section-sub">
      Marka, model, kW ve bağlı motor bilgileri burada tutulur.
@@ -2816,9 +3767,12 @@ function driverBody(){
     edit
     ?
     `
-    <button class="btn ok"
+    <button
+     class="btn ok"
      onclick="addDriver()">
+
      + SÜRÜCÜ EKLE
+
     </button>
     `
     :
@@ -2832,12 +3786,22 @@ function driverBody(){
  ${
   current.d.length
   ?
-  current.d.map((d,i)=>driverCard(d,i)).join('')
+  current.d
+   .map(
+    (d,i)=>
+     driverCard(d,i)
+   )
+   .join('')
   :
-  `<div class="empty">Bu terfide sürücü kaydı yok.</div>`
+  `
+  <div class="empty">
+   Bu terfide sürücü kaydı yok.
+  </div>
+  `
  }
 
  `;
+
 }
 
 function driverCard(d,i){
@@ -2857,8 +3821,20 @@ function driverCard(d,i){
     </h3>
 
     <span class="badge">
-     ${esc(d.marka||'Marka')}
-     ${d.model?' · '+esc(d.model):''}
+
+     ${esc(
+      d.marka||
+      'Marka'
+     )}
+
+     ${
+      d.model
+      ?
+      ' · '+esc(d.model)
+      :
+      ''
+     }
+
     </span>
 
    </div>
@@ -2866,10 +3842,15 @@ function driverCard(d,i){
    ${
     edit
     ?
-    `<button class="btn bad"
+    `
+    <button
+     class="btn bad"
      onclick="deleteDriver('${d.id}')">
+
      Sürücüyü Sil
-    </button>`
+
+    </button>
+    `
     :
     ''
    }
@@ -2881,7 +3862,8 @@ function driverCard(d,i){
    ${input(
     'Sürücü Adı',
     `d_${d.id}_ad`,
-    d.ad||`${i+1}. Sürücü`
+    d.ad||
+    `${i+1}. Sürücü`
    )}
 
    ${input(
@@ -2918,20 +3900,34 @@ function driverCard(d,i){
 
    <div class="field">
 
-    <label>Bağlı Motor</label>
+    <label>
+     Bağlı Motor
+    </label>
 
-    <select id="d_${d.id}_motor">
+    <select
+     id="d_${d.id}_motor">
 
-     <option value="">Seçilmedi</option>
+     <option value="">
+      Seçilmedi
+     </option>
 
      ${
-      current.m.map(m=>`
-       <option
-        value="${m.id}"
-        ${d.motor_id===m.id?'selected':''}>
-        ${esc(m.ad||'Motor')}
-       </option>
-      `).join('')
+      current.m
+       .map(
+        m=>`
+        <option
+         value="${m.id}"
+         ${d.motor_id===m.id?'selected':''}>
+
+         ${esc(
+          m.ad||
+          'Motor'
+         )}
+
+        </option>
+        `
+       )
+       .join('')
      }
 
     </select>
@@ -2940,13 +3936,17 @@ function driverCard(d,i){
 
   </div>
 
-  <div class="field" style="margin-top:10px">
+  <div
+   class="field"
+   style="margin-top:10px">
 
-   <label>Notlar</label>
+   <label>
+    Notlar
+   </label>
 
-   <textarea id="d_${d.id}_not">${
-    esc(d.notlar||'')
-   }</textarea>
+   <textarea id="d_${d.id}_not">
+${esc(d.notlar||'')}
+   </textarea>
 
   </div>
 
@@ -2957,7 +3957,8 @@ function driverCard(d,i){
     ${
      current.m.find(
       m=>m.id===d.motor_id
-     )?.ad||'Bağlı değil'
+     )?.ad||
+     'Bağlı değil'
     }
    </span>
 
@@ -2971,6 +3972,7 @@ function driverCard(d,i){
  </div>
 
  `;
+
 }
 
 async function addDriver(){
@@ -2980,22 +3982,31 @@ async function addDriver(){
   requestAdmin();
 
   return;
+
  }
 
- const r=await db
-  .from('suruculer')
-  .insert({
-   terfi_id:current.s.id,
-   ad:`${current.d.length+1}. Sürücü`
-  })
-  .select()
-  .single();
+ touchAdminSession();
+
+ const r=
+  await db
+   .from('suruculer')
+   .insert({
+    terfi_id:
+     current.s.id,
+    ad:
+     `${current.d.length+1}. Sürücü`
+   })
+   .select()
+   .single();
 
  if(r.error){
 
-  alert(r.error.message);
+  alert(
+   r.error.message
+  );
 
   return;
+
  }
 
  recordHistory(
@@ -3003,7 +4014,10 @@ async function addDriver(){
   r.data?.ad||''
  );
 
- await openStation(current.s.id);
+ await openStation(
+  current.s.id
+ );
+
 }
 
 async function deleteDriver(id){
@@ -3013,20 +4027,32 @@ async function deleteDriver(id){
   requestAdmin();
 
   return;
+
  }
 
- if(!confirm('Sürücü silinsin mi?'))return;
+ touchAdminSession();
 
- const r=await db
-  .from('suruculer')
-  .delete()
-  .eq('id',id);
+ if(!confirm(
+  'Sürücü silinsin mi?'
+ ))return;
+
+ const r=
+  await db
+   .from('suruculer')
+   .delete()
+   .eq(
+    'id',
+    id
+   );
 
  if(r.error){
 
-  alert(r.error.message);
+  alert(
+   r.error.message
+  );
 
   return;
+
  }
 
  recordHistory(
@@ -3034,7 +4060,10 @@ async function deleteDriver(id){
   id
  );
 
- await openStation(current.s.id);
+ await openStation(
+  current.s.id
+ );
+
 }
 
 
@@ -3045,20 +4074,72 @@ async function deleteDriver(id){
 function defaultBox(){
 
  return {
-  l1:{bara:'1. Bara',damar:'1',renk:'',detay:'',hedef:'Motor',etiket:''},
-  l2:{bara:'2. Bara',damar:'2',renk:'',detay:'',hedef:'Motor',etiket:''},
-  l3:{bara:'3. Bara',damar:'3',renk:'',detay:'',hedef:'Motor',etiket:''},
-  t4:{bara:'4. Bara',damar:'4',renk:'',detay:'',hedef:'Motor',etiket:''},
-  t5:{bara:'5. Bara',damar:'5',renk:'',detay:'',hedef:'Motor',etiket:''},
-  t6:{bara:'6. Bara',damar:'6',renk:'',detay:'',hedef:'Motor',etiket:''}
+
+  l1:{
+   bara:'1. Bara',
+   damar:'1',
+   renk:'',
+   detay:'',
+   hedef:'Motor',
+   etiket:''
+  },
+
+  l2:{
+   bara:'2. Bara',
+   damar:'2',
+   renk:'',
+   detay:'',
+   hedef:'Motor',
+   etiket:''
+  },
+
+  l3:{
+   bara:'3. Bara',
+   damar:'3',
+   renk:'',
+   detay:'',
+   hedef:'Motor',
+   etiket:''
+  },
+
+  t4:{
+   bara:'4. Bara',
+   damar:'4',
+   renk:'',
+   detay:'',
+   hedef:'Motor',
+   etiket:''
+  },
+
+  t5:{
+   bara:'5. Bara',
+   damar:'5',
+   renk:'',
+   detay:'',
+   hedef:'Motor',
+   etiket:''
+  },
+
+  t6:{
+   bara:'6. Bara',
+   damar:'6',
+   renk:'',
+   detay:'',
+   hedef:'Motor',
+   etiket:''
+  }
+
  };
+
 }
 
 function getBox(id){
 
- localBoxes[id] ||= defaultBox();
+ localBoxes[id] ||=
+  defaultBox();
 
  return localBoxes[id];
+
 }
 
 function boxBody(){
@@ -3066,22 +4147,32 @@ function boxBody(){
  if(!current.m.length){
 
   return `
+
   <div class="empty">
+
    Önce motor ekleyin.
+
   </div>
+
   `;
+
  }
 
  if(!subView.boxMotor)
-  subView.boxMotor=current.m[0].id;
+  subView.boxMotor=
+   current.m[0].id;
 
- const m=current.m.find(
-  x=>x.id===subView.boxMotor
- )||current.m[0];
+ const m=
+  current.m.find(
+   x=>x.id===subView.boxMotor
+  )||
+  current.m[0];
 
- subView.boxMotor=m.id;
+ subView.boxMotor=
+  m.id;
 
- const b=getBox(m.id);
+ const b=
+  getBox(m.id);
 
  return `
 
@@ -3091,20 +4182,29 @@ function boxBody(){
 
    <div>
 
-    <h2>BOX / KABLO BAĞLANTISI</h2>
+    <h2>
+     BOX / KABLO BAĞLANTISI
+    </h2>
 
     <div class="section-sub">
-     Motorun önündeki BOX içerisindeki bara, damar, renk,
-     renk detayı, hedef ve etiket bilgileri.
+
+     Motorun önündeki BOX içerisindeki
+     bara, damar, renk, renk detayı,
+     hedef ve etiket bilgileri.
+
     </div>
 
    </div>
 
   </div>
 
-  <div class="field" style="margin-top:10px">
+  <div
+   class="field"
+   style="margin-top:10px">
 
-   <label>Motor</label>
+   <label>
+    Motor
+   </label>
 
    <select
     onchange="
@@ -3113,13 +4213,22 @@ function boxBody(){
     ">
 
     ${
-     current.m.map(x=>`
-      <option
-       value="${x.id}"
-       ${x.id===m.id?'selected':''}>
-       ${esc(x.ad||'Motor')}
-      </option>
-     `).join('')
+     current.m
+      .map(
+       x=>`
+       <option
+        value="${x.id}"
+        ${x.id===m.id?'selected':''}>
+
+        ${esc(
+         x.ad||
+         'Motor'
+        )}
+
+       </option>
+       `
+      )
+      .join('')
     }
 
    </select>
@@ -3155,98 +4264,194 @@ function boxBody(){
       ['t4','T4'],
       ['t5','T5'],
       ['t6','T6']
-     ].map(([key,label])=>`
+     ]
+     .map(
+      ([key,label])=>`
 
-      <tr>
+       <tr>
 
-       <td>
-        ${
-         edit
-         ?
-         `<input
-          value="${esc(b[key].bara||'')}"
-          onchange="
-           boxChange('${m.id}','${key}','bara',this.value)
-          ">`
-         :
-         esc(b[key].bara||'—')
-        }
-       </td>
+        <td>
 
-       <td>
-        ${
-         edit
-         ?
-         `<input
-          value="${esc(b[key].damar||'')}"
-          onchange="
-           boxChange('${m.id}','${key}','damar',this.value)
-          ">`
-         :
-         esc(b[key].damar||'—')
-        }
-       </td>
+         ${
+          edit
+          ?
+          `
+          <input
+           value="${esc(
+            b[key].bara||
+            ''
+           )}"
+           onchange="
+            boxChange(
+             '${m.id}',
+             '${key}',
+             'bara',
+             this.value
+            )
+           ">
+          `
+          :
+          esc(
+           b[key].bara||
+           '—'
+          )
+         }
 
-       <td>
-        ${
-         edit
-         ?
-         `<input
-          value="${esc(b[key].renk||'')}"
-          placeholder="Kahve / Mavi / Gri..."
-          onchange="
-           boxChange('${m.id}','${key}','renk',this.value)
-          ">`
-         :
-         esc(b[key].renk||'—')
-        }
-       </td>
+        </td>
 
-       <td>
-        ${
-         edit
-         ?
-         `<input
-          value="${esc(b[key].detay||'')}"
-          onchange="
-           boxChange('${m.id}','${key}','detay',this.value)
-          ">`
-         :
-         esc(b[key].detay||'—')
-        }
-       </td>
+        <td>
 
-       <td>
-        ${
-         edit
-         ?
-         `<input
-          value="${esc(b[key].hedef||'')}"
-          onchange="
-           boxChange('${m.id}','${key}','hedef',this.value)
-          ">`
-         :
-         esc(b[key].hedef||'—')
-        }
-       </td>
+         ${
+          edit
+          ?
+          `
+          <input
+           value="${esc(
+            b[key].damar||
+            ''
+           )}"
+           onchange="
+            boxChange(
+             '${m.id}',
+             '${key}',
+             'damar',
+             this.value
+            )
+           ">
+          `
+          :
+          esc(
+           b[key].damar||
+           '—'
+          )
+         }
 
-       <td>
-        ${
-         edit
-         ?
-         `<input
-          value="${esc(b[key].etiket||'')}"
-          onchange="
-           boxChange('${m.id}','${key}','etiket',this.value)
-          ">`
-         :
-         esc(b[key].etiket||'—')
-        }
-       </td>
+        </td>
 
-      </tr>
+        <td>
 
-     `).join('')
+         ${
+          edit
+          ?
+          `
+          <input
+           value="${esc(
+            b[key].renk||
+            ''
+           )}"
+           placeholder="
+            Kahve / Mavi / Gri...
+           "
+           onchange="
+            boxChange(
+             '${m.id}',
+             '${key}',
+             'renk',
+             this.value
+            )
+           ">
+          `
+          :
+          esc(
+           b[key].renk||
+           '—'
+          )
+         }
+
+        </td>
+
+        <td>
+
+         ${
+          edit
+          ?
+          `
+          <input
+           value="${esc(
+            b[key].detay||
+            ''
+           )}"
+           onchange="
+            boxChange(
+             '${m.id}',
+             '${key}',
+             'detay',
+             this.value
+            )
+           ">
+          `
+          :
+          esc(
+           b[key].detay||
+           '—'
+          )
+         }
+
+        </td>
+
+        <td>
+
+         ${
+          edit
+          ?
+          `
+          <input
+           value="${esc(
+            b[key].hedef||
+            ''
+           )}"
+           onchange="
+            boxChange(
+             '${m.id}',
+             '${key}',
+             'hedef',
+             this.value
+            )
+           ">
+          `
+          :
+          esc(
+           b[key].hedef||
+           '—'
+          )
+         }
+
+        </td>
+
+        <td>
+
+         ${
+          edit
+          ?
+          `
+          <input
+           value="${esc(
+            b[key].etiket||
+            ''
+           )}"
+           onchange="
+            boxChange(
+             '${m.id}',
+             '${key}',
+             'etiket',
+             this.value
+            )
+           ">
+          `
+          :
+          esc(
+           b[key].etiket||
+           '—'
+          )
+         }
+
+        </td>
+
+       </tr>
+
+      `
+     )
+     .join('')
     }
 
    </tbody>
@@ -3256,20 +4461,40 @@ function boxBody(){
  </div>
 
  `;
+
 }
 
-function boxChange(motorId,line,key,value){
+function boxChange(
+ motorId,
+ line,
+ key,
+ value
+){
 
- localBoxes[motorId] ||= defaultBox();
+ if(!edit){
 
- localBoxes[motorId][line] ||= {};
+  requestAdmin();
 
- localBoxes[motorId][line][key]=value;
+  return;
+
+ }
+
+ touchAdminSession();
+
+ localBoxes[motorId] ||=
+  defaultBox();
+
+ localBoxes[motorId][line] ||=
+  {};
+
+ localBoxes[motorId][line][key]=
+  value;
 
  saveLocal(
   LOCAL_BOX_KEY,
   localBoxes
  );
+
 }
 
 
@@ -3286,19 +4511,29 @@ function pumpBody(){
   <div class="top">
 
    <div>
-    <h2>POMPALAR</h2>
+
+    <h2>
+     POMPALAR
+    </h2>
+
     <div class="section-sub">
      Pompa etiketi ve teknik bilgileri.
     </div>
+
    </div>
 
    ${
     edit
     ?
-    `<button class="btn ok"
+    `
+    <button
+     class="btn ok"
      onclick="addPump()">
+
      + POMPA EKLE
-    </button>`
+
+    </button>
+    `
     :
     ''
    }
@@ -3310,124 +4545,145 @@ function pumpBody(){
  ${
   current.p.length
   ?
-  current.p.map((p,i)=>`
+  current.p
+   .map(
+    (p,i)=>`
 
-   <div class="pump-card">
+     <div class="pump-card">
 
-    <div class="pump-header">
+      <div class="pump-header">
 
-     <h3>
-      ${i+1}. POMPA ·
-      ${esc(p.ad||'')}
-     </h3>
+       <h3>
 
-     ${
-      edit
-      ?
-      `<button class="btn bad"
-       onclick="deletePump('${p.id}')">
-       Pompayı Sil
-      </button>`
-      :
-      ''
-     }
+        ${i+1}. POMPA ·
+        ${esc(p.ad||'')}
 
-    </div>
+       </h3>
 
-    <div class="grid3">
+       ${
+        edit
+        ?
+        `
+        <button
+         class="btn bad"
+         onclick="deletePump('${p.id}')">
 
-     ${input(
-      'Pompa Adı',
-      `p_${p.id}_ad`,
-      p.ad||`${i+1}. Pompa`
-     )}
+         Pompayı Sil
 
-     ${input(
-      'Marka',
-      `p_${p.id}_marka`,
-      p.marka||''
-     )}
+        </button>
+        `
+        :
+        ''
+       }
 
-     ${input(
-      'Model',
-      `p_${p.id}_model`,
-      p.model||''
-     )}
+      </div>
 
-     ${input(
-      'Tip',
-      `p_${p.id}_tip`,
-      p.tip||''
-     )}
+      <div class="grid3">
 
-     ${input(
-      'Seri No',
-      `p_${p.id}_seri`,
-      p.seri_no||''
-     )}
+       ${input(
+        'Pompa Adı',
+        `p_${p.id}_ad`,
+        p.ad||
+        `${i+1}. Pompa`
+       )}
 
-     ${input(
-      'Güç [kW]',
-      `p_${p.id}_kw`,
-      p.guc_kw??'',
-      'number'
-     )}
+       ${input(
+        'Marka',
+        `p_${p.id}_marka`,
+        p.marka||''
+       )}
 
-     ${input(
-      'Güç [HP]',
-      `p_${p.id}_hp`,
-      p.guc_hp??'',
-      'number'
-     )}
+       ${input(
+        'Model',
+        `p_${p.id}_model`,
+        p.model||''
+       )}
 
-     ${input(
-      'Q Min [m³/h]',
-      `p_${p.id}_qmin`,
-      p.q_min_m3h??'',
-      'number'
-     )}
+       ${input(
+        'Tip',
+        `p_${p.id}_tip`,
+        p.tip||''
+       )}
 
-     ${input(
-      'Q Max [m³/h]',
-      `p_${p.id}_qmax`,
-      p.q_max_m3h??'',
-      'number'
-     )}
+       ${input(
+        'Seri No',
+        `p_${p.id}_seri`,
+        p.seri_no||''
+       )}
 
-     ${input(
-      'H Min [m]',
-      `p_${p.id}_hmin`,
-      p.h_min_m??'',
-      'number'
-     )}
+       ${input(
+        'Güç [kW]',
+        `p_${p.id}_kw`,
+        p.guc_kw??'',
+        'number'
+       )}
 
-     ${input(
-      'H Max [m]',
-      `p_${p.id}_hmax`,
-      p.h_max_m??'',
-      'number'
-     )}
+       ${input(
+        'Güç [HP]',
+        `p_${p.id}_hp`,
+        p.guc_hp??'',
+        'number'
+       )}
 
-    </div>
+       ${input(
+        'Q Min [m³/h]',
+        `p_${p.id}_qmin`,
+        p.q_min_m3h??'',
+        'number'
+       )}
 
-    <div class="field" style="margin-top:10px">
+       ${input(
+        'Q Max [m³/h]',
+        `p_${p.id}_qmax`,
+        p.q_max_m3h??'',
+        'number'
+       )}
 
-     <label>Etiket Notu</label>
+       ${input(
+        'H Min [m]',
+        `p_${p.id}_hmin`,
+        p.h_min_m??'',
+        'number'
+       )}
 
-     <textarea id="p_${p.id}_not">${
-      esc(p.etiket_notu||'')
-     }</textarea>
+       ${input(
+        'H Max [m]',
+        `p_${p.id}_hmax`,
+        p.h_max_m??'',
+        'number'
+       )}
 
-    </div>
+      </div>
 
-   </div>
+      <div
+       class="field"
+       style="margin-top:10px">
 
-  `).join('')
+       <label>
+        Etiket Notu
+       </label>
+
+       <textarea id="p_${p.id}_not">
+${esc(p.etiket_notu||'')}
+       </textarea>
+
+      </div>
+
+     </div>
+
+    `
+   )
+   .join('')
   :
-  `<div class="empty">Pompa kaydı yok.</div>`
+  `
+  <div class="empty">
+   Pompa kaydı yok.
+  </div>
+  `
  }
 
  `;
+
 }
 
 async function addPump(){
@@ -3437,20 +4693,29 @@ async function addPump(){
   requestAdmin();
 
   return;
+
  }
 
- const r=await db
-  .from('pompalar')
-  .insert({
-   terfi_id:current.s.id,
-   ad:`${current.p.length+1}. Pompa`
-  });
+ touchAdminSession();
+
+ const r=
+  await db
+   .from('pompalar')
+   .insert({
+    terfi_id:
+     current.s.id,
+    ad:
+     `${current.p.length+1}. Pompa`
+   });
 
  if(r.error){
 
-  alert(r.error.message);
+  alert(
+   r.error.message
+  );
 
   return;
+
  }
 
  recordHistory(
@@ -3458,25 +4723,45 @@ async function addPump(){
   ''
  );
 
- await openStation(current.s.id);
+ await openStation(
+  current.s.id
+ );
+
 }
 
 async function deletePump(id){
 
- if(!edit)return requestAdmin();
+ if(!edit){
 
- if(!confirm('Pompa silinsin mi?'))return;
+  requestAdmin();
 
- const r=await db
-  .from('pompalar')
-  .delete()
-  .eq('id',id);
+  return;
+
+ }
+
+ touchAdminSession();
+
+ if(!confirm(
+  'Pompa silinsin mi?'
+ ))return;
+
+ const r=
+  await db
+   .from('pompalar')
+   .delete()
+   .eq(
+    'id',
+    id
+   );
 
  if(r.error){
 
-  alert(r.error.message);
+  alert(
+   r.error.message
+  );
 
   return;
+
  }
 
  recordHistory(
@@ -3484,7 +4769,10 @@ async function deletePump(id){
   id
  );
 
- await openStation(current.s.id);
+ await openStation(
+  current.s.id
+ );
+
 }
 
 
@@ -3497,14 +4785,21 @@ function workBody(){
  if(!current.m.length){
 
   return `
+
   <div class="empty">
+
    Önce motor ekleyin.
+
   </div>
+
   `;
+
  }
 
  if(!workMotor)
-  workMotor=current.m[0].id;
+
+  workMotor=
+   current.m[0].id;
 
  const last=
   current.w.find(
@@ -3520,12 +4815,19 @@ function workBody(){
   </div>
 
   <div class="section-sub">
-   HMI üzerinde görülen gerçek saha çalışma değerlerini kaydet.
+
+   HMI üzerinde görülen gerçek saha
+   çalışma değerlerini kaydet.
+
   </div>
 
-  <div class="field" style="margin-top:10px">
+  <div
+   class="field"
+   style="margin-top:10px">
 
-   <label>Motor</label>
+   <label>
+    Motor
+   </label>
 
    <select
     onchange="
@@ -3534,52 +4836,75 @@ function workBody(){
     ">
 
     ${
-     current.m.map(m=>`
+     current.m.map(
+      m=>`
+
       <option
        value="${m.id}"
        ${m.id===workMotor?'selected':''}>
-       ${esc(m.ad||'Motor')}
+
+       ${esc(
+        m.ad||
+        'Motor'
+       )}
+
       </option>
-     `).join('')
+
+      `
+     ).join('')
     }
 
    </select>
 
   </div>
 
-  <div class="grid3" style="margin-top:10px">
+  <div
+   class="grid3"
+   style="margin-top:10px">
 
    ${
     WORK.map(
-     x=>input(
-      x[0],
-      'w_'+x[1],
-      last[x[1]]??'',
-      'number'
-     )
+     x=>
+      input(
+       x[0],
+       'w_'+x[1],
+       last[x[1]]??'',
+       'number'
+      )
     ).join('')
    }
 
   </div>
 
-  <div class="field" style="margin-top:10px">
+  <div
+   class="field"
+   style="margin-top:10px">
 
-   <label>Çalışma Durumu</label>
+   <label>
+    Çalışma Durumu
+   </label>
 
    <input
     id="w_durum"
-    value="${esc(last.durum||'Sistem Normal')}"
+    value="${esc(
+     last.durum||
+     'Sistem Normal'
+    )}"
    >
 
   </div>
 
-  <div class="field" style="margin-top:10px">
+  <div
+   class="field"
+   style="margin-top:10px">
 
-   <label>Teknik Not</label>
+   <label>
+    Teknik Not
+   </label>
 
-   <textarea id="w_notlar">${
-    esc(last.notlar||'')
-   }</textarea>
+   <textarea id="w_notlar">
+${esc(last.notlar||'')}
+   </textarea>
 
   </div>
 
@@ -3594,31 +4919,57 @@ function workBody(){
   ${
    current.w.length
    ?
-   current.w.map(w=>`
+   current.w.map(
+    w=>`
 
     <div class="history-card">
 
      <div class="history-date">
-      ${new Date(w.captured_at).toLocaleString('tr-TR')}
+
+      ${new Date(
+       w.captured_at
+      ).toLocaleString(
+       'tr-TR'
+      )}
+
      </div>
 
      <div class="history-title">
+
       ${esc(
        current.m.find(
         m=>m.id===w.motor_id
-       )?.ad||'Motor'
+       )?.ad||
+       'Motor'
       )}
+
      </div>
 
      <div class="kpi">
 
-      <span>${w.frekans_hz??'—'} Hz</span>
-      <span>${w.akim_a??'—'} A</span>
-      <span>${w.guc_kw??'—'} kW</span>
-      <span>${w.gerilim_v??'—'} V</span>
       <span>
-       ${w.set_basinci_bar??'—'} /
-       ${w.calisma_basinci_bar??'—'} bar
+       ${w.frekans_hz??'—'} Hz
+      </span>
+
+      <span>
+       ${w.akim_a??'—'} A
+      </span>
+
+      <span>
+       ${w.guc_kw??'—'} kW
+      </span>
+
+      <span>
+       ${w.gerilim_v??'—'} V
+      </span>
+
+      <span>
+
+       ${w.set_basinci_bar??'—'}
+       /
+       ${w.calisma_basinci_bar??'—'}
+       bar
+
       </span>
 
      </div>
@@ -3626,23 +4977,35 @@ function workBody(){
      ${
       w.notlar
       ?
-      `<div class="muted" style="margin-top:6px">
+      `
+      <div
+       class="muted"
+       style="margin-top:6px">
+
        ${esc(w.notlar)}
-      </div>`
+
+      </div>
+      `
       :
       ''
      }
 
     </div>
 
-   `).join('')
+    `
+   ).join('')
    :
-   `<div class="empty">Henüz çalışma kaydı yok.</div>`
+   `
+   <div class="empty">
+    Henüz çalışma kaydı yok.
+   </div>
+   `
   }
 
  </div>
 
  `;
+
 }
 
 
@@ -3664,20 +5027,30 @@ function hmiBody(){
 
  <div class="card hmi-shell">
 
-  <h2>HMI / PLC ARŞİVİ</h2>
+  <h2>
+   HMI / PLC ARŞİVİ
+  </h2>
 
   <div class="section-sub">
+
    Weintek HMI'nin 5 ekranı bağımsız olarak kayıt edilir.
    Ekranda hangi sayfa açık olursa olsun PDF tüm 5 sayfayı alır.
+
   </div>
 
-  <div class="hmi-tabs" style="margin-top:12px">
+  <div
+   class="hmi-tabs"
+   style="margin-top:12px">
 
    ${
-    HMI.map((_,i)=>`
+    HMI.map(
+     (_,i)=>`
 
      <button
-      class="hmi-tab ${hmiPage===i+1?'active':''}"
+      class="
+       hmi-tab
+       ${hmiPage===i+1?'active':''}
+      "
       onclick="
        hmiPage=${i+1};
        render();
@@ -3687,7 +5060,8 @@ function hmiBody(){
 
      </button>
 
-    `).join('')
+     `
+    ).join('')
    }
 
   </div>
@@ -3703,25 +5077,28 @@ function hmiBody(){
   <div class="hmi-fields">
 
    ${
-    HMI[hmiPage-1].map(
-     (label,i)=>`
+    HMI[hmiPage-1]
+     .map(
+      (label,i)=>`
 
-      <div class="hmi-field">
+       <div class="hmi-field">
 
-       <label>
-        ${esc(label)}
-       </label>
+        <label>
+         ${esc(label)}
+        </label>
 
-       <input
-        id="hmi_${hmiPage}_${i}"
-        value="${esc(values[i]??'')}"
-        inputmode="decimal"
-       >
+        <input
+         id="hmi_${hmiPage}_${i}"
+         value="${esc(
+          values[i]??''
+         )}"
+         inputmode="decimal"
+        >
 
-      </div>
+       </div>
 
-     `
-    ).join('')
+      `
+     ).join('')
    }
 
   </div>
@@ -3729,11 +5106,12 @@ function hmiBody(){
  </div>
 
  `;
+
 }
 
 
 /* =========================================================
-   PARAMETRE
+   PARAMETRELER
 ========================================================= */
 
 function parameterBody(){
@@ -3746,7 +5124,9 @@ function parameterBody(){
 
    <div>
 
-    <h2>ABB PARAMETRE KÜTÜPHANESİ</h2>
+    <h2>
+     ABB PARAMETRE KÜTÜPHANESİ
+    </h2>
 
     <div class="section-sub">
      Kod · ad · birim · açıklama · kaynak
@@ -3757,10 +5137,15 @@ function parameterBody(){
    ${
     edit
     ?
-    `<button class="btn ok"
+    `
+    <button
+     class="btn ok"
      onclick="newParam()">
+
      + PARAMETRE EKLE
-    </button>`
+
+    </button>
+    `
     :
     ''
    }
@@ -3769,7 +5154,9 @@ function parameterBody(){
 
   <input
    id="paramSearch"
-   placeholder="Parametre kodu veya adı ara..."
+   placeholder="
+    Parametre kodu veya adı ara...
+   "
    oninput="filterParams()"
    style="
     width:100%;
@@ -3789,113 +5176,173 @@ function parameterBody(){
   class="library-grid">
 
   ${
-   params().map(p=>`
+   params()
+    .map(
+     p=>`
 
-    <div
-     class="library-card"
-     data-param="${esc(
-      (p.code+' '+p.name+' '+p.desc).toLowerCase()
-     )}">
+      <div
+       class="library-card"
+       data-param="${esc(
+        (
+         p.code+
+         ' '+
+         p.name+
+         ' '+
+         p.desc
+        ).toLowerCase()
+       )}">
 
-     <div class="library-code">
-      ${esc(p.code)}
-     </div>
+       <div class="library-code">
+        ${esc(p.code)}
+       </div>
 
-     <div class="library-name">
-      ${esc(p.name)}
-     </div>
+       <div class="library-name">
+        ${esc(p.name)}
+       </div>
 
-     <div class="library-desc">
-      ${esc(p.desc)}
-     </div>
+       <div class="library-desc">
+        ${esc(p.desc)}
+       </div>
 
-     <div class="library-source">
-      ${esc(p.source)}
-      ·
-      ${esc(p.unit)}
-     </div>
-
-     ${
-      edit
-      ?
-      `
-      <div style="margin-top:9px">
+       <div class="library-source">
+        ${esc(p.source)}
+        ·
+        ${esc(p.unit)}
+       </div>
 
        ${
-        customParams.some(
-         x=>x.code===p.code
-        )
+        edit
         ?
-        `<button class="btn bad btn-small"
-         onclick="deleteCustomParam('${esc(p.code)}')">
-         Sil
-        </button>`
+        `
+        <div style="margin-top:9px">
+
+         ${
+          customParams.some(
+           x=>x.code===p.code
+          )
+          ?
+          `
+          <button
+           class="btn bad"
+           onclick="
+            deleteCustomParam(
+             '${esc(p.code)}'
+            )
+           ">
+
+           Sil
+
+          </button>
+          `
+          :
+          ''
+         }
+
+        </div>
+        `
         :
         ''
        }
 
       </div>
-      `
-      :
-      ''
-     }
 
-    </div>
-
-   `).join('')
+     `
+    )
+    .join('')
   }
 
  </div>
 
  <div class="card">
 
-  <h2>TERFİYE ÖZEL PARAMETRELER</h2>
+  <h2>
+   TERFİYE ÖZEL PARAMETRELER
+  </h2>
 
   ${
    current.tp.length
    ?
-   current.tp.map(x=>`
+   current.tp.map(
+    x=>`
 
     <div class="workbox">
 
      <div class="top">
 
       <div>
+
        <b>
-        ${esc(x.ekran_adi||'')}
+
+        ${esc(
+         x.ekran_adi||
+         ''
+        )}
+
         ·
-        ${esc(x.parametre_adi||'')}
+
+        ${esc(
+         x.parametre_adi||
+         ''
+        )}
+
        </b>
 
        <div style="margin-top:5px">
+
         Değer:
+
         <strong>
-         ${esc(x.deger||'—')}
+         ${esc(
+          x.deger||
+          '—'
+         )}
         </strong>
-        ${esc(x.birim||'')}
+
+        ${esc(
+         x.birim||
+         ''
+        )}
+
        </div>
 
-       <div class="muted" style="margin-top:4px">
-        ${esc(x.aciklama||'')}
+       <div
+        class="muted"
+        style="margin-top:4px">
+
+        ${esc(
+         x.aciklama||
+         ''
+        )}
+
        </div>
+
       </div>
 
      </div>
 
     </div>
 
-   `).join('')
+    `
+   ).join('')
    :
-   `<div class="empty">Terfiye özel parametre yok.</div>`
+   `
+   <div class="empty">
+    Terfiye özel parametre yok.
+   </div>
+   `
   }
 
   ${
    edit
    ?
    `
-   <div class="card" style="background:#081b30">
+   <div
+    class="card"
+    style="background:#081b30">
 
-    <h3>Yeni Terfi Parametresi</h3>
+    <h3>
+     Yeni Terfi Parametresi
+    </h3>
 
     <div class="grid3">
 
@@ -3927,17 +5374,25 @@ function parameterBody(){
 
     </div>
 
-    <div class="field" style="margin-top:9px">
+    <div
+     class="field"
+     style="margin-top:9px">
 
-     <label>Açıklama</label>
+     <label>
+      Açıklama
+     </label>
 
-     <textarea id="new_tp_aciklama"></textarea>
+     <textarea id="new_tp_aciklama">
+     </textarea>
 
     </div>
 
-    <button class="btn ok"
+    <button
+     class="btn ok"
      onclick="addTerfiParam()">
+
      PARAMETREYİ KAYDET
+
     </button>
 
    </div>
@@ -3949,26 +5404,35 @@ function parameterBody(){
  </div>
 
  `;
+
 }
 
 function filterParams(){
 
- const q=(
-  document.getElementById('paramSearch')?.value||''
- ).toLowerCase();
+ const q=
+  (
+   document
+    .getElementById(
+     'paramSearch'
+    )
+    ?.value||
+   ''
+  ).toLowerCase();
 
- document.querySelectorAll(
-  '#paramGrid .library-card'
- ).forEach(x=>{
+ document
+  .querySelectorAll(
+   '#paramGrid .library-card'
+  )
+  .forEach(x=>{
 
-  x.style.display=
-   x.dataset.param.includes(q)
-   ?
-   'block'
-   :
-   'none';
+   x.style.display=
+    x.dataset.param.includes(q)
+    ?
+    'block'
+    :
+    'none';
 
- });
+  });
 
 }
 
@@ -3979,36 +5443,46 @@ function newParam(){
   requestAdmin();
 
   return;
+
  }
 
- const code=prompt(
-  'Parametre kodu:',
-  '99.00'
- );
+ touchAdminSession();
 
- if(!code)return;
+ const code=
+  prompt(
+   'Parametre kodu:',
+   '99.00'
+  );
 
- const name=prompt(
-  'Parametre adı:',
-  ''
- );
+ if(!code)
+  return;
 
- if(!name)return;
+ const name=
+  prompt(
+   'Parametre adı:',
+   ''
+  );
 
- const unit=prompt(
-  'Birim:',
-  ''
- )||'';
+ if(!name)
+  return;
 
- const desc=prompt(
-  'Açıklama:',
-  ''
- )||'';
+ const unit=
+  prompt(
+   'Birim:',
+   ''
+  )||'';
 
- const source=prompt(
-  'Kaynak:',
-  'Kullanıcı kaydı'
- )||'Kullanıcı kaydı';
+ const desc=
+  prompt(
+   'Açıklama:',
+   ''
+  )||'';
+
+ const source=
+  prompt(
+   'Kaynak:',
+   'Kullanıcı kaydı'
+  )||'Kullanıcı kaydı';
 
  customParams.push({
   code,
@@ -4034,7 +5508,15 @@ function newParam(){
 
 function deleteCustomParam(code){
 
- if(!edit)return requestAdmin();
+ if(!edit){
+
+  requestAdmin();
+
+  return;
+
+ }
+
+ touchAdminSession();
 
  if(!confirm(
   `${code} parametresi silinsin mi?`
@@ -4069,7 +5551,9 @@ function faultBody(){
 
    <div>
 
-    <h2>⚠️ SÜRÜCÜ ARIZA KÜTÜPHANESİ</h2>
+    <h2>
+     ⚠️ SÜRÜCÜ ARIZA KÜTÜPHANESİ
+    </h2>
 
     <div class="section-sub">
      Kod · başlık · olası neden · çözüm · kaynak
@@ -4080,10 +5564,15 @@ function faultBody(){
    ${
     edit
     ?
-    `<button class="btn ok"
+    `
+    <button
+     class="btn ok"
      onclick="newFault()">
+
      + ARIZA KODU EKLE
-    </button>`
+
+    </button>
+    `
     :
     ''
    }
@@ -4092,7 +5581,9 @@ function faultBody(){
 
   <input
    id="faultSearch"
-   placeholder="Hata kodu, başlık veya açıklama ara..."
+   placeholder="
+    Hata kodu, başlık veya açıklama ara...
+   "
    oninput="filterFaults()"
    style="
     width:100%;
@@ -4112,56 +5603,75 @@ function faultBody(){
   class="library-grid">
 
   ${
-   faults().map((f,index)=>`
+   faults()
+    .map(
+     (f)=>`
 
-    <div
-     class="library-card"
-     data-fault="${esc(
-      (
-       f.code+' '+
-       f.name+' '+
-       f.cause+' '+
-       f.solution
-      ).toLowerCase()
-     )}"
-     onclick="faultDetail('${esc(f.code)}')">
+      <div
+       class="library-card"
+       data-fault="${esc(
+        (
+         f.code+
+         ' '+
+         f.name+
+         ' '+
+         f.cause+
+         ' '+
+         f.solution
+        ).toLowerCase()
+       )}"
+       onclick="
+        faultDetail(
+         '${esc(f.code)}'
+        )
+       ">
 
-     <div class="library-code">
-      ${esc(f.code)}
-     </div>
+       <div class="library-code">
+        ${esc(f.code)}
+       </div>
 
-     <div class="library-name">
-      ${esc(f.name)}
-     </div>
+       <div class="library-name">
+        ${esc(f.name)}
+       </div>
 
-     <div class="library-desc">
-      ${esc(f.cause)}
-     </div>
+       <div class="library-desc">
+        ${esc(f.cause)}
+       </div>
 
-     <div class="library-source">
-      Kaynak: ${esc(f.source)}
-     </div>
+       <div class="library-source">
+        Kaynak:
+        ${esc(f.source)}
+       </div>
 
-    </div>
+      </div>
 
-   `).join('')
+     `
+    )
+    .join('')
   }
 
  </div>
 
  <div class="card">
 
-  <h2>GERÇEK SAHA ARIZASI KAYITLARI</h2>
+  <h2>
+   GERÇEK SAHA ARIZASI KAYITLARI
+  </h2>
 
   <div class="section-sub">
-   Kütüphanedeki açıklamadan bağımsız olarak gerçekleşen arızayı kaydet.
+
+   Kütüphanedeki açıklamadan bağımsız olarak
+   gerçekleşen arızayı kaydet.
+
   </div>
 
   ${
    edit
    ?
    `
-   <div class="grid3" style="margin-top:10px">
+   <div
+    class="grid3"
+    style="margin-top:10px">
 
     ${input(
      'Arıza Kodu',
@@ -4180,102 +5690,164 @@ function faultBody(){
 
    </div>
 
-   <div class="field" style="margin-top:9px">
+   <div
+    class="field"
+    style="margin-top:9px">
 
-    <label>Yapılan İşlem</label>
+    <label>
+     Yapılan İşlem
+    </label>
 
-    <textarea id="real_fault_action"></textarea>
-
-   </div>
-
-   <div class="field" style="margin-top:9px">
-
-    <label>Sonuç</label>
-
-    <textarea id="real_fault_result"></textarea>
+    <textarea id="real_fault_action">
+    </textarea>
 
    </div>
 
-   <button class="btn ok"
+   <div
+    class="field"
+    style="margin-top:9px">
+
+    <label>
+     Sonuç
+    </label>
+
+    <textarea id="real_fault_result">
+    </textarea>
+
+   </div>
+
+   <button
+    class="btn ok"
     onclick="saveRealFault()">
+
     ARIZA KAYDINI EKLE
+
    </button>
    `
    :
    ''
   }
 
-  <div id="realFaultList"
+  <div
+   id="realFaultList"
    style="margin-top:10px">
+
    ${renderLocalFaultHistory()}
+
   </div>
 
  </div>
 
  `;
+
 }
 
 function filterFaults(){
 
- const q=(
-  document.getElementById('faultSearch')?.value||''
- ).toLowerCase();
+ const q=
+  (
+   document
+    .getElementById(
+     'faultSearch'
+    )
+    ?.value||
+   ''
+  ).toLowerCase();
 
- document.querySelectorAll(
-  '#faultGrid .library-card'
- ).forEach(x=>{
+ document
+  .querySelectorAll(
+   '#faultGrid .library-card'
+  )
+  .forEach(x=>{
 
-  x.style.display=
-   x.dataset.fault.includes(q)
-   ?
-   'block'
-   :
-   'none';
+   x.style.display=
+    x.dataset.fault.includes(q)
+    ?
+    'block'
+    :
+    'none';
 
- });
+  });
 
 }
 
 function faultDetail(code){
 
- const f=faults().find(
-  x=>x.code===code
- );
+ const f=
+  faults().find(
+   x=>x.code===code
+  );
 
- if(!f)return;
+ if(!f)
+  return;
 
  openModal(`
-  <h2>${esc(f.code)} · ${esc(f.name)}</h2>
+
+  <h2>
+   ${esc(f.code)}
+   ·
+   ${esc(f.name)}
+  </h2>
 
   <div class="workbox">
-   <h4>OLASI NEDEN</h4>
-   <div>${esc(f.cause)}</div>
+
+   <h4>
+    OLASI NEDEN
+   </h4>
+
+   <div>
+    ${esc(f.cause)}
+   </div>
+
   </div>
 
   <div class="workbox">
-   <h4>ÇÖZÜM / YAPILACAKLAR</h4>
-   <div>${esc(f.solution)}</div>
+
+   <h4>
+    ÇÖZÜM / YAPILACAKLAR
+   </h4>
+
+   <div>
+    ${esc(f.solution)}
+   </div>
+
   </div>
 
   <div class="workbox">
-   <h4>KAYNAK</h4>
-   <div>${esc(f.source)}</div>
+
+   <h4>
+    KAYNAK
+   </h4>
+
+   <div>
+    ${esc(f.source)}
+   </div>
+
   </div>
 
   ${
-   edit && customFaults.some(
+   edit &&
+   customFaults.some(
     x=>x.code===f.code
    )
    ?
    `
-   <button class="btn bad"
-    onclick="deleteCustomFault('${esc(f.code)}')">
+   <button
+    class="btn bad"
+    onclick="
+     deleteCustomFault(
+      '${esc(f.code)}'
+     )
+    ">
+
     BU ÖZEL KAYDI SİL
+
    </button>
    `
    :
    ''
   }
+
  `);
 
 }
@@ -4287,36 +5859,46 @@ function newFault(){
   requestAdmin();
 
   return;
+
  }
 
- const code=prompt(
-  'Hata kodu:',
-  'F1234'
- );
+ touchAdminSession();
 
- if(!code)return;
+ const code=
+  prompt(
+   'Hata kodu:',
+   'F1234'
+  );
 
- const name=prompt(
-  'Başlık:',
-  ''
- );
+ if(!code)
+  return;
 
- if(!name)return;
+ const name=
+  prompt(
+   'Başlık:',
+   ''
+  );
 
- const cause=prompt(
-  'Olası nedenler:',
-  ''
- )||'';
+ if(!name)
+  return;
 
- const solution=prompt(
-  'Çözüm / yapılacak işlem:',
-  ''
- )||'';
+ const cause=
+  prompt(
+   'Olası nedenler:',
+   ''
+  )||'';
 
- const source=prompt(
-  'Kaynak:',
-  'Kullanıcı kaydı'
- )||'Kullanıcı kaydı';
+ const solution=
+  prompt(
+   'Çözüm / yapılacak işlem:',
+   ''
+  )||'';
+
+ const source=
+  prompt(
+   'Kaynak:',
+   'Kullanıcı kaydı'
+  )||'Kullanıcı kaydı';
 
  customFaults.push({
   code,
@@ -4342,7 +5924,15 @@ function newFault(){
 
 function deleteCustomFault(code){
 
- if(!edit)return requestAdmin();
+ if(!edit){
+
+  requestAdmin();
+
+  return;
+
+ }
+
+ touchAdminSession();
 
  if(!confirm(
   `${code} kaydı silinsin mi?`
@@ -4365,11 +5955,14 @@ function deleteCustomFault(code){
 function renderLocalFaultHistory(){
 
  const arr=
-  current?
+  current
+  ?
   changeHistory.filter(
    x=>
-    x.terfi_id===current.s.id &&
-    x.action==='GERÇEK ARIZA KAYDI'
+    x.terfi_id===
+     current.s.id &&
+    x.action===
+     'GERÇEK ARIZA KAYDI'
   )
   :
   [];
@@ -4377,19 +5970,30 @@ function renderLocalFaultHistory(){
  if(!arr.length){
 
   return `
+
    <div class="empty">
+
     Bu terfi için yerel arıza kaydı yok.
+
    </div>
+
   `;
 
  }
 
- return arr.map(x=>`
+ return arr.map(
+  x=>`
 
   <div class="history-card">
 
    <div class="history-date">
-    ${new Date(x.date).toLocaleString('tr-TR')}
+
+    ${new Date(
+     x.date
+    ).toLocaleString(
+     'tr-TR'
+    )}
+
    </div>
 
    <div class="history-title">
@@ -4397,25 +6001,52 @@ function renderLocalFaultHistory(){
    </div>
 
    <div style="margin-top:5px">
+
     ${esc(x.detail)}
+
    </div>
 
   </div>
 
- `).join('');
+  `
+ ).join('');
 
 }
 
 function saveRealFault(){
 
- if(!edit)return requestAdmin();
+ if(!edit){
+
+  requestAdmin();
+
+  return;
+
+ }
+
+ touchAdminSession();
 
  const detail=[
-  `Kod: ${val('real_fault_code')}`,
-  `Ekipman: ${val('real_fault_equipment')}`,
-  `Tespit: ${val('real_fault_detection')}`,
-  `İşlem: ${val('real_fault_action')}`,
-  `Sonuç: ${val('real_fault_result')}`
+
+  `Kod: ${val(
+   'real_fault_code'
+  )}`,
+
+  `Ekipman: ${val(
+   'real_fault_equipment'
+  )}`,
+
+  `Tespit: ${val(
+   'real_fault_detection'
+  )}`,
+
+  `İşlem: ${val(
+   'real_fault_action'
+  )}`,
+
+  `Sonuç: ${val(
+   'real_fault_result'
+  )}`
+
  ].join(' · ');
 
  recordHistory(
@@ -4423,7 +6054,9 @@ function saveRealFault(){
   detail
  );
 
- toast('Arıza kaydı eklendi.');
+ toast(
+  'Arıza kaydı eklendi.'
+ );
 
  render();
 
@@ -4438,8 +6071,10 @@ function historyBody(){
 
  const arr=
   changeHistory.filter(
-   x=>current &&
-   x.terfi_id===current.s.id
+   x=>
+    current &&
+    x.terfi_id===
+     current.s.id
   );
 
  return `
@@ -4450,10 +6085,15 @@ function historyBody(){
 
    <div>
 
-    <h2>DEĞİŞİKLİK GEÇMİŞİ</h2>
+    <h2>
+     DEĞİŞİKLİK GEÇMİŞİ
+    </h2>
 
     <div class="section-sub">
-     Bu cihazdaki yönetici işlemleri ve saha kayıtları.
+
+     Bu cihazdaki yönetici işlemleri
+     ve saha kayıtları.
+
     </div>
 
    </div>
@@ -4462,9 +6102,12 @@ function historyBody(){
     edit
     ?
     `
-    <button class="btn bad"
+    <button
+     class="btn bad"
      onclick="clearHistory()">
+
      GEÇMİŞİ TEMİZLE
+
     </button>
     `
     :
@@ -4473,32 +6116,53 @@ function historyBody(){
 
   </div>
 
-  <div class="history-list" style="margin-top:10px">
+  <div
+   class="history-list"
+   style="margin-top:10px">
 
    ${
     arr.length
     ?
-    arr.map(x=>`
+    arr.map(
+     x=>`
 
      <div class="history-card">
 
       <div class="history-date">
-       ${new Date(x.date).toLocaleString('tr-TR')}
+
+       ${new Date(
+        x.date
+       ).toLocaleString(
+        'tr-TR'
+       )}
+
       </div>
 
       <div class="history-title">
+
        ${esc(x.action)}
+
       </div>
 
       <div style="margin-top:5px">
-       ${esc(x.detail||'')}
+
+       ${esc(
+        x.detail||
+        ''
+       )}
+
       </div>
 
      </div>
 
-    `).join('')
+     `
+    ).join('')
     :
-    `<div class="empty">Geçmiş kaydı yok.</div>`
+    `
+    <div class="empty">
+     Geçmiş kaydı yok.
+    </div>
+    `
    }
 
   </div>
@@ -4506,11 +6170,20 @@ function historyBody(){
  </div>
 
  `;
+
 }
 
 function clearHistory(){
 
- if(!edit)return requestAdmin();
+ if(!edit){
+
+  requestAdmin();
+
+  return;
+
+ }
+
+ touchAdminSession();
 
  if(!confirm(
   'Bu cihazdaki değişiklik geçmişi temizlensin mi?'
@@ -4518,7 +6191,9 @@ function clearHistory(){
 
  changeHistory=
   changeHistory.filter(
-   x=>x.terfi_id!==current.s.id
+   x=>
+    x.terfi_id!==
+     current.s.id
   );
 
  saveLocal(
@@ -4538,7 +6213,9 @@ function clearHistory(){
 function photoBody(){
 
  const arr=
-  localPhotos[current.s.id]||[];
+  localPhotos[
+   current.s.id
+  ]||[];
 
  return `
 
@@ -4548,10 +6225,15 @@ function photoBody(){
 
    <div>
 
-    <h2>TEKNİK FOTOĞRAFLAR</h2>
+    <h2>
+     TEKNİK FOTOĞRAFLAR
+    </h2>
 
     <div class="section-sub">
-     Motor, pano, sürücü, kablo, BOX ve saha fotoğraflarını sakla.
+
+     Motor, pano, sürücü, kablo,
+     BOX ve saha fotoğraflarını sakla.
+
     </div>
 
    </div>
@@ -4585,11 +6267,15 @@ function photoBody(){
   ${
    arr.length
    ?
-   arr.map((p,i)=>`
+   arr.map(
+    (p,i)=>`
 
     <div class="photo-item">
 
-     <img src="${p.data}" alt="Teknik Fotoğraf">
+     <img
+      src="${p.data}"
+      alt="Teknik Fotoğraf"
+     >
 
      <div class="photo-caption">
 
@@ -4606,7 +6292,7 @@ function photoBody(){
        <br>
 
        <button
-        class="btn bad btn-small"
+        class="btn bad"
         onclick="deletePhoto(${i})">
 
         Sil
@@ -4621,16 +6307,20 @@ function photoBody(){
 
     </div>
 
-   `).join('')
+    `
+   ).join('')
    :
-   `<div class="empty">
+   `
+   <div class="empty">
     Henüz fotoğraf yok.
-   </div>`
+   </div>
+   `
   }
 
  </div>
 
  `;
+
 }
 
 function addPhotos(event){
@@ -4640,64 +6330,96 @@ function addPhotos(event){
   requestAdmin();
 
   return;
+
  }
+
+ touchAdminSession();
 
  const files=[
   ...(event.target.files||[])
  ];
 
- if(!files.length)return;
+ if(!files.length)
+  return;
 
- let pending=files.length;
+ let pending=
+  files.length;
 
- files.forEach(file=>{
+ files.forEach(
+  file=>{
 
-  const reader=new FileReader();
+   const reader=
+    new FileReader();
 
-  reader.onload=()=>{
+   reader.onload=
+    ()=>{
 
-   localPhotos[current.s.id] ||=[];
+     localPhotos[
+      current.s.id
+     ] ||= [];
 
-   localPhotos[current.s.id].push({
-    name:file.name,
-    type:file.type,
-    data:reader.result,
-    date:nowText()
-   });
+     localPhotos[
+      current.s.id
+     ].push({
 
-   pending--;
+      name:file.name,
 
-   if(pending===0){
+      type:file.type,
 
-    saveLocal(
-     LOCAL_PHOTO_KEY,
-     localPhotos
-    );
+      data:reader.result,
 
-    recordHistory(
-     'FOTOĞRAF EKLENDİ',
-     `${files.length} fotoğraf`
-    );
+      date:nowText()
 
-    render();
+     });
 
-   }
+     pending--;
 
-  };
+     if(pending===0){
 
-  reader.readAsDataURL(file);
+      saveLocal(
+       LOCAL_PHOTO_KEY,
+       localPhotos
+      );
 
- });
+      recordHistory(
+       'FOTOĞRAF EKLENDİ',
+       `${files.length} fotoğraf`
+      );
+
+      render();
+
+     }
+
+    };
+
+   reader.readAsDataURL(
+    file
+   );
+
+  }
+ );
 
 }
 
 function deletePhoto(index){
 
- if(!edit)return requestAdmin();
+ if(!edit){
 
- if(!confirm('Fotoğraf silinsin mi?'))return;
+  requestAdmin();
 
- localPhotos[current.s.id].splice(
+  return;
+
+ }
+
+ touchAdminSession();
+
+ if(!confirm(
+  'Fotoğraf silinsin mi?'
+ ))return;
+
+ localPhotos[
+  current.s.id
+ ].splice(
   index,
   1
  );
@@ -4727,7 +6449,9 @@ function referenceBody(){
 
  <div class="card">
 
-  <h2>TEKNİK REFERANSLAR</h2>
+  <h2>
+   TEKNİK REFERANSLAR
+  </h2>
 
   <div class="library-grid">
 
@@ -4742,7 +6466,10 @@ function referenceBody(){
     </div>
 
     <div class="library-desc">
-     V · A · kW · Hz · RPM · cosφ bilgilerini birlikte değerlendir.
+
+     V · A · kW · Hz · RPM · cosφ
+     bilgilerini birlikte değerlendir.
+
     </div>
 
    </div>
@@ -4758,7 +6485,11 @@ function referenceBody(){
     </div>
 
     <div class="library-desc">
-     Tek anlık değerin yanı sıra ölçümün zamana bağlı davranışı da değerlendirilir.
+
+     Tek anlık değerin yanı sıra
+     ölçümün zamana bağlı davranışı
+     da değerlendirilir.
+
     </div>
 
    </div>
@@ -4774,7 +6505,11 @@ function referenceBody(){
     </div>
 
     <div class="library-desc">
-     Set değeri, geri bildirim, uyku/uyanma, minimum/maksimum frekans ve PID kayıtları.
+
+     Set değeri, geri bildirim,
+     uyku/uyanma, minimum/maksimum
+     frekans ve PID kayıtları.
+
     </div>
 
    </div>
@@ -4790,7 +6525,11 @@ function referenceBody(){
     </div>
 
     <div class="library-desc">
-     Weintek ekranları ayrı ayrı kaydedilir; PDF'de beş sayfanın tamamı bulunur.
+
+     Weintek ekranları ayrı ayrı
+     kaydedilir; PDF'de beş sayfanın
+     tamamı bulunur.
+
     </div>
 
    </div>
@@ -4806,7 +6545,11 @@ function referenceBody(){
     </div>
 
     <div class="library-desc">
-     Pompa çalışma süreleri ve çoklu pompa haberleşmesi takip edilebilir.
+
+     Pompa çalışma süreleri ve
+     çoklu pompa haberleşmesi
+     takip edilebilir.
+
     </div>
 
    </div>
@@ -4822,7 +6565,10 @@ function referenceBody(){
     </div>
 
     <div class="library-desc">
-     Bara · damar · renk · renk detayı · hedef · etiket bilgisi saklanır.
+
+     Bara · damar · renk · renk detayı
+     · hedef · etiket bilgisi saklanır.
+
     </div>
 
    </div>
@@ -4832,11 +6578,12 @@ function referenceBody(){
  </div>
 
  `;
+
 }
 
 
 /* =========================================================
-   SETTINGS
+   AYARLAR
 ========================================================= */
 
 function showSettings(){
@@ -4846,9 +6593,14 @@ function showSettings(){
   requestAdmin();
 
   return;
+
  }
 
- openModal(settingsMarkup());
+ touchAdminSession();
+
+ openModal(
+  settingsMarkup()
+ );
 
 }
 
@@ -4856,24 +6608,33 @@ function settingsMarkup(){
 
  return `
 
- <h2>⚙ YÖNETİCİ AYARLARI</h2>
+ <h2>
+  ⚙ YÖNETİCİ AYARLARI
+ </h2>
 
  <div class="section-sub">
+
   Bu alan yalnızca yönetici modunda kullanılabilir.
+
  </div>
 
- <div class="settings-grid" style="margin-top:12px">
+ <div
+  class="settings-grid"
+  style="margin-top:12px">
 
   <div class="setting">
 
-   <h4>Site Giriş Şifresi</h4>
+   <h4>
+    Site Giriş Şifresi
+   </h4>
 
    <input
     id="newSitePassword"
     type="password"
     inputmode="numeric"
     pattern="[0-9]*"
-    value=""
+    maxlength="16"
+    autocomplete="off"
     placeholder="Yeni site şifresi"
    >
 
@@ -4881,14 +6642,17 @@ function settingsMarkup(){
 
   <div class="setting">
 
-   <h4>Yönetici Şifresi</h4>
+   <h4>
+    Yönetici Şifresi
+   </h4>
 
    <input
     id="newAdminPassword"
     type="password"
     inputmode="numeric"
     pattern="[0-9]*"
-    value=""
+    maxlength="16"
+    autocomplete="off"
     placeholder="Yeni yönetici şifresi"
    >
 
@@ -4896,18 +6660,26 @@ function settingsMarkup(){
 
   <div class="setting">
 
-   <h4>Görünüm</h4>
+   <h4>
+    Görünüm
+   </h4>
 
    <select id="prefTheme">
 
-    <option value="dark"
+    <option
+     value="dark"
      ${prefs.theme==='dark'?'selected':''}>
+
      Koyu
+
     </option>
 
-    <option value="light"
+    <option
+     value="light"
      ${prefs.theme==='light'?'selected':''}>
+
      Açık
+
     </option>
 
    </select>
@@ -4916,23 +6688,34 @@ function settingsMarkup(){
 
   <div class="setting">
 
-   <h4>Yakınlaştırma</h4>
+   <h4>
+    Yakınlaştırma
+   </h4>
 
    <select id="prefZoom">
 
-    <option value="small"
+    <option
+     value="small"
      ${prefs.zoom==='small'?'selected':''}>
+
      Küçük
+
     </option>
 
-    <option value="normal"
+    <option
+     value="normal"
      ${prefs.zoom==='normal'?'selected':''}>
+
      Normal
+
     </option>
 
-    <option value="large"
+    <option
+     value="large"
      ${prefs.zoom==='large'?'selected':''}>
+
      Büyük
+
     </option>
 
    </select>
@@ -4941,29 +6724,55 @@ function settingsMarkup(){
 
   <div class="setting">
 
-   <h4>Ana Başlık</h4>
+   <h4>
+    Ana Başlık
+   </h4>
 
    <input
     id="prefTitle"
-    value="${esc(prefs.labels.title)}"
+    value="${esc(
+     prefs.labels.title
+    )}"
    >
 
   </div>
 
   <div class="setting">
 
-   <h4>Alt Başlık</h4>
+   <h4>
+    Alt Başlık
+   </h4>
 
    <input
     id="prefSubtitle"
-    value="${esc(prefs.labels.subtitle)}"
+    value="${esc(
+     prefs.labels.subtitle
+    )}"
    >
 
   </div>
 
  </div>
 
- <div class="workbox" style="margin-top:12px">
+ <div
+  class="workbox"
+  style="margin-top:12px">
+
+  <h4>
+   YÖNETİCİ OTURUMU
+  </h4>
+
+  Yönetici şifresi tekrar tekrar sorulmaz.
+  Aynı tarayıcı sekmesi içindeki çalışma boyunca
+  yetki devam eder. 30 dakika hiçbir işlem yapılmazsa
+  sistem otomatik olarak kilitlenir.
+  Tarayıcı sekmesi kapatıldığında yönetici oturumu sona erer.
+
+ </div>
+
+ <div
+  class="workbox"
+  style="margin-top:12px">
 
   <h4>
    YÖNETİCİ NOTU
@@ -4977,19 +6786,26 @@ function settingsMarkup(){
 
  <div class="modal-actions">
 
-  <button class="btn"
+  <button
+   class="btn"
    onclick="closeModal()">
+
    İPTAL
+
   </button>
 
-  <button class="btn ok"
+  <button
+   class="btn ok"
    onclick="saveSettings()">
+
    AYARLARI KAYDET
+
   </button>
 
  </div>
 
  `;
+
 }
 
 function saveSettings(){
@@ -4999,40 +6815,62 @@ function saveSettings(){
   requestAdmin();
 
   return;
+
  }
 
- const site=val('newSitePassword');
- const admin=val('newAdminPassword');
+ touchAdminSession();
+
+ const site=
+  val(
+   'newSitePassword'
+  );
+
+ const admin=
+  val(
+   'newAdminPassword'
+  );
 
  if(site){
 
   if(!/^\d+$/.test(site)){
 
-   toast('Site şifresi sadece sayı olabilir.');
+   toast(
+    'Site şifresi sadece sayı olabilir.'
+   );
 
    return;
+
   }
 
-  prefs.sitePassword=site;
+  prefs.sitePassword=
+   site;
+
  }
 
  if(admin){
 
   if(!/^\d+$/.test(admin)){
 
-   toast('Yönetici şifresi sadece sayı olabilir.');
+   toast(
+    'Yönetici şifresi sadece sayı olabilir.'
+   );
 
    return;
+
   }
 
-  prefs.adminPassword=admin;
+  prefs.adminPassword=
+   admin;
+
  }
 
  prefs.theme=
-  val('prefTheme')||'dark';
+  val('prefTheme')||
+  'dark';
 
  prefs.zoom=
-  val('prefZoom')||'normal';
+  val('prefZoom')||
+  'normal';
 
  prefs.labels.title=
   val('prefTitle')||
@@ -5053,7 +6891,9 @@ function saveSettings(){
 
  render();
 
- toast('Yönetici ayarları kaydedildi.');
+ toast(
+  'Yönetici ayarları kaydedildi.'
+ );
 
 }
 
@@ -5064,19 +6904,21 @@ function saveSettings(){
 
 function requestAdmin(){
 
+ /*
+   Zaten yönetici ise tekrar şifre istemiyoruz;
+   sadece kilitleme görevi görüyor.
+ */
+
  if(edit){
 
-  edit=false;
+  clearAdminSession();
 
-  document.getElementById('saveBar')
-   .classList.add('hidden');
+  recordHistory(
+   'YÖNETİCİ MODU KAPATILDI',
+   ''
+  );
 
   if(current){
-
-   recordHistory(
-    'YÖNETİCİ MODU KAPATILDI',
-    ''
-   );
 
    render();
 
@@ -5086,20 +6928,34 @@ function requestAdmin(){
 
   }
 
+  toast(
+   'Yönetici modu kilitlendi.'
+  );
+
   return;
+
  }
 
  openModal(`
 
-  <h2>🔐 Yönetici Girişi</h2>
+  <h2>
+   🔐 Yönetici Girişi
+  </h2>
 
   <div class="section-sub">
-   Düzenleme, silme, parametre/hata kütüphanesi ve ayarlar için yönetici şifresini gir.
+
+   Düzenleme, silme, parametre/hata kütüphanesi
+   ve ayarlar için yönetici şifresini gir.
+
   </div>
 
-  <div class="field" style="margin-top:12px">
+  <div
+   class="field"
+   style="margin-top:12px">
 
-   <label>Yönetici Şifresi</label>
+   <label>
+    Yönetici Şifresi
+   </label>
 
    <input
     id="adminPasswordBox"
@@ -5110,7 +6966,8 @@ function requestAdmin(){
     maxlength="16"
     autocomplete="off"
     onkeydown="
-     if(event.key==='Enter')checkAdmin();
+     if(event.key==='Enter')
+      checkAdmin();
     "
    >
 
@@ -5118,14 +6975,20 @@ function requestAdmin(){
 
   <div class="modal-actions">
 
-   <button class="btn"
+   <button
+    class="btn"
     onclick="closeModal()">
+
     İPTAL
+
    </button>
 
-   <button class="btn ok"
+   <button
+    class="btn ok"
     onclick="checkAdmin()">
+
     GİRİŞ
+
    </button>
 
   </div>
@@ -5133,9 +6996,13 @@ function requestAdmin(){
  `);
 
  setTimeout(
-  ()=>document.getElementById(
-   'adminPasswordBox'
-  )?.focus(),
+  ()=>{
+   document
+    .getElementById(
+     'adminPasswordBox'
+    )
+    ?.focus();
+  },
   80
  );
 
@@ -5143,13 +7010,16 @@ function requestAdmin(){
 
 function checkAdmin(){
 
- const p=val(
-  'adminPasswordBox'
- );
+ const p=
+  val(
+   'adminPasswordBox'
+  );
 
  if(p===prefs.adminPassword){
 
   edit=true;
+
+  setAdminSession();
 
   closeModal();
 
@@ -5160,13 +7030,16 @@ function checkAdmin(){
 
   render();
 
-  toast('Yönetici modu aktif.');
+  toast(
+   'Yönetici modu aktif.'
+  );
 
  }else{
 
-  const e=document.getElementById(
-   'adminPasswordBox'
-  );
+  const e=
+   document.getElementById(
+    'adminPasswordBox'
+   );
 
   if(e){
 
@@ -5176,7 +7049,9 @@ function checkAdmin(){
 
   }
 
-  toast('Yönetici şifresi hatalı.');
+  toast(
+   'Yönetici şifresi hatalı.'
+  );
 
  }
 
@@ -5191,11 +7066,16 @@ function openModal(html){
 
  closeModal();
 
- const wrap=document.createElement('div');
+ const wrap=
+  document.createElement(
+   'div'
+  );
 
- wrap.className='modal-backdrop';
+ wrap.className=
+  'modal-backdrop';
 
- wrap.id='modalRoot';
+ wrap.id=
+  'modalRoot';
 
  wrap.innerHTML=`
 
@@ -5207,15 +7087,19 @@ function openModal(html){
 
  `;
 
- document.body.appendChild(wrap);
+ document.body.appendChild(
+  wrap
+ );
 
 }
 
 function closeModal(){
 
- document.getElementById(
-  'modalRoot'
- )?.remove();
+ document
+  .getElementById(
+   'modalRoot'
+  )
+  ?.remove();
 
 }
 
@@ -5228,9 +7112,12 @@ async function saveActive(){
 
  if(!current){
 
-  toast('Önce bir terfi açın.');
+  toast(
+   'Önce bir terfi açın.'
+  );
 
   return;
+
  }
 
  if(!edit){
@@ -5238,61 +7125,88 @@ async function saveActive(){
   requestAdmin();
 
   return;
+
  }
+
+ touchAdminSession();
 
  try{
 
   /* TERFİ */
+
   if(tab==='terfi'){
 
-   const r=await db
-    .from('terfiler')
-    .update({
+   const r=
+    await db
+     .from('terfiler')
+     .update({
 
-     ad:val('s_ad'),
-     terfi_no:val('s_no'),
-     kod:val('s_kod'),
-     bolge:val('s_bolge'),
-     adres:val('s_adres'),
-     aciklama:val('s_aciklama'),
-     updated_at:new Date().toISOString()
+      ad:
+       val('s_ad'),
 
-    })
-    .eq('id',current.s.id);
+      terfi_no:
+       val('s_no'),
 
-   if(r.error)throw r.error;
+      kod:
+       val('s_kod'),
+
+      bolge:
+       val('s_bolge'),
+
+      adres:
+       val('s_adres'),
+
+      aciklama:
+       val('s_aciklama'),
+
+      updated_at:
+       new Date().toISOString()
+
+     })
+     .eq(
+      'id',
+      current.s.id
+     );
+
+   if(r.error)
+    throw r.error;
 
   }
 
 
-  /* SSR - local device */
+  /* SSR */
+
   if(tab==='ssr'){
 
    current.ssr={
-    level:val('ssr_level'),
-    low:val('ssr_low'),
-    high:val('ssr_high'),
-    note:val('ssr_note')
+
+    level:
+     val('ssr_level'),
+
+    low:
+     val('ssr_low'),
+
+    high:
+     val('ssr_high'),
+
+    note:
+     val('ssr_note')
+
    };
-
-   current.s.aciklama=
-    current.s.aciklama||'';
-
-   /*
-     SSR için mevcut şemanda ayrı alan olmadığı için
-     cihaz tarafında saklanır.
-   */
 
    const map=
     localJSON(
-     'meski_ssr_v10',
+     LOCAL_SSR_KEY,
      {}
     );
 
-   map[current.s.id]=current.ssr;
+   map[
+    current.s.id
+   ]=
+    current.ssr;
 
    saveLocal(
-    'meski_ssr_v10',
+    LOCAL_SSR_KEY,
     map
    );
 
@@ -5300,68 +7214,120 @@ async function saveActive(){
 
 
   /* MOTOR */
+
   if(tab==='motor'){
 
-   for(const m of current.m){
+   for(
+    const m of current.m
+   ){
 
-    const r=await db
-     .from('motorlar')
-     .update({
+    const r=
+     await db
+      .from('motorlar')
+      .update({
 
-      ad:val(`m_${m.id}_ad`),
+       ad:
+        val(
+         `m_${m.id}_ad`
+        ),
 
-      marka:val(`m_${m.id}_marka`),
+       marka:
+        val(
+         `m_${m.id}_marka`
+        ),
 
-      model:val(`m_${m.id}_model`),
+       model:
+        val(
+         `m_${m.id}_model`
+        ),
 
-      seri_no:val(`m_${m.id}_seri`),
+       seri_no:
+        val(
+         `m_${m.id}_seri`
+        ),
 
-      guc_kw:num(
-       val(`m_${m.id}_kw`)
-      ),
+       guc_kw:
+        num(
+         val(
+          `m_${m.id}_kw`
+         )
+        ),
 
-      guc_hp:num(
-       val(`m_${m.id}_hp`)
-      ),
+       guc_hp:
+        num(
+         val(
+          `m_${m.id}_hp`
+         )
+        ),
 
-      gerilim_v:num(
-       val(`m_${m.id}_v`)
-      ),
+       gerilim_v:
+        num(
+         val(
+          `m_${m.id}_v`
+         )
+        ),
 
-      nominal_akim_a:num(
-       val(`m_${m.id}_a`)
-      ),
+       nominal_akim_a:
+        num(
+         val(
+          `m_${m.id}_a`
+         )
+        ),
 
-      frekans_hz:num(
-       val(`m_${m.id}_hz`)
-      ),
+       frekans_hz:
+        num(
+         val(
+          `m_${m.id}_hz`
+         )
+        ),
 
-      devir_rpm:num(
-       val(`m_${m.id}_rpm`)
-      ),
+       devir_rpm:
+        num(
+         val(
+          `m_${m.id}_rpm`
+         )
+        ),
 
-      cos_phi:num(
-       val(`m_${m.id}_cos`)
-      ),
+       cos_phi:
+        num(
+         val(
+          `m_${m.id}_cos`
+         )
+        ),
 
-      montaj_tarihi:
-       val(`m_${m.id}_montaj`)||null,
+       montaj_tarihi:
+        val(
+         `m_${m.id}_montaj`
+        )||
+        null,
 
-      degisim_tarihi:
-       val(`m_${m.id}_degisim`)||null,
+       degisim_tarihi:
+        val(
+         `m_${m.id}_degisim`
+        )||
+        null,
 
-      etiket_notu:
-       val(`m_${m.id}_not`)
+       etiket_notu:
+        val(
+         `m_${m.id}_not`
+        )
 
-     })
-     .eq('id',m.id);
+      })
+      .eq(
+       'id',
+       m.id
+      );
 
-    if(r.error)throw r.error;
+    if(r.error)
+     throw r.error;
+
    }
+
   }
 
 
   /* BOX */
+
   if(tab==='box'){
 
    saveLocal(
@@ -5373,128 +7339,214 @@ async function saveActive(){
 
 
   /* POMPA */
+
   if(tab==='pompa'){
 
-   for(const p of current.p){
+   for(
+    const p of current.p
+   ){
 
-    const r=await db
-     .from('pompalar')
-     .update({
+    const r=
+     await db
+      .from('pompalar')
+      .update({
 
-      ad:val(`p_${p.id}_ad`),
+       ad:
+        val(
+         `p_${p.id}_ad`
+        ),
 
-      marka:val(`p_${p.id}_marka`),
+       marka:
+        val(
+         `p_${p.id}_marka`
+        ),
 
-      model:val(`p_${p.id}_model`),
+       model:
+        val(
+         `p_${p.id}_model`
+        ),
 
-      tip:val(`p_${p.id}_tip`),
+       tip:
+        val(
+         `p_${p.id}_tip`
+        ),
 
-      seri_no:val(`p_${p.id}_seri`),
+       seri_no:
+        val(
+         `p_${p.id}_seri`
+        ),
 
-      guc_kw:num(
-       val(`p_${p.id}_kw`)
-      ),
+       guc_kw:
+        num(
+         val(
+          `p_${p.id}_kw`
+         )
+        ),
 
-      guc_hp:num(
-       val(`p_${p.id}_hp`)
-      ),
+       guc_hp:
+        num(
+         val(
+          `p_${p.id}_hp`
+         )
+        ),
 
-      q_min_m3h:num(
-       val(`p_${p.id}_qmin`)
-      ),
+       q_min_m3h:
+        num(
+         val(
+          `p_${p.id}_qmin`
+         )
+        ),
 
-      q_max_m3h:num(
-       val(`p_${p.id}_qmax`)
-      ),
+       q_max_m3h:
+        num(
+         val(
+          `p_${p.id}_qmax`
+         )
+        ),
 
-      h_min_m:num(
-       val(`p_${p.id}_hmin`)
-      ),
+       h_min_m:
+        num(
+         val(
+          `p_${p.id}_hmin`
+         )
+        ),
 
-      h_max_m:num(
-       val(`p_${p.id}_hmax`)
-      ),
+       h_max_m:
+        num(
+         val(
+          `p_${p.id}_hmax`
+         )
+        ),
 
-      etiket_notu:
-       val(`p_${p.id}_not`)
+       etiket_notu:
+        val(
+         `p_${p.id}_not`
+        )
 
-     })
-     .eq('id',p.id);
+      })
+      .eq(
+       'id',
+       p.id
+      );
 
-    if(r.error)throw r.error;
+    if(r.error)
+     throw r.error;
 
    }
+
   }
 
 
   /* SÜRÜCÜ */
+
   if(tab==='surucu'){
 
-   for(const d of current.d){
+   for(
+    const d of current.d
+   ){
 
-    const r=await db
-     .from('suruculer')
-     .update({
+    const r=
+     await db
+      .from('suruculer')
+      .update({
 
-      ad:val(`d_${d.id}_ad`),
+       ad:
+        val(
+         `d_${d.id}_ad`
+        ),
 
-      marka:val(`d_${d.id}_marka`),
+       marka:
+        val(
+         `d_${d.id}_marka`
+        ),
 
-      model:val(`d_${d.id}_model`),
+       model:
+        val(
+         `d_${d.id}_model`
+        ),
 
-      seri_no:val(`d_${d.id}_seri`),
+       seri_no:
+        val(
+         `d_${d.id}_seri`
+        ),
 
-      guc_kw:num(
-       val(`d_${d.id}_kw`)
-      ),
+       guc_kw:
+        num(
+         val(
+          `d_${d.id}_kw`
+         )
+        ),
 
-      besleme_v:num(
-       val(`d_${d.id}_v`)
-      ),
+       besleme_v:
+        num(
+         val(
+          `d_${d.id}_v`
+         )
+        ),
 
-      motor_id:
-       val(`d_${d.id}_motor`)||null,
+       motor_id:
+        val(
+         `d_${d.id}_motor`
+        )||
+        null,
 
-      notlar:
-       val(`d_${d.id}_not`)
+       notlar:
+        val(
+         `d_${d.id}_not`
+        )
 
-     })
-     .eq('id',d.id);
+      })
+      .eq(
+       'id',
+       d.id
+      );
 
-    if(r.error)throw r.error;
+    if(r.error)
+     throw r.error;
 
    }
+
   }
 
 
   /* HMI */
+
   if(tab==='hmi'){
 
-   for(let page=1;page<=5;page++){
-
-    /*
-      Mevcut açık sayfa harici diğer sayfaları koruyoruz.
-      Açık sayfadaki alanlar kayıt edilir.
-    */
+   for(
+    let page=1;
+    page<=5;
+    page++
+   ){
 
     const old=
      current.h.find(
-      x=>x.ekran_no===page
+      x=>
+       x.ekran_no===page
      );
 
-    if(page===hmiPage || !old){
+    if(
+     page===hmiPage ||
+     !old
+    ){
 
      const values=
-      old?.degerler||{};
+      old?.degerler||
+      {};
 
-     if(page===hmiPage){
+     if(
+      page===hmiPage
+     ){
 
-      HMI[page-1].forEach(
+      HMI[
+       page-1
+      ].forEach(
        (label,i)=>{
 
-        values[i]=val(
-         `hmi_${page}_${i}`
-        );
+        values[i]=
+         val(
+          `hmi_${page}_${i}`
+         );
 
        }
       );
@@ -5503,26 +7555,45 @@ async function saveActive(){
 
      if(old){
 
-      const r=await db
-       .from('hmi_kayitlari')
-       .update({
-        degerler:values
-       })
-       .eq('id',old.id);
+      const r=
+       await db
+        .from(
+         'hmi_kayitlari'
+        )
+        .update({
+         degerler:
+          values
+        })
+        .eq(
+         'id',
+         old.id
+        );
 
-      if(r.error)throw r.error;
+      if(r.error)
+       throw r.error;
 
      }else{
 
-      const r=await db
-       .from('hmi_kayitlari')
-       .insert({
-        terfi_id:current.s.id,
-        ekran_no:page,
-        degerler:values
-       });
+      const r=
+       await db
+        .from(
+         'hmi_kayitlari'
+        )
+        .insert({
 
-      if(r.error)throw r.error;
+         terfi_id:
+          current.s.id,
+
+         ekran_no:
+          page,
+
+         degerler:
+          values
+
+        });
+
+      if(r.error)
+       throw r.error;
 
      }
 
@@ -5534,6 +7605,7 @@ async function saveActive(){
 
 
   /* ÇALIŞMA */
+
   if(tab==='calisma'){
 
    if(!workMotor)
@@ -5543,53 +7615,103 @@ async function saveActive(){
 
    const patch={
 
-    terfi_id:current.s.id,
+    terfi_id:
+     current.s.id,
 
-    motor_id:workMotor,
+    motor_id:
+     workMotor,
 
     captured_at:
      new Date().toISOString(),
 
     frekans_hz:
-     num(val('w_frekans_hz')),
+     num(
+      val(
+       'w_frekans_hz'
+      )
+     ),
 
     akim_a:
-     num(val('w_akim_a')),
+     num(
+      val(
+       'w_akim_a'
+      )
+     ),
 
     devir_rpm:
-     num(val('w_devir_rpm')),
+     num(
+      val(
+       'w_devir_rpm'
+      )
+     ),
 
     guc_kw:
-     num(val('w_guc_kw')),
+     num(
+      val(
+       'w_guc_kw'
+      )
+     ),
 
     gerilim_v:
-     num(val('w_gerilim_v')),
+     num(
+      val(
+       'w_gerilim_v'
+      )
+     ),
 
     surucu_sicaklik_c:
-     num(val('w_surucu_sicaklik_c')),
+     num(
+      val(
+       'w_surucu_sicaklik_c'
+      )
+     ),
 
     set_basinci_bar:
-     num(val('w_set_basinci_bar')),
+     num(
+      val(
+       'w_set_basinci_bar'
+      )
+     ),
 
     calisma_basinci_bar:
-     num(val('w_calisma_basinci_bar')),
+     num(
+      val(
+       'w_calisma_basinci_bar'
+      )
+     ),
 
     tasarruf_kwh:
-     num(val('w_tasarruf_kwh')),
+     num(
+      val(
+       'w_tasarruf_kwh'
+      )
+     ),
 
     durum:
-     val('w_durum')||null,
+     val(
+      'w_durum'
+     )||
+     null,
 
     notlar:
-     val('w_notlar')||null
+     val(
+      'w_notlar'
+     )||
+     null
 
    };
 
-   const r=await db
-    .from('motor_calisma_kayitlari')
-    .insert(patch);
+   const r=
+    await db
+     .from(
+      'motor_calisma_kayitlari'
+     )
+     .insert(
+      patch
+     );
 
-   if(r.error)throw r.error;
+   if(r.error)
+    throw r.error;
 
   }
 
@@ -5613,7 +7735,10 @@ async function saveActive(){
 
   alert(
    'Kayıt sırasında hata oluştu.\n\n'+
-   (e.message||'Bilinmeyen hata')
+   (
+    e.message||
+    'Bilinmeyen hata'
+   )
   );
 
  }
@@ -5627,44 +7752,73 @@ async function saveActive(){
 
 async function addTerfiParam(){
 
- if(!edit)return requestAdmin();
+ if(!edit){
+
+  requestAdmin();
+
+  return;
+
+ }
+
+ touchAdminSession();
 
  const data={
 
-  terfi_id:current.s.id,
+  terfi_id:
+   current.s.id,
 
   ekran_adi:
-   val('new_tp_ekran'),
+   val(
+    'new_tp_ekran'
+   ),
 
   parametre_adi:
-   val('new_tp_ad'),
+   val(
+    'new_tp_ad'
+   ),
 
   deger:
-   val('new_tp_deger'),
+   val(
+    'new_tp_deger'
+   ),
 
   birim:
-   val('new_tp_birim'),
+   val(
+    'new_tp_birim'
+   ),
 
   aciklama:
-   val('new_tp_aciklama'),
+   val(
+    'new_tp_aciklama'
+   ),
 
   kaynak:
-   val('new_tp_kaynak'),
+   val(
+    'new_tp_kaynak'
+   ),
 
   sira:
    current.tp.length+1
 
  };
 
- const r=await db
-  .from('terfi_parametreleri')
-  .insert(data);
+ const r=
+  await db
+   .from(
+    'terfi_parametreleri'
+   )
+   .insert(
+    data
+   );
 
  if(r.error){
 
-  alert(r.error.message);
+  alert(
+   r.error.message
+  );
 
   return;
+
  }
 
  recordHistory(
@@ -5690,7 +7844,10 @@ async function newStation(){
   requestAdmin();
 
   return;
+
  }
+
+ touchAdminSession();
 
  const kod=
   'T'+
@@ -5698,37 +7855,52 @@ async function newStation(){
    Date.now()
   ).slice(-6);
 
- const r=await db
-  .from('terfiler')
-  .insert({
+ const r=
+  await db
+   .from('terfiler')
+   .insert({
 
-   ad:'Yeni Terfi',
+    ad:
+     'Yeni Terfi',
 
-   kod,
+    kod,
 
-   terfi_no:kod,
+    terfi_no:
+     kod,
 
-   aciklama:''
+    aciklama:
+     ''
 
-  })
-  .select()
-  .single();
+   })
+   .select()
+   .single();
 
  if(r.error){
 
-  alert(r.error.message);
+  alert(
+   r.error.message
+  );
 
   return;
+
  }
 
  current={
+
   s:r.data,
   m:[],
   p:[],
   d:[],
   h:[],
   w:[],
-  tp:[]
+  tp:[],
+  ssr:{
+   level:'',
+   low:'',
+   high:'',
+   note:''
+  }
+
  };
 
  tab='terfi';
@@ -5740,7 +7912,9 @@ async function newStation(){
 
  render();
 
- toast('Yeni terfi oluşturuldu.');
+ toast(
+  'Yeni terfi oluşturuldu.'
+ );
 
 }
 
@@ -5756,42 +7930,64 @@ async function deleteTerfi(){
   requestAdmin();
 
   return;
+
  }
 
- if(!current?.s?.id)return;
+ touchAdminSession();
 
- const s=current.s;
+ if(!current?.s?.id)
+  return;
 
- const sure=confirm(
-  `"${s.ad||'Bu terfi'}" tamamen silinsin mi?\n\n`+
-  `Bu işlem terfinin bağlı motor, pompa, sürücü, HMI, çalışma, `+
-  `parametre ve diğer kayıtlarını da silmeyi deneyecek.\n\n`+
-  `GERİ ALINAMAZ.`
- );
+ const s=
+  current.s;
 
- if(!sure)return;
+ const sure=
+  confirm(
 
- const id=s.id;
+   `"${s.ad||'Bu terfi'}" tamamen silinsin mi?\n\n`+
+
+   `Bu işlem terfinin bağlı motor, pompa, sürücü, HMI, çalışma, `+
+   `parametre ve diğer kayıtlarını da silmeyi deneyecek.\n\n`+
+
+   `GERİ ALINAMAZ.`
+
+  );
+
+ if(!sure)
+  return;
+
+ const id=
+  s.id;
 
  try{
 
   /* Motorlar */
-  const mr=await db
-   .from('motorlar')
-   .select('id')
-   .eq('terfi_id',id);
 
-  if(mr.error)throw mr.error;
+  const mr=
+   await db
+    .from('motorlar')
+    .select('id')
+    .eq(
+     'terfi_id',
+     id
+    );
+
+  if(mr.error)
+   throw mr.error;
 
   const motorIds=
-   (mr.data||[]).map(
-    x=>x.id
-   );
+   (mr.data||[])
+    .map(
+     x=>x.id
+    );
 
   /* Motor bağlı BOX */
-  for(const mid of motorIds){
 
-   localBoxes[mid]=undefined;
+  for(
+   const mid of motorIds
+  ){
+
+   delete localBoxes[mid];
 
   }
 
@@ -5802,6 +7998,7 @@ async function deleteTerfi(){
 
 
   /* Terfi bazlı bilinen tablolar */
+
   const terfiTables=[
 
    'motor_calisma_kayitlari',
@@ -5822,19 +8019,21 @@ async function deleteTerfi(){
    'degisiklik_gecmisi',
    'ariza_notlari',
    'kablo_baglantilari'
+
   ];
 
-  /*
-   Bazı tablolar mevcut olmayabilir.
-   Böyle bir durumda diğer silme işlemlerine devam ediyoruz.
-  */
+  for(
+   const table of terfiTables
+  ){
 
-  for(const table of terfiTables){
-
-   const r=await db
-    .from(table)
-    .delete()
-    .eq('terfi_id',id);
+   const r=
+    await db
+     .from(table)
+     .delete()
+     .eq(
+      'terfi_id',
+      id
+     );
 
    if(r.error){
 
@@ -5849,90 +8048,141 @@ async function deleteTerfi(){
   }
 
 
-  /* Sürücüleri sil */
-  const dr=await db
-   .from('suruculer')
-   .select('id')
-   .eq('terfi_id',id);
+  /* Sürücüler */
 
-  if(dr.error)throw dr.error;
-
-  for(const d of dr.data||[]){
-
+  const dr=
    await db
-    .from('surucu_ariza_kayitlari')
-    .delete()
-    .eq('surucu_id',d.id);
-
-   await db
-    .from('surucu_parametre_kayitlari')
-    .delete()
-    .eq('surucu_id',d.id);
-
-   const r=await db
     .from('suruculer')
-    .delete()
-    .eq('id',d.id);
+    .select('id')
+    .eq(
+     'terfi_id',
+     id
+    );
 
-   if(r.error)throw r.error;
+  if(dr.error)
+   throw dr.error;
+
+  for(
+   const d of dr.data||[]
+  ){
+
+   await db
+    .from(
+     'surucu_ariza_kayitlari'
+    )
+    .delete()
+    .eq(
+     'surucu_id',
+     d.id
+    );
+
+   await db
+    .from(
+     'surucu_parametre_kayitlari'
+    )
+    .delete()
+    .eq(
+     'surucu_id',
+     d.id
+    );
+
+   const r=
+    await db
+     .from('suruculer')
+     .delete()
+     .eq(
+      'id',
+      d.id
+     );
+
+   if(r.error)
+    throw r.error;
 
   }
 
 
   /* Motorlar */
-  for(const mid of motorIds){
 
-   const r=await db
-    .from('motorlar')
-    .delete()
-    .eq('id',mid);
+  for(
+   const mid of motorIds
+  ){
 
-   if(r.error)throw r.error;
+   const r=
+    await db
+     .from('motorlar')
+     .delete()
+     .eq(
+      'id',
+      mid
+     );
+
+   if(r.error)
+    throw r.error;
 
   }
 
 
   /* Pompalar */
-  const pumps=await db
-   .from('pompalar')
-   .select('id')
-   .eq('terfi_id',id);
 
-  if(pumps.error)throw pumps.error;
-
-  for(const p of pumps.data||[]){
-
-   const r=await db
+  const pumps=
+   await db
     .from('pompalar')
-    .delete()
-    .eq('id',p.id);
+    .select('id')
+    .eq(
+     'terfi_id',
+     id
+    );
 
-   if(r.error)throw r.error;
+  if(pumps.error)
+   throw pumps.error;
+
+  for(
+   const p of pumps.data||[]
+  ){
+
+   const r=
+    await db
+     .from('pompalar')
+     .delete()
+     .eq(
+      'id',
+      p.id
+     );
+
+   if(r.error)
+    throw r.error;
 
   }
 
 
-  /* Son olarak ana terfi */
-  const finalDelete=await db
-   .from('terfiler')
-   .delete()
-   .eq('id',id);
+  /* ANA TERFİ */
+
+  const finalDelete=
+   await db
+    .from('terfiler')
+    .delete()
+    .eq(
+     'id',
+     id
+    );
 
   if(finalDelete.error)
    throw finalDelete.error;
 
 
   /* Yerel foto / geçmiş */
+
   delete localPhotos[id];
 
   changeHistory=
    changeHistory.filter(
-    x=>x.terfi_id!==id
+    x=>
+     x.terfi_id!==id
    );
 
   const ssrMap=
    localJSON(
-    'meski_ssr_v10',
+    LOCAL_SSR_KEY,
     {}
    );
 
@@ -5949,7 +8199,7 @@ async function deleteTerfi(){
   );
 
   saveLocal(
-   'meski_ssr_v10',
+   LOCAL_SSR_KEY,
    ssrMap
   );
 
@@ -5959,7 +8209,7 @@ async function deleteTerfi(){
 
   current=null;
 
-  edit=false;
+  clearAdminSession();
 
   await home();
 
@@ -5969,10 +8219,14 @@ async function deleteTerfi(){
 
   alert(
    'Terfi tamamen silinemedi.\n\n'+
-   (e.message||'Bilinmeyen hata')
+   (
+    e.message||
+    'Bilinmeyen hata'
+   )
   );
 
  }
+
 }
 
 
@@ -5982,9 +8236,13 @@ async function deleteTerfi(){
 
 function logout(){
 
- edit=false;
+ clearAdminSession();
+
  current=null;
+
  loggedIn=false;
+
+ closeModal();
 
  showLogin();
 
@@ -5995,33 +8253,51 @@ function logout(){
    PDF
 ========================================================= */
 
-function printCell(label,value){
+function printCell(
+ label,
+ value
+){
 
  return `
+
  <div class="print-cell">
-  <b>${esc(label)}</b>
-  <span>${
-   value===null||
-   value===undefined||
-   value===''
-   ?
-   '—'
-   :
-   value
-  }</span>
+
+  <b>
+   ${esc(label)}
+  </b>
+
+  <span>
+
+   ${
+    value===null||
+    value===undefined||
+    value===''
+    ?
+    '—'
+    :
+    esc(value)
+   }
+
+  </span>
+
  </div>
+
  `;
+
 }
 
 function printHmi(pageIndex){
 
  const rec=
   current.h.find(
-   x=>x.ekran_no===pageIndex
+   x=>
+    x.ekran_no===
+    pageIndex
   );
 
  const v=
-  rec?.degerler||{};
+  rec?.degerler||
+  {};
 
  return `
 
@@ -6043,31 +8319,33 @@ function printHmi(pageIndex){
 
    ${
     HMI[pageIndex-1]
-    .map(
-     (label,i)=>`
+     .map(
+      (label,i)=>`
 
-      <div class="print-hmi-cell">
+       <div class="print-hmi-cell">
 
-       <b>
-        ${esc(label)}
-       </b>
+        <b>
+         ${esc(label)}
+        </b>
 
-       <span>
-        ${esc(
-         v[i]===''||
-         v[i]===undefined||
-         v[i]===null
-         ?
-         '—'
-         :
-         v[i]
-        )}
-       </span>
+        <span>
 
-      </div>
+         ${esc(
+          v[i]===''||
+          v[i]===undefined||
+          v[i]===null
+          ?
+          '—'
+          :
+          v[i]
+         )}
 
-     `
-    ).join('')
+        </span>
+
+       </div>
+
+      `
+     ).join('')
    }
 
   </div>
@@ -6075,26 +8353,30 @@ function printHmi(pageIndex){
  </div>
 
  `;
+
 }
 
 function reportHTML(){
 
- const s=current.s;
+ const s=
+  current.s;
 
  const ssrMap=
   localJSON(
-   'meski_ssr_v10',
+   LOCAL_SSR_KEY,
    {}
   );
 
  const ssr=
-  ssrMap[s.id] ||
-  current.ssr ||
+  ssrMap[s.id]||
+  current.ssr||
   {};
 
  const history=
   changeHistory.filter(
-   x=>x.terfi_id===s.id
+   x=>
+    x.terfi_id===
+    s.id
   );
 
  return `
@@ -6110,22 +8392,44 @@ function reportHTML(){
     </h1>
 
     <p>
-     ${esc(s.terfi_no||s.kod||'')}
+
+     ${esc(
+      s.terfi_no||
+      s.kod||
+      ''
+     )}
+
      ·
-     ${esc(s.ad||'')}
+
+     ${esc(
+      s.ad||
+      ''
+     )}
+
      ·
-     ${esc(s.bolge||'')}
+
+     ${esc(
+      s.bolge||
+      ''
+     )}
+
     </p>
 
    </div>
 
    <div class="print-right">
 
-    ${esc(s.adres||'')}
+    ${esc(
+     s.adres||
+     ''
+    )}
 
     <br>
 
-    ${new Date().toLocaleString('tr-TR')}
+    ${new Date()
+     .toLocaleString(
+      'tr-TR'
+     )}
 
    </div>
 
@@ -6137,7 +8441,9 @@ function reportHTML(){
 
     <div class="print-section">
 
-     <h2>TERFİ BİLGİLERİ</h2>
+     <h2>
+      TERFİ BİLGİLERİ
+     </h2>
 
      <div class="print-grid">
 
@@ -6148,7 +8454,8 @@ function reportHTML(){
 
       ${printCell(
        'Terfi No',
-       s.terfi_no||s.kod
+       s.terfi_no||
+       s.kod
       )}
 
       ${printCell(
@@ -6177,7 +8484,9 @@ function reportHTML(){
 
     <div class="print-section">
 
-     <h2>SSR / SEVİYE</h2>
+     <h2>
+      SSR / SEVİYE
+     </h2>
 
      <div class="print-grid">
 
@@ -6207,15 +8516,24 @@ function reportHTML(){
 
     <div class="print-section">
 
-     <h2>MOTORLAR</h2>
+     <h2>
+      MOTORLAR
+     </h2>
 
      ${
-      current.m.map((m,i)=>`
+      current.m.map(
+       (m,i)=>`
 
        <div class="print-motor">
 
         <div class="print-motor-title">
-         ${i+1}. MOTOR · ${esc(m.ad||'')}
+
+         ${i+1}. MOTOR ·
+         ${esc(
+          m.ad||
+          ''
+         )}
+
         </div>
 
         <div class="print-grid3">
@@ -6269,59 +8587,86 @@ function reportHTML(){
 
        </div>
 
-      `).join('')
-      ||
-      `<div class="print-small">Motor kaydı yok.</div>`
+       `
+      ).join('')||
+
+      `
+      <div class="print-small">
+       Motor kaydı yok.
+      </div>
+      `
      }
 
     </div>
 
     <div class="print-section">
 
-     <h2>BOX / MOTOR KABLO</h2>
+     <h2>
+      BOX / MOTOR KABLO
+     </h2>
 
      ${
-      current.m.map(m=>{
+      current.m.map(
+       m=>{
 
-       const b=getBox(m.id);
+        const b=
+         getBox(m.id);
 
-       return `
+        return `
 
-       <div class="print-motor">
+        <div class="print-motor">
 
-        <div class="print-motor-title">
-         ${esc(m.ad||'Motor')}
-        </div>
+         <div class="print-motor-title">
 
-        <div class="print-grid3">
+          ${esc(
+           m.ad||
+           'Motor'
+          )}
 
-         ${
-          [
-           ['L1',b.l1],
-           ['L2',b.l2],
-           ['L3',b.l3],
-           ['T4',b.t4],
-           ['T5',b.t5],
-           ['T6',b.t6]
-          ].map(x=>
-           printCell(
-            x[0],
-            [
-             x[1]?.bara,
-             x[1]?.renk,
-             x[1]?.detay
-            ].filter(Boolean).join(' · ')
+         </div>
+
+         <div class="print-grid3">
+
+          ${
+           [
+            ['L1',b.l1],
+            ['L2',b.l2],
+            ['L3',b.l3],
+            ['T4',b.t4],
+            ['T5',b.t5],
+            ['T6',b.t6]
+           ]
+           .map(
+            x=>
+             printCell(
+              x[0],
+              [
+               x[1]?.bara,
+               x[1]?.damar,
+               x[1]?.renk,
+               x[1]?.detay,
+               x[1]?.hedef,
+               x[1]?.etiket
+              ]
+              .filter(
+               Boolean
+              )
+              .join(
+               ' · '
+              )
+             )
            )
-          ).join('')
-         }
+           .join('')
+          }
+
+         </div>
 
         </div>
 
-       </div>
+        `;
 
-       `;
-
-      }).join('')
+       }
+      ).join('')
      }
 
     </div>
@@ -6333,7 +8678,9 @@ function reportHTML(){
 
     <div class="print-section">
 
-     <h2>POMPALAR</h2>
+     <h2>
+      POMPALAR
+     </h2>
 
      <div class="print-grid3">
 
@@ -6381,7 +8728,9 @@ function reportHTML(){
 
     <div class="print-section">
 
-     <h2>SÜRÜCÜLER</h2>
+     <h2>
+      SÜRÜCÜLER
+     </h2>
 
      <div class="print-grid3">
 
@@ -6412,8 +8761,11 @@ function reportHTML(){
          printCell(
           'Motor',
           current.m.find(
-           m=>m.id===d.motor_id
-          )?.ad||'—'
+           m=>
+            m.id===
+            d.motor_id
+          )?.ad||
+          '—'
          ),
 
          printCell(
@@ -6431,87 +8783,112 @@ function reportHTML(){
 
     <div class="print-section">
 
-     <h2>ANLIK ÇALIŞMA / SON KAYITLAR</h2>
+     <h2>
+      ANLIK ÇALIŞMA / SON KAYITLAR
+     </h2>
 
      ${
-      current.w.slice(0,6).map(w=>`
+      current.w
+       .slice(
+        0,
+        6
+       )
+       .map(
+        w=>`
 
-       <div class="print-motor">
+        <div class="print-motor">
 
-        <div class="print-motor-title">
+         <div class="print-motor-title">
 
-         ${
-          current.m.find(
-           m=>m.id===w.motor_id
-          )?.ad||'Motor'
-         }
+          ${
+           current.m.find(
+            m=>
+             m.id===
+             w.motor_id
+           )?.ad||
+           'Motor'
+          }
 
-         ·
+          ·
 
-         ${new Date(
-          w.captured_at
-         ).toLocaleString('tr-TR')}
+          ${new Date(
+           w.captured_at
+          ).toLocaleString(
+           'tr-TR'
+          )}
+
+         </div>
+
+         <div class="print-grid3">
+
+          ${printCell(
+           'Hz',
+           w.frekans_hz
+          )}
+
+          ${printCell(
+           'A',
+           w.akim_a
+          )}
+
+          ${printCell(
+           'kW',
+           w.guc_kw
+          )}
+
+          ${printCell(
+           'V',
+           w.gerilim_v
+          )}
+
+          ${printCell(
+           'Basınç',
+           `${w.set_basinci_bar??'—'} / ${w.calisma_basinci_bar??'—'}`
+          )}
+
+          ${printCell(
+           'Durum',
+           w.durum
+          )}
+
+         </div>
 
         </div>
 
-        <div class="print-grid3">
-
-         ${printCell(
-          'Hz',
-          w.frekans_hz
-         )}
-
-         ${printCell(
-          'A',
-          w.akim_a
-         )}
-
-         ${printCell(
-          'kW',
-          w.guc_kw
-         )}
-
-         ${printCell(
-          'V',
-          w.gerilim_v
-         )}
-
-         ${printCell(
-          'Basınç',
-          `${w.set_basinci_bar??'—'} / ${w.calisma_basinci_bar??'—'}`
-         )}
-
-         ${printCell(
-          'Durum',
-          w.durum
-         )}
-
-        </div>
-
-       </div>
-
-      `).join('')
+        `
+       ).join('')
       ||
-      '<div class="print-small">Çalışma kaydı yok.</div>'
+      `
+      <div class="print-small">
+       Çalışma kaydı yok.
+      </div>
+      `
      }
 
     </div>
 
     <div class="print-section">
 
-     <h2>TERFİYE ÖZEL PARAMETRELER</h2>
+     <h2>
+      TERFİYE ÖZEL PARAMETRELER
+     </h2>
 
      <div class="print-grid3">
 
       ${
-       current.tp.map(x=>
-        printCell(
-         `${x.ekran_adi||''} · ${x.parametre_adi||''}`,
-         `${x.deger||'—'} ${x.birim||''}`
-        )
+       current.tp.map(
+        x=>
+         printCell(
+          `${x.ekran_adi||''} · ${x.parametre_adi||''}`,
+          `${x.deger||'—'} ${x.birim||''}`
+         )
        ).join('')
        ||
-       '<div class="print-small">Özel parametre yok.</div>'
+       `
+       <div class="print-small">
+        Özel parametre yok.
+       </div>
+       `
       }
 
      </div>
@@ -6520,28 +8897,56 @@ function reportHTML(){
 
     <div class="print-section">
 
-     <h2>SON DEĞİŞİKLİKLER</h2>
+     <h2>
+      SON DEĞİŞİKLİKLER
+     </h2>
 
      ${
-      history.slice(0,8).map(x=>`
+      history
+       .slice(
+        0,
+        8
+       )
+       .map(
+        x=>`
 
-       <div class="print-item">
+        <div class="print-item">
 
-        <div class="print-small">
-         ${new Date(x.date).toLocaleString('tr-TR')}
+         <div class="print-small">
+
+          ${new Date(
+           x.date
+          ).toLocaleString(
+           'tr-TR'
+          )}
+
+         </div>
+
+         <div class="print-small">
+
+          <b>
+           ${esc(x.action)}
+          </b>
+
+          ·
+
+          ${esc(
+           x.detail||
+           ''
+          )}
+
+         </div>
+
         </div>
 
-        <div class="print-small">
-         <b>${esc(x.action)}</b>
-         ·
-         ${esc(x.detail||'')}
-        </div>
-
+        `
+       ).join('')
+       ||
+       `
+       <div class="print-small">
+        Geçmiş yok.
        </div>
-
-      `).join('')
-      ||
-      '<div class="print-small">Geçmiş yok.</div>'
+       `
      }
 
     </div>
@@ -6553,41 +8958,75 @@ function reportHTML(){
 
     <div class="print-section">
 
-     <h2>HMI / PLC · TÜM 5 SAYFA</h2>
-
-     ${[1,2,3,4,5].map(printHmi).join('')}
-
-    </div>
-
-    <div class="print-section">
-
-     <h2>ARIZA KÜTÜPHANESİ / SON KAYITLAR</h2>
+     <h2>
+      HMI / PLC · TÜM 5 SAYFA
+     </h2>
 
      ${
-      faults().slice(0,12).map(f=>`
-
-       <div class="print-item">
-
-        <div class="print-small">
-         <b>${esc(f.code)}</b>
-         ·
-         ${esc(f.name)}
-        </div>
-
-        <div class="print-small">
-         ${esc(f.solution)}
-        </div>
-
-       </div>
-
-      `).join('')
+      [
+       1,
+       2,
+       3,
+       4,
+       5
+      ]
+      .map(printHmi)
+      .join('')
      }
 
     </div>
 
     <div class="print-section">
 
-     <h2>TEKNİK REFERANS</h2>
+     <h2>
+      ARIZA KÜTÜPHANESİ / SON KAYITLAR
+     </h2>
+
+     ${
+      faults()
+       .slice(
+        0,
+        12
+       )
+       .map(
+        f=>`
+
+        <div class="print-item">
+
+         <div class="print-small">
+
+          <b>
+           ${esc(f.code)}
+          </b>
+
+          ·
+
+          ${esc(f.name)}
+
+         </div>
+
+         <div class="print-small">
+
+          ${esc(
+           f.solution
+          )}
+
+         </div>
+
+        </div>
+
+        `
+       )
+       .join('')
+     }
+
+    </div>
+
+    <div class="print-section">
+
+     <h2>
+      TEKNİK REFERANS
+     </h2>
 
      <div class="print-grid">
 
@@ -6626,9 +9065,20 @@ function reportHTML(){
    </span>
 
    <span>
-    ${esc(s.kod||s.terfi_no||'')}
+
+    ${esc(
+     s.kod||
+     s.terfi_no||
+     ''
+    )}
+
     ·
-    ${esc(s.ad||'')}
+
+    ${esc(
+     s.ad||
+     ''
+    )}
+
    </span>
 
    <span>
@@ -6640,32 +9090,49 @@ function reportHTML(){
  </div>
 
  `;
+
 }
 
 function makePDF(){
 
  if(!current){
 
-  toast('Önce terfi açın.');
+  toast(
+   'Önce terfi açın.'
+  );
 
   return;
+
  }
 
- const old=document.getElementById(
-  'printArea'
+ if(edit)
+  touchAdminSession();
+
+ const old=
+  document.getElementById(
+   'printArea'
+  );
+
+ if(old)
+  old.remove();
+
+ const area=
+  document.createElement(
+   'div'
+  );
+
+ area.id=
+  'printArea';
+
+ area.className=
+  'print-only';
+
+ area.innerHTML=
+  reportHTML();
+
+ document.body.appendChild(
+  area
  );
-
- if(old)old.remove();
-
- const area=document.createElement('div');
-
- area.id='printArea';
-
- area.className='print-only';
-
- area.innerHTML=reportHTML();
-
- document.body.appendChild(area);
 
  recordHistory(
   'PDF OLUŞTURULDU',
@@ -6673,7 +9140,9 @@ function makePDF(){
  );
 
  setTimeout(
-  ()=>window.print(),
+  ()=>{
+   window.print();
+  },
   250
  );
 
@@ -6686,8 +9155,12 @@ function makePDF(){
 
 function csvEscape(value){
 
- return `"${String(value??'')
-  .replaceAll('"','""')}"`;
+ return `"${String(
+  value??''
+ ).replaceAll(
+  '"',
+  '""'
+ )}"`;
 
 }
 
@@ -6695,36 +9168,85 @@ function exportCSV(){
 
  if(!current){
 
-  toast('Önce terfi açın.');
+  toast(
+   'Önce terfi açın.'
+  );
 
   return;
+
  }
 
+ if(edit)
+  touchAdminSession();
+
  const rows=[
-  ['MESKİ TERFİ ARŞİVİM',''],
-  ['Terfi',current.s.ad||''],
-  ['Kod',current.s.kod||current.s.terfi_no||''],
-  ['Bölge',current.s.bolge||''],
-  ['Adres',current.s.adres||''],
+
+  [
+   'MESKİ TERFİ ARŞİVİM',
+   ''
+  ],
+
+  [
+   'Terfi',
+   current.s.ad||''
+  ],
+
+  [
+   'Kod',
+   current.s.kod||
+   current.s.terfi_no||
+   ''
+  ],
+
+  [
+   'Bölge',
+   current.s.bolge||
+   ''
+  ],
+
+  [
+   'Adres',
+   current.s.adres||
+   ''
+  ],
+
   [],
-  ['MOTORLAR'],
-  ['Motor','Marka','Model','kW','V','A','Hz','RPM']
+
+  [
+   'MOTORLAR'
+  ],
+
+  [
+   'Motor',
+   'Marka',
+   'Model',
+   'kW',
+   'V',
+   'A',
+   'Hz',
+   'RPM'
+  ]
+
  ];
 
- current.m.forEach(m=>{
+ current.m.forEach(
+  m=>{
 
-  rows.push([
-   m.ad,
-   m.marka,
-   m.model,
-   m.guc_kw,
-   m.gerilim_v,
-   m.nominal_akim_a,
-   m.frekans_hz,
-   m.devir_rpm
-  ]);
+   rows.push([
 
- });
+    m.ad,
+    m.marka,
+    m.model,
+    m.guc_kw,
+    m.gerilim_v,
+    m.nominal_akim_a,
+    m.frekans_hz,
+    m.devir_rpm
+
+   ]);
+
+  }
+ );
 
  rows.push([]);
 
@@ -6733,28 +9255,38 @@ function exportCSV(){
  ]);
 
  rows.push([
+
   'Sürücü',
   'Marka',
   'Model',
   'kW',
   'V',
   'Bağlı Motor'
+
  ]);
 
- current.d.forEach(d=>{
+ current.d.forEach(
+  d=>{
 
-  rows.push([
-   d.ad,
-   d.marka,
-   d.model,
-   d.guc_kw,
-   d.besleme_v,
-   current.m.find(
-    m=>m.id===d.motor_id
-   )?.ad||''
-  ]);
+   rows.push([
 
- });
+    d.ad,
+    d.marka,
+    d.model,
+    d.guc_kw,
+    d.besleme_v,
+
+    current.m.find(
+     m=>
+      m.id===
+      d.motor_id
+    )?.ad||
+    ''
+
+   ]);
+
+  }
+ );
 
  rows.push([]);
 
@@ -6763,6 +9295,7 @@ function exportCSV(){
  ]);
 
  rows.push([
+
   'Pompa',
   'Marka',
   'Model',
@@ -6771,22 +9304,27 @@ function exportCSV(){
   'Q Max',
   'H Min',
   'H Max'
+
  ]);
 
- current.p.forEach(p=>{
+ current.p.forEach(
+  p=>{
 
-  rows.push([
-   p.ad,
-   p.marka,
-   p.model,
-   p.guc_kw,
-   p.q_min_m3h,
-   p.q_max_m3h,
-   p.h_min_m,
-   p.h_max_m
-  ]);
+   rows.push([
 
- });
+    p.ad,
+    p.marka,
+    p.model,
+    p.guc_kw,
+    p.q_min_m3h,
+    p.q_max_m3h,
+    p.h_min_m,
+    p.h_max_m
+
+   ]);
+
+  }
+ );
 
  rows.push([]);
 
@@ -6794,21 +9332,34 @@ function exportCSV(){
   'HMI SAYFALARI'
  ]);
 
- for(let page=1;page<=5;page++){
+ for(
+  let page=1;
+  page<=5;
+  page++
+ ){
 
-  const r=current.h.find(
-   x=>x.ekran_no===page
-  );
+  const r=
+   current.h.find(
+    x=>
+     x.ekran_no===
+     page
+   );
 
-  const values=r?.degerler||{};
+  const values=
+   r?.degerler||
+   {};
 
-  HMI[page-1].forEach(
+  HMI[
+   page-1
+  ].forEach(
    (label,i)=>{
 
     rows.push([
+
      `HMI ${page}`,
      label,
      values[i]??''
+
     ]);
 
    }
@@ -6818,30 +9369,47 @@ function exportCSV(){
 
  const csv=
   '\ufeff'+
-  rows.map(
-   r=>r.map(
-    csvEscape
-   ).join(';')
-  ).join('\r\n');
+  rows
+   .map(
+    r=>
+     r.map(
+      csvEscape
+     ).join(';')
+   )
+   .join('\r\n');
 
- const blob=new Blob(
-  [csv],
-  {type:'text/csv;charset=utf-8'}
- );
+ const blob=
+  new Blob(
+   [csv],
+   {
+    type:
+     'text/csv;charset=utf-8'
+   }
+  );
 
  const url=
-  URL.createObjectURL(blob);
+  URL.createObjectURL(
+   blob
+  );
 
- const a=document.createElement('a');
+ const a=
+  document.createElement(
+   'a'
+  );
 
  a.href=url;
 
  a.download=
-  `${current.s.kod||'terfi'}-teknik-arsiv.csv`;
+  `${
+   current.s.kod||
+   'terfi'
+  }-teknik-arsiv.csv`;
 
  a.click();
 
- URL.revokeObjectURL(url);
+ URL.revokeObjectURL(
+  url
+ );
 
  recordHistory(
   'EXCEL/CSV DIŞA AKTARMA',
@@ -6852,7 +9420,7 @@ function exportCSV(){
 
 
 /* =========================================================
-   INIT
+   BAŞLAT
 ========================================================= */
 
 (function init(){
@@ -6860,43 +9428,14 @@ function exportCSV(){
  applyPrefs();
 
  /*
-  SSR yerel kayıtlarını current açılırken otomatik getir.
+   Tarayıcı sekmesi içerisinde daha önce açılmış
+   bir yönetici oturumu varsa geri yükle.
  */
-
- const oldOpenStation=openStation;
-
- openStation=async function(id){
-
-  await oldOpenStation(id);
-
-  const map=
-   localJSON(
-    'meski_ssr_v10',
-    {}
-   );
-
-  if(current){
-
-   current.ssr=
-    map[id]||
-    {
-     level:'',
-     low:'',
-     high:'',
-     note:''
-    };
-
-  }
-
-  if(current)
-   render();
-
- };
+ restoreAdminSession();
 
  showLogin();
 
 })();
-
 </script>
 
 </body>
