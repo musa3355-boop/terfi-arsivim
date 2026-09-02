@@ -26,7 +26,9 @@
  --scale:1;
 }
 
-*{box-sizing:border-box}
+*{
+ box-sizing:border-box
+}
 
 html{
  scroll-behavior:smooth;
@@ -42,10 +44,18 @@ body{
  min-height:100vh;
 }
 
-body.zoom-small{--scale:.88}
-body.zoom-large{--scale:1.12}
+body.zoom-small{
+ --scale:.88
+}
 
-button,input,textarea,select{
+body.zoom-large{
+ --scale:1.12
+}
+
+button,
+input,
+textarea,
+select{
  font:inherit;
 }
 
@@ -77,7 +87,10 @@ main{
  padding:15px 15px 105px;
 }
 
-h1,h2,h3,h4{
+h1,
+h2,
+h3,
+h4{
  margin:0 0 10px;
 }
 
@@ -441,7 +454,6 @@ h1,h2,h3,h4{
  border:1px solid #203b56;
  border-radius:14px;
  padding:13px;
- cursor:pointer;
 }
 
 .library-card:hover{
@@ -452,11 +464,13 @@ h1,h2,h3,h4{
  font-size:20px;
  font-weight:950;
  color:#67c9ff;
+ cursor:pointer;
 }
 
 .library-name{
  font-weight:900;
  margin-top:3px;
+ cursor:pointer;
 }
 
 .library-desc{
@@ -464,12 +478,36 @@ h1,h2,h3,h4{
  color:#a9bbcd;
  line-height:1.5;
  margin-top:7px;
+ cursor:pointer;
 }
 
 .library-source{
  font-size:10px;
  color:#71879b;
  margin-top:8px;
+ cursor:pointer;
+}
+
+.library-actions{
+ display:flex;
+ gap:5px;
+ flex-wrap:wrap;
+ margin-top:10px;
+}
+
+.library-actions .btn{
+ margin:0;
+}
+
+.param-row-actions{
+ display:flex;
+ gap:5px;
+ flex-wrap:wrap;
+ margin-top:8px;
+}
+
+.param-row-actions .btn{
+ margin:0;
 }
 
 .hmi-shell{
@@ -627,7 +665,7 @@ h1,h2,h3,h4{
 }
 
 .modal{
- width:min(520px,100%);
+ width:min(560px,100%);
  max-height:90vh;
  overflow:auto;
  background:#0d2945;
@@ -635,10 +673,45 @@ h1,h2,h3,h4{
  border-radius:17px;
  padding:18px;
  box-shadow:0 25px 80px rgba(0,0,0,.45);
+ position:relative;
 }
 
 .modal h2{
  font-size:19px;
+}
+
+.modal-head{
+ display:flex;
+ align-items:center;
+ justify-content:space-between;
+ gap:10px;
+ margin-bottom:10px;
+}
+
+.modal-head h2{
+ margin:0;
+ padding-right:8px;
+}
+
+.modal-close{
+ width:38px;
+ height:38px;
+ flex:0 0 38px;
+ border:1px solid #44637a;
+ border-radius:10px;
+ background:#172f45;
+ color:#fff;
+ font-size:20px;
+ font-weight:900;
+ cursor:pointer;
+ display:grid;
+ place-items:center;
+ line-height:1;
+}
+
+.modal-close:hover{
+ background:var(--danger);
+ border-color:var(--danger);
 }
 
 .modal-actions{
@@ -790,20 +863,57 @@ h1,h2,h3,h4{
 }
 
 @media(max-width:900px){
- .summary{grid-template-columns:repeat(3,1fr)}
- .station-stats{grid-template-columns:repeat(2,1fr)}
- .grid4{grid-template-columns:repeat(2,1fr)}
- .photo-grid{grid-template-columns:repeat(2,1fr)}
+
+ .summary{
+  grid-template-columns:repeat(3,1fr)
+ }
+
+ .station-stats{
+  grid-template-columns:repeat(2,1fr)
+ }
+
+ .grid4{
+  grid-template-columns:repeat(2,1fr)
+ }
+
+ .photo-grid{
+  grid-template-columns:repeat(2,1fr)
+ }
+
 }
 
 @media(max-width:650px){
- main{padding:10px 10px 100px}
- .row,.grid2,.grid3{grid-template-columns:1fr}
- .summary{grid-template-columns:repeat(2,1fr)}
- .library-grid{grid-template-columns:1fr}
- .hmi-fields{grid-template-columns:repeat(2,minmax(0,1fr))}
- .settings-grid{grid-template-columns:1fr}
- .photo-grid{grid-template-columns:1fr 1fr}
+
+ main{
+  padding:10px 10px 100px
+ }
+
+ .row,
+ .grid2,
+ .grid3{
+  grid-template-columns:1fr
+ }
+
+ .summary{
+  grid-template-columns:repeat(2,1fr)
+ }
+
+ .library-grid{
+  grid-template-columns:1fr
+ }
+
+ .hmi-fields{
+  grid-template-columns:repeat(2,minmax(0,1fr))
+ }
+
+ .settings-grid{
+  grid-template-columns:1fr
+ }
+
+ .photo-grid{
+  grid-template-columns:1fr 1fr
+ }
+
 }
 
 @media print{
@@ -813,7 +923,8 @@ h1,h2,h3,h4{
   margin:3mm;
  }
 
- html,body{
+ html,
+ body{
   width:100%;
   min-height:0;
   background:#fff!important;
@@ -992,6 +1103,7 @@ h1,h2,h3,h4{
  .no-print{
   display:none!important;
  }
+
 }
 </style>
 </head>
@@ -1042,6 +1154,12 @@ const LOCAL_HISTORY_KEY='meski_history_v10';
 const LOCAL_PHOTO_KEY='meski_photos_v10';
 const LOCAL_SSR_KEY='meski_ssr_v10';
 
+const LOCAL_FAULT_EDIT_KEY='meski_fault_edits_v11';
+const LOCAL_FAULT_DELETE_KEY='meski_fault_deleted_v11';
+
+const LOCAL_PARAM_EDIT_KEY='meski_param_edits_v11';
+const LOCAL_PARAM_DELETE_KEY='meski_param_deleted_v11';
+
 /*
   Yönetici oturumu:
   sessionStorage kullanılır.
@@ -1049,6 +1167,7 @@ const LOCAL_SSR_KEY='meski_ssr_v10';
   Sekme kapatıldığında gider.
   Ayrıca 30 dakika işlem yapılmazsa otomatik kilitlenir.
 */
+
 const ADMIN_SESSION_KEY='meski_admin_session_v11';
 const ADMIN_IDLE_MS=30*60*1000;
 
@@ -1371,33 +1490,59 @@ function loadPrefs(){
 
  try{
 
-  const x=JSON.parse(
-   localStorage.getItem(APP_PREF_KEY)||'{}'
-  );
+  const x=
+   JSON.parse(
+    localStorage.getItem(APP_PREF_KEY)||'{}'
+   );
 
   return {
+
    theme:x.theme||'dark',
+
    zoom:x.zoom||'normal',
-   sitePassword:x.sitePassword||DEFAULT_SITE_PASSWORD,
-   adminPassword:x.adminPassword||DEFAULT_ADMIN_PASSWORD,
+
+   sitePassword:
+    x.sitePassword||
+    DEFAULT_SITE_PASSWORD,
+
+   adminPassword:
+    x.adminPassword||
+    DEFAULT_ADMIN_PASSWORD,
+
    labels:{
-    title:x.labels?.title||'MESKİ TERFİ ARŞİVİM',
-    subtitle:x.labels?.subtitle||'Merkezi saha teknik arşivi',
+    title:
+     x.labels?.title||
+     'MESKİ TERFİ ARŞİVİM',
+
+    subtitle:
+     x.labels?.subtitle||
+     'Merkezi saha teknik arşivi',
+
     ...x.labels
+
    }
+
   };
 
  }catch(e){
 
   return {
+
    theme:'dark',
+
    zoom:'normal',
-   sitePassword:DEFAULT_SITE_PASSWORD,
-   adminPassword:DEFAULT_ADMIN_PASSWORD,
+
+   sitePassword:
+    DEFAULT_SITE_PASSWORD,
+
+   adminPassword:
+    DEFAULT_ADMIN_PASSWORD,
+
    labels:{
     title:'MESKİ TERFİ ARŞİVİM',
     subtitle:'Merkezi saha teknik arşivi'
    }
+
   };
 
  }
@@ -1436,7 +1581,10 @@ function applyPrefs(){
    LOCAL STORE
 ========================================================= */
 
-function localJSON(key,fallback){
+function localJSON(
+ key,
+ fallback
+){
 
  try{
 
@@ -1453,7 +1601,10 @@ function localJSON(key,fallback){
 
 }
 
-function saveLocal(key,value){
+function saveLocal(
+ key,
+ value
+){
 
  localStorage.setItem(
   key,
@@ -1466,31 +1617,55 @@ let customFaults=
  localJSON(
   LOCAL_FAULT_KEY,
   []
- );
+);
 
 let customParams=
  localJSON(
   LOCAL_PARAM_KEY,
   []
- );
+);
+
+let faultEdits=
+ localJSON(
+  LOCAL_FAULT_EDIT_KEY,
+  {}
+);
+
+let faultDeleted=
+ localJSON(
+  LOCAL_FAULT_DELETE_KEY,
+  []
+);
+
+let paramEdits=
+ localJSON(
+  LOCAL_PARAM_EDIT_KEY,
+  {}
+);
+
+let paramDeleted=
+ localJSON(
+  LOCAL_PARAM_DELETE_KEY,
+  []
+);
 
 let changeHistory=
  localJSON(
   LOCAL_HISTORY_KEY,
   []
- );
+);
 
 let localBoxes=
  localJSON(
   LOCAL_BOX_KEY,
   {}
- );
+);
 
 let localPhotos=
  localJSON(
   LOCAL_PHOTO_KEY,
   {}
- );
+);
 
 
 /* =========================================================
@@ -1522,7 +1697,8 @@ function num(v){
  if(
   v===null||
   v===undefined||
-  v===''
+  v===
+''
  )
   return null;
 
@@ -1574,7 +1750,10 @@ function toast(message){
    GEÇMİŞ
 ========================================================= */
 
-function recordHistory(action,detail){
+function recordHistory(
+ action,
+ detail
+){
 
  if(!current?.s?.id)
   return;
@@ -1617,19 +1796,61 @@ function recordHistory(action,detail){
 
 function faults(){
 
- return [
+ const all=[
   ...DEFAULT_FAULTS,
   ...customFaults
  ];
+
+ return all
+  .filter(
+   f=>
+    !faultDeleted.includes(
+     f.code
+    )
+  )
+  .map(
+   f=>{
+
+    const editData=
+     faultEdits[f.code]||{};
+
+    return {
+     ...f,
+     ...editData
+    };
+
+   }
+  );
 
 }
 
 function params(){
 
- return [
+ const all=[
   ...DEFAULT_PARAMS,
   ...customParams
  ];
+
+ return all
+  .filter(
+   p=>
+    !paramDeleted.includes(
+     p.code
+    )
+  )
+  .map(
+   p=>{
+
+    const editData=
+     paramEdits[p.code]||{};
+
+    return {
+     ...p,
+     ...editData
+    };
+
+   }
+  );
 
 }
 
@@ -1866,12 +2087,6 @@ function lockAdminForTimeout(){
 }
 
 
-/*
-  Kullanıcı gerçekten işlem yaptıkça yönetici oturum saatini
-  yeniliyoruz. Böylece sürekli açık kalmıyor ama çalışırken
-  tekrar şifre istemiyor.
-*/
-
 document.addEventListener(
  'click',
  function(){
@@ -1915,29 +2130,24 @@ document.addEventListener(
 );
 
 
-/*
-  Sekme başka sayfaya gidip tamamen kapanırsa tarayıcı oturumunun
-  kendisi sessionStorage ile sonlandırılır. Uygulamanın SPA içindeki
-  sekme değişimleri bundan etkilenmez.
-*/
+/* =========================================================
+   MODAL ESC
+========================================================= */
 
-window.addEventListener(
- 'beforeunload',
- function(){
+document.addEventListener(
+ 'keydown',
+ function(e){
 
-  /*
-    sessionStorage zaten sekme yaşam döngüsüne bağlıdır.
-    Burada sadece uygulama dışına çıkışta yerel admin işaretini
-    temizliyoruz.
-  */
+  if(
+   e.key==='Escape' &&
+   document.getElementById(
+    'modalRoot'
+   )
+  ){
 
-  try{
+   closeModal();
 
-   sessionStorage.removeItem(
-    ADMIN_SESSION_KEY
-   );
-
-  }catch(e){}
+  }
 
  }
 );
@@ -2090,11 +2300,6 @@ async function home(){
  }
 
  current=null;
-
- /*
-   Ana sayfaya dönüldüğünde yönetici modu
-   devam edebilir. Kullanıcı isterse kilitleyebilir.
- */
 
  document.getElementById(
   'saveBar'
@@ -2414,7 +2619,10 @@ async function home(){
 
 }
 
-async function countTable(table,ids){
+async function countTable(
+ table,
+ ids
+){
 
  if(!ids.length)
   return 0;
@@ -2634,9 +2842,6 @@ async function openStation(id){
   tp:tp.data||[]
  };
 
- /*
-   SSR cihaz tarafında saklanıyor.
- */
  const ssrMap=
   localJSON(
    LOCAL_SSR_KEY,
@@ -3167,63 +3372,83 @@ ${esc(s.aciklama||'')}
   <div class="summary">
 
    <div class="stat">
+
     <div class="stat-label">
      Motor
     </div>
+
     <div class="stat-value">
      ${current.m.length}
     </div>
+
     <div class="stat-unit">
      adet
     </div>
+
    </div>
 
    <div class="stat">
+
     <div class="stat-label">
      Pompa
     </div>
+
     <div class="stat-value">
      ${current.p.length}
     </div>
+
     <div class="stat-unit">
      adet
     </div>
+
    </div>
 
    <div class="stat">
+
     <div class="stat-label">
      Sürücü
     </div>
+
     <div class="stat-value">
      ${current.d.length}
     </div>
+
     <div class="stat-unit">
      adet
     </div>
+
    </div>
 
    <div class="stat">
+
     <div class="stat-label">
      HMI
     </div>
+
     <div class="stat-value">
      5
     </div>
+
     <div class="stat-unit">
      sayfa
     </div>
+
    </div>
 
    <div class="stat">
+
     <div class="stat-label">
      Çalışma
     </div>
+
     <div class="stat-value">
      ${current.w.length}
     </div>
+
     <div class="stat-unit">
      kayıt
     </div>
+
    </div>
 
   </div>
@@ -3239,33 +3464,48 @@ ${esc(s.aciklama||'')}
   <div class="grid3">
 
    <div class="workbox">
-    <h4>SSR</h4>
+
+    <h4>
+     SSR
+    </h4>
+
     <b>
      ${esc(
       current.ssr?.level||
       '—'
      )}
     </b>
+
    </div>
 
    <div class="workbox">
-    <h4>ALT SEVİYE</h4>
+
+    <h4>
+     ALT SEVİYE
+    </h4>
+
     <b>
      ${esc(
       current.ssr?.low||
       '—'
      )}
     </b>
+
    </div>
 
    <div class="workbox">
-    <h4>ÜST SEVİYE</h4>
+
+    <h4>
+     ÜST SEVİYE
+    </h4>
+
     <b>
      ${esc(
       current.ssr?.high||
       '—'
      )}
     </b>
+
    </div>
 
   </div>
@@ -3358,7 +3598,9 @@ function motorBody(){
     </h2>
 
     <div class="section-sub">
+
      Motor sayısı sınırsızdır. Her motor bağımsız kayıt altında tutulur.
+
     </div>
 
    </div>
@@ -3404,7 +3646,10 @@ function motorBody(){
 
 }
 
-function motorCard(m,i){
+function motorCard(
+ m,
+ i
+){
 
  return `
 
@@ -3804,7 +4049,10 @@ function driverBody(){
 
 }
 
-function driverCard(d,i){
+function driverCard(
+ d,
+ i
+){
 
  return `
 
@@ -5192,51 +5440,64 @@ function parameterBody(){
         ).toLowerCase()
        )}">
 
-       <div class="library-code">
-        ${esc(p.code)}
-       </div>
+       <div
+        onclick="
+         openParamDetail(
+          '${esc(p.code)}'
+         )
+        ">
 
-       <div class="library-name">
-        ${esc(p.name)}
-       </div>
+        <div class="library-code">
+         ${esc(p.code)}
+        </div>
 
-       <div class="library-desc">
-        ${esc(p.desc)}
-       </div>
+        <div class="library-name">
+         ${esc(p.name)}
+        </div>
 
-       <div class="library-source">
-        ${esc(p.source)}
-        ·
-        ${esc(p.unit)}
+        <div class="library-desc">
+         ${esc(p.desc)}
+        </div>
+
+        <div class="library-source">
+         ${esc(p.source)}
+         ·
+         ${esc(p.unit)}
+        </div>
+
        </div>
 
        ${
         edit
         ?
         `
-        <div style="margin-top:9px">
+        <div class="library-actions">
 
-         ${
-          customParams.some(
-           x=>x.code===p.code
-          )
-          ?
-          `
-          <button
-           class="btn bad"
-           onclick="
-            deleteCustomParam(
-             '${esc(p.code)}'
-            )
-           ">
+         <button
+          class="btn"
+          onclick="
+           event.stopPropagation();
+           editParam(
+            '${esc(p.code)}'
+           );
+          ">
 
-           Sil
+          ✏ DÜZENLE
 
-          </button>
-          `
-          :
-          ''
-         }
+         </button>
+
+         <button
+          class="btn bad"
+          onclick="
+           event.stopPropagation();
+           deleteParam(
+            '${esc(p.code)}'
+           );
+          ">
+
+          🗑 SİL
+
+         </button>
 
         </div>
         `
@@ -5320,6 +5581,42 @@ function parameterBody(){
 
      </div>
 
+     ${
+      edit
+      ?
+      `
+      <div class="param-row-actions">
+
+       <button
+        class="btn"
+        onclick="
+         editTerfiParam(
+          '${x.id}'
+         )
+        ">
+
+        ✏ DÜZENLE
+
+       </button>
+
+       <button
+        class="btn bad"
+        onclick="
+         deleteTerfiParam(
+          '${x.id}'
+         )
+        ">
+
+        🗑 SİL
+
+       </button>
+
+      </div>
+      `
+      :
+      ''
+     }
+
     </div>
 
     `
@@ -5382,8 +5679,7 @@ function parameterBody(){
       Açıklama
      </label>
 
-     <textarea id="new_tp_aciklama">
-     </textarea>
+     <textarea id="new_tp_aciklama"></textarea>
 
     </div>
 
@@ -5436,6 +5732,114 @@ function filterParams(){
 
 }
 
+
+/* =========================================================
+   PARAMETRE DETAY
+========================================================= */
+
+function openParamDetail(
+ code
+){
+
+ const p=
+  params().find(
+   x=>x.code===code
+  );
+
+ if(!p)
+  return;
+
+ openModal(`
+
+  <h2>
+   ${esc(p.code)}
+   ·
+   ${esc(p.name)}
+  </h2>
+
+  <div class="workbox">
+
+   <h4>
+    AÇIKLAMA
+   </h4>
+
+   <div>
+    ${esc(p.desc)}
+   </div>
+
+  </div>
+
+  <div class="workbox">
+
+   <h4>
+    BİRİM
+   </h4>
+
+   <div>
+    ${esc(p.unit||'—')}
+   </div>
+
+  </div>
+
+  <div class="workbox">
+
+   <h4>
+    KAYNAK
+   </h4>
+
+   <div>
+    ${esc(p.source||'—')}
+   </div>
+
+  </div>
+
+  ${
+   edit
+   ?
+   `
+   <div class="modal-actions">
+
+    <button
+     class="btn"
+     onclick="
+      closeModal();
+      editParam(
+       '${esc(p.code)}'
+      );
+     ">
+
+     ✏ DÜZENLE
+
+    </button>
+
+    <button
+     class="btn bad"
+     onclick="
+      closeModal();
+      deleteParam(
+       '${esc(p.code)}'
+      );
+     ">
+
+     🗑 SİL
+
+    </button>
+
+   </div>
+   `
+   :
+   ''
+  }
+
+ `);
+
+}
+
+
+/* =========================================================
+   PARAMETRE EKLE / DÜZENLE / SİL
+========================================================= */
+
 function newParam(){
 
  if(!edit){
@@ -5448,65 +5852,79 @@ function newParam(){
 
  touchAdminSession();
 
- const code=
-  prompt(
-   'Parametre kodu:',
-   '99.00'
-  );
+ openModal(`
 
- if(!code)
-  return;
+  <h2>
+   + YENİ PARAMETRE
+  </h2>
 
- const name=
-  prompt(
-   'Parametre adı:',
-   ''
-  );
+  <div class="grid2">
 
- if(!name)
-  return;
+   ${input(
+    'Parametre Kodu',
+    'param_edit_code',
+    ''
+   )}
 
- const unit=
-  prompt(
-   'Birim:',
-   ''
-  )||'';
+   ${input(
+    'Parametre Adı',
+    'param_edit_name',
+    ''
+   )}
 
- const desc=
-  prompt(
-   'Açıklama:',
-   ''
-  )||'';
+   ${input(
+    'Birim',
+    'param_edit_unit',
+    ''
+   )}
 
- const source=
-  prompt(
-   'Kaynak:',
-   'Kullanıcı kaydı'
-  )||'Kullanıcı kaydı';
+   ${input(
+    'Kaynak',
+    'param_edit_source',
+    'Kullanıcı kaydı'
+   )}
 
- customParams.push({
-  code,
-  name,
-  unit,
-  desc,
-  source
- });
+  </div>
 
- saveLocal(
-  LOCAL_PARAM_KEY,
-  customParams
- );
+  <div
+   class="field"
+   style="margin-top:10px">
 
- recordHistory(
-  'PARAMETRE KÜTÜPHANESİNE EKLENDİ',
-  `${code} · ${name}`
- );
+   <label>
+    Açıklama
+   </label>
 
- render();
+   <textarea id="param_edit_desc"></textarea>
+
+  </div>
+
+  <div class="modal-actions">
+
+   <button
+    class="btn"
+    onclick="closeModal()">
+
+    İPTAL
+
+   </button>
+
+   <button
+    class="btn ok"
+    onclick="saveParamEditor(false)">
+
+    KAYDET
+
+   </button>
+
+  </div>
+
+ `);
 
 }
 
-function deleteCustomParam(code){
+function editParam(
+ code
+){
 
  if(!edit){
 
@@ -5518,21 +5936,407 @@ function deleteCustomParam(code){
 
  touchAdminSession();
 
- if(!confirm(
-  `${code} parametresi silinsin mi?`
- ))return;
-
- customParams=
-  customParams.filter(
-   x=>x.code!==code
+ const p=
+  params().find(
+   x=>x.code===code
   );
+
+ if(!p)
+  return;
+
+ openModal(`
+
+  <h2>
+   ✏ PARAMETRE DÜZENLE
+  </h2>
+
+  <input
+   id="param_original_code"
+   type="hidden"
+   value="${esc(code)}"
+  >
+
+  <div class="grid2">
+
+   ${input(
+    'Parametre Kodu',
+    'param_edit_code',
+    p.code
+   )}
+
+   ${input(
+    'Parametre Adı',
+    'param_edit_name',
+    p.name
+   )}
+
+   ${input(
+    'Birim',
+    'param_edit_unit',
+    p.unit
+   )}
+
+   ${input(
+    'Kaynak',
+    'param_edit_source',
+    p.source
+   )}
+
+  </div>
+
+  <div
+   class="field"
+   style="margin-top:10px">
+
+   <label>
+    Açıklama
+   </label>
+
+   <textarea
+    id="param_edit_desc"
+   >${esc(p.desc)}</textarea>
+
+  </div>
+
+  <div class="modal-actions">
+
+   <button
+    class="btn"
+    onclick="closeModal()">
+
+    İPTAL
+
+   </button>
+
+   <button
+    class="btn ok"
+    onclick="saveParamEditor(true)">
+
+    DEĞİŞİKLİKLERİ KAYDET
+
+   </button>
+
+  </div>
+
+ `);
+
+}
+
+function saveParamEditor(
+ isEdit
+){
+
+ if(!edit){
+
+  requestAdmin();
+
+  return;
+
+ }
+
+ touchAdminSession();
+
+ const original=
+  isEdit
+  ?
+  val('param_original_code')
+  :
+  '';
+
+ const code=
+  val('param_edit_code').trim();
+
+ const name=
+  val('param_edit_name').trim();
+
+ const unit=
+  val('param_edit_unit').trim();
+
+ const desc=
+  val('param_edit_desc').trim();
+
+ const source=
+  val('param_edit_source').trim();
+
+ if(!code){
+
+  toast(
+   'Parametre kodu boş bırakılamaz.'
+  );
+
+  return;
+
+ }
+
+ if(!name){
+
+  toast(
+   'Parametre adı boş bırakılamaz.'
+  );
+
+  return;
+
+ }
+
+ if(isEdit){
+
+  const duplicate=
+   params().some(
+    x=>
+     x.code===code &&
+     x.code!==original
+   );
+
+  if(duplicate){
+
+   toast(
+    'Bu parametre kodu zaten mevcut.'
+   );
+
+   return;
+
+  }
+
+  if(
+   original &&
+   original!==code
+  ){
+
+   delete paramEdits[original];
+
+   /*
+     Eski varsayılan kodun silinmiş
+     durumu varsa yeni kodda görünürlük
+     problemini önlüyoruz.
+   */
+
+   if(
+    !paramDeleted.includes(
+     code
+    )
+   ){
+
+    paramDeleted=
+     paramDeleted.filter(
+      x=>x!==original
+     );
+
+   }
+
+  }
+
+  paramDeleted=
+   paramDeleted.filter(
+    x=>x!==code
+   );
+
+  paramEdits[code]={
+
+   code,
+   name,
+   unit,
+   desc,
+   source
+
+  };
+
+  const customIndex=
+   customParams.findIndex(
+    x=>
+     x.code===original
+   );
+
+  if(customIndex>=0){
+
+   customParams[
+    customIndex
+   ]={
+
+    code,
+    name,
+    unit,
+    desc,
+    source
+
+   };
+
+   saveLocal(
+    LOCAL_PARAM_KEY,
+    customParams
+   );
+
+  }
+
+  saveLocal(
+   LOCAL_PARAM_EDIT_KEY,
+   paramEdits
+  );
+
+  saveLocal(
+   LOCAL_PARAM_DELETE_KEY,
+   paramDeleted
+  );
+
+  recordHistory(
+   'PARAMETRE KÜTÜPHANESİ DÜZENLENDİ',
+   `${code} · ${name}`
+  );
+
+  closeModal();
+
+  render();
+
+  toast(
+   'Parametre güncellendi.'
+  );
+
+  return;
+
+ }
+
+ const exists=
+  [
+   ...DEFAULT_PARAMS,
+   ...customParams
+  ].some(
+   x=>x.code===code
+  );
+
+ if(exists){
+
+  toast(
+   'Bu parametre kodu zaten mevcut.'
+  );
+
+  return;
+
+ }
+
+ customParams.push({
+
+  code,
+  name,
+  unit,
+  desc,
+  source
+
+ });
 
  saveLocal(
   LOCAL_PARAM_KEY,
   customParams
  );
 
+ paramDeleted=
+  paramDeleted.filter(
+   x=>x!==code
+  );
+
+ saveLocal(
+  LOCAL_PARAM_DELETE_KEY,
+  paramDeleted
+ );
+
+ recordHistory(
+  'PARAMETRE KÜTÜPHANESİNE EKLENDİ',
+  `${code} · ${name}`
+ );
+
+ closeModal();
+
  render();
+
+ toast(
+  'Yeni parametre eklendi.'
+ );
+
+}
+
+function deleteParam(
+ code
+){
+
+ if(!edit){
+
+  requestAdmin();
+
+  return;
+
+ }
+
+ touchAdminSession();
+
+ const p=
+  params().find(
+   x=>x.code===code
+  );
+
+ if(!p)
+  return;
+
+ if(!confirm(
+  `${code} · ${p.name}\n\nBu parametre silinsin mi?`
+ ))return;
+
+ if(
+  DEFAULT_PARAMS.some(
+   x=>x.code===code
+  )
+ ){
+
+  if(
+   !paramDeleted.includes(
+    code
+   )
+  ){
+
+   paramDeleted.push(code);
+
+  }
+
+  delete paramEdits[code];
+
+  saveLocal(
+   LOCAL_PARAM_DELETE_KEY,
+   paramDeleted
+  );
+
+  saveLocal(
+   LOCAL_PARAM_EDIT_KEY,
+   paramEdits
+  );
+
+ }else{
+
+  customParams=
+   customParams.filter(
+    x=>x.code!==code
+   );
+
+  delete paramEdits[code];
+
+  saveLocal(
+   LOCAL_PARAM_KEY,
+   customParams
+  );
+
+  saveLocal(
+   LOCAL_PARAM_EDIT_KEY,
+   paramEdits
+  );
+
+ }
+
+ recordHistory(
+  'PARAMETRE KÜTÜPHANESİNDEN SİLİNDİ',
+  `${code} · ${p.name}`
+ );
+
+ render();
+
+ toast(
+  'Parametre silindi.'
+ );
 
 }
 
@@ -5605,7 +6409,7 @@ function faultBody(){
   ${
    faults()
     .map(
-     (f)=>`
+     f=>`
 
       <div
        class="library-card"
@@ -5619,29 +6423,71 @@ function faultBody(){
          ' '+
          f.solution
         ).toLowerCase()
-       )}"
-       onclick="
-        faultDetail(
-         '${esc(f.code)}'
-        )
-       ">
+       )}">
 
-       <div class="library-code">
-        ${esc(f.code)}
+       <div
+        onclick="
+         faultDetail(
+          '${esc(f.code)}'
+         )
+        ">
+
+        <div class="library-code">
+         ${esc(f.code)}
+        </div>
+
+        <div class="library-name">
+         ${esc(f.name)}
+        </div>
+
+        <div class="library-desc">
+         ${esc(f.cause)}
+        </div>
+
+        <div class="library-source">
+         Kaynak:
+         ${esc(f.source)}
+        </div>
+
        </div>
 
-       <div class="library-name">
-        ${esc(f.name)}
-       </div>
+       ${
+        edit
+        ?
+        `
+        <div class="library-actions">
 
-       <div class="library-desc">
-        ${esc(f.cause)}
-       </div>
+         <button
+          class="btn"
+          onclick="
+           event.stopPropagation();
+           editFault(
+            '${esc(f.code)}'
+           );
+          ">
 
-       <div class="library-source">
-        Kaynak:
-        ${esc(f.source)}
-       </div>
+          ✏ DÜZENLE
+
+         </button>
+
+         <button
+          class="btn bad"
+          onclick="
+           event.stopPropagation();
+           deleteFault(
+            '${esc(f.code)}'
+           );
+          ">
+
+          🗑 SİL
+
+         </button>
+
+        </div>
+        `
+        :
+        ''
+       }
 
       </div>
 
@@ -5698,8 +6544,7 @@ function faultBody(){
      Yapılan İşlem
     </label>
 
-    <textarea id="real_fault_action">
-    </textarea>
+    <textarea id="real_fault_action"></textarea>
 
    </div>
 
@@ -5711,8 +6556,7 @@ function faultBody(){
      Sonuç
     </label>
 
-    <textarea id="real_fault_result">
-    </textarea>
+    <textarea id="real_fault_result"></textarea>
 
    </div>
 
@@ -5771,7 +6615,9 @@ function filterFaults(){
 
 }
 
-function faultDetail(code){
+function faultDetail(
+ code
+){
 
  const f=
   faults().find(
@@ -5826,23 +6672,38 @@ function faultDetail(code){
   </div>
 
   ${
-   edit &&
-   customFaults.some(
-    x=>x.code===f.code
-   )
+   edit
    ?
    `
-   <button
-    class="btn bad"
-    onclick="
-     deleteCustomFault(
-      '${esc(f.code)}'
-     )
-    ">
+   <div class="modal-actions">
 
-    BU ÖZEL KAYDI SİL
+    <button
+     class="btn"
+     onclick="
+      closeModal();
+      editFault(
+       '${esc(f.code)}'
+      );
+     ">
 
-   </button>
+     ✏ DÜZENLE
+
+    </button>
+
+    <button
+     class="btn bad"
+     onclick="
+      closeModal();
+      deleteFault(
+       '${esc(f.code)}'
+      );
+     ">
+
+     🗑 SİL
+
+    </button>
+
+   </div>
    `
    :
    ''
@@ -5864,65 +6725,94 @@ function newFault(){
 
  touchAdminSession();
 
- const code=
-  prompt(
-   'Hata kodu:',
-   'F1234'
-  );
+ openModal(`
 
- if(!code)
-  return;
+  <h2>
+   + YENİ ARIZA KODU
+  </h2>
 
- const name=
-  prompt(
-   'Başlık:',
-   ''
-  );
+  <div class="grid2">
 
- if(!name)
-  return;
+   ${input(
+    'Hata Kodu',
+    'fault_edit_code',
+    ''
+   )}
 
- const cause=
-  prompt(
-   'Olası nedenler:',
-   ''
-  )||'';
+   ${input(
+    'Başlık',
+    'fault_edit_name',
+    ''
+   )}
 
- const solution=
-  prompt(
-   'Çözüm / yapılacak işlem:',
-   ''
-  )||'';
+  </div>
 
- const source=
-  prompt(
-   'Kaynak:',
-   'Kullanıcı kaydı'
-  )||'Kullanıcı kaydı';
+  <div
+   class="field"
+   style="margin-top:10px">
 
- customFaults.push({
-  code,
-  name,
-  cause,
-  solution,
-  source
- });
+   <label>
+    Olası Neden
+   </label>
 
- saveLocal(
-  LOCAL_FAULT_KEY,
-  customFaults
- );
+   <textarea id="fault_edit_cause"></textarea>
 
- recordHistory(
-  'ARIZA KÜTÜPHANESİNE EKLENDİ',
-  `${code} · ${name}`
- );
+  </div>
 
- render();
+  <div
+   class="field"
+   style="margin-top:10px">
+
+   <label>
+    Çözüm / Yapılacaklar
+   </label>
+
+   <textarea id="fault_edit_solution"></textarea>
+
+  </div>
+
+  <div
+   class="field"
+   style="margin-top:10px">
+
+   <label>
+    Kaynak
+   </label>
+
+   <input
+    id="fault_edit_source"
+    value="Kullanıcı kaydı"
+   >
+
+  </div>
+
+  <div class="modal-actions">
+
+   <button
+    class="btn"
+    onclick="closeModal()">
+
+    İPTAL
+
+   </button>
+
+   <button
+    class="btn ok"
+    onclick="saveFaultEditor(false)">
+
+    KAYDET
+
+   </button>
+
+  </div>
+
+ `);
 
 }
 
-function deleteCustomFault(code){
+function editFault(
+ code
+){
 
  if(!edit){
 
@@ -5934,21 +6824,407 @@ function deleteCustomFault(code){
 
  touchAdminSession();
 
- if(!confirm(
-  `${code} kaydı silinsin mi?`
- ))return;
-
- customFaults=
-  customFaults.filter(
-   x=>x.code!==code
+ const f=
+  faults().find(
+   x=>x.code===code
   );
+
+ if(!f)
+  return;
+
+ openModal(`
+
+  <h2>
+   ✏ ARIZA DÜZENLE
+  </h2>
+
+  <input
+   id="fault_original_code"
+   type="hidden"
+   value="${esc(code)}"
+  >
+
+  <div class="grid2">
+
+   ${input(
+    'Hata Kodu',
+    'fault_edit_code',
+    f.code
+   )}
+
+   ${input(
+    'Başlık',
+    'fault_edit_name',
+    f.name
+   )}
+
+  </div>
+
+  <div
+   class="field"
+   style="margin-top:10px">
+
+   <label>
+    Olası Neden
+   </label>
+
+   <textarea
+    id="fault_edit_cause"
+   >${esc(f.cause)}</textarea>
+
+  </div>
+
+  <div
+   class="field"
+   style="margin-top:10px">
+
+   <label>
+    Çözüm / Yapılacaklar
+   </label>
+
+   <textarea
+    id="fault_edit_solution"
+   >${esc(f.solution)}</textarea>
+
+  </div>
+
+  <div
+   class="field"
+   style="margin-top:10px">
+
+   <label>
+    Kaynak
+   </label>
+
+   <input
+    id="fault_edit_source"
+    value="${esc(f.source)}"
+   >
+
+  </div>
+
+  <div class="modal-actions">
+
+   <button
+    class="btn"
+    onclick="closeModal()">
+
+    İPTAL
+
+   </button>
+
+   <button
+    class="btn ok"
+    onclick="saveFaultEditor(true)">
+
+    DEĞİŞİKLİKLERİ KAYDET
+
+   </button>
+
+  </div>
+
+ `);
+
+}
+
+function saveFaultEditor(
+ isEdit
+){
+
+ if(!edit){
+
+  requestAdmin();
+
+  return;
+
+ }
+
+ touchAdminSession();
+
+ const original=
+  isEdit
+  ?
+  val('fault_original_code')
+  :
+  '';
+
+ const code=
+  val('fault_edit_code').trim();
+
+ const name=
+  val('fault_edit_name').trim();
+
+ const cause=
+  val('fault_edit_cause').trim();
+
+ const solution=
+  val('fault_edit_solution').trim();
+
+ const source=
+  val('fault_edit_source').trim();
+
+ if(!code){
+
+  toast(
+   'Hata kodu boş bırakılamaz.'
+  );
+
+  return;
+
+ }
+
+ if(!name){
+
+  toast(
+   'Başlık boş bırakılamaz.'
+  );
+
+  return;
+
+ }
+
+ if(isEdit){
+
+  const duplicate=
+   faults().some(
+    x=>
+     x.code===code &&
+     x.code!==original
+   );
+
+  if(duplicate){
+
+   toast(
+    'Bu hata kodu zaten mevcut.'
+   );
+
+   return;
+
+  }
+
+  if(
+   original &&
+   original!==code
+  ){
+
+   delete faultEdits[
+    original
+   ];
+
+  }
+
+  faultDeleted=
+   faultDeleted.filter(
+    x=>x!==code
+   );
+
+  faultEdits[code]={
+
+   code,
+   name,
+   cause,
+   solution,
+   source
+
+  };
+
+  const customIndex=
+   customFaults.findIndex(
+    x=>
+     x.code===original
+   );
+
+  if(customIndex>=0){
+
+   customFaults[
+    customIndex
+   ]={
+
+    code,
+    name,
+    cause,
+    solution,
+    source
+
+   };
+
+   saveLocal(
+    LOCAL_FAULT_KEY,
+    customFaults
+   );
+
+  }
+
+  saveLocal(
+   LOCAL_FAULT_EDIT_KEY,
+   faultEdits
+  );
+
+  saveLocal(
+   LOCAL_FAULT_DELETE_KEY,
+   faultDeleted
+  );
+
+  recordHistory(
+   'ARIZA KÜTÜPHANESİ DÜZENLENDİ',
+   `${code} · ${name}`
+  );
+
+  closeModal();
+
+  render();
+
+  toast(
+   'Arıza kaydı güncellendi.'
+  );
+
+  return;
+
+ }
+
+ const exists=
+  [
+   ...DEFAULT_FAULTS,
+   ...customFaults
+  ].some(
+   x=>x.code===code
+  );
+
+ if(exists){
+
+  toast(
+   'Bu hata kodu zaten mevcut.'
+  );
+
+  return;
+
+ }
+
+ customFaults.push({
+
+  code,
+  name,
+  cause,
+  solution,
+  source
+
+ });
 
  saveLocal(
   LOCAL_FAULT_KEY,
   customFaults
  );
 
+ faultDeleted=
+  faultDeleted.filter(
+   x=>x!==code
+  );
+
+ saveLocal(
+  LOCAL_FAULT_DELETE_KEY,
+  faultDeleted
+ );
+
+ recordHistory(
+  'ARIZA KÜTÜPHANESİNE EKLENDİ',
+  `${code} · ${name}`
+ );
+
+ closeModal();
+
  render();
+
+ toast(
+  'Yeni arıza kodu eklendi.'
+ );
+
+}
+
+function deleteFault(
+ code
+){
+
+ if(!edit){
+
+  requestAdmin();
+
+  return;
+
+ }
+
+ touchAdminSession();
+
+ const f=
+  faults().find(
+   x=>x.code===code
+  );
+
+ if(!f)
+  return;
+
+ if(!confirm(
+  `${code} · ${f.name}\n\nBu arıza kaydı kütüphaneden silinsin mi?`
+ ))return;
+
+ if(
+  DEFAULT_FAULTS.some(
+   x=>x.code===code
+  )
+ ){
+
+  if(
+   !faultDeleted.includes(
+    code
+   )
+  ){
+
+   faultDeleted.push(code);
+
+  }
+
+  delete faultEdits[code];
+
+  saveLocal(
+   LOCAL_FAULT_DELETE_KEY,
+   faultDeleted
+  );
+
+  saveLocal(
+   LOCAL_FAULT_EDIT_KEY,
+   faultEdits
+  );
+
+ }else{
+
+  customFaults=
+   customFaults.filter(
+    x=>x.code!==code
+   );
+
+  delete faultEdits[code];
+
+  saveLocal(
+   LOCAL_FAULT_KEY,
+   customFaults
+  );
+
+  saveLocal(
+   LOCAL_FAULT_EDIT_KEY,
+   faultEdits
+  );
+
+ }
+
+ recordHistory(
+  'ARIZA KÜTÜPHANESİNDEN SİLİNDİ',
+  `${code} · ${f.name}`
+ );
+
+ render();
+
+ toast(
+  'Arıza kaydı silindi.'
+ );
 
 }
 
@@ -6401,7 +7677,9 @@ function addPhotos(event){
 
 }
 
-function deletePhoto(index){
+function deletePhoto(
+ index
+){
 
  if(!edit){
 
@@ -6904,11 +8182,6 @@ function saveSettings(){
 
 function requestAdmin(){
 
- /*
-   Zaten yönetici ise tekrar şifre istemiyoruz;
-   sadece kilitleme görevi görüyor.
- */
-
  if(edit){
 
   clearAdminSession();
@@ -7062,7 +8335,9 @@ function checkAdmin(){
    MODAL
 ========================================================= */
 
-function openModal(html){
+function openModal(
+ html
+){
 
  closeModal();
 
@@ -7079,9 +8354,33 @@ function openModal(html){
 
  wrap.innerHTML=`
 
-  <div class="modal">
+  <div
+   class="modal"
+   onclick="event.stopPropagation()">
 
-   ${html}
+   <div class="modal-head">
+
+    <h2>
+     ${getModalTitle(html)}
+    </h2>
+
+    <button
+     class="modal-close"
+     type="button"
+     aria-label="Kapat"
+     onclick="closeModal()">
+
+     ✕
+
+    </button>
+
+   </div>
+
+   <div id="modalContent">
+
+    ${removeFirstH2(html)}
+
+   </div>
 
   </div>
 
@@ -7090,6 +8389,84 @@ function openModal(html){
  document.body.appendChild(
   wrap
  );
+
+ wrap.addEventListener(
+  'click',
+  function(e){
+
+   if(e.target===wrap){
+
+    closeModal();
+
+   }
+
+  }
+ );
+
+}
+
+function getModalTitle(
+ html
+){
+
+ try{
+
+  const holder=
+   document.createElement(
+    'div'
+   );
+
+  holder.innerHTML=
+   html;
+
+  const h2=
+   holder.querySelector(
+    'h2'
+   );
+
+  return h2
+   ?
+   h2.textContent.trim()
+   :
+   '';
+
+ }catch(e){
+
+  return '';
+
+ }
+
+}
+
+function removeFirstH2(
+ html
+){
+
+ try{
+
+  const holder=
+   document.createElement(
+    'div'
+   );
+
+  holder.innerHTML=
+   html;
+
+  const h2=
+   holder.querySelector(
+    'h2'
+   );
+
+  if(h2)
+   h2.remove();
+
+  return holder.innerHTML;
+
+ }catch(e){
+
+  return html;
+
+ }
 
 }
 
@@ -7834,6 +9211,260 @@ async function addTerfiParam(){
 
 
 /* =========================================================
+   TERFİ PARAMETRESİ DÜZENLE
+========================================================= */
+
+function editTerfiParam(
+ id
+){
+
+ if(!edit){
+
+  requestAdmin();
+
+  return;
+
+ }
+
+ touchAdminSession();
+
+ const p=
+  current.tp.find(
+   x=>
+    String(x.id)===
+    String(id)
+  );
+
+ if(!p)
+  return;
+
+ openModal(`
+
+  <h2>
+   ✏ TERFİ PARAMETRESİNİ DÜZENLE
+  </h2>
+
+  <input
+   id="edit_tp_id"
+   type="hidden"
+   value="${esc(p.id)}"
+  >
+
+  <div class="grid2">
+
+   ${input(
+    'Ekran / Grup',
+    'edit_tp_ekran',
+    p.ekran_adi||''
+   )}
+
+   ${input(
+    'Parametre',
+    'edit_tp_ad',
+    p.parametre_adi||''
+   )}
+
+   ${input(
+    'Değer',
+    'edit_tp_deger',
+    p.deger||''
+   )}
+
+   ${input(
+    'Birim',
+    'edit_tp_birim',
+    p.birim||''
+   )}
+
+   ${input(
+    'Kaynak',
+    'edit_tp_kaynak',
+    p.kaynak||''
+   )}
+
+  </div>
+
+  <div
+   class="field"
+   style="margin-top:10px">
+
+   <label>
+    Açıklama
+   </label>
+
+   <textarea
+    id="edit_tp_aciklama"
+   >${esc(p.aciklama||'')}</textarea>
+
+  </div>
+
+  <div class="modal-actions">
+
+   <button
+    class="btn"
+    onclick="closeModal()">
+
+    İPTAL
+
+   </button>
+
+   <button
+    class="btn ok"
+    onclick="saveEditedTerfiParam()">
+
+    KAYDET
+
+   </button>
+
+  </div>
+
+ `);
+
+}
+
+async function saveEditedTerfiParam(){
+
+ if(!edit){
+
+  requestAdmin();
+
+  return;
+
+ }
+
+ touchAdminSession();
+
+ const id=
+  val('edit_tp_id');
+
+ const data={
+
+  ekran_adi:
+   val('edit_tp_ekran'),
+
+  parametre_adi:
+   val('edit_tp_ad'),
+
+  deger:
+   val('edit_tp_deger'),
+
+  birim:
+   val('edit_tp_birim'),
+
+  kaynak:
+   val('edit_tp_kaynak'),
+
+  aciklama:
+   val('edit_tp_aciklama')
+
+ };
+
+ const r=
+  await db
+   .from(
+    'terfi_parametreleri'
+   )
+   .update(
+    data
+   )
+   .eq(
+    'id',
+    id
+   );
+
+ if(r.error){
+
+  alert(
+   r.error.message
+  );
+
+  return;
+
+ }
+
+ recordHistory(
+  'TERFİ PARAMETRESİ DÜZENLENDİ',
+  `${data.parametre_adi} = ${data.deger}`
+ );
+
+ closeModal();
+
+ await openStation(
+  current.s.id
+ );
+
+ toast(
+  'Terfi parametresi güncellendi.'
+ );
+
+}
+
+async function deleteTerfiParam(
+ id
+){
+
+ if(!edit){
+
+  requestAdmin();
+
+  return;
+
+ }
+
+ touchAdminSession();
+
+ const p=
+  current.tp.find(
+   x=>
+    String(x.id)===
+    String(id)
+  );
+
+ if(!p)
+  return;
+
+ if(!confirm(
+  `"${p.parametre_adi||'Parametre'}" silinsin mi?`
+ ))return;
+
+ const r=
+  await db
+   .from(
+    'terfi_parametreleri'
+   )
+   .delete()
+   .eq(
+    'id',
+    id
+   );
+
+ if(r.error){
+
+  alert(
+   r.error.message
+  );
+
+  return;
+
+ }
+
+ recordHistory(
+  'TERFİ PARAMETRESİ SİLİNDİ',
+  `${p.parametre_adi||''} = ${p.deger||''}`
+ );
+
+ await openStation(
+  current.s.id
+ );
+
+ toast(
+  'Terfi parametresi silindi.'
+ );
+
+}
+
+
+/* =========================================================
    YENİ TERFİ
 ========================================================= */
 
@@ -8271,7 +9902,7 @@ function printCell(
    ${
     value===null||
     value===undefined||
-    value===''
+    value==='' 
     ?
     '—'
     :
@@ -8286,7 +9917,9 @@ function printCell(
 
 }
 
-function printHmi(pageIndex){
+function printHmi(
+ pageIndex
+){
 
  const rec=
   current.h.find(
@@ -9153,7 +10786,9 @@ function makePDF(){
    CSV / EXCEL
 ========================================================= */
 
-function csvEscape(value){
+function csvEscape(
+ value
+){
 
  return `"${String(
   value??''
@@ -9427,10 +11062,6 @@ function exportCSV(){
 
  applyPrefs();
 
- /*
-   Tarayıcı sekmesi içerisinde daha önce açılmış
-   bir yönetici oturumu varsa geri yükle.
- */
  restoreAdminSession();
 
  showLogin();
