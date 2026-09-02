@@ -310,6 +310,11 @@ h4{
  color:#7fd9ff
 }
 
+.badge.danger{
+ background:#52242b;
+ color:#ff9ea7
+}
+
 .admin-status{
  display:inline-block;
  padding:7px 9px;
@@ -379,6 +384,17 @@ h4{
  gap:6px;
  flex-wrap:wrap;
  margin-top:9px
+}
+
+.station-actions{
+ display:flex;
+ gap:5px;
+ flex-wrap:wrap;
+ margin-top:10px
+}
+
+.station-actions .btn{
+ margin:0
 }
 
 .summary{
@@ -513,6 +529,18 @@ h4{
  cursor:pointer
 }
 
+.library-driver{
+ display:inline-block;
+ margin-top:8px;
+ padding:6px 8px;
+ border-radius:999px;
+ background:#123b52;
+ border:1px solid #285d78;
+ color:#8fdcff;
+ font-size:10px;
+ font-weight:800
+}
+
 .library-actions{
  display:flex;
  gap:5px;
@@ -533,6 +561,85 @@ h4{
 
 .param-row-actions .btn{
  margin:0
+}
+
+.quick-library-title{
+ display:flex;
+ align-items:center;
+ justify-content:space-between;
+ gap:10px;
+ flex-wrap:wrap
+}
+
+.quick-library-card{
+ background:#091827;
+ border:1px solid #203b56;
+ border-radius:14px;
+ padding:13px
+}
+
+.quick-library-card h3{
+ font-size:15px
+}
+
+.quick-library-list{
+ display:grid;
+ gap:8px;
+ margin-top:10px
+}
+
+.quick-library-item{
+ border:1px solid #214159;
+ border-radius:11px;
+ background:#081b30;
+ padding:10px
+}
+
+.quick-library-main{
+ display:flex;
+ align-items:flex-start;
+ justify-content:space-between;
+ gap:10px;
+ flex-wrap:wrap
+}
+
+.quick-library-code{
+ color:#67c9ff;
+ font-size:14px;
+ font-weight:950
+}
+
+.quick-library-name{
+ font-size:12px;
+ font-weight:900;
+ margin-top:3px
+}
+
+.quick-library-meta{
+ color:#91adbf;
+ font-size:10px;
+ margin-top:4px;
+ line-height:1.45
+}
+
+.quick-library-driver{
+ color:#8bf0bf;
+ font-size:10px;
+ font-weight:800;
+ margin-top:7px
+}
+
+.quick-library-actions{
+ display:flex;
+ gap:4px;
+ flex-wrap:wrap
+}
+
+.quick-library-actions .btn{
+ margin:0;
+ min-height:38px;
+ padding:7px 9px;
+ font-size:11px
 }
 
 .hmi-shell{
@@ -839,7 +946,7 @@ h4{
 }
 
 .modal{
- width:min(620px,100%);
+ width:min(700px,100%);
  max-height:90vh;
  overflow:auto;
  background:#0d2945;
@@ -1023,9 +1130,7 @@ h4{
  color:#9fc2d2
 }
 
-/* =========================================================
-   PRINT
-========================================================= */
+/* PRINT */
 
 .print-only{
  display:none
@@ -1125,6 +1230,10 @@ h4{
 
  .modal{
   padding:15px
+ }
+
+ .station-actions .btn{
+  width:100%
  }
 
 }
@@ -1298,25 +1407,23 @@ const db =
 const DEFAULT_SITE_PASSWORD='2468';
 const DEFAULT_ADMIN_PASSWORD='6872';
 
-const APP_PREF_KEY='meski_terfi_preferences_v11';
+const APP_PREF_KEY='meski_terfi_preferences_v12';
 
 const LOCAL_BOX_KEY='meski_motor_box_v10';
-const LOCAL_FAULT_KEY='meski_fault_library_v10';
-const LOCAL_PARAM_KEY='meski_param_library_v10';
+const LOCAL_FAULT_KEY='meski_fault_library_v12';
+const LOCAL_PARAM_KEY='meski_param_library_v12';
 const LOCAL_HISTORY_KEY='meski_history_v10';
 const LOCAL_PHOTO_KEY='meski_photos_v10';
 const LOCAL_SSR_KEY='meski_ssr_v10';
 
-const LOCAL_FAULT_EDIT_KEY='meski_fault_edits_v11';
-const LOCAL_FAULT_DELETE_KEY='meski_fault_deleted_v11';
+const LOCAL_FAULT_EDIT_KEY='meski_fault_edits_v12';
+const LOCAL_FAULT_DELETE_KEY='meski_fault_deleted_v12';
 
-const LOCAL_PARAM_EDIT_KEY='meski_param_edits_v11';
-const LOCAL_PARAM_DELETE_KEY='meski_param_deleted_v11';
+const LOCAL_PARAM_EDIT_KEY='meski_param_edits_v12';
+const LOCAL_PARAM_DELETE_KEY='meski_param_deleted_v12';
 
-const LOCAL_LOCATION_KEY='meski_terfi_locations_v1';
-const LOCAL_TERFI_DETAIL_KEY='meski_terfi_details_v1';
-
-const LOCAL_GENERAL_LIBRARY_KEY='meski_general_library_v1';
+const LOCAL_LOCATION_KEY='meski_terfi_locations_v2';
+const LOCAL_TERFI_DETAIL_KEY='meski_terfi_details_v2';
 
 const ADMIN_SESSION_KEY='meski_admin_session_v11';
 const ADMIN_IDLE_MS=30*60*1000;
@@ -1349,13 +1456,11 @@ const HMI=[
    'Sensör Hata',
    '[AI1] Min. Sensör Kalibrasyonu',
    '[AI1] Max. Sensör Kalibrasyonu',
-
    'Motor Gürültü Seviyesi',
    'Panel Hata',
    'Aşırı Gerilim',
    'Düşük Gerilim',
    'Sensör Tipi',
-
    'Sensör Giriş Port',
    'Sensör Giriş Hata',
    'Aşırı Akım',
@@ -1543,7 +1648,7 @@ const WORK=[
 
 
 /* =========================================================
-   ARIZALAR
+   ARIZA KÜTÜPHANESİ
 ========================================================= */
 
 const DEFAULT_FAULTS=[
@@ -1552,8 +1657,9 @@ const DEFAULT_FAULTS=[
   code:'F0001',
   name:'Aşırı Akım',
   cause:'Motor veya yük tarafında aşırı akım oluşması.',
-  solution:'Motor yükünü, motor kablosunu, fazlamayı, üçgen/yıldız bağlantısını ve sürücü motor parametrelerini kontrol edin.',
-  source:'ABB Hidrofor / saha teknik notu'
+  solution:'Motor yükünü, motor kablosunu, bağlantıları, motor parametrelerini ve hız/frekans rampalarını kontrol edin.',
+  source:'ABB saha / hidrofor referansı',
+  driver:'ABB ACQ580'
  },
 
  {
@@ -1561,7 +1667,8 @@ const DEFAULT_FAULTS=[
   name:'DC Yüksek Gerilim',
   cause:'DC bara geriliminin yüksek olması.',
   solution:'Besleme gerilimini ve yavaşlama/rampa ayarlarını kontrol edin.',
-  source:'ABB Hidrofor / saha teknik notu'
+  source:'ABB saha / hidrofor referansı',
+  driver:'ABB ACQ580'
  },
 
  {
@@ -1569,7 +1676,8 @@ const DEFAULT_FAULTS=[
   name:'Cihaz Aşırı Isı',
   cause:'Sürücü sıcaklığının yükselmesi.',
   solution:'Soğutma, fan, hava akışı ve ortam sıcaklığını kontrol edin.',
-  source:'ABB Hidrofor / saha teknik notu'
+  source:'ABB saha / hidrofor referansı',
+  driver:'ABB ACQ580'
  },
 
  {
@@ -1577,15 +1685,17 @@ const DEFAULT_FAULTS=[
   name:'Kısa Devre',
   cause:'Motor veya motor kablosunda kısa devre.',
   solution:'Motor kablosu, motor sargıları ve bağlantıları kontrol edilmelidir.',
-  source:'ABB Hidrofor / saha teknik notu'
+  source:'ABB saha / hidrofor referansı',
+  driver:'ABB ACQ580'
  },
 
  {
   code:'F0006',
   name:'Toprak Hatası',
   cause:'Motor veya motor kablosunda toprağa kaçak.',
-  solution:'Motor ve kablonun izolasyon direncini ölçün.',
-  source:'ABB Hidrofor / saha teknik notu'
+  solution:'Motor ve kablonun izolasyon durumunu ve bağlantılarını kontrol edin.',
+  source:'ABB saha / hidrofor referansı',
+  driver:'ABB ACQ580'
  },
 
  {
@@ -1593,23 +1703,26 @@ const DEFAULT_FAULTS=[
   name:'Sensör Hatası',
   cause:'Sensör veya analog giriş tarafında hata.',
   solution:'AI1/AI2 bağlantılarını, sensör beslemesini ve ilgili parametreleri kontrol edin.',
-  source:'ABB Hidrofor / saha teknik notu'
+  source:'ABB saha / hidrofor referansı',
+  driver:'ABB ACQ580'
  },
 
  {
   code:'F0013',
   name:'U2-W2 Akım Farkı',
   cause:'Çıkış fazları arasındaki akım farkının yüksek olması.',
-  solution:'Motor kablosu, bağlantılar, fazlama ve motor sargılarını kontrol edin.',
-  source:'ABB Hidrofor / saha teknik notu'
+  solution:'Motor kablosu, bağlantılar, fazlar ve motor sargılarını kontrol edin.',
+  source:'ABB saha / hidrofor referansı',
+  driver:'ABB ACQ580'
  },
 
  {
   code:'F0014',
   name:'Kablo veya Toprak Hatası',
   cause:'Motor/kablo tarafında hata veya kaçak.',
-  solution:'Kablo ve motor izolasyonunu kontrol edin.',
-  source:'ABB Hidrofor / saha teknik notu'
+  solution:'Kablo ve motor tarafını kontrol edin; gerekiyorsa izolasyon durumunu ölçün.',
+  source:'ABB saha / hidrofor referansı',
+  driver:'ABB ACQ580'
  },
 
  {
@@ -1617,7 +1730,8 @@ const DEFAULT_FAULTS=[
   name:'Besleme Fazı',
   cause:'Besleme faz kaybı veya besleme dengesizliği.',
   solution:'Üç faz beslemeyi ve bağlantıları ölçün.',
-  source:'ABB Hidrofor / saha teknik notu'
+  source:'ABB saha / hidrofor referansı',
+  driver:'ABB ACQ580'
  },
 
  {
@@ -1625,7 +1739,8 @@ const DEFAULT_FAULTS=[
   name:'Motor Fazı',
   cause:'Motor çıkış fazlarından birinde problem.',
   solution:'Motor kablosunu, bağlantıları ve motoru kontrol edin.',
-  source:'ABB Hidrofor / saha teknik notu'
+  source:'ABB saha / hidrofor referansı',
+  driver:'ABB ACQ580'
  },
 
  {
@@ -1633,7 +1748,8 @@ const DEFAULT_FAULTS=[
   name:'ID Run Hatası',
   cause:'Motor tanımlama çalışmasının tamamlanamaması.',
   solution:'Motor parametrelerini ve sürücü/motor uyumluluğunu kontrol edin.',
-  source:'ABB Hidrofor / saha teknik notu'
+  source:'ABB saha / hidrofor referansı',
+  driver:'ABB ACQ580'
  },
 
  {
@@ -1641,15 +1757,17 @@ const DEFAULT_FAULTS=[
   name:'Aşırı Akım',
   cause:'Çıkış akımı dahili hata seviyesini aşmış.',
   solution:'Motor yükünü, hız/frekans rampalarını, motor-kablo bağlantısını ve motor parametrelerini kontrol edin.',
-  source:'ABB ACS580'
+  source:'ABB ACS580',
+  driver:'ABB ACS580'
  },
 
  {
   code:'2330',
   name:'Topraklama Kaçağı',
   cause:'Motor veya motor kablosu nedeniyle yük dengesizliği/topraklama kaçağı algılanması.',
-  solution:'Motor ve motor kablosunun izolasyon direncini ölçün.',
-  source:'ABB ACS580'
+  solution:'Motor ve motor kablosunu kontrol edin; gerekiyorsa izolasyon durumunu ölçün.',
+  source:'ABB ACS580',
+  driver:'ABB ACS580'
  },
 
  {
@@ -1657,156 +1775,84 @@ const DEFAULT_FAULTS=[
   name:'Kısa Devre',
   cause:'Motor veya motor kablosunda kısa devre.',
   solution:'Motoru ve motor kablosunu kablolama hatası bakımından kontrol edin.',
-  source:'ABB ACS580'
+  source:'ABB ACS580',
+  driver:'ABB ACS580'
  },
 
  {
   code:'2381',
   name:'IGBT Aşırı Yüklü',
-  cause:'IGBT kutu bağlantısı aşırı sıcaklığı.',
+  cause:'IGBT kutu sıcaklığının aşırı yükselmesi.',
   solution:'Motor kablosunu, ortam koşullarını, hava akışını, fanı ve soğutucu kanatlarını kontrol edin.',
-  source:'ABB ACS580'
+  source:'ABB ACS580',
+  driver:'ABB ACS580'
  }
+
 ];
 
 
 /* =========================================================
-   PARAMETRELER
+   PARAMETRE KÜTÜPHANESİ
 ========================================================= */
 
 const DEFAULT_PARAMS=[
 
- ['99.06','Motor nominal akımı','A','Motor güç plakasındaki nominal akım.','ABB ACQ580'],
- ['99.07','Motor nominal gerilimi','V','Motor nominal gerilimi.','ABB ACQ580'],
- ['99.08','Motor nominal frekansı','Hz','Motor nominal frekansı.','ABB ACQ580'],
- ['99.09','Motor nominal hızı','rpm','Motor nominal devir değeri.','ABB ACQ580'],
- ['99.10','Motor nominal gücü','kW','Motor nominal gücü.','ABB ACQ580'],
- ['99.11','Motor nominal cos Φ','-','Motor nominal güç faktörü.','ABB ACQ580'],
- ['99.12','Nominal motor momenti','Nm','Nominal motor momenti.','ABB ACQ580'],
+ ['99.06','Motor nominal akımı','A','Motor güç plakasındaki nominal akım.','ABB ACQ580','ABB ACQ580'],
+ ['99.07','Motor nominal gerilimi','V','Motor nominal gerilimi.','ABB ACQ580','ABB ACQ580'],
+ ['99.08','Motor nominal frekansı','Hz','Motor nominal frekansı.','ABB ACQ580','ABB ACQ580'],
+ ['99.09','Motor nominal hızı','rpm','Motor nominal devir değeri.','ABB ACQ580','ABB ACQ580'],
+ ['99.10','Motor nominal gücü','kW','Motor nominal gücü.','ABB ACQ580','ABB ACQ580'],
+ ['99.11','Motor nominal cos Φ','-','Motor nominal güç faktörü.','ABB ACQ580','ABB ACQ580'],
+ ['99.12','Nominal motor momenti','Nm','Nominal motor momenti.','ABB ACQ580','ABB ACQ580'],
 
- ['30.11','Minimum hız','Hz','Motorun minimum hız sınırı.','ABB ACQ580'],
- ['30.12','Maksimum hız','Hz','Motorun maksimum hız sınırı.','ABB ACQ580'],
- ['30.17','Maksimum akım','A','Sürücünün maksimum akım sınırı.','ABB ACQ580'],
+ ['30.11','Minimum hız','Hz','Motorun minimum hız sınırı.','ABB ACQ580','ABB ACQ580'],
+ ['30.12','Maksimum hız','Hz','Motorun maksimum hız sınırı.','ABB ACQ580','ABB ACQ580'],
+ ['30.17','Maksimum akım','A','Sürücünün maksimum akım sınırı.','ABB ACQ580','ABB ACQ580'],
 
- ['40.01','PID kontrol modu','-','Proses PID grubunun kontrol yapısı.','ABB ACQ580'],
- ['40.19','Setpoint 1 seçimi','kaynak','Birinci PID setpoint kaynağı.','ABB ACQ580'],
- ['40.20','Setpoint 2 seçimi','kaynak','İkinci PID setpoint kaynağı.','ABB ACQ580'],
- ['40.21','Setpoint seçimi','kaynak','Kullanılan proses setpoint seçimi.','ABB ACQ580'],
- ['40.22','Setpoint minimum','bar','Setpoint alt sınırı.','ABB ACQ580'],
- ['40.23','Setpoint maksimum','bar','Setpoint üst sınırı.','ABB ACQ580'],
- ['40.32','PID integral zamanı','s','PID integral zamanı.','Saha/ABB referansı'],
- ['40.33','PID derivatif zamanı','s','PID türev zamanı.','Saha/ABB referansı'],
+ ['40.01','PID kontrol modu','-','Proses PID grubunun kontrol yapısı.','ABB ACQ580','ABB ACQ580'],
+ ['40.19','Setpoint 1 seçimi','kaynak','Birinci PID setpoint kaynağı.','ABB ACQ580','ABB ACQ580'],
+ ['40.20','Setpoint 2 seçimi','kaynak','İkinci PID setpoint kaynağı.','ABB ACQ580','ABB ACQ580'],
+ ['40.21','Setpoint seçimi','kaynak','Kullanılan proses setpoint seçimi.','ABB ACQ580','ABB ACQ580'],
+ ['40.22','Setpoint minimum','bar','Setpoint alt sınırı.','ABB ACQ580','ABB ACQ580'],
+ ['40.23','Setpoint maksimum','bar','Setpoint üst sınırı.','ABB ACQ580','ABB ACQ580'],
+ ['40.32','PID integral zamanı','s','PID integral zamanı.','Saha/ABB referansı','ABB ACQ580'],
+ ['40.33','PID derivatif zamanı','s','PID türev zamanı.','Saha/ABB referansı','ABB ACQ580'],
 
- ['76.30','Çoklu pompa yapılandırması','-','Çoklu pompa uygulamasının yapılandırılması.','ABB ACQ580'],
- ['76.31','Çoklu pompa düğüm numarası','-','Pompa/sürücü düğüm bilgisi.','ABB ACQ580'],
- ['76.32','Çoklu pompa haberleşmesi','-','Çoklu pompa haberleşmesi.','ABB ACQ580'],
- ['76.33','Çoklu pompa kontrolü','-','Çoklu pompa kontrol davranışı.','ABB ACQ580'],
+ ['76.30','Çoklu pompa yapılandırması','-','Çoklu pompa uygulamasının yapılandırılması.','ABB ACQ580','ABB ACQ580'],
+ ['76.31','Çoklu pompa düğüm numarası','-','Pompa/sürücü düğüm bilgisi.','ABB ACQ580','ABB ACQ580'],
+ ['76.32','Çoklu pompa haberleşmesi','-','Çoklu pompa haberleşmesi.','ABB ACQ580','ABB ACQ580'],
+ ['76.33','Çoklu pompa kontrolü','-','Çoklu pompa kontrol davranışı.','ABB ACQ580','ABB ACQ580'],
 
- ['77.11','Pompa 1 çalışma süresi','h','Pompa 1 çalışma süresi sayacı.','ABB ACQ580'],
- ['77.12','Pompa 2 çalışma süresi','h','Pompa 2 çalışma süresi sayacı.','ABB ACQ580'],
- ['77.13','Pompa 3 çalışma süresi','h','Pompa 3 çalışma süresi sayacı.','ABB ACQ580'],
- ['77.14','Pompa 4 çalışma süresi','h','Pompa 4 çalışma süresi sayacı.','ABB ACQ580'],
- ['77.15','Pompa 5 çalışma süresi','h','Pompa 5 çalışma süresi sayacı.','ABB ACQ580'],
- ['77.16','Pompa 6 çalışma süresi','h','Pompa 6 çalışma süresi sayacı.','ABB ACQ580'],
- ['77.17','Pompa 7 çalışma süresi','h','Pompa 7 çalışma süresi sayacı.','ABB ACQ580'],
- ['77.18','Pompa 8 çalışma süresi','h','Pompa 8 çalışma süresi sayacı.','ABB ACQ580'],
- ['77.20','IPC çevrimiçi pompalar','-','İnvertör-invertör haberleşmesi üzerinden çevrimiçi pompalar.','ABB ACQ580'],
- ['77.21','IPC iletişim kaybı durumu','-','Çoklu pompa iletişim kaybı durum bilgisi.','ABB ACQ580'],
+ ['77.11','Pompa 1 çalışma süresi','h','Pompa 1 çalışma süresi sayacı.','ABB ACQ580','ABB ACQ580'],
+ ['77.12','Pompa 2 çalışma süresi','h','Pompa 2 çalışma süresi sayacı.','ABB ACQ580','ABB ACQ580'],
+ ['77.13','Pompa 3 çalışma süresi','h','Pompa 3 çalışma süresi sayacı.','ABB ACQ580','ABB ACQ580'],
+ ['77.14','Pompa 4 çalışma süresi','h','Pompa 4 çalışma süresi sayacı.','ABB ACQ580','ABB ACQ580'],
+ ['77.15','Pompa 5 çalışma süresi','h','Pompa 5 çalışma süresi sayacı.','ABB ACQ580','ABB ACQ580'],
+ ['77.16','Pompa 6 çalışma süresi','h','Pompa 6 çalışma süresi sayacı.','ABB ACQ580','ABB ACQ580'],
+ ['77.17','Pompa 7 çalışma süresi','h','Pompa 7 çalışma süresi sayacı.','ABB ACQ580','ABB ACQ580'],
+ ['77.18','Pompa 8 çalışma süresi','h','Pompa 8 çalışma süresi sayacı.','ABB ACQ580','ABB ACQ580'],
+ ['77.20','IPC çevrimiçi pompalar','-','İnvertör-invertör haberleşmesi üzerinden çevrimiçi pompalar.','ABB ACQ580','ABB ACQ580'],
+ ['77.21','IPC iletişim kaybı durumu','-','Çoklu pompa iletişim kaybı durum bilgisi.','ABB ACQ580','ABB ACQ580'],
 
- ['46.01','Hız ölçeklendirme','-','Hız ölçeklendirme.','ABB ACQ580'],
- ['46.02','Frekans ölçeklendirme','-','Frekans ölçeklendirme.','ABB ACQ580'],
- ['46.03','Moment ölçeklendirme','-','Moment ölçeklendirme.','ABB ACQ580'],
+ ['46.01','Hız ölçeklendirme','-','Hız ölçeklendirme.','ABB ACQ580','ABB ACQ580'],
+ ['46.02','Frekans ölçeklendirme','-','Frekans ölçeklendirme.','ABB ACQ580','ABB ACQ580'],
+ ['46.03','Moment ölçeklendirme','-','Moment ölçeklendirme.','ABB ACQ580','ABB ACQ580'],
 
- ['22.18','Hız referansı / rampa','s','Hızlanma ile ilişkili rampa ayarı.','ABB ACQ580'],
- ['28.15','Frekans referans zinciri','s','Frekans rampasıyla ilgili ayar.','ABB ACQ580'],
+ ['22.18','Hız referansı / rampa','s','Hızlanma ile ilişkili rampa ayarı.','ABB ACQ580','ABB ACQ580'],
+ ['28.15','Frekans referans zinciri','s','Frekans rampasıyla ilgili ayar.','ABB ACQ580','ABB ACQ580'],
 
- ['31.20','Toprak hatası','-','Topraklama hatası fonksiyonu.','ABB ACQ580']
+ ['31.20','Toprak hatası','-','Topraklama hatası fonksiyonu.','ABB ACQ580','ABB ACQ580']
 
-].map(x=>({
- code:x[0],
- name:x[1],
- unit:x[2],
- desc:x[3],
- source:x[4]
-}));
-
-
-/* =========================================================
-   GENEL TEKNİK KÜTÜPHANE
-========================================================= */
-
-const DEFAULT_GENERAL_LIBRARY=[
-
- {
-  id:'motor',
-  code:'MOTOR',
-  name:'Motor Teknik Bilgi',
-  desc:'Motor plakasındaki değerler ve sahada değerlendirme başlıkları.',
-  source:'MESKİ saha arşivi',
-  body:
-   'Nominal gerilim, nominal akım, güç, frekans, devir ve cosφ birlikte değerlendirilir. HMI üzerinde görülen gerçek akım, gerilim, frekans ve devir ayrıca ÇALIŞMA bölümüne kaydedilir.'
- },
-
- {
-  id:'pompa',
-  code:'POMPA',
-  name:'Pompa Tipi / Çalışma Şekli',
-  desc:'Dalgıç, dik milli, yatay ve hidrofor sistemlerini ayır.',
-  source:'MESKİ saha arşivi',
-  body:
-   'Fiziksel pompa tipi ile çalışma şekli birbirinden bağımsız tutulur. Örnek: Dalgıç + Hidrofor, Dik Milli + Depoya Basma, Yatay + Depoya Basma veya Dik Milli + Hidrofor.'
- },
-
- {
-  id:'surucu',
-  code:'SÜRÜCÜ',
-  name:'ABB Sürücü Teknik Bilgi',
-  desc:'Motor parametreleri, rampa, PID, akım ve koruma ayarları.',
-  source:'ABB / saha referansı',
-  body:
-   'Motor nominal değerleri, minimum-maksimum frekans, hız/frekans rampaları, PID ayarları, maksimum akım ve arıza kayıtları birlikte takip edilir.'
- },
-
- {
-  id:'hmi',
-  code:'HMI / PLC',
-  name:'Weintek HMI Arşivi',
-  desc:'HMI üzerindeki gerçek ekran değerleri, sayfa sırası korunarak kaydedilir.',
-  source:'MESKİ saha arşivi',
-  body:
-   'HMI 1-5 sayfaları fotoğraflardaki yerleşime göre düzenlenmiştir. AI1/AI2, röle, basınç koruma, PID, frekans, uyku/uyanma ve analog değerler ayrı alanlarda tutulur.'
- },
-
- {
-  id:'basinc',
-  code:'BASINÇ',
-  name:'Basınç / Seviye',
-  desc:'Set basıncı, çalışma basıncı, üst-alt koruma ve seviye bilgileri.',
-  source:'MESKİ saha arşivi',
-  body:
-   'Set basıncı ile gerçek çalışma basıncı ayrı tutulur. Alçak/yüksek basınç koruma sınırları ve bunların girme-çıkma süreleri HMI kayıtlarıyla birlikte değerlendirilir.'
- },
-
- {
-  id:'ariza',
-  code:'ARIZA',
-  name:'Arıza Teşhis',
-  desc:'Sürücü, motor, pompa ve HMI arızalarını aynı teknik arşiv altında incele.',
-  source:'MESKİ saha arşivi',
-  body:
-   'Arıza kodu, ekipman, sahadaki tespit, yapılan işlem ve sonuç ayrı ayrı kayıt altına alınır. Hazır arıza kütüphanesiyle gerçek saha arızası birbirinden ayrıdır.'
- },
-
- {
-  id:'box',
-  code:'BOX',
-  name:'Motor / BOX / Sürücü',
-  desc:'U-V-W kablo zinciri ve saha bağlantı kimliği.',
-  source:'MESKİ saha arşivi',
-  body:
-   'Motor → BOX → Sürücü güzergâhında U/V/W kabloları, renkleri, detayları ve etiketleri ayrı ayrı tutulur.'
- }
-];
+].map(
+ x=>({
+  code:x[0],
+  name:x[1],
+  unit:x[2],
+  desc:x[3],
+  source:x[4],
+  driver:x[5]
+ })
+);
 
 
 /* =========================================================
@@ -2004,12 +2050,6 @@ let terfiDetails=
  localJSON(
   LOCAL_TERFI_DETAIL_KEY,
   {}
-);
-
-let customGeneralLibrary=
- localJSON(
-  LOCAL_GENERAL_LIBRARY_KEY,
-  []
 );
 
 
@@ -2241,15 +2281,6 @@ function params(){
    ...(paramEdits[p.code]||{})
   })
  );
-
-}
-
-function generalLibrary(){
-
- return [
-  ...DEFAULT_GENERAL_LIBRARY,
-  ...customGeneralLibrary
- ];
 
 }
 
@@ -2881,99 +2912,39 @@ async function home(){
    <div class="summary">
 
     <div class="stat">
-
-     <div class="stat-label">
-      Kayıtlı Terfi
-     </div>
-
-     <div class="stat-value">
-      ${rows.length}
-     </div>
-
-     <div class="stat-unit">
-      istasyon
-     </div>
-
+     <div class="stat-label">Kayıtlı Terfi</div>
+     <div class="stat-value">${rows.length}</div>
+     <div class="stat-unit">istasyon</div>
     </div>
 
     <div class="stat">
-
-     <div class="stat-label">
-      Motor
-     </div>
-
-     <div class="stat-value">
-      ${motorCount}
-     </div>
-
-     <div class="stat-unit">
-      adet
-     </div>
-
+     <div class="stat-label">Motor</div>
+     <div class="stat-value">${motorCount}</div>
+     <div class="stat-unit">adet</div>
     </div>
 
     <div class="stat">
-
-     <div class="stat-label">
-      Pompa
-     </div>
-
-     <div class="stat-value">
-      ${pumpCount}
-     </div>
-
-     <div class="stat-unit">
-      adet
-     </div>
-
+     <div class="stat-label">Pompa</div>
+     <div class="stat-value">${pumpCount}</div>
+     <div class="stat-unit">adet</div>
     </div>
 
     <div class="stat">
-
-     <div class="stat-label">
-      Sürücü
-     </div>
-
-     <div class="stat-value">
-      ${driveCount}
-     </div>
-
-     <div class="stat-unit">
-      adet
-     </div>
-
+     <div class="stat-label">Sürücü</div>
+     <div class="stat-value">${driveCount}</div>
+     <div class="stat-unit">adet</div>
     </div>
 
     <div class="stat">
-
-     <div class="stat-label">
-      Konum
-     </div>
-
-     <div class="stat-value">
-      ${locationCount}
-     </div>
-
-     <div class="stat-unit">
-      kayıtlı
-     </div>
-
+     <div class="stat-label">Konum</div>
+     <div class="stat-value">${locationCount}</div>
+     <div class="stat-unit">kayıtlı</div>
     </div>
 
     <div class="stat">
-
-     <div class="stat-label">
-      Arşiv
-     </div>
-
-     <div class="stat-value">
-      AKTİF
-     </div>
-
-     <div class="stat-unit">
-      Supabase
-     </div>
-
+     <div class="stat-label">Arşiv</div>
+     <div class="stat-value">AKTİF</div>
+     <div class="stat-unit">Supabase</div>
     </div>
 
    </div>
@@ -2994,7 +2965,7 @@ async function home(){
 
       Terfiyi açarak bütün teknik sekmelere
       ulaş. Konum, pompa tipi ve çalışma şekli
-      de artık terfi kaydının içinde tutulur.
+      de terfi kaydının içinde tutulur.
 
      </div>
 
@@ -3048,7 +3019,7 @@ async function home(){
 
   </div>
 
-  ${globalLibraryBody()}
+  ${homeLibrariesBody()}
 
  </div>
 
@@ -3123,12 +3094,10 @@ function renderStationMarkup(
      <div>
 
       <div class="station-title">
-
        ${esc(
         x.ad||
         'İsimsiz Terfi'
        )}
-
       </div>
 
       <div class="station-meta">
@@ -3150,12 +3119,10 @@ function renderStationMarkup(
       </div>
 
       <div class="station-meta">
-
        ${esc(
         x.adres||
         'Adres girilmemiş'
        )}
-
       </div>
 
      </div>
@@ -3213,10 +3180,59 @@ function renderStationMarkup(
       </span>
       `
       :
-      ''
+      `
+      <span class="badge danger">
+       📍 KONUM YOK
+      </span>
+      `
      }
 
     </div>
+
+    ${
+     loc
+     ?
+     `
+     <div class="station-actions">
+
+      <button
+       class="btn primary"
+       onclick="
+        event.stopPropagation();
+        openLocationForStation(
+         '${x.id}'
+        );
+       ">
+
+       🗺️ KONUMA GİT
+
+      </button>
+
+      <button
+       class="btn"
+       onclick="
+        event.stopPropagation();
+        openStation(
+         '${x.id}'
+        );
+        setTimeout(
+         ()=>{
+          tab='location';
+          render();
+         },
+         150
+        );
+       ">
+
+       📍 KONUMU GÖR
+
+      </button>
+
+     </div>
+     `
+     :
+     ''
+    }
 
    </div>
 
@@ -3261,31 +3277,33 @@ function filterStations(){
 
 
 /* =========================================================
-   GENEL TEKNİK KÜTÜPHANE
+   ANA SAYFA KÜTÜPHANELERİ
 ========================================================= */
 
-function globalLibraryBody(){
+function homeLibrariesBody(){
+
+ const fs=
+  faults();
+
+ const ps=
+  params();
 
  return `
 
- <div
-  class="card"
-  id="globalLibrary">
+ <div class="card">
 
-  <div class="top">
+  <div class="quick-library-title">
 
    <div>
 
     <h2>
-     🧰 GENEL TEKNİK KÜTÜPHANE
+     ⚠️ SÜRÜCÜ ARIZA KÜTÜPHANESİ
     </h2>
 
     <div class="section-sub">
-
-     Tüm terfiler için ortak kullanılacak
-     motor, pompa, sürücü, HMI/PLC,
-     basınç/seviye, arıza ve BOX bilgileri.
-
+     Sürücü arıza kodları, nedenleri,
+     çözüm yolları ve hangi sürücü için
+     geçerli oldukları.
     </div>
 
    </div>
@@ -3296,9 +3314,9 @@ function globalLibraryBody(){
     `
     <button
      class="btn ok"
-     onclick="newGeneralLibraryItem()">
+     onclick="newFault()">
 
-     + TEKNİK BİLGİ EKLE
+     + ARIZA KODU EKLE
 
     </button>
     `
@@ -3308,31 +3326,243 @@ function globalLibraryBody(){
 
   </div>
 
-  <input
-   id="generalLibrarySearch"
-   placeholder="
-    Motor, pompa, sürücü, HMI, basınç, arıza ara...
-   "
-   oninput="filterGeneralLibrary()"
-   style="
-    width:100%;
-    margin-top:10px;
-    padding:12px;
-    border-radius:10px;
-    border:1px solid var(--line);
-    background:#061a2d;
-    color:#fff;
-    outline:none;
-    min-height:46px
-   "
-  >
+  <div class="quick-library-list">
 
-  <div
-   id="generalLibraryGrid"
-   class="library-grid"
-   style="margin-top:10px">
+   ${
+    fs.slice(0,8).map(
+     f=>`
 
-   ${renderGeneralLibraryCards()}
+     <div class="quick-library-item">
+
+      <div class="quick-library-main">
+
+       <div style="min-width:0">
+
+        <div class="quick-library-code">
+         ${esc(f.code)}
+        </div>
+
+        <div class="quick-library-name">
+         ${esc(f.name)}
+        </div>
+
+        <div class="quick-library-meta">
+         ${esc(f.cause)}
+        </div>
+
+        <div class="quick-library-driver">
+         Sürücü:
+         ${esc(f.driver||'Belirtilmemiş')}
+        </div>
+
+       </div>
+
+       <div class="quick-library-actions">
+
+        <button
+         class="btn"
+         onclick="
+          openQuickFaultDetail(
+           '${esc(f.code)}'
+          );
+         ">
+
+         GÖRÜNTÜLE
+
+        </button>
+
+        ${
+         edit
+         ?
+         `
+         <button
+          class="btn"
+          onclick="
+           editFault(
+            '${esc(f.code)}'
+           );
+          ">
+
+          ✏
+
+         </button>
+
+         <button
+          class="btn bad"
+          onclick="
+           deleteFault(
+            '${esc(f.code)}'
+           );
+          ">
+
+          🗑
+
+         </button>
+         `
+         :
+         ''
+        }
+
+       </div>
+
+      </div>
+
+     </div>
+
+     `
+    ).join('')
+   }
+
+  </div>
+
+  <div style="margin-top:9px">
+
+   <button
+    class="btn primary"
+    onclick="goGlobalLibrary('fault')">
+
+    ⚠️ TÜM ARIZA KÜTÜPHANESİ
+
+   </button>
+
+  </div>
+
+ </div>
+
+ <div class="card">
+
+  <div class="quick-library-title">
+
+   <div>
+
+    <h2>
+     ⚙️ ABB PARAMETRE KÜTÜPHANESİ
+    </h2>
+
+    <div class="section-sub">
+     Parametre kodu, açıklaması, birimi,
+     kaynağı ve hangi sürücü için geçerli olduğu.
+    </div>
+
+   </div>
+
+   ${
+    edit
+    ?
+    `
+    <button
+     class="btn ok"
+     onclick="newParam()">
+
+     + PARAMETRE EKLE
+
+    </button>
+    `
+    :
+    ''
+   }
+
+  </div>
+
+  <div class="quick-library-list">
+
+   ${
+    ps.slice(0,8).map(
+     p=>`
+
+     <div class="quick-library-item">
+
+      <div class="quick-library-main">
+
+       <div style="min-width:0">
+
+        <div class="quick-library-code">
+         ${esc(p.code)}
+        </div>
+
+        <div class="quick-library-name">
+         ${esc(p.name)}
+        </div>
+
+        <div class="quick-library-meta">
+         ${esc(p.desc)}
+         · ${esc(p.unit||'—')}
+        </div>
+
+        <div class="quick-library-driver">
+         Sürücü:
+         ${esc(p.driver||'Belirtilmemiş')}
+        </div>
+
+       </div>
+
+       <div class="quick-library-actions">
+
+        <button
+         class="btn"
+         onclick="
+          openQuickParamDetail(
+           '${esc(p.code)}'
+          );
+         ">
+
+         GÖRÜNTÜLE
+
+        </button>
+
+        ${
+         edit
+         ?
+         `
+         <button
+          class="btn"
+          onclick="
+           editParam(
+            '${esc(p.code)}'
+           );
+          ">
+
+          ✏
+
+         </button>
+
+         <button
+          class="btn bad"
+          onclick="
+           deleteParam(
+            '${esc(p.code)}'
+           );
+          ">
+
+          🗑
+
+         </button>
+         `
+         :
+         ''
+        }
+
+       </div>
+
+      </div>
+
+     </div>
+
+     `
+    ).join('')
+   }
+
+  </div>
+
+  <div style="margin-top:9px">
+
+   <button
+    class="btn primary"
+    onclick="goGlobalLibrary('parametre')">
+
+    ⚙️ TÜM PARAMETRE KÜTÜPHANESİ
+
+   </button>
 
   </div>
 
@@ -3342,153 +3572,89 @@ function globalLibraryBody(){
 
 }
 
-function renderGeneralLibraryCards(){
-
- return generalLibrary().map(
-  item=>`
-
-  <div
-   class="library-card"
-   data-general-library="${esc(
-    (
-     `${item.code||''} `+
-     `${item.name||''} `+
-     `${item.desc||''} `+
-     `${item.body||''}`
-    ).toLowerCase()
-   )}">
-
-   <div
-    onclick="
-     openGeneralLibraryDetail(
-      '${esc(item.id)}'
-     )
-    ">
-
-    <div class="library-code">
-     ${esc(item.code)}
-    </div>
-
-    <div class="library-name">
-     ${esc(item.name)}
-    </div>
-
-    <div class="library-desc">
-     ${esc(item.desc)}
-    </div>
-
-    <div class="library-source">
-     ${esc(item.source||'')}
-    </div>
-
-   </div>
-
-   ${
-    edit &&
-    !DEFAULT_GENERAL_LIBRARY.some(
-     x=>x.id===item.id
-    )
-    ?
-    `
-    <div class="library-actions">
-
-     <button
-      class="btn"
-      onclick="
-       event.stopPropagation();
-       editGeneralLibraryItem(
-        '${esc(item.id)}'
-       );
-      ">
-
-      ✏ DÜZENLE
-
-     </button>
-
-     <button
-      class="btn bad"
-      onclick="
-       event.stopPropagation();
-       deleteGeneralLibraryItem(
-        '${esc(item.id)}'
-       );
-      ">
-
-      🗑 SİL
-
-     </button>
-
-    </div>
-    `
-    :
-    ''
-   }
-
-  </div>
-
-  `
- ).join('');
-}
-
-function filterGeneralLibrary(){
-
- const q=
-  (
-   document
-    .getElementById(
-     'generalLibrarySearch'
-    )
-    ?.value||
-   ''
-  ).toLowerCase();
-
- document
-  .querySelectorAll(
-   '#generalLibraryGrid .library-card'
-  )
-  .forEach(
-   x=>{
-    x.style.display=
-     x.dataset.generalLibrary.includes(q)
-     ?
-     'block'
-     :
-     'none';
-   }
-  );
-
-}
-
-function openGeneralLibraryDetail(
- id
+function goGlobalLibrary(
+ target
 ){
 
- const item=
-  generalLibrary().find(
-   x=>String(x.id)===String(id)
+ if(target==='fault'){
+
+  current=null;
+  tab='fault';
+
+  home();
+
+  setTimeout(
+   ()=>{
+    if(
+     loggedIn
+    ){
+     alert(
+      'Arıza kütüphanesine girmek için bir terfi açık olması gerekir. Terfiyi açtıktan sonra ARIZA sekmesini kullanabilirsin.'
+     );
+    }
+   },
+   100
   );
 
- if(!item)
+  return;
+
+ }
+
+ if(target==='parametre'){
+
+  current=null;
+  tab='parametre';
+
+  home();
+
+  setTimeout(
+   ()=>{
+    if(
+     loggedIn
+    ){
+     alert(
+      'Parametre kütüphanesine girmek için bir terfi açık olması gerekir. Terfiyi açtıktan sonra PARAMETRELER sekmesini kullanabilirsin.'
+     );
+    }
+   },
+   100
+  );
+
+ }
+
+}
+
+function openQuickFaultDetail(
+ code
+){
+
+ const f=
+  faults().find(
+   x=>x.code===code
+  );
+
+ if(!f)
   return;
 
  openModal(`
 
   <h2>
-   ${esc(item.code)}
+   ⚠️ ${esc(f.code)}
    ·
-   ${esc(item.name)}
+   ${esc(f.name)}
   </h2>
 
   <div class="workbox">
 
    <h4>
-    GENEL BİLGİ
+    GEÇERLİ SÜRÜCÜ
    </h4>
 
-   <div style="line-height:1.6">
-
-    ${esc(item.body||item.desc||'')}
-
+   <div>
+    ${esc(
+     f.driver||
+     'Belirtilmemiş'
+    )}
    </div>
 
   </div>
@@ -3496,11 +3662,23 @@ function openGeneralLibraryDetail(
   <div class="workbox">
 
    <h4>
-    AÇIKLAMA
+    OLASI NEDEN
    </h4>
 
    <div>
-    ${esc(item.desc||'—')}
+    ${esc(f.cause)}
+   </div>
+
+  </div>
+
+  <div class="workbox">
+
+   <h4>
+    ÇÖZÜM / YAPILACAKLAR
+   </h4>
+
+   <div>
+    ${esc(f.solution)}
    </div>
 
   </div>
@@ -3512,16 +3690,13 @@ function openGeneralLibraryDetail(
    </h4>
 
    <div>
-    ${esc(item.source||'—')}
+    ${esc(f.source||'—')}
    </div>
 
   </div>
 
   ${
-   edit &&
-   !DEFAULT_GENERAL_LIBRARY.some(
-    x=>x.id===item.id
-   )
+   edit
    ?
    `
    <div class="modal-actions">
@@ -3530,8 +3705,8 @@ function openGeneralLibraryDetail(
      class="btn"
      onclick="
       closeModal();
-      editGeneralLibraryItem(
-       '${esc(item.id)}'
+      editFault(
+       '${esc(f.code)}'
       );
      ">
 
@@ -3543,8 +3718,8 @@ function openGeneralLibraryDetail(
      class="btn bad"
      onclick="
       closeModal();
-      deleteGeneralLibraryItem(
-       '${esc(item.id)}'
+      deleteFault(
+       '${esc(f.code)}'
       );
      ">
 
@@ -3562,346 +3737,122 @@ function openGeneralLibraryDetail(
 
 }
 
-function newGeneralLibraryItem(){
-
- if(!edit){
-
-  requestAdmin();
-
-  return;
-
- }
-
- touchAdminSession();
-
- openModal(`
-
-  <h2>
-   + GENEL TEKNİK BİLGİ
-  </h2>
-
-  <div class="grid2">
-
-   ${input(
-    'Kısa Kod',
-    'gl_code'
-   )}
-
-   ${input(
-    'Başlık',
-    'gl_name'
-   )}
-
-   ${input(
-    'Kaynak',
-    'gl_source',
-    'Kullanıcı kaydı'
-   )}
-
-  </div>
-
-  <div
-   class="field"
-   style="margin-top:10px">
-
-   <label>
-    Kısa Açıklama
-   </label>
-
-   <textarea id="gl_desc"></textarea>
-
-  </div>
-
-  <div
-   class="field"
-   style="margin-top:10px">
-
-   <label>
-    Teknik Bilgi
-   </label>
-
-   <textarea id="gl_body"></textarea>
-
-  </div>
-
-  <div class="modal-actions">
-
-   <button
-    class="btn"
-    onclick="closeModal()">
-
-    İPTAL
-
-   </button>
-
-   <button
-    class="btn ok"
-    onclick="
-     saveGeneralLibraryItem(false)
-    ">
-
-    KAYDET
-
-   </button>
-
-  </div>
-
- `);
-
-}
-
-function editGeneralLibraryItem(
- id
+function openQuickParamDetail(
+ code
 ){
 
- if(!edit){
-
-  requestAdmin();
-
-  return;
-
- }
-
- touchAdminSession();
-
- const item=
-  generalLibrary().find(
-   x=>String(x.id)===String(id)
+ const p=
+  params().find(
+   x=>x.code===code
   );
 
- if(!item)
+ if(!p)
   return;
 
  openModal(`
 
   <h2>
-   ✏ TEKNİK BİLGİ DÜZENLE
+   ⚙️ ${esc(p.code)}
+   ·
+   ${esc(p.name)}
   </h2>
 
-  <input
-   id="gl_id"
-   type="hidden"
-   value="${esc(item.id)}"
-  >
+  <div class="workbox">
 
-  <div class="grid2">
+   <h4>
+    GEÇERLİ SÜRÜCÜ
+   </h4>
 
-   ${input(
-    'Kısa Kod',
-    'gl_code',
-    item.code
-   )}
-
-   ${input(
-    'Başlık',
-    'gl_name',
-    item.name
-   )}
-
-   ${input(
-    'Kaynak',
-    'gl_source',
-    item.source
-   )}
+   <div>
+    ${esc(
+     p.driver||
+     'Belirtilmemiş'
+    )}
+   </div>
 
   </div>
 
-  <div
-   class="field"
-   style="margin-top:10px">
+  <div class="workbox">
 
-   <label>
-    Kısa Açıklama
-   </label>
+   <h4>
+    AÇIKLAMA
+   </h4>
 
-   <textarea id="gl_desc">${esc(item.desc||'')}</textarea>
-
-  </div>
-
-  <div
-   class="field"
-   style="margin-top:10px">
-
-   <label>
-    Teknik Bilgi
-   </label>
-
-   <textarea id="gl_body">${esc(item.body||'')}</textarea>
+   <div>
+    ${esc(p.desc)}
+   </div>
 
   </div>
 
-  <div class="modal-actions">
+  <div class="workbox">
 
-   <button
-    class="btn"
-    onclick="closeModal()">
+   <h4>
+    BİRİM
+   </h4>
 
-    İPTAL
-
-   </button>
-
-   <button
-    class="btn ok"
-    onclick="
-     saveGeneralLibraryItem(true)
-    ">
-
-    DEĞİŞİKLİKLERİ KAYDET
-
-   </button>
+   <div>
+    ${esc(
+     p.unit||
+     '—'
+    )}
+   </div>
 
   </div>
 
- `);
+  <div class="workbox">
 
-}
+   <h4>
+    KAYNAK
+   </h4>
 
-function saveGeneralLibraryItem(
- isEdit
-){
+   <div>
+    ${esc(
+     p.source||
+     '—'
+    )}
+   </div>
 
- if(!edit){
+  </div>
 
-  requestAdmin();
+  ${
+   edit
+   ?
+   `
+   <div class="modal-actions">
 
-  return;
+    <button
+     class="btn"
+     onclick="
+      closeModal();
+      editParam(
+       '${esc(p.code)}'
+      );
+     ">
 
- }
+     ✏ DÜZENLE
 
- touchAdminSession();
+    </button>
 
- const code=
-  val('gl_code').trim();
+    <button
+     class="btn bad"
+     onclick="
+      closeModal();
+      deleteParam(
+       '${esc(p.code)}'
+      );
+     ">
 
- const name=
-  val('gl_name').trim();
+     🗑 SİL
 
- const desc=
-  val('gl_desc').trim();
+    </button>
 
- const body=
-  val('gl_body').trim();
-
- const source=
-  val('gl_source').trim();
-
- if(!code||!name){
-
-  toast(
-   'Kod ve başlık boş bırakılamaz.'
-  );
-
-  return;
-
- }
-
- if(isEdit){
-
-  const id=
-   val('gl_id');
-
-  const idx=
-   customGeneralLibrary.findIndex(
-    x=>String(x.id)===String(id)
-   );
-
-  if(idx<0){
-
-   toast(
-    'Bu kayıt düzenlenemedi.'
-   );
-
-   return;
-
+   </div>
+   `
+   :
+   ''
   }
 
-  customGeneralLibrary[idx]={
-
-   ...customGeneralLibrary[idx],
-
-   code,
-   name,
-   desc,
-   body,
-   source
-
-  };
-
- }else{
-
-  customGeneralLibrary.push({
-
-   id:
-    'custom_'+
-    Date.now()+
-    '_'+
-    Math.random()
-     .toString(36)
-     .slice(2,8),
-
-   code,
-   name,
-   desc,
-   body,
-   source
-
-  });
-
- }
-
- saveLocal(
-  LOCAL_GENERAL_LIBRARY_KEY,
-  customGeneralLibrary
- );
-
- closeModal();
-
- home();
-
- toast(
-  isEdit
-  ?
-  'Teknik bilgi güncellendi.'
-  :
-  'Yeni teknik bilgi eklendi.'
- );
-
-}
-
-function deleteGeneralLibraryItem(
- id
-){
-
- if(!edit){
-
-  requestAdmin();
-
-  return;
-
- }
-
- touchAdminSession();
-
- if(!confirm(
-  'Bu genel teknik bilgi silinsin mi?'
- ))
-  return;
-
- customGeneralLibrary=
-  customGeneralLibrary.filter(
-   x=>String(x.id)!==String(id)
-  );
-
- saveLocal(
-  LOCAL_GENERAL_LIBRARY_KEY,
-  customGeneralLibrary
- );
-
- home();
-
- toast(
-  'Teknik bilgi silindi.'
- );
+ `);
 
 }
 
@@ -4144,12 +4095,10 @@ function render(){
    <div>
 
     <div class="page-title">
-
      ${esc(
       current.s.ad||
       'Terfi'
      )}
-
     </div>
 
     <div class="page-sub">
@@ -4258,6 +4207,14 @@ function render(){
     onclick="setTab('terfi')">
 
     TERFİ
+
+   </button>
+
+   <button
+    class="btn ${tab==='location'?'primary':''}"
+    onclick="setTab('location')">
+
+    📍 KONUM
 
    </button>
 
@@ -4392,9 +4349,7 @@ function render(){
   </nav>
 
   <div id="body">
-
    ${body()}
-
   </div>
 
  </div>
@@ -4427,6 +4382,9 @@ function body(){
 
   case 'terfi':
    return stationBody();
+
+  case 'location':
+   return locationBody();
 
   case 'ssr':
    return ssrBody();
@@ -4575,43 +4533,59 @@ function locationBody(){
 
   return `
 
-  <div class="location-card">
+  <div class="card">
 
-   <div class="section-title">
-    📍 TERFİ KONUMU
-   </div>
+   <div class="location-card">
 
-   <div class="section-sub">
+    <div class="location-main">
 
-    Bu terfinin bulunduğun konumunu GPS ile
-    alıp kaydet. Konum kaydedildikten sonra
-    doğrudan haritaya gidebilirsin.
+     <div>
 
-   </div>
+      <div class="section-title">
+       📍 TERFİ KONUMU
+      </div>
 
-   <div
-    class="location-actions"
-    style="margin-top:10px">
+      <div class="section-sub">
 
-    ${
-     edit
-     ?
-     `
-     <button
-      class="btn ok"
-      onclick="requestLocation()">
+       Bu terfinin bulunduğun konumunu
+       GPS ile alıp kaydet. Kaydettikten
+       sonra doğrudan haritaya gidebilirsin.
 
-      📍 BULUNDUĞUM KONUMU AL
+      </div>
 
-     </button>
-     `
-     :
-     `
-     <span class="badge warn">
-      Yönetici modu olmadan konum kaydedilemez.
+     </div>
+
+     <span class="badge danger">
+      KONUM KAYITLI DEĞİL
      </span>
-     `
-    }
+
+    </div>
+
+    <div
+     class="location-actions"
+     style="margin-top:12px">
+
+     ${
+      edit
+      ?
+      `
+      <button
+       class="btn ok big"
+       onclick="requestLocation()">
+
+       📍 BULUNDUĞUM KONUMU AL VE KAYDET
+
+      </button>
+      `
+      :
+      `
+      <span class="badge warn">
+       Konum kaydetmek için yönetici modu gerekir.
+      </span>
+      `
+     }
+
+    </div>
 
    </div>
 
@@ -4623,46 +4597,56 @@ function locationBody(){
 
  return `
 
- <div class="location-card">
+ <div class="card">
 
-  <div class="location-main">
+  <div class="location-card">
 
-   <div>
+   <div class="location-main">
 
-    <div class="section-title">
-     📍 KAYITLI TERFİ KONUMU
+    <div>
+
+     <div class="section-title">
+      📍 KAYITLI TERFİ KONUMU
+     </div>
+
+     <div class="location-coords">
+
+      ${Number(loc.lat).toFixed(6)}
+      ,
+      ${Number(loc.lng).toFixed(6)}
+
+     </div>
+
+     <div class="location-meta">
+
+      Doğruluk:
+      ±${Math.round(
+       Number(loc.accuracy||0)
+      )} m
+
+      ·
+
+      Kayıt:
+      ${esc(
+       loc.date||'—'
+      )}
+
+     </div>
+
     </div>
 
-    <div class="location-coords">
-
-     ${Number(loc.lat).toFixed(6)}
-     ,
-     ${Number(loc.lng).toFixed(6)}
-
-    </div>
-
-    <div class="location-meta">
-
-     Doğruluk:
-     ±${Math.round(
-      Number(loc.accuracy||0)
-     )} m
-
-     ·
-
-     Kayıt:
-     ${esc(
-      loc.date||'—'
-     )}
-
-    </div>
+    <span class="badge location">
+     GPS KAYITLI
+    </span>
 
    </div>
 
-   <div class="location-actions">
+   <div
+    class="location-actions"
+    style="margin-top:12px">
 
     <button
-     class="btn primary"
+     class="btn primary big"
      onclick="openGoogleMaps()">
 
      🗺️ KONUMA GİT
@@ -4670,7 +4654,7 @@ function locationBody(){
     </button>
 
     <button
-     class="btn"
+     class="btn big"
      onclick="openAppleMaps()">
 
      🍎 APPLE MAPS
@@ -4700,6 +4684,28 @@ function locationBody(){
      :
      ''
     }
+
+   </div>
+
+   <div
+    class="tag-grid"
+    style="margin-top:12px">
+
+    <span class="tag active">
+     ENLEM:
+     ${Number(loc.lat).toFixed(6)}
+    </span>
+
+    <span class="tag active">
+     BOYLAM:
+     ${Number(loc.lng).toFixed(6)}
+    </span>
+
+    <span class="tag">
+     ±${Math.round(
+      Number(loc.accuracy||0)
+     )} m
+    </span>
 
    </div>
 
@@ -4804,7 +4810,7 @@ function requestLocation(){
    if(error?.code===1){
 
     message=
-     'Konum izni verilmedi. Safari/Chrome konum iznini aç.';
+     'Konum izni verilmedi. Tarayıcı ayarlarından konum iznini aç.';
 
    }
 
@@ -4834,6 +4840,36 @@ function requestLocation(){
    maximumAge:0
   }
 
+ );
+
+}
+
+function openLocationForStation(
+ id
+){
+
+ const loc=
+  getLocation(id);
+
+ if(!loc){
+
+  toast(
+   'Bu terfi için kayıtlı konum yok.'
+  );
+
+  return;
+
+ }
+
+ const url=
+  'https://www.google.com/maps/search/?api=1&query='+
+  encodeURIComponent(
+   `${loc.lat},${loc.lng}`
+  );
+
+ window.open(
+  url,
+  '_blank'
  );
 
 }
@@ -4947,6 +4983,10 @@ function stationBody(){
   current.detail||
   getTerfiDetail(s.id);
 
+ const loc=
+  current.location||
+  getLocation(s.id);
+
  return `
 
  <div class="card">
@@ -5019,11 +5059,13 @@ function stationBody(){
 
   <div class="section-sub">
 
-   Fiziksel pompa tipini ve sistemin nasıl
-   çalıştığını ayrı ayrı belirleyebilirsin.
-   Böylece örneğin “Dalgıç + Hidrofor”
-   veya “Dik Milli + Depoya Basma” şeklinde
-   net kayıt tutulur.
+   Fiziksel pompa tipini ve sistemin çalışma
+   şeklini ayrı ayrı belirleyebilirsin.
+   Örneğin:
+   <b>Dalgıç + Hidrofor</b>,
+   <b>Dik Milli + Hidrofor</b>,
+   <b>Yatay + Depoya Basma</b>,
+   <b>Dik Milli + Depoya Basma</b>.
 
   </div>
 
@@ -5032,7 +5074,7 @@ function stationBody(){
    style="margin-top:12px">
 
    ${selectField(
-    'Pompa Tipi',
+    'Pompa Fiziksel Tipi',
     's_pompa_tipi',
     d.pompa_tipi,
     [
@@ -5145,7 +5187,118 @@ function stationBody(){
 
  </div>
 
- ${locationBody()}
+ <div class="card">
+
+  <div class="location-card">
+
+   <div class="location-main">
+
+    <div>
+
+     <div class="section-title">
+      📍 HIZLI KONUM
+     </div>
+
+     ${
+      loc
+      ?
+      `
+      <div class="location-coords">
+       ${Number(loc.lat).toFixed(6)},
+       ${Number(loc.lng).toFixed(6)}
+      </div>
+
+      <div class="location-meta">
+       ±${Math.round(
+        Number(loc.accuracy||0)
+       )} m
+       ·
+       ${esc(loc.date||'')}
+      </div>
+      `
+      :
+      `
+      <div class="section-sub">
+       Bu terfi için henüz GPS konumu kayıtlı değil.
+      </div>
+      `
+     }
+
+    </div>
+
+    ${
+     loc
+     ?
+     `
+     <span class="badge location">
+      GPS KAYITLI
+     </span>
+     `
+     :
+     `
+     <span class="badge danger">
+      KONUM YOK
+     </span>
+     `
+    }
+
+   </div>
+
+   <div
+    class="location-actions"
+    style="margin-top:10px">
+
+    ${
+     loc
+     ?
+     `
+     <button
+      class="btn primary"
+      onclick="openGoogleMaps()">
+
+      🗺️ KONUMA GİT
+
+     </button>
+
+     <button
+      class="btn"
+      onclick="setTab('location')">
+
+      📍 KONUM AYARLARI
+
+     </button>
+     `
+     :
+     ''
+    }
+
+    ${
+     edit
+     ?
+     `
+     <button
+      class="btn ok"
+      onclick="requestLocation()">
+
+      📍 ${
+       loc
+       ?
+       'KONUMU YENİLE'
+       :
+       'KONUMU AL'
+      }
+
+     </button>
+     `
+     :
+     ''
+    }
+
+   </div>
+
+  </div>
+
+ </div>
 
  <div class="card">
 
@@ -5197,7 +5350,7 @@ function stationBody(){
     <div class="stat-label">Konum</div>
     <div class="stat-value">
      ${
-      current.location
+      loc
       ?
       'VAR'
       :
@@ -6395,17 +6548,9 @@ function boxTable(
        ${leftTitle}
       </th>
 
-      <th>
-       U
-      </th>
-
-      <th>
-       V
-      </th>
-
-      <th>
-       W
-      </th>
+      <th>U</th>
+      <th>V</th>
+      <th>W</th>
 
      </tr>
 
@@ -6415,9 +6560,7 @@ function boxTable(
 
      <tr>
 
-      <td>
-       Kablo Rengi
-      </td>
+      <td>Kablo Rengi</td>
 
       ${
        ['u','v','w']
@@ -6469,9 +6612,7 @@ function boxTable(
 
      <tr>
 
-      <td>
-       Renk Detayı
-      </td>
+      <td>Renk Detayı</td>
 
       ${
        ['u','v','w']
@@ -6519,9 +6660,7 @@ function boxTable(
 
      <tr>
 
-      <td>
-       Etiket
-      </td>
+      <td>Etiket</td>
 
       ${
        ['u','v','w']
@@ -7244,24 +7383,20 @@ function workBody(){
     <div class="history-card">
 
      <div class="history-date">
-
       ${new Date(
        w.captured_at
       ).toLocaleString(
        'tr-TR'
       )}
-
      </div>
 
      <div class="history-title">
-
       ${esc(
        current.m.find(
         m=>m.id===w.motor_id
        )?.ad||
        'Motor'
       )}
-
      </div>
 
      <div class="kpi">
@@ -7486,11 +7621,11 @@ function parameterBody(){
    <div>
 
     <h2>
-     ABB PARAMETRE KÜTÜPHANESİ
+     ⚙️ ABB PARAMETRE KÜTÜPHANESİ
     </h2>
 
     <div class="section-sub">
-     Kod · ad · birim · açıklama · kaynak
+     Kod · ad · birim · açıklama · kaynak · hangi sürücü için
     </div>
 
    </div>
@@ -7516,7 +7651,7 @@ function parameterBody(){
   <input
    id="paramSearch"
    placeholder="
-    Parametre kodu veya adı ara...
+    Parametre kodu, adı, sürücü veya açıklama ara...
    "
    oninput="filterParams()"
    style="
@@ -7550,7 +7685,9 @@ function parameterBody(){
        ' '+
        p.name+
        ' '+
-       p.desc
+       p.desc+
+       ' '+
+       (p.driver||'')
       ).toLowerCase()
      )}">
 
@@ -7577,6 +7714,14 @@ function parameterBody(){
        ${esc(p.source)}
        ·
        ${esc(p.unit)}
+      </div>
+
+      <div class="library-driver">
+       Sürücü:
+       ${esc(
+        p.driver||
+        'Belirtilmemiş'
+       )}
       </div>
 
      </div>
@@ -7878,6 +8023,21 @@ function openParamDetail(
   <div class="workbox">
 
    <h4>
+    HANGİ SÜRÜCÜ İÇİN
+   </h4>
+
+   <div>
+    ${esc(
+     p.driver||
+     'Belirtilmemiş'
+    )}
+   </div>
+
+  </div>
+
+  <div class="workbox">
+
+   <h4>
     AÇIKLAMA
    </h4>
 
@@ -8000,6 +8160,11 @@ function newParam(){
     'Kullanıcı kaydı'
    )}
 
+   ${input(
+    'Hangi Sürücü İçin Geçerli',
+    'param_edit_driver'
+   )}
+
   </div>
 
   <div
@@ -8100,6 +8265,12 @@ function editParam(
     p.source
    )}
 
+   ${input(
+    'Hangi Sürücü İçin Geçerli',
+    'param_edit_driver',
+    p.driver||''
+   )}
+
   </div>
 
   <div
@@ -8190,6 +8361,11 @@ function saveParamEditor(
    'param_edit_source'
   ).trim();
 
+ const driver=
+  val(
+   'param_edit_driver'
+  ).trim();
+
  if(!code){
 
   toast(
@@ -8251,7 +8427,8 @@ function saveParamEditor(
    name,
    unit,
    desc,
-   source
+   source,
+   driver
 
   };
 
@@ -8270,7 +8447,8 @@ function saveParamEditor(
     name,
     unit,
     desc,
-    source
+    source,
+    driver
 
    };
 
@@ -8293,7 +8471,7 @@ function saveParamEditor(
 
   recordHistory(
    'PARAMETRE KÜTÜPHANESİ DÜZENLENDİ',
-   `${code} · ${name}`
+   `${code} · ${name} · ${driver||'Sürücü belirtilmedi'}`
   );
 
   closeModal();
@@ -8332,7 +8510,8 @@ function saveParamEditor(
   name,
   unit,
   desc,
-  source
+  source,
+  driver
 
  });
 
@@ -8353,7 +8532,7 @@ function saveParamEditor(
 
  recordHistory(
   'PARAMETRE KÜTÜPHANESİNE EKLENDİ',
-  `${code} · ${name}`
+  `${code} · ${name} · ${driver||'Sürücü belirtilmedi'}`
  );
 
  closeModal();
@@ -8446,7 +8625,10 @@ function deleteParam(
   `${code} · ${p.name}`
  );
 
- render();
+ if(current)
+  render();
+ else
+  home();
 
  toast(
   'Parametre silindi.'
@@ -8474,7 +8656,7 @@ function faultBody(){
     </h2>
 
     <div class="section-sub">
-     Kod · başlık · olası neden · çözüm · kaynak
+     Kod · başlık · olası neden · çözüm · kaynak · hangi sürücü için
     </div>
 
    </div>
@@ -8500,7 +8682,7 @@ function faultBody(){
   <input
    id="faultSearch"
    placeholder="
-    Hata kodu, başlık veya açıklama ara...
+    Hata kodu, başlık, açıklama veya sürücü ara...
    "
    oninput="filterFaults()"
    style="
@@ -8536,7 +8718,9 @@ function faultBody(){
        ' '+
        f.cause+
        ' '+
-       f.solution
+       f.solution+
+       ' '+
+       (f.driver||'')
       ).toLowerCase()
      )}">
 
@@ -8557,6 +8741,14 @@ function faultBody(){
 
       <div class="library-desc">
        ${esc(f.cause)}
+      </div>
+
+      <div class="library-driver">
+       Sürücü:
+       ${esc(
+        f.driver||
+        'Belirtilmemiş'
+       )}
       </div>
 
       <div class="library-source">
@@ -8753,6 +8945,21 @@ function faultDetail(
   <div class="workbox">
 
    <h4>
+    HANGİ SÜRÜCÜ İÇİN
+   </h4>
+
+   <div>
+    ${esc(
+     f.driver||
+     'Belirtilmemiş'
+    )}
+   </div>
+
+  </div>
+
+  <div class="workbox">
+
+   <h4>
     OLASI NEDEN
    </h4>
 
@@ -8856,6 +9063,11 @@ function newFault(){
    ${input(
     'Başlık',
     'fault_edit_name'
+   )}
+
+   ${input(
+    'Hangi Sürücü İçin Geçerli',
+    'fault_edit_driver'
    )}
 
   </div>
@@ -8971,6 +9183,12 @@ function editFault(
     'Başlık',
     'fault_edit_name',
     f.name
+   )}
+
+   ${input(
+    'Hangi Sürücü İçin Geçerli',
+    'fault_edit_driver',
+    f.driver||''
    )}
 
   </div>
@@ -9092,6 +9310,11 @@ function saveFaultEditor(
    'fault_edit_source'
   ).trim();
 
+ const driver=
+  val(
+   'fault_edit_driver'
+  ).trim();
+
  if(!code){
 
   toast(
@@ -9153,7 +9376,8 @@ function saveFaultEditor(
    name,
    cause,
    solution,
-   source
+   source,
+   driver
 
   };
 
@@ -9172,7 +9396,8 @@ function saveFaultEditor(
     name,
     cause,
     solution,
-    source
+    source,
+    driver
 
    };
 
@@ -9195,12 +9420,15 @@ function saveFaultEditor(
 
   recordHistory(
    'ARIZA KÜTÜPHANESİ DÜZENLENDİ',
-   `${code} · ${name}`
+   `${code} · ${name} · ${driver||'Sürücü belirtilmedi'}`
   );
 
   closeModal();
 
-  render();
+  if(current)
+   render();
+  else
+   home();
 
   toast(
    'Arıza kaydı güncellendi.'
@@ -9234,7 +9462,8 @@ function saveFaultEditor(
   name,
   cause,
   solution,
-  source
+  source,
+  driver
 
  });
 
@@ -9255,12 +9484,15 @@ function saveFaultEditor(
 
  recordHistory(
   'ARIZA KÜTÜPHANESİNE EKLENDİ',
-  `${code} · ${name}`
+  `${code} · ${name} · ${driver||'Sürücü belirtilmedi'}`
  );
 
  closeModal();
 
- render();
+ if(current)
+  render();
+ else
+  home();
 
  toast(
   'Yeni arıza kodu eklendi.'
@@ -9348,7 +9580,10 @@ function deleteFault(
   `${code} · ${f.name}`
  );
 
- render();
+ if(current)
+  render();
+ else
+  home();
 
  toast(
   'Arıza kaydı silindi.'
@@ -9401,9 +9636,7 @@ function renderLocalFaultHistory(){
    </div>
 
    <div style="margin-top:5px">
-
     ${esc(x.detail)}
-
    </div>
 
   </div>
@@ -10305,12 +10538,20 @@ function requestAdmin(){
 
   clearAdminSession();
 
-  recordHistory(
-   'YÖNETİCİ MODU KAPATILDI',
-   ''
-  );
+  if(current){
 
-  render();
+   recordHistory(
+    'YÖNETİCİ MODU KAPATILDI',
+    ''
+   );
+
+   render();
+
+  }else{
+
+   home();
+
+  }
 
   toast(
    'Yönetici modu kilitlendi.'
@@ -10328,8 +10569,9 @@ function requestAdmin(){
 
   <div class="section-sub">
 
-   Düzenleme, silme, parametre/hata kütüphanesi
-   ve ayarlar için yönetici şifresini gir.
+   Düzenleme, silme, konum kaydı,
+   parametre/ariza kütüphanesi ve ayarlar
+   için yönetici şifresini gir.
 
   </div>
 
@@ -10410,12 +10652,20 @@ function checkAdmin(){
 
   closeModal();
 
-  recordHistory(
-   'YÖNETİCİ MODU AÇILDI',
-   ''
-  );
+  if(current){
 
-  render();
+   recordHistory(
+    'YÖNETİCİ MODU AÇILDI',
+    ''
+   );
+
+   render();
+
+  }else{
+
+   home();
+
+  }
 
   toast(
    'Yönetici modu aktif.'
@@ -10990,14 +11240,14 @@ async function saveActive(){
         num(
          val(
           `d_${d.id}_kw`
-         )
+        )
         ),
 
        besleme_v:
         num(
          val(
           `d_${d.id}_v`
-        )
+         )
         ),
 
        motor_id:
@@ -12263,62 +12513,17 @@ function reportHTML(){
 
      <div class="print-grid">
 
-      ${pc(
-       'Terfi',
-       s.ad
-      )}
-
-      ${pc(
-       'Terfi No',
-       s.terfi_no||
-       s.kod
-      )}
-
-      ${pc(
-       'Kod',
-       s.kod
-      )}
-
-      ${pc(
-       'Bölge',
-       s.bolge
-      )}
-
-      ${pc(
-       'Adres',
-       s.adres
-      )}
-
-      ${pc(
-       'Açıklama',
-       s.aciklama
-      )}
-
-      ${pc(
-       'Pompa Tipi',
-       detail.pompa_tipi
-      )}
-
-      ${pc(
-       'Çalışma Şekli',
-       detail.calisma_sekli
-      )}
-
-      ${pc(
-       'Emiş / Kaynak',
-       detail.emiş_kaynagi
-      )}
-
-      ${pc(
-       'Basma Noktası',
-       detail.basma_noktasi
-      )}
-
-      ${pc(
-       'Sistem Açıklaması',
-       detail.sistem_aciklama
-      )}
-
+      ${pc('Terfi',s.ad)}
+      ${pc('Terfi No',s.terfi_no||s.kod)}
+      ${pc('Kod',s.kod)}
+      ${pc('Bölge',s.bolge)}
+      ${pc('Adres',s.adres)}
+      ${pc('Açıklama',s.aciklama)}
+      ${pc('Pompa Tipi',detail.pompa_tipi)}
+      ${pc('Çalışma Şekli',detail.calisma_sekli)}
+      ${pc('Emiş / Kaynak',detail.emiş_kaynagi)}
+      ${pc('Basma Noktası',detail.basma_noktasi)}
+      ${pc('Sistem Açıklaması',detail.sistem_aciklama)}
       ${pc(
        'GPS',
        loc
@@ -12340,25 +12545,10 @@ function reportHTML(){
 
      <div class="print-grid">
 
-      ${pc(
-       'SSR',
-       ssr.level
-      )}
-
-      ${pc(
-       'Alt',
-       ssr.low
-      )}
-
-      ${pc(
-       'Üst',
-       ssr.high
-      )}
-
-      ${pc(
-       'Not',
-       ssr.note
-      )}
+      ${pc('SSR',ssr.level)}
+      ${pc('Alt',ssr.low)}
+      ${pc('Üst',ssr.high)}
+      ${pc('Not',ssr.note)}
 
      </div>
 
@@ -12388,50 +12578,15 @@ function reportHTML(){
 
         <div class="print-grid">
 
-         ${pc(
-          'Marka',
-          m.marka
-         )}
-
-         ${pc(
-          'Model',
-          m.model
-         )}
-
-         ${pc(
-          'Seri',
-          m.seri_no
-         )}
-
-         ${pc(
-          'Güç',
-          `${m.guc_kw??'—'} kW`
-         )}
-
-         ${pc(
-          'Gerilim',
-          `${m.gerilim_v??'—'} V`
-         )}
-
-         ${pc(
-          'Akım',
-          `${m.nominal_akim_a??'—'} A`
-         )}
-
-         ${pc(
-          'Frekans',
-          `${m.frekans_hz??'—'} Hz`
-         )}
-
-         ${pc(
-          'Devir',
-          `${m.devir_rpm??'—'} RPM`
-         )}
-
-         ${pc(
-          'cosφ',
-          m.cos_phi
-         )}
+         ${pc('Marka',m.marka)}
+         ${pc('Model',m.model)}
+         ${pc('Seri',m.seri_no)}
+         ${pc('Güç',`${m.guc_kw??'—'} kW`)}
+         ${pc('Gerilim',`${m.gerilim_v??'—'} V`)}
+         ${pc('Akım',`${m.nominal_akim_a??'—'} A`)}
+         ${pc('Frekans',`${m.frekans_hz??'—'} Hz`)}
+         ${pc('Devir',`${m.devir_rpm??'—'} RPM`)}
+         ${pc('cosφ',m.cos_phi)}
 
         </div>
 
@@ -12472,10 +12627,7 @@ function reportHTML(){
        current.p.flatMap(
         (p,i)=>[
 
-         pc(
-          `${i+1}. Pompa`,
-          p.ad
-         ),
+         pc(`${i+1}. Pompa`,p.ad),
 
          pc(
           'Marka / Model',
@@ -12517,10 +12669,7 @@ function reportHTML(){
        current.d.flatMap(
         (d,i)=>[
 
-         pc(
-          `${i+1}. Sürücü`,
-          d.ad
-         ),
+         pc(`${i+1}. Sürücü`,d.ad),
 
          pc(
           'Marka / Model',
@@ -12540,9 +12689,7 @@ function reportHTML(){
          pc(
           'Motor',
           current.m.find(
-           m=>
-            m.id===
-            d.motor_id
+           m=>m.id===d.motor_id
           )?.ad||
           '—'
          ),
@@ -12628,35 +12775,15 @@ function reportHTML(){
 
          <div class="print-grid">
 
-          ${pc(
-           'Hz',
-           w.frekans_hz
-          )}
-
-          ${pc(
-           'A',
-           w.akim_a
-          )}
-
-          ${pc(
-           'kW',
-           w.guc_kw
-          )}
-
-          ${pc(
-           'V',
-           w.gerilim_v
-          )}
-
+          ${pc('Hz',w.frekans_hz)}
+          ${pc('A',w.akim_a)}
+          ${pc('kW',w.guc_kw)}
+          ${pc('V',w.gerilim_v)}
           ${pc(
            'Basınç',
            `${w.set_basinci_bar??'—'} / ${w.calisma_basinci_bar??'—'}`
           )}
-
-          ${pc(
-           'Durum',
-           w.durum
-          )}
+          ${pc('Durum',w.durum)}
 
          </div>
 
@@ -12848,7 +12975,7 @@ function reportHTML(){
     <div class="print-sec">
 
      <h2>
-      ARIZA KÜTÜPHANESİ
+      SÜRÜCÜ ARIZA KÜTÜPHANESİ
      </h2>
 
      ${
@@ -12871,9 +12998,51 @@ function reportHTML(){
 
          ${esc(f.name)}
 
+         ·
+
+         ${esc(f.driver||'')}
+
          <br>
 
          ${esc(f.solution)}
+
+        </div>
+
+        `
+       ).join('')
+     }
+
+    </div>
+
+    <div class="print-sec">
+
+     <h2>
+      ABB PARAMETRELERİ
+     </h2>
+
+     ${
+      params()
+       .slice(0,12)
+       .map(
+        p=>`
+
+        <div
+         style="
+          margin-bottom:1mm;
+          font-size:4pt
+         ">
+
+         <b>
+          ${esc(p.code)}
+         </b>
+
+         ·
+
+         ${esc(p.name)}
+
+         ·
+
+         ${esc(p.driver||'')}
 
         </div>
 
@@ -12911,7 +13080,7 @@ function reportHTML(){
    </span>
 
    <span>
-    U/V/W · HMI 1/5–5/5
+    U/V/W · HMI 1/5–5/5 · GPS
    </span>
 
   </div>
