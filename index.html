@@ -1639,6 +1639,45 @@ h4{
 
 .wrap{animation:appIn .18s ease-out}.card{background:linear-gradient(145deg,rgba(12,45,70,.97),rgba(7,28,47,.97));box-shadow:0 8px 24px rgba(0,0,0,.12)}.btn{transition:transform .12s ease,filter .12s ease,box-shadow .12s ease}.btn:active{transform:translateY(1px)}.station{transition:transform .14s ease,border-color .14s ease,box-shadow .14s ease}.station:hover{transform:translateY(-1px);box-shadow:0 8px 20px rgba(0,0,0,.12)}@keyframes appIn{from{opacity:.75;transform:translateY(3px)}to{opacity:1;transform:none}}
 </style>  
+<style id="v8-modern-theme">
+:root{
+ --bg:#070b10;--bg2:#0b1118;--card:#101923;--card2:#0d151e;--line:#263544;
+ --accent:#19c3ff;--accent2:#00e0a4;--warn:#ffb020;--danger:#ff4d5d;--text:#eef6fb;--muted:#8fa4b5;
+}
+html,body{background:radial-gradient(circle at 20% 0%,#10202d 0,#070b10 42%,#05080c 100%) !important;color:var(--text)}
+body:before{content:"";position:fixed;inset:0;pointer-events:none;opacity:.045;background-image:linear-gradient(rgba(255,255,255,.7) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.7) 1px,transparent 1px);background-size:28px 28px;z-index:-1}
+.card{background:linear-gradient(145deg,rgba(17,28,39,.98),rgba(9,15,22,.98)) !important;border:1px solid #263544 !important;box-shadow:0 10px 28px rgba(0,0,0,.28) !important}
+.btn{border:1px solid #314455 !important;background:linear-gradient(180deg,#182836,#101b25) !important;color:#eaf5fb !important}
+.btn.primary{background:linear-gradient(180deg,#16bdf2,#087cae) !important;border-color:#32ceff !important}
+.btn.ok{background:linear-gradient(180deg,#13c99b,#078464) !important;border-color:#22e0b0 !important}
+.btn.warn{background:linear-gradient(180deg,#b47a17,#79510c) !important;border-color:#d99b24 !important}
+.btn.bad{background:linear-gradient(180deg,#b52f42,#741c2b) !important;border-color:#ef5365 !important}
+.page-title{letter-spacing:.5px}.section-title,h2,h3{letter-spacing:.25px}
+.station{background:linear-gradient(145deg,#111f2b,#0b141d) !important;border-color:#2a4051 !important}
+.station:hover{border-color:#19c3ff !important}
+.station-group .group-title{background:#0c141c !important;border-color:#263544 !important}
+.pump-context{background:linear-gradient(145deg,#0d1720,#081017) !important;border-color:#294657 !important}
+.pump-context-tab{border:1px solid rgba(255,255,255,.18) !important;filter:saturate(.95)}
+.pump-context-tab.active{box-shadow:0 0 0 2px #19c3ff,0 8px 22px rgba(25,195,255,.22) !important}
+input,select,textarea{background:#08121b !important;color:#edf7fb !important;border-color:#29465a !important}
+input:focus,select:focus,textarea:focus{border-color:#19c3ff !important;box-shadow:0 0 0 2px rgba(25,195,255,.12) !important}
+.bottom-save{background:rgba(5,10,15,.94) !important;border-top:1px solid #263544 !important;backdrop-filter:blur(12px)}
+.bottom-save button{background:linear-gradient(90deg,#00b989,#08a97e) !important;box-shadow:0 8px 25px rgba(0,224,164,.16)}
+.badge{border:1px solid rgba(25,195,255,.25)}
+@media(max-width:800px){.card{border-radius:16px !important}.wrap{padding-bottom:82px}}
+</style>
+<style id="v8-print-css">
+@media print{
+ @page{size:A3 landscape;margin:6mm}
+ body{background:#fff !important;color:#111 !important}
+ body>*:not(#printArea){display:none !important}
+ #printArea{display:block !important}
+ .v7-page{width:100%;min-height:0;box-sizing:border-box;color:#111;background:#fff;font-family:Arial,sans-serif;font-size:7.2pt;line-height:1.15}
+ .v7-head{display:flex;justify-content:space-between;border-bottom:1px solid #17364b;padding-bottom:2.5mm;margin-bottom:2mm}.v7-head h1{font-size:18pt;margin:0 0 1mm}.v7-sub{font-size:9pt}.v7-right{text-align:right;font-size:7.5pt}
+ .v7-info{display:grid;grid-template-columns:repeat(6,1fr);gap:1mm;margin-bottom:2mm}.v7-cell{border:1px solid #b8c7d1;border-radius:2mm;padding:1.2mm;min-height:7mm;overflow:hidden}.v7-cell b{display:block;font-size:6.5pt;text-transform:uppercase;color:#31576f;margin-bottom:.5mm}.v7-cell span{font-size:7.2pt}
+ .v7-section{border:1px solid #aebfca;border-radius:2mm;padding:1.7mm;margin-bottom:1.8mm;break-inside:avoid}.v7-section h2{font-size:9pt;margin:0 0 1mm;border-bottom:1px solid #ccd7dd;padding-bottom:1mm}.v7-pump-grid{display:block}.v7-pump{border:1px solid #b7c8d2;border-radius:1.5mm;padding:1.5mm}.v7-pump h3{font-size:9pt;margin:0 0 1mm}.v7-block-title{font-size:7pt;font-weight:800;border-bottom:1px solid #d2dce2;padding:1mm 0 .7mm;margin-top:1mm}.v7-line{display:grid;grid-template-columns:repeat(4,1fr);gap:.7mm 2mm;font-size:6.8pt}.v7-label{font-weight:700;color:#34556a}.v7-lower{display:grid;grid-template-columns:1fr 1.35fr 1.35fr;gap:1.8mm}.v7-hmi-row{display:grid;grid-template-columns:38mm 1fr;gap:2mm;font-size:6.5pt;padding:.65mm 0;border-bottom:1px dotted #c8d2d8}.v7-table{width:100%;border-collapse:collapse;font-size:6.2pt}.v7-table th,.v7-table td{border:1px solid #bdcbd3;padding:.7mm;vertical-align:top}.v7-table th{background:#edf2f5}.v7-foot{text-align:center;border-top:1px solid #aebfca;padding-top:1.2mm;font-size:6.5pt}
+}
+</style>
 </head>  
   
 <body>  
@@ -14115,75 +14154,72 @@ const v7PrintCss=`
 `;
 if(!document.getElementById('v7printcss')){const st=document.createElement('style');st.id='v7printcss';st.textContent=v7PrintCss;document.head.appendChild(st)}
 
-function v7Esc(x){return typeof esc==='function'?esc(x??''):String(x??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
-function v7Val(x){return x===null||x===undefined||String(x)===''?'—':String(x)}
-function v7Cell(label,value){return `<div class="v7-cell"><b>${v7Esc(label)}</b><span>${v7Esc(v7Val(value))}</span></div>`}
-function v7PumpSSR(){
+function v8Esc(x){return typeof esc==='function'?esc(x??''):String(x??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+function v8Val(x){return x===null||x===undefined||String(x)===''?'—':String(x)}
+function v8Cell(label,value){return `<div class="v7-cell"><b>${v8Esc(label)}</b><span>${v8Esc(v8Val(value))}</span></div>`}
+function v8Pumps(){return [...(current?.p||[])].sort((a,b)=>(Number(a.pompa_no)||9999)-(Number(b.pompa_no)||9999))}
+function v8SelectedPump(){const ps=v8Pumps();let p=ps.find(x=>x.id===selectedPumpId);if(!p)p=ps[0];if(p)selectedPumpId=p.id;return p||null}
+function v8PumpNo(p){return Number(p?.pompa_no)||1}
+function v8PumpSSR(){
  const map=localJSON(LOCAL_SSR_KEY,{}); const raw=map?.[current?.s?.id];
- return raw&&typeof raw==='object'?raw:(current?.ssr||{});
+ if(raw?.pumps && selectedPumpId && raw.pumps[selectedPumpId]) return raw.pumps[selectedPumpId];
+ return raw&&typeof raw==='object'?(raw.level!==undefined?raw:{level:'',low:'',high:'',note:''}):(current?.ssr||{level:'',low:'',high:'',note:''});
 }
-function v7MotorText(m){
- if(!m)return 'YOK';
- const type=m.motor_tipi||motorTypeFromNote?.(m.etiket_notu)||'';
- return `${m.ad||'Motor'}${m.marka||m.model?' · '+[m.marka,m.model].filter(Boolean).join(' '):''}${type?' · '+type:''}`;
-}
-function v7DriveText(d){return d?`${d.ad||''} ${[d.marka,d.model].filter(Boolean).join(' ')}${d.seri_no?' · SN:'+d.seri_no:''}`.trim():'YOK'}
-function v7PumpCard(p,i){
- const n=Number(p?.pompa_no)||i+1; const m=p?.motor_id?current.m.find(x=>x.id===p.motor_id):null; const d=p?.surucu_id?current.d.find(x=>x.id===p.surucu_id):null;
- return `<div class="v7-pump"><h3>P${n} <span class="tag">${v7Esc(p.ad||'Pompa')}</span></h3>
- <div class="v7-block-title">POMPA</div><div class="v7-line"><div><span class="v7-label">Marka:</span> ${v7Esc(p.marka||'—')}</div><div><span class="v7-label">Model:</span> ${v7Esc(p.model||'—')}</div><div><span class="v7-label">Tip:</span> ${v7Esc(p.tip||'—')}</div><div><span class="v7-label">Seri:</span> ${v7Esc(p.seri_no||'—')}</div><div><span class="v7-label">Güç:</span> ${v7Esc(p.guc_kw??'—')} kW / ${v7Esc(p.guc_hp??'—')} HP</div><div><span class="v7-label">Q:</span> ${v7Esc(p.q_min_m3h??'—')}–${v7Esc(p.q_max_m3h??'—')} m³/h</div><div><span class="v7-label">H:</span> ${v7Esc(p.h_min_m??'—')}–${v7Esc(p.h_max_m??'—')} m</div><div><span class="v7-label">Not:</span> ${v7Esc(p.etiket_notu||'—')}</div></div>
- <div class="v7-block-title">MOTOR</div><div class="v7-line"><div><span class="v7-label">Ad:</span> ${v7Esc(m?.ad||'YOK')}</div><div><span class="v7-label">Marka/Model:</span> ${v7Esc(m?[m.marka,m.model].filter(Boolean).join(' ')||'—':'—')}</div><div><span class="v7-label">Seri:</span> ${v7Esc(m?.seri_no||'—')}</div><div><span class="v7-label">Güç:</span> ${v7Esc(m?.guc_kw??'—')} kW / ${v7Esc(m?.guc_hp??'—')} HP</div><div><span class="v7-label">V/A:</span> ${v7Esc(m?.gerilim_v??'—')} V / ${v7Esc(m?.nominal_akim_a??'—')} A</div><div><span class="v7-label">Hz/RPM:</span> ${v7Esc(m?.frekans_hz??'—')} / ${v7Esc(m?.devir_rpm??'—')}</div><div><span class="v7-label">cosφ:</span> ${v7Esc(m?.cos_phi??'—')}</div><div><span class="v7-label">Tip:</span> ${v7Esc(m?.motor_tipi||motorTypeFromNote?.(m?.etiket_notu)||'—')}</div></div>
- <div class="v7-block-title">SÜRÜCÜ</div><div class="v7-line"><div><span class="v7-label">Ad:</span> ${v7Esc(d?.ad||'YOK')}</div><div><span class="v7-label">Marka/Model:</span> ${v7Esc(d?[d.marka,d.model].filter(Boolean).join(' ')||'—':'—')}</div><div><span class="v7-label">Seri:</span> ${v7Esc(d?.seri_no||'—')}</div><div><span class="v7-label">Güç:</span> ${v7Esc(d?.guc_kw??d?.guc??'—')}</div><div><span class="v7-label">Gerilim:</span> ${v7Esc(d?.besleme_v??d?.gerilim??'—')}</div><div><span class="v7-label">Aile:</span> ${v7Esc(d?.surucu_ailesi||'—')}</div></div></div>`;
-}
-function v7BoxSummary(){
- const rows=[]; for(const m of current.m||[]){const b=getBox(m.id); for(const sec of ['motor','surucu']){if(!b?.[sec])continue; const vals=['u','v','w'].map(t=>{const z=b[sec][t]||{};return `${t.toUpperCase()}:${[z.renk,z.detay,z.etiket].filter(Boolean).join('/')||'—'}`}).join(' · '); if(vals)rows.push(`<tr><td>${v7Esc(m.ad||'Motor')}</td><td>${v7Esc(sec.toUpperCase())}</td><td>${v7Esc(vals)}</td></tr>`);}}
+function v8PumpBoxSummary(pump){
+ const m=pump?.motor_id?current.m.find(x=>x.id===pump.motor_id):null; if(!m)return '<tr><td colspan="3">Bu pompaya bağlı motor yok.</td></tr>';
+ const b=getBox(m.id); if(!b)return '<tr><td colspan="3">BOX/KABLO kaydı yok.</td></tr>';
+ const rows=[]; for(const sec of ['motor','box_motor','box_surucu','surucu']){if(!b?.[sec])continue;const vals=['u','v','w'].map(k=>{const z=b[sec][k]||{};return `${k.toUpperCase()}:${[z.renk,z.detay,z.etiket].filter(Boolean).join('/')||'—'}`}).join(' · ');rows.push(`<tr><td>${v8Esc(m.ad||'Motor')}</td><td>${v8Esc(sec.toUpperCase())}</td><td>${v8Esc(vals)}</td></tr>`)}
  return rows.join('')||'<tr><td colspan="3">BOX/KABLO kaydı yok.</td></tr>';
 }
-function v7HmiRows(){
- const selected=v5SelectedPump(); const rows=[]; const all=Array.isArray(current.h)?current.h:[];
- HMI.forEach((pg,i)=>{const r=all.find(x=>x.ekran_no===i+1&&selected&&x.pompa_id===selected.id)||all.find(x=>x.ekran_no===i+1&&!x.pompa_id); const vals=r?.degerler||{}; const text=pg.labels.map((lab,j)=>`${lab}: ${v7Val(vals[j])}`).join(' · '); rows.push(`<div class="v7-hmi-row"><b>${i+1}. ${v7Esc(pg.title)}</b><span>${v7Esc(text)}</span></div>`)}); return rows.join('');
+function v8HmiRows(pump){
+ const all=Array.isArray(current.h)?current.h:[]; const pid=pump?.id;
+ return HMI.map((pg,i)=>{const r=all.find(x=>x.ekran_no===i+1&&x.pompa_id===pid)||null;const vals=r?.degerler||{};const text=pg.labels.map((lab,j)=>`${lab}: ${v8Val(vals[j])}`).join(' · ');return `<div class="v7-hmi-row"><b>${i+1}. ${v8Esc(pg.title)}</b><span>${v8Esc(text)}</span></div>`}).join('');
 }
-function v7WorkRows(){
- const rows=(current.w||[]).slice(0,18).map((w,i)=>`<tr><td>${i+1}</td><td>${v7Esc(w.captured_at?new Date(w.captured_at).toLocaleString('tr-TR'):'—')}</td><td>${v7Esc(current.m.find(m=>m.id===w.motor_id)?.ad||w.motor_id||'—')}</td><td>${v7Esc(w.frekans_hz??'—')}</td><td>${v7Esc(w.akim_a??'—')}</td><td>${v7Esc(w.devir_rpm??'—')}</td><td>${v7Esc(w.guc_kw??'—')}</td><td>${v7Esc(w.gerilim_v??'—')}</td><td>${v7Esc(w.set_basinci_bar??'—')}</td><td>${v7Esc(w.calisma_basinci_bar??'—')}</td><td>${v7Esc(w.durum||'—')}</td><td>${v7Esc(w.notlar||'')}</td></tr>`).join('');
- return rows||'<tr><td colspan="12">Çalışma kaydı yok.</td></tr>';
+function v8WorkRows(pump){
+ const motorId=pump?.motor_id;const rows=(current.w||[]).filter(w=>!motorId||w.motor_id===motorId).slice(0,20).map((w,i)=>`<tr><td>${i+1}</td><td>${v8Esc(w.captured_at?new Date(w.captured_at).toLocaleString('tr-TR'):'—')}</td><td>${v8Esc(current.m.find(m=>m.id===w.motor_id)?.ad||'—')}</td><td>${v8Esc(w.frekans_hz??'—')}</td><td>${v8Esc(w.akim_a??'—')}</td><td>${v8Esc(w.devir_rpm??'—')}</td><td>${v8Esc(w.guc_kw??'—')}</td><td>${v8Esc(w.gerilim_v??'—')}</td><td>${v8Esc(w.set_basinci_bar??'—')}</td><td>${v8Esc(w.calisma_basinci_bar??'—')}</td><td>${v8Esc(w.durum||'—')}</td><td>${v8Esc(w.notlar||'')}</td></tr>`).join('');
+ return rows||'<tr><td colspan="12">Bu pompaya ait çalışma kaydı yok.</td></tr>';
 }
-function v7ParamRows(){
- return (current.tp||[]).map((p,i)=>`<tr><td>${i+1}</td><td>${v7Esc(p.ekran_adi||'')}</td><td>${v7Esc(p.parametre_adi||'')}</td><td>${v7Esc(p.deger??'')}</td><td>${v7Esc(p.birim||'')}</td><td>${v7Esc(p.aciklama||'')}</td></tr>`).join('')||'<tr><td colspan="6">Terfiye özel parametre kaydı yok.</td></tr>';
+function v8ParamRows(pump){
+ const pid=pump?.id;const rows=(current.tp||[]).filter(x=>x.pompa_id===pid).map((p,i)=>`<tr><td>${i+1}</td><td>${v8Esc(p.ekran_adi||'')}</td><td>${v8Esc(p.parametre_adi||'')}</td><td>${v8Esc(p.deger??'')}</td><td>${v8Esc(p.birim||'')}</td><td>${v8Esc(p.aciklama||'')}</td></tr>`).join('');
+ return rows||'<tr><td colspan="6">Bu pompaya ait terfi parametresi yok.</td></tr>';
 }
-function v7DriverRecordRows(){
- const ids=(current.d||[]).map(d=>d.id); return ids.length?`<div class="v7-block-title">SÜRÜCÜ PARAMETRE / ARIZA KAYITLARI</div><table class="v7-table"><thead><tr><th>Sürücü</th><th>Kod</th><th>Değer / Tespit</th><th>İşlem / Sonuç</th><th>Tarih</th></tr></thead><tbody>${(current._driverParams||[]).map(x=>`<tr><td>${v7Esc(current.d.find(d=>d.id===x.surucu_id)?.ad||x.surucu_id)}</td><td>${v7Esc(x.parametre_kodu)}</td><td>${v7Esc([x.mevcut_deger,x.yeni_deger].filter(Boolean).join(' → ')||x.amac||'')}</td><td>${v7Esc(x.uygulama_notu||'')}</td><td>${v7Esc(x.tarih||'')}</td></tr>`).join('')}${(current._driverFaults||[]).map(x=>`<tr><td>${v7Esc(current.d.find(d=>d.id===x.surucu_id)?.ad||x.surucu_id)}</td><td>${v7Esc(x.kod||x.ariza_kodu_id||'')}</td><td>${v7Esc(x.tespit||x.aciklama||'')}</td><td>${v7Esc([x.yapilan_islem,x.sonuc].filter(Boolean).join(' / '))}</td><td>${v7Esc(x.tarih||'')}</td></tr>`).join('')}</tbody></table>`:'';
+function v8DriverRecordRows(pump){
+ const d=pump?.surucu_id?current.d.find(x=>x.id===pump.surucu_id):null;if(!d)return '<div class="v7-block-title">SÜRÜCÜ KAYITLARI</div><div>Bu pompaya bağlı sürücü yok.</div>';
+ const ps=(current._driverParams||[]).filter(x=>x.surucu_id===d.id);const fs=(current._driverFaults||[]).filter(x=>x.surucu_id===d.id);
+ const rows=[...ps.map(x=>`<tr><td>PARAM</td><td>${v8Esc(x.parametre_kodu||'')}</td><td>${v8Esc([x.mevcut_deger,x.yeni_deger].filter(Boolean).join(' → ')||x.amac||'')}</td><td>${v8Esc(x.uygulama_notu||'')}</td><td>${v8Esc(x.tarih||'')}</td></tr>`),...fs.map(x=>`<tr><td>ARIZA</td><td>${v8Esc(x.kod||x.ariza_kodu_id||'')}</td><td>${v8Esc(x.tespit||x.aciklama||'')}</td><td>${v8Esc([x.yapilan_islem,x.sonuc].filter(Boolean).join(' / '))}</td><td>${v8Esc(x.tarih||'')}</td></tr>`)];
+ return `<div class="v7-block-title">P${v8PumpNo(pump)} · SÜRÜCÜ PARAMETRE / ARIZA</div><table class="v7-table"><thead><tr><th>Tip</th><th>Kod</th><th>Değer / Tespit</th><th>İşlem / Not</th><th>Tarih</th></tr></thead><tbody>${rows.join('')||'<tr><td colspan="5">Bu sürücüye ait kayıt yok.</td></tr>'}</tbody></table>`;
 }
-function v7CompactReportHTML(){
- const s=current?.s||{}, detail=current?.detail||getTerfiDetail(s.id)||{}, loc=current?.location||getLocation(s.id)||null, ssr=v7PumpSSR(); const pumps=v5Pumps(); const photos=localPhotos?.[s.id]||[]; const hist=(changeHistory||[]).filter(x=>x.terfi_id===s.id).slice(0,10);
- const pumpCount=pumps.length; const selected=v5SelectedPump();
+function v8PumpCard(p){
+ const n=v8PumpNo(p),m=p?.motor_id?current.m.find(x=>x.id===p.motor_id):null,d=p?.surucu_id?current.d.find(x=>x.id===p.surucu_id):null;
+ return `<div class="v7-pump"><h3>P${n} <span class="tag">${v8Esc(p.ad||'Pompa')}</span></h3><div class="v7-block-title">POMPA</div><div class="v7-line"><div><span class="v7-label">Marka:</span> ${v8Esc(p.marka||'—')}</div><div><span class="v7-label">Model:</span> ${v8Esc(p.model||'—')}</div><div><span class="v7-label">Tip:</span> ${v8Esc(p.tip||'—')}</div><div><span class="v7-label">Seri:</span> ${v8Esc(p.seri_no||'—')}</div><div><span class="v7-label">Güç:</span> ${v8Esc(p.guc_kw??'—')} kW / ${v8Esc(p.guc_hp??'—')} HP</div><div><span class="v7-label">Q:</span> ${v8Esc(p.q_min_m3h??'—')}–${v8Esc(p.q_max_m3h??'—')} m³/h</div><div><span class="v7-label">H:</span> ${v8Esc(p.h_min_m??'—')}–${v8Esc(p.h_max_m??'—')} m</div><div><span class="v7-label">Not:</span> ${v8Esc(p.etiket_notu||'—')}</div></div><div class="v7-block-title">MOTOR</div><div class="v7-line"><div><span class="v7-label">Ad:</span> ${v8Esc(m?.ad||'YOK')}</div><div><span class="v7-label">Marka/Model:</span> ${v8Esc(m?[m.marka,m.model].filter(Boolean).join(' ')||'—':'—')}</div><div><span class="v7-label">Seri:</span> ${v8Esc(m?.seri_no||'—')}</div><div><span class="v7-label">Güç:</span> ${v8Esc(m?.guc_kw??'—')} kW / ${v8Esc(m?.guc_hp??'—')} HP</div><div><span class="v7-label">V/A:</span> ${v8Esc(m?.gerilim_v??'—')} V / ${v8Esc(m?.nominal_akim_a??'—')} A</div><div><span class="v7-label">Hz/RPM:</span> ${v8Esc(m?.frekans_hz??'—')} / ${v8Esc(m?.devir_rpm??'—')}</div><div><span class="v7-label">cosφ:</span> ${v8Esc(m?.cos_phi??'—')}</div><div><span class="v7-label">Tip:</span> ${v8Esc(m?.motor_tipi||'—')}</div></div><div class="v7-block-title">SÜRÜCÜ</div><div class="v7-line"><div><span class="v7-label">Ad:</span> ${v8Esc(d?.ad||'YOK')}</div><div><span class="v7-label">Marka/Model:</span> ${v8Esc(d?[d.marka,d.model].filter(Boolean).join(' ')||'—':'—')}</div><div><span class="v7-label">Seri:</span> ${v8Esc(d?.seri_no||'—')}</div><div><span class="v7-label">Güç:</span> ${v8Esc(d?.guc_kw??d?.guc??'—')}</div><div><span class="v7-label">Gerilim:</span> ${v8Esc(d?.besleme_v??d?.gerilim??'—')}</div><div><span class="v7-label">Aile:</span> ${v8Esc(d?.surucu_ailesi||'—')}</div></div></div>`;
+}
+function v8CompactReportHTML(){
+ const s=current?.s||{},detail=current?.detail||getTerfiDetail(s.id)||{},loc=current?.location||getLocation(s.id)||null,pump=v8SelectedPump(),ssr=v8PumpSSR(),photos=localPhotos?.[s.id]||[],hist=(changeHistory||[]).filter(x=>x.terfi_id===s.id).slice(0,8),n=v8PumpNo(pump);if(!pump)return '<div class="v7-page"><h1>Pompa kaydı yok</h1></div>';
+ const m=pump.motor_id?current.m.find(x=>x.id===pump.motor_id):null,d=pump.surucu_id?current.d.find(x=>x.id===pump.surucu_id):null;
+ const hmi=v8HmiRows(pump), params=v8ParamRows(pump), works=v8WorkRows(pump), box=v8PumpBoxSummary(pump), driver=v8DriverRecordRows(pump);
  const historyText=hist.map(x=>`${x.date||x.tarih||''} ${x.action||x.eylem||''} ${x.detail||x.detay||''}`).join(' · ');
- return `<div class="v7-page">
- <div class="v7-head"><div><h1>MESKİ TERFİ TEKNİK ARŞİVİ</h1><div class="v7-sub">${v7Esc(s.ad||'')} · ${v7Esc(s.terfi_no||s.kod||'RTU YOK')} · ${v7Esc(s.bolge||'')} · ${pumpCount} POMPA</div></div><div class="v7-right">${v7Esc(s.adres||'Adres girilmemiş')}<br>${v7Esc(now())}<br>Fotoğraf: ${photos.length} adet</div></div>
- <div class="v7-info">${v7Cell('Terfi Tipi',s.terfi_tipi||detail.tip||'Terfi')}${v7Cell('Kuyu Derinliği',s.kuyu_derinligi!=null?`${s.kuyu_derinligi} m`:'—')}${v7Cell('Kaynak / Emiş',detail.emiş_kaynagi)}${v7Cell('Basma Noktası',detail.basma_noktasi)}${v7Cell('Pompa Tipi',detail.pompa_tipi)}${v7Cell('Çalışma Şekli',detail.calisma_sekli)}${v7Cell('Bölge',s.bolge)}${v7Cell('RTU / Kod',s.terfi_no||s.kod)}${v7Cell('GPS',loc?`${Number(loc.lat).toFixed(6)}, ${Number(loc.lng).toFixed(6)}`:'Kayıt yok')}${v7Cell('GPS Doğruluk',loc?.accuracy)}${v7Cell('Sistem Açıklaması',detail.sistem_aciklama)}${v7Cell('Terfi Açıklaması',s.aciklama)}</div>
- <div class="v7-section"><h2>POMPA + MOTOR + SÜRÜCÜ · HER POMPA AYRI BLOK</h2><div class="v7-pump-grid">${pumps.map(v7PumpCard).join('')||'<div>Pompa kaydı yok.</div>'}</div></div>
- <div class="v7-lower">
-  <div class="v7-section"><h2>SSR / SEVİYE</h2>${v7Cell('Seviye',ssr.level)}${v7Cell('Alt',ssr.low)}${v7Cell('Üst',ssr.high)}${v7Cell('Not',ssr.note)}<h2 style="margin-top:1mm">BOX / KABLO</h2><table class="v7-table"><thead><tr><th>Motor</th><th>Bölüm</th><th>U / V / W</th></tr></thead><tbody>${v7BoxSummary()}</tbody></table><h2 style="margin-top:1mm">GEÇMİŞ</h2><div style="line-height:1.15">${v7Esc(historyText||'Kayıt yok')}</div></div>
-  <div class="v7-section"><h2>HMI / PLC · SEÇİLİ POMPA ${selected?'P'+v5PumpNo(selected,0):'—'} · TÜM 5 EKRAN</h2>${v7HmiRows()}<h2 style="margin-top:1mm">TERFİYE ÖZEL PARAMETRELER</h2><table class="v7-table"><thead><tr><th>#</th><th>Ekran</th><th>Parametre</th><th>Değer</th><th>Birim</th><th>Açıklama</th></tr></thead><tbody>${v7ParamRows()}</tbody></table></div>
-  <div class="v7-section"><h2>ÇALIŞMA KAYITLARI</h2><table class="v7-table"><thead><tr><th>#</th><th>Tarih</th><th>Motor</th><th>Hz</th><th>A</th><th>RPM</th><th>kW</th><th>V</th><th>Set bar</th><th>Çalışma bar</th><th>Durum</th><th>Not</th></tr></thead><tbody>${v7WorkRows()}</tbody></table>${v7DriverRecordRows()}<h2 style="margin-top:1mm">FOTOĞRAF ARŞİVİ</h2><div>${photos.map((p,i)=>`${i+1}. ${v7Esc(p.name||'Fotoğraf')} · ${v7Esc(p.date||'')}`).join(' · ')||'Fotoğraf yok'}</div></div>
- </div>
- <div class="v7-foot">MESKİ TERFİ ARŞİVİM · TEK SAYFA TAM TEKNİK ÖZET · ${v7Esc(s.kod||s.terfi_no||'')}</div>
- </div>`;
+ return `<div class="v7-page"><div class="v7-head"><div><h1>MESKİ TERFİ TEKNİK ARŞİVİ</h1><div class="v7-sub">${v8Esc(s.ad||'')} · ${v8Esc(s.terfi_no||s.kod||'RTU YOK')} · <b>P${n} BLOĞU</b> · ${v8Esc(pump.ad||'Pompa')}</div></div><div class="v7-right">${v8Esc(s.adres||'Adres girilmemiş')}<br>${v8Esc(now())}<br>POMPA P${n}</div></div>
+ <div class="v7-info">${v8Cell('Terfi Tipi',s.terfi_tipi||detail.tip||'Terfi')}${v8Cell('Kuyu Derinliği',s.kuyu_derinligi!=null?`${s.kuyu_derinligi} m`:'—')}${v8Cell('Kaynak / Emiş',detail.emiş_kaynagi)}${v8Cell('Basma Noktası',detail.basma_noktasi)}${v8Cell('Pompa Tipi',pump.tip||detail.pompa_tipi)}${v8Cell('Çalışma Şekli',detail.calisma_sekli)}${v8Cell('Bölge',s.bolge)}${v8Cell('RTU / Kod',s.terfi_no||s.kod)}${v8Cell('GPS',loc?`${Number(loc.lat).toFixed(6)}, ${Number(loc.lng).toFixed(6)}`:'Kayıt yok')}${v8Cell('GPS Doğruluk',loc?.accuracy)}${v8Cell('POMPA',`P${n} · ${pump.ad||''}`)}${v8Cell('Sürücü Ailesi',d?.surucu_ailesi||'—')}${v8Cell('Motor',m?.ad||'YOK')}${v8Cell('Sürücü',d?.ad||'YOK')}${v8Cell('Sistem Açıklaması',detail.sistem_aciklama)}${v8Cell('Terfi Açıklaması',s.aciklama)}</div>
+ <div class="v7-section"><h2>🔷 P${n} · POMPA / MOTOR / SÜRÜCÜ</h2><div class="v7-pump-grid">${v8PumpCard(pump)}</div></div>
+ <div class="v7-lower"><div class="v7-section"><h2>SSR / SEVİYE · P${n}</h2>${v8Cell('Seviye',ssr.level)}${v8Cell('Alt',ssr.low)}${v8Cell('Üst',ssr.high)}${v8Cell('Not',ssr.note)}<h2 style="margin-top:1mm">BOX / KABLO · P${n}</h2><table class="v7-table"><thead><tr><th>Motor</th><th>Bölüm</th><th>U / V / W</th></tr></thead><tbody>${box}</tbody></table><h2 style="margin-top:1mm">GEÇMİŞ</h2><div style="line-height:1.15">${v8Esc(historyText||'Kayıt yok')}</div></div>
+ <div class="v7-section"><h2>HMI / PLC · P${n} · 5 EKRAN</h2>${hmi}<h2 style="margin-top:1mm">TERFİYE ÖZEL PARAMETRELER · P${n}</h2><table class="v7-table"><thead><tr><th>#</th><th>Ekran</th><th>Parametre</th><th>Değer</th><th>Birim</th><th>Açıklama</th></tr></thead><tbody>${params}</tbody></table></div>
+ <div class="v7-section"><h2>ÇALIŞMA KAYITLARI · P${n}</h2><table class="v7-table"><thead><tr><th>#</th><th>Tarih</th><th>Motor</th><th>Hz</th><th>A</th><th>RPM</th><th>kW</th><th>V</th><th>Set bar</th><th>Çalışma bar</th><th>Durum</th><th>Not</th></tr></thead><tbody>${works}</tbody></table>${driver}<h2 style="margin-top:1mm">FOTOĞRAF ARŞİVİ</h2><div>${photos.map((p,i)=>`${i+1}. ${v8Esc(p.name||'Fotoğraf')} · ${v8Esc(p.date||'')}`).join(' · ')||'Fotoğraf yok'}</div></div></div>
+ <div class="v7-foot">MESKİ TERFİ ARŞİVİM · P${n} BLOĞU · TEK SAYFA TEKNİK ARŞİV · ${v8Esc(s.kod||s.terfi_no||'')}</div></div>`;
 }
 async function makePDF(){
- if(!current){toast('Önce terfi açın.');return;} if(edit)touchAdminSession();
- const id=current.s.id;
+ if(!current){toast('Önce terfi açın.');return;}if(edit)touchAdminSession();const pump=v8SelectedPump();if(!pump){toast('Bu terfide pompa kaydı yok.');return;}
+ const id=current.s.id,driverId=pump.surucu_id,motorId=pump.motor_id;
  try{
-  const driverIds=(current.d||[]).map(d=>d.id);
   const [h,w,tp,dp,df]=await Promise.all([
-   db.from('hmi_kayitlari').select('*').eq('terfi_id',id).order('ekran_no',{ascending:true}),
-   db.from('motor_calisma_kayitlari').select('*').eq('terfi_id',id).order('captured_at',{ascending:false}),
-   db.from('terfi_parametreleri').select('*').eq('terfi_id',id).order('sira',{ascending:true}),
-   driverIds.length?db.from('surucu_parametre_kayitlari').select('*').in('surucu_id',driverIds).order('tarih',{ascending:false}):Promise.resolve({data:[]}),
-   driverIds.length?db.from('surucu_ariza_kayitlari').select('*').in('surucu_id',driverIds).order('tarih',{ascending:false}):Promise.resolve({data:[]})
+   db.from('hmi_kayitlari').select('*').eq('terfi_id',id).eq('pompa_id',pump.id).order('ekran_no',{ascending:true}),
+   motorId?db.from('motor_calisma_kayitlari').select('*').eq('terfi_id',id).eq('motor_id',motorId).order('captured_at',{ascending:false}):Promise.resolve({data:[]}),
+   db.from('terfi_parametreleri').select('*').eq('terfi_id',id).eq('pompa_id',pump.id).order('sira',{ascending:true}),
+   driverId?db.from('surucu_parametre_kayitlari').select('*').eq('surucu_id',driverId).order('tarih',{ascending:false}):Promise.resolve({data:[]}),
+   driverId?db.from('surucu_ariza_kayitlari').select('*').eq('surucu_id',driverId).order('tarih',{ascending:false}):Promise.resolve({data:[]})
   ]);
   current.h=h?.data||[];current.w=w?.data||[];current.tp=tp?.data||[];current._driverParams=dp?.data||[];current._driverFaults=df?.data||[];
- }catch(e){console.warn('PDF veri yükleme:',e);}
- document.getElementById('printArea')?.remove(); const area=document.createElement('div');area.id='printArea';area.className='print-only';area.innerHTML=v7CompactReportHTML();document.body.appendChild(area);setTimeout(()=>window.print(),180);
+ }catch(e){console.error(e);toast('PDF verileri alınamadı: '+(e.message||e));return;}
+ document.getElementById('printArea')?.remove();const area=document.createElement('div');area.id='printArea';area.className='print-only';area.innerHTML=v8CompactReportHTML();document.body.appendChild(area);setTimeout(()=>window.print(),180);
 }
 
 // V5 fonksiyonlarını global bağlama taşı: HTML onclick ve mevcut uygulama gövdesi bunları kullanır.
