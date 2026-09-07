@@ -14420,6 +14420,108 @@ window.showLogin=showLogin;
 // Uygulama ilk yüklendiğinde yeni login ekranını göster.
 setTimeout(()=>{if(!loggedIn)window.showLogin()},0);
 })();
+
+
+/* =========================================================
+   V10 — TERFİ = SİTE / P1-Pn = BAĞIMSIZ SİSTEM BLOĞU
+   Tasarım: endüstriyel SCADA / teknik servis paneli.
+========================================================= */
+(function(){
+ const css=`
+ :root{
+   --v10-bg:#06111c;--v10-panel:#0b1b2a;--v10-panel2:#0e2437;--v10-line:#19415b;
+   --v10-text:#eaf6ff;--v10-muted:#86a9bd;--v10-cyan:#16b9ee;--v10-green:#13c77b;
+   --v10-red:#ef3f4f;--v10-yellow:#f2ad22;--v10-blue:#188ce8;--v10-shadow:0 14px 35px rgba(0,0,0,.28)
+ }
+ body{background:radial-gradient(circle at 20% 0%,rgba(21,136,196,.13),transparent 28%),linear-gradient(180deg,#06111c,#071522 55%,#05101a)!important;color:var(--v10-text)!important}
+ body:before{content:"";position:fixed;inset:0;pointer-events:none;opacity:.08;background-image:linear-gradient(rgba(255,255,255,.08) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.08) 1px,transparent 1px);background-size:28px 28px;z-index:-1}
+ .wrap{max-width:1500px!important;padding:14px 18px 110px!important}
+ .card{background:linear-gradient(145deg,rgba(13,35,53,.97),rgba(7,21,33,.98))!important;border:1px solid var(--v10-line)!important;box-shadow:var(--v10-shadow)!important;border-radius:18px!important}
+ .top{gap:14px}.page-title,.section-title,h1,h2,h3{letter-spacing:.2px}
+ .btn{border:1px solid #245875!important;background:#102d43!important;box-shadow:0 5px 16px rgba(0,0,0,.18)!important;border-radius:11px!important}
+ .btn.primary{background:linear-gradient(180deg,#1db7ee,#0d83c2)!important;border-color:#27c6fa!important}
+ .btn.ok{background:linear-gradient(180deg,#16c985,#09995f)!important;border-color:#1ee39a!important}
+ .btn.warn{background:linear-gradient(180deg,#a87510,#76520a)!important;border-color:#d69b1f!important}
+ .btn.bad{background:linear-gradient(180deg,#e94755,#a92331)!important;border-color:#ff5b67!important}
+ .pump-context{margin:0!important;padding:16px!important;background:linear-gradient(180deg,#081825,#07131e)!important;border:1px solid #21465d!important;border-radius:16px!important}
+ .pump-context-title{font-weight:900!important;font-size:18px!important;display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:12px}
+ .pump-context-title span{font-size:13px;background:#0d4161;color:#8bdcff;padding:7px 11px;border-radius:999px}
+ .pump-context-tabs{display:flex;gap:10px;overflow-x:auto;padding-bottom:2px;scrollbar-width:none}.pump-context-tabs::-webkit-scrollbar{display:none}
+ .pump-context-tab{min-width:116px!important;height:82px!important;border-radius:16px!important;border:1px solid #24516c!important;color:#dceefa!important;background:#102a3d!important;display:flex!important;flex-direction:column!important;align-items:flex-start!important;justify-content:center!important;padding:13px 16px!important;box-shadow:none!important;flex:0 0 auto!important}
+ .pump-context-tab b{font-size:22px}.pump-context-tab small{font-size:13px;opacity:.85;margin-top:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}
+ .pump-context-tab.active{transform:translateY(-2px);box-shadow:0 0 0 2px #19c5f7,0 10px 25px rgba(0,0,0,.3)!important;color:#fff!important}
+ .pump-color-1{background:linear-gradient(145deg,#1a4669,#0d2b42)!important}.pump-color-2{background:linear-gradient(145deg,#11614f,#0d3b33)!important}.pump-color-3{background:linear-gradient(145deg,#b73543,#6f202c)!important}.pump-color-4{background:linear-gradient(145deg,#9b6a14,#63440e)!important}.pump-color-5{background:linear-gradient(145deg,#5b39a3,#382667)!important}.pump-color-6{background:linear-gradient(145deg,#187f98,#0f4f61)!important}
+ .v10-site{display:grid;gap:14px}.v10-site-head{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:12px;align-items:stretch}
+ .v10-site-main{display:flex;gap:14px;align-items:center}.v10-site-icon{width:82px;height:82px;border-radius:16px;background:linear-gradient(145deg,#0e79bd,#0a4167);display:grid;place-items:center;font-size:38px;border:1px solid #1aa9e4;flex:0 0 auto}
+ .v10-kicker{font-size:12px;color:#72a9c2;text-transform:uppercase;letter-spacing:1px;font-weight:800}.v10-site-name{font-size:30px;font-weight:950;margin:3px 0}.v10-meta{color:#8caec1;font-size:14px}.v10-live{display:inline-flex;gap:7px;align-items:center;padding:6px 10px;border-radius:999px;background:#0c4a38;color:#5ff0b0;font-weight:900;font-size:12px;margin-left:7px}.v10-live:before{content:"";width:8px;height:8px;background:#17df87;border-radius:50%;box-shadow:0 0 12px #17df87}
+ .v10-head-info{display:grid;grid-template-columns:repeat(3,minmax(130px,1fr));gap:1px;background:#173b50;border:1px solid #1d4c65;border-radius:14px;overflow:hidden}.v10-info{padding:12px 14px;background:#0a1b2a}.v10-info b{display:block;color:#74a6ba;font-size:10px;text-transform:uppercase;margin-bottom:4px}.v10-info span{font-size:14px;font-weight:800}
+ .v10-pump-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}.v10-pump-tile{border:1px solid #214e67;border-radius:15px;padding:15px;background:#0b2031;cursor:pointer;transition:.18s;min-height:125px}.v10-pump-tile:hover{transform:translateY(-2px)}.v10-pump-tile.active{border-color:#1ac6fa;box-shadow:0 0 0 2px rgba(26,198,250,.3),0 12px 28px rgba(0,0,0,.3)}.v10-pump-top{display:flex;align-items:center;justify-content:space-between}.v10-pump-no{font-size:28px;font-weight:950}.v10-pump-icon{font-size:28px}.v10-pump-name{font-weight:800;margin-top:7px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.v10-status{display:inline-flex;align-items:center;gap:6px;color:#54e9a7;font-size:12px;font-weight:900;margin-top:11px}.v10-status:before{content:"";width:7px;height:7px;border-radius:50%;background:#18dc86}.v10-add{display:grid;place-items:center;border:1px dashed #2b647f!important;background:#091a28!important;color:#9bd8ee!important}
+ .v10-block{border:1px solid #234a62;border-radius:17px;overflow:hidden;background:#081724;box-shadow:var(--v10-shadow)}.v10-block-head{display:flex;justify-content:space-between;gap:12px;align-items:center;padding:17px 19px;background:linear-gradient(90deg,#761e2a,#b92d3b 45%,#7d202c);border-bottom:1px solid #e14c59}.v10-block-head h2{margin:0;font-size:25px}.v10-block-sub{color:#ffe5e8;font-size:13px;margin-top:4px}.v10-section-nav{display:flex;gap:7px;overflow:auto;padding:10px;background:#07121d;border-bottom:1px solid #17384b;scrollbar-width:none}.v10-section-nav::-webkit-scrollbar{display:none}.v10-section-nav button{flex:0 0 auto;border:0;background:transparent;color:#aac1cf;padding:10px 12px;border-radius:9px;font-weight:800}.v10-section-nav button.active{background:#e83949;color:#fff}
+ .v10-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;padding:14px}.v10-data-card{background:linear-gradient(145deg,#0c2233,#091925);border:1px solid #1b4157;border-radius:14px;padding:14px}.v10-data-card h3{margin:0 0 10px;font-size:15px;display:flex;align-items:center;gap:8px}.v10-data-card h3 i{font-style:normal;font-size:20px}.v10-row{display:flex;justify-content:space-between;gap:10px;padding:7px 0;border-bottom:1px solid rgba(80,130,155,.12);font-size:12px}.v10-row:last-child{border-bottom:0}.v10-row span:first-child{color:#7fa4b8}.v10-row span:last-child{font-weight:800;text-align:right;color:#e4f2f8}.v10-kpis{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));border-top:1px solid #173d51;background:#07131e}.v10-kpi{padding:12px;border-right:1px solid #173d51}.v10-kpi b{display:block;font-size:18px}.v10-kpi span{font-size:10px;color:#7599ad;text-transform:uppercase}
+ .v10-empty{padding:28px;text-align:center;color:#86a8ba}.v10-danger{color:#ff7c87!important}.v10-good{color:#54e9a7!important}
+ @media(max-width:900px){.wrap{padding:10px 10px 100px!important}.v10-site-head{grid-template-columns:1fr}.v10-head-info{grid-template-columns:repeat(2,1fr)}.v10-pump-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.v10-grid{grid-template-columns:1fr}.v10-kpis{grid-template-columns:repeat(2,1fr)}.v10-kpi:nth-child(2n){border-right:0}.v10-site-icon{width:64px;height:64px;font-size:29px}.v10-site-name{font-size:24px}}
+ @media(max-width:520px){.v10-pump-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.v10-pump-tile{min-height:105px;padding:12px}.v10-pump-no{font-size:22px}.v10-site-main{align-items:flex-start}.v10-head-info{grid-template-columns:1fr 1fr}.v10-block-head{padding:14px}.v10-block-head h2{font-size:21px}}
+ `;
+ const st=document.createElement('style');st.id='v10-style';st.textContent=css;document.head.appendChild(st);
+
+ function v10Pumps(){return [...(current?.p||[])].sort((a,b)=>(Number(a.pompa_no)||999)-(Number(b.pompa_no)||999));}
+ function v10Pump(){const ps=v10Pumps();let p=ps.find(x=>x.id===selectedPumpId);if(!p)p=ps[0];if(p)selectedPumpId=p.id;return p||null;}
+ function v10Motor(p){return p?.motor_id?current.m.find(x=>x.id===p.motor_id):null}
+ function v10Driver(p){return p?.surucu_id?current.d.find(x=>x.id===p.surucu_id):null}
+ function v10Val(x){return x===null||x===undefined||x===''?'—':String(x)}
+ function v10Rows(items){return items.map(([a,b])=>`<div class="v10-row"><span>${esc(a)}</span><span>${esc(v10Val(b))}</span></div>`).join('')}
+ function v10PumpTiles(){const ps=v10Pumps();return `<div class="card"><div class="pump-context-title" style="padding:0 2px 12px">POMPA BLOKLARI <span>${ps.length} POMPA</span></div><div class="v10-pump-grid">${ps.map((p,i)=>{const n=Number(p.pompa_no)||i+1,active=p.id===selectedPumpId;return `<button type="button" class="v10-pump-tile ${active?'active':''}" onclick="selectPump('${p.id}')"><div class="v10-pump-top"><span class="v10-pump-no">P${n}</span><span class="v10-pump-icon">⚙</span></div><div class="v10-pump-name">${esc(p.ad||'Pompa '+n)}</div><span class="v10-status">${p.motor_id||p.surucu_id?'AKTİF BLOK':'BLOK HAZIR'}</span></button>`}).join('')}${edit?`<button type="button" class="v10-pump-tile v10-add" onclick="addPump()"><b style="font-size:27px">＋</b><span>POMPA EKLE</span></button>`:''}</div></div>`}
+
+ function v10StationBody(){
+   const s=current.s||{}, ref=getTerfiReference(s)||{}, p=v10Pump(); if(!p)return `<div class="card"><div class="v10-empty">Bu terfide henüz pompa bloğu yok.</div></div>`;
+   const n=Number(p.pompa_no)||1,m=v10Motor(p),d=v10Driver(p),loc=current.location||getLocation(s.id)||null;
+   const detail=current.detail||getTerfiDetail(s.id)||{};
+   const work=(current.w||[]).find(x=>x.motor_id===p.motor_id)||{};
+   const ssr=v8PumpSSR? v8PumpSSR(p): (current.ssr||{});
+   return `<div class="v10-site">
+    <div class="v10-site-head">
+      <div class="card" style="padding:16px"><div class="v10-site-main"><div class="v10-site-icon">💧</div><div><div class="v10-kicker">MESKİ · TERFİ TEKNİK ARŞİV</div><div class="v10-site-name">${esc(s.ad||'Terfi')} <span class="v10-live">AKTİF</span></div><div class="v10-meta">${esc(s.terfi_no||s.kod||'RTU YOK')} · ${esc(s.bolge||'Bölge yok')} · ${esc(s.adres||'Adres girilmemiş')}</div></div></div></div>
+      <div class="v10-head-info"><div class="v10-info"><b>Kaynak / Emiş</b><span>${esc(v10Val(detail.emiş_kaynagi||ref.kaynak))}</span></div><div class="v10-info"><b>Basma</b><span>${esc(v10Val(detail.basma_noktasi||ref.cikis))}</span></div><div class="v10-info"><b>Kuyu Derinliği</b><span>${esc(s.kuyu_derinligi!=null?s.kuyu_derinligi+' m':'—')}</span></div><div class="v10-info"><b>Terfi Tipi</b><span>${esc(v10Val(s.terfi_tipi||ref.tip))}</span></div><div class="v10-info"><b>Pompa Tipi</b><span>${esc(v10Val(p.tip||detail.pompa_tipi))}</span></div><div class="v10-info"><b>GPS</b><span>${loc?esc(Number(loc.lat).toFixed(5)+', '+Number(loc.lng).toFixed(5)):'Kayıt yok'}</span></div></div>
+    </div>
+    ${v10PumpTiles()}
+    <div class="v10-block">
+      <div class="v10-block-head"><div><h2>P${n}</h2><div class="v10-block-sub">${esc(p.ad||'Pompa '+n)} · <b>POMPA + MOTOR + SÜRÜCÜ + PANO</b> bağımsız sistem bloğu</div></div><div class="v10-live">${m||d?'ÇALIŞIYOR':'HAZIR'}</div></div>
+      <div class="v10-section-nav">${[['terfi','Genel Bakış'],['pompa','Pompa'],['motor','Motor'],['surucu','Sürücü'],['ssr','SSR / Seviye'],['hmi','HMI / PLC'],['parametre','Parametre'],['calisma','Çalışma'],['ariza','Arıza'],['box','Pano / Kablo'],['photos','Fotoğraflar']].map(([k,l])=>`<button class="${tab===k?'active':''}" onclick="setTab('${k}')">${esc(l)}</button>`).join('')}</div>
+      <div class="v10-grid">
+       <div class="v10-data-card"><h3><i>💧</i> POMPA BİLGİLERİ</h3>${v10Rows([['Marka',p.marka],['Model',p.model],['Tip',p.tip],['Seri No',p.seri_no],['Güç',p.guc_kw!=null?p.guc_kw+' kW':null],['Q Min / Max',p.q_min_m3h!=null||p.q_max_m3h!=null?`${v10Val(p.q_min_m3h)} / ${v10Val(p.q_max_m3h)} m³/h`:null],['H Min / Max',p.h_min_m!=null||p.h_max_m!=null?`${v10Val(p.h_min_m)} / ${v10Val(p.h_max_m)} m`:null],['Etiket',p.etiket_notu]])}</div>
+       <div class="v10-data-card"><h3><i>⚙</i> MOTOR BİLGİLERİ</h3>${v10Rows([['Ad',m?.ad],['Marka',m?.marka],['Model',m?.model],['Güç',m?.guc_kw!=null?m.guc_kw+' kW':null],['Gerilim',m?.gerilim_v!=null?m.gerilim_v+' V':null],['Akım',m?.nominal_akim_a!=null?m.nominal_akim_a+' A':null],['Frekans',m?.frekans_hz!=null?m.frekans_hz+' Hz':null],['Devir',m?.devir_rpm!=null?m.devir_rpm+' rpm':null],['Motor Tipi',m?.motor_tipi]])}</div>
+       <div class="v10-data-card"><h3><i>▣</i> SÜRÜCÜ BİLGİLERİ</h3>${v10Rows([['Ad',d?.ad],['Marka',d?.marka],['Model',d?.model],['Seri No',d?.seri_no],['Güç',d?.guc_kw??d?.guc],['Gerilim',d?.besleme_v??d?.gerilim],['Sürücü Ailesi',d?.surucu_ailesi],['Not',d?.notlar]])}</div>
+       <div class="v10-data-card"><h3><i>🟢</i> SSR / SEVİYE</h3>${v10Rows([['Seviye Üst',ssr?.high],['Seviye Alt',ssr?.low],['Seviye',ssr?.level],['Not',ssr?.note]])}</div>
+       <div class="v10-data-card"><h3><i>⚡</i> PANO / KABLO</h3>${v10Rows([['Pano Tipi',detail.pano_tipi],['Kablo Tipi',detail.kablo_tipi],['U',detail.kablo_u],['V',detail.kablo_v],['W',detail.kablo_w],['Toprak',detail.kablo_pe],['Not',detail.pano_notu]])}</div>
+       <div class="v10-data-card"><h3><i>▣</i> HMI / PLC</h3>${v10Rows([['Marka','Weintek'],['Ekran','5 ekran'],['Seçili Ekran',hmiPage+'/5'],['PLC',detail.plc_model||detail.plc||'—'],['IP',detail.plc_ip||'—'],['Son kayıt',current.h?.filter(x=>x.pompa_id===p.id).length+' HMI kaydı']])}</div>
+      </div>
+      <div class="v10-kpis"><div class="v10-kpi"><b>${v10Val(m?.guc_kw)} kW</b><span>Motor Gücü</span></div><div class="v10-kpi"><b>${v10Val(m?.nominal_akim_a)} A</b><span>Motor Akımı</span></div><div class="v10-kpi"><b>${v10Val(m?.devir_rpm)} rpm</b><span>Devir</span></div><div class="v10-kpi"><b>${v10Val(p.q_max_m3h)} m³/h</b><span>Debi</span></div><div class="v10-kpi"><b>${v10Val(p.h_max_m)} m</b><span>Basma Yüksekliği</span></div></div>
+    </div>
+   </div>`;
+ }
+
+ const oldStation=window.stationBody;
+ window.__v10StationBody=v10StationBody; window.stationBody=v10StationBody;
+ window.selectPump=function(id){
+   if(!current?.p?.some(p=>p.id===id))return;
+   selectedPumpId=id;
+   const p=current.p.find(x=>x.id===id);
+   selectedMotorId=p?.motor_id||null;workMotor=p?.motor_id||null;
+   tab='terfi';hmiPage=1;
+   if(edit)touchAdminSession();
+   captureScrollPosition();render();
+ };
+ // Tüm blok sayfaları seçili P'ye kilitli kalsın.
+ const wrap=(fn)=>function(){const p=v10Pump();if(p)selectedPumpId=p.id;return fn.apply(this,arguments)};
+ window.pumpBody=wrap(window.pumpBody);window.motorBody=wrap(window.motorBody);window.driverBody=wrap(window.driverBody);window.ssrBody=wrap(window.ssrBody);window.workBody=wrap(window.workBody);window.hmiBody=wrap(window.hmiBody);window.parameterBody=wrap(window.parameterBody);window.faultBody=wrap(window.faultBody);
+ // PDF mevcut makePDF fonksiyonunu seçili bloğa kilitleyen güvenli sarıcı.
+ if(window.makePDF){const oldPDF=window.makePDF;window.makePDF=async function(){const p=v10Pump();if(!p){toast('PDF için pompa bloğu seçin.');return;}selectedPumpId=p.id;return oldPDF.apply(this,arguments)}}
+ // body() stationBody fonksiyon adına çözülür; render zaten global çağırıyor.
+})();
+
+
+// V10 lexical bridge: body() uses this stationBody declaration.
+function stationBody(){ return window.__v10StationBody ? window.__v10StationBody() : (current ? (window.v10StationBody?window.v10StationBody():'') : ''); }
 </script>
 
 </body>
