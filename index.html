@@ -1507,6 +1507,133 @@ h4{
  }  
   
 }  
+
+/* V2 UX / HMI / grouped archive */
+.nav{
+ position:sticky;
+ top:0;
+ z-index:30;
+ backdrop-filter:blur(12px);
+ background:rgba(7,26,47,.94);
+ padding:8px 0;
+}
+.section-title,.section-sub,h2,h3{
+ scroll-margin-top:70px;
+}
+.group-title{
+ position:sticky;
+ top:58px;
+ z-index:15;
+ backdrop-filter:blur(10px);
+ background:rgba(7,26,47,.96);
+ border:1px solid var(--line);
+ border-radius:12px;
+ padding:10px 12px;
+ margin:14px 0 8px;
+}
+.pump-switch{
+ display:flex;
+ gap:8px;
+ flex-wrap:wrap;
+ margin:8px 0 12px;
+}
+.pump-detail-grid{
+ display:grid;
+ grid-template-columns:1fr;
+ gap:10px;
+}
+.pump-link-card{
+ border:1px solid var(--line);
+ border-radius:12px;
+ padding:12px;
+ background:#0a2239;
+}
+.hmi-real{
+ border:2px solid #8b96a2;
+ border-radius:14px;
+ padding:12px;
+ background:linear-gradient(#e9eef2,#cfd7dd);
+ color:#15202b;
+ box-shadow:inset 0 0 0 2px #4e5963;
+}
+.hmi-real-head{
+ display:flex;
+ justify-content:space-between;
+ align-items:center;
+ gap:8px;
+ background:#1c4d88;
+ color:#fff;
+ padding:8px 10px;
+ border-radius:8px;
+ font-weight:800;
+}
+.hmi-real-body{
+ display:grid;
+ grid-template-columns:1fr 1fr 1fr;
+ gap:8px;
+ margin-top:8px;
+}
+.hmi-real-col{
+ display:flex;
+ flex-direction:column;
+ gap:6px;
+}
+.hmi-real-field{
+ display:grid;
+ grid-template-columns:minmax(0,1fr) 78px;
+ gap:5px;
+ align-items:center;
+ font-size:11px;
+ font-weight:700;
+}
+.hmi-real-field input{
+ width:100%;
+ min-width:0;
+ padding:6px;
+ border:1px solid #9ca7b0;
+ background:#f8fbfd;
+ color:#123;
+ border-radius:3px;
+}
+.hmi-real-center{
+ display:flex;
+ flex-direction:column;
+ justify-content:space-between;
+ gap:8px;
+}
+.hmi-graphic{
+ min-height:130px;
+ border:1px solid #9aa6b0;
+ border-radius:8px;
+ background:#f8fbfd;
+ display:flex;
+ align-items:center;
+ justify-content:center;
+ position:relative;
+ overflow:hidden;
+}
+.hmi-graphic svg{width:100%;height:100%;min-height:130px}
+.hmi-real-buttons{
+ display:flex;
+ justify-content:space-between;
+ gap:6px;
+ margin-top:8px;
+}
+.hmi-real-btn{
+ border:0;
+ border-radius:8px;
+ padding:7px 10px;
+ font-weight:800;
+}
+.hmi-real-btn.menu{background:#20d6c3}
+.hmi-real-btn.home{background:#67d04d}
+.hmi-real-btn.save{background:#b8d9ff}
+.hmi-real-btn.arrow{background:#f35b3f;color:#fff}
+@media(max-width:800px){
+ .hmi-real-body{grid-template-columns:1fr}
+ .hmi-real-field{grid-template-columns:1fr 82px}
+}
+
 </style>  
 </head>  
   
@@ -11086,7 +11213,7 @@ function closeModal(){
    SAVE  
 ========================================================= */  
   
-async function saveActive(){  
+async function saveActiveBase(){  
   
  if(!current){  
   
@@ -12798,7 +12925,9 @@ function reportHTML(){
       ${pc('Çalışma Şekli',detail.calisma_sekli)}  
       ${pc('Emiş / Kaynak',detail.emiş_kaynagi)}  
       ${pc('Basma Noktası',detail.basma_noktasi)}  
-      ${pc('Sistem Açıklaması',detail.sistem_aciklama)}  
+      ${pc('Sistem Açıklaması',detail.sistem_aciklama)}
+      ${pc('Terfi Tipi',s.terfi_tipi)}
+      ${pc('Kuyu Derinliği',s.kuyu_derinligi!=null?`${s.kuyu_derinligi} m`:'')}  
       ${pc(  
        'GPS',  
        loc  
@@ -13246,49 +13375,8 @@ function reportHTML(){
      }  
   
     </div>  
-  
-    <div class="print-sec">
+  </div>
 
-     <h2>
-      ABB PARAMETRELERİ  
-     </h2>  
-  
-     ${  
-      params()  
-       .slice(0,12)  
-       .map(  
-        p=>`  
-  
-        <div  
-         style="  
-          margin-bottom:1mm;  
-          font-size:4pt  
-         ">  
-  
-         <b>  
-          ${esc(p.code)}  
-         </b>  
-  
-         ·  
-  
-         ${esc(p.name)}  
-  
-         ·  
-  
-         ${esc(p.driver||'')}  
-  
-        </div>  
-  
-        `  
-       ).join('')  
-     }  
-  
-    </div>  
-  
-   </div>  
-  
-  </div>  
-  
   <div class="print-foot">  
   
    <span>  
@@ -13816,3 +13904,574 @@ function exportCSV(){
   
 </body>  
 </html>  
+
+
+/* =========================================================
+   V2 PARAMETRE AİLELERİ
+   ABB resmi ACS580/ACQ580 grup yapısına göre ayrılır.
+========================================================= */
+const ACS580_PARAMS=[
+ ['99.06','Motor nominal akımı','A','Motor nominal akımı','ABB ACS580','ABB ACS580'],
+ ['99.07','Motor nominal gerilimi','V','Motor nominal gerilimi','ABB ACS580','ABB ACS580'],
+ ['99.08','Motor nominal frekansı','Hz','Motor nominal frekansı','ABB ACS580','ABB ACS580'],
+ ['99.09','Motor nominal hızı','rpm','Motor nominal hızı','ABB ACS580','ABB ACS580'],
+ ['99.10','Motor nominal gücü','kW','Motor nominal gücü','ABB ACS580','ABB ACS580'],
+ ['30.11','Minimum hız','Hz','Minimum hız sınırı','ABB ACS580','ABB ACS580'],
+ ['30.12','Maksimum hız','Hz','Maksimum hız sınırı','ABB ACS580','ABB ACS580'],
+ ['30.17','Maksimum akım','A','Maksimum akım sınırı','ABB ACS580','ABB ACS580'],
+ ['20.01','Harici 1 komutları','-','Start/stop ve yön komutları','ABB ACS580','ABB ACS580'],
+ ['22.11','Hız referansı seçimi','-','Hız referansı kaynağı','ABB ACS580','ABB ACS580'],
+ ['23.12','Hızlanma zamanı 1','s','Hızlanma rampası','ABB ACS580','ABB ACS580'],
+ ['23.13','Yavaşlama zamanı 1','s','Yavaşlama rampası','ABB ACS580','ABB ACS580'],
+ ['31.20','Harici olay 1','-','Harici olay/fault davranışı','ABB ACS580','ABB ACS580'],
+ ['40.01','PID kontrol modu','-','Proses PID kontrolü','ABB ACS580','ABB ACS580'],
+ ['40.07','PID setpoint 1','-','PID setpoint kaynağı','ABB ACS580','ABB ACS580'],
+ ['40.08','PID feedback 1','-','PID geri besleme kaynağı','ABB ACS580','ABB ACS580'],
+ ['40.14','PID kazanç','-','PID kazanç ayarı','ABB ACS580','ABB ACS580']
+].map(x=>({code:x[0],name:x[1],unit:x[2],desc:x[3],source:x[4],driver:x[5]}));
+
+function params(){
+ return [
+  ...DEFAULT_PARAMS,
+  ...ACS580_PARAMS,
+  ...customParams
+ ].filter(p=>!paramDeleted.includes(p.code))
+  .map(p=>({...p,...(paramEdits[p.code]||{})}));
+}
+
+
+
+/* =========================================================
+   V2 ANA SAYFA — BÖLGE GRUPLU
+========================================================= */
+async function home(){
+ if(!loggedIn){ showLogin(); return; }
+ current=null;
+ document.getElementById('saveBar')?.classList.add('hidden');
+
+ const r=await db.from('terfiler').select('*').order('bolge',{ascending:true}).order('ad',{ascending:true});
+ if(r.error){
+  app.innerHTML=`<div class="wrap"><div class="card"><h2>Supabase bağlantısı kurulamadı</h2><p>${esc(r.error.message)}</p><button class="btn" onclick="home()">TEKRAR DENE</button></div></div>`;
+  return;
+ }
+ const rows=r.data||[];
+ const ids=rows.map(x=>x.id);
+ const [motorCount,pumpCount,driveCount]=await Promise.all([
+  countTable('motorlar',ids),countTable('pompalar',ids),countTable('suruculer',ids)
+ ]);
+ const groups={};
+ rows.forEach(x=>{
+  const b=(x.bolge||'BÖLGE BELİRLENMEDİ').trim()||'BÖLGE BELİRLENMEDİ';
+  (groups[b] ||= []).push(x);
+ });
+ const groupNames=Object.keys(groups).sort((a,b)=>{
+  if(a==='BÖLGE BELİRLENMEDİ') return 1;
+  if(b==='BÖLGE BELİRLENMEDİ') return -1;
+  return a.localeCompare(b,'tr');
+ });
+
+ app.innerHTML=`
+ <div class="wrap">
+  <div class="top">
+   <div class="top-left">
+    <div class="logo">M</div>
+    <div>
+     <div class="page-title">${esc(prefs.labels.title)}</div>
+     <div class="page-sub">${esc(prefs.labels.subtitle)}</div>
+    </div>
+   </div>
+   <div class="top-right">
+    <span class="badge ${edit?'warn':''}">${edit?'Yönetici':'Ziyaretçi'}</span>
+    ${edit?`<button class="btn" onclick="showSettings()">⚙ AYARLAR</button>`:''}
+    <button class="btn ${edit?'warn':'primary'}" onclick="requestAdmin()">${edit?'🔒 KİLİTLE':'🔐 YÖNETİCİ'}</button>
+    <button class="btn" onclick="logout()">ÇIKIŞ</button>
+   </div>
+  </div>
+
+  ${edit?`<div style="margin-top:7px"><span class="admin-status">🔓 Yönetici modu açık · 30 dk hareketsizlikte kilitlenir</span></div>`:''}
+
+  <div class="card">
+   <div class="summary">
+    <div class="stat"><div class="stat-label">Kayıtlı Terfi</div><div class="stat-value">${rows.length}</div><div class="stat-unit">istasyon</div></div>
+    <div class="stat"><div class="stat-label">Motor</div><div class="stat-value">${motorCount}</div><div class="stat-unit">adet</div></div>
+    <div class="stat"><div class="stat-label">Pompa</div><div class="stat-value">${pumpCount}</div><div class="stat-unit">adet</div></div>
+    <div class="stat"><div class="stat-label">Sürücü</div><div class="stat-value">${driveCount}</div><div class="stat-unit">adet</div></div>
+   </div>
+  </div>
+
+  <div class="card">
+   <div class="top">
+    <div><h2>TERFİ KAYITLARI</h2><div class="section-sub">Terfiler bölgeye göre otomatik gruplanır. Yeni terfi eklenince seçtiğin bölgenin içine kendiliğinden yerleşir.</div></div>
+    ${edit?`<button class="btn ok" onclick="newStation()">+ YENİ TERFİ</button>`:''}
+   </div>
+
+   <div class="quick-actions" style="margin-top:10px">
+    <button class="btn primary" onclick="goGlobalLibrary('fault')">⚠️ ARIZA KÜTÜPHANESİ</button>
+    <button class="btn primary" onclick="goGlobalLibrary('parametre')">⚙️ ACS / ACQ PARAMETRELERİ</button>
+   </div>
+
+   <div style="margin-top:10px">
+    <input id="search" placeholder="Terfi, RTU, bölge, adres veya pompa ara..." oninput="filterStations()" style="width:100%;padding:12px;border-radius:10px;border:1px solid var(--line);background:#061a2d;color:#fff;outline:none;min-height:46px">
+   </div>
+
+   <div id="stations">
+    ${groupNames.map(b=>`
+     <section class="station-group" data-group="${esc(b)}">
+      <div class="group-title">📍 ${esc(b)} <span class="badge">${groups[b].length} TERFİ</span></div>
+      ${renderStationMarkup(groups[b])}
+     </section>
+    `).join('') || `<div class="empty">Henüz terfi kaydı yok.</div>`}
+   </div>
+  </div>
+ </div>`;
+}
+
+
+
+function filterStations(){
+ const q=(document.getElementById('search')?.value||'').toLowerCase().trim();
+ document.querySelectorAll('.station-group').forEach(group=>{
+  let visible=0;
+  group.querySelectorAll('.station').forEach(x=>{
+   const show=!q || (x.dataset.search||'').includes(q);
+   x.style.display=show?'block':'none';
+   if(show) visible++;
+  });
+  group.style.display=visible?'block':'none';
+ });
+}
+
+
+
+async function newStation(){
+ if(!edit){requestAdmin();return;}
+ touchAdminSession();
+
+ const name=prompt('Terfi adı:','Yeni Terfi');
+ if(!name) return;
+ const rtu=prompt('RTU / Terfi No:','RTU YOK')||'RTU YOK';
+ const region=prompt('Bölge (ör. MEZİTLİ, AKDENİZ, TOROSLAR):','BÖLGE BELİRLENMEDİ')||'BÖLGE BELİRLENMEDİ';
+ const type=prompt('Terfi tipi: Kuyu / Terfi / Pompa İstasyonu','Terfi')||'Terfi';
+ let depth=null;
+ if(type.toLowerCase().includes('kuyu')){
+  const raw=prompt('Kuyu derinliği [m]:','');
+  depth=raw===''?null:Number(raw);
+ }
+ const count=Math.max(1,Math.min(50,parseInt(prompt('Pompa sayısı:','2')||'2',10)||2));
+ const kod='T'+String(Date.now()).slice(-6);
+
+ const r=await db.from('terfiler').insert({
+  ad:name, kod, terfi_no:rtu, bolge:region, terfi_tipi:type,
+  kuyu_derinligi:Number.isFinite(depth)?depth:null, aciklama:''
+ }).select().single();
+ if(r.error){alert(r.error.message);return;}
+
+ const pumpRows=Array.from({length:count},(_,i)=>({
+  terfi_id:r.data.id, ad:`P${i+1}`, pompa_no:i+1
+ }));
+ const pr=await db.from('pompalar').insert(pumpRows);
+ if(pr.error){alert('Terfi oluşturuldu ancak P kayıtları eklenemedi.\n\n'+pr.error.message);}
+
+ saveTerfiDetail(r.data.id,stationDetailDefaults());
+ recordHistory('YENİ TERFİ OLUŞTURULDU',`${kod} · ${name}`);
+ await openStation(r.data.id);
+}
+
+
+
+function stationBody(){
+ const s=current.s, d=current.detail||getTerfiDetail(s.id), loc=current.location||getLocation(s.id);
+ const pumps=[...current.p].sort((a,b)=>(a.pompa_no||999)-(b.pompa_no||999));
+ return `
+ <div class="card">
+  <div class="section-title">TERFİ BİLGİLERİ</div>
+  <div class="grid3" style="margin-top:12px">
+   ${input('Terfi Adı','s_ad',s.ad)}
+   ${input('Terfi No / RTU','s_no',s.terfi_no||'')}
+   ${input('Kod','s_kod',s.kod||'')}
+   ${input('Bölge','s_bolge',s.bolge||'')}
+   ${input('Terfi Tipi','s_terfi_tipi',s.terfi_tipi||'Terfi')}
+   ${input('Kuyu Derinliği [m]','s_kuyu_derinligi',s.kuyu_derinligi??'','number')}
+   ${input('Adres','s_adres',s.adres||'')}
+  </div>
+  <div class="field" style="margin-top:10px"><label>Açıklama</label><textarea id="s_aciklama">${esc(s.aciklama||'')}</textarea></div>
+ </div>
+
+ <div class="card">
+  <div class="section-title">⚡ POMPA HIZLI ERİŞİM</div>
+  <div class="section-sub">Terfi içindeki her pompa bağımsızdır. P1'in motoru, pompası ve sürücüsü P1'e; P2'ninkiler P2'ye bağlıdır.</div>
+  <div class="pump-switch">
+   ${pumps.map((p,i)=>`<button class="btn ${selectedPumpId===p.id?'primary':''}" onclick="selectPump('${p.id}')">P${p.pompa_no||i+1}</button>`).join('')}
+   ${edit?`<button class="btn ok" onclick="addPump()">+ POMPA</button>`:''}
+  </div>
+  <div class="grid3">
+   ${pumps.map((p,i)=>{
+    const m=current.m.find(x=>x.id===p.motor_id);
+    const dr=current.d.find(x=>x.id===p.surucu_id);
+    return `<div class="pump-link-card">
+      <b>⚙ P${p.pompa_no||i+1}</b>
+      <div class="section-sub">Pompa: ${esc(p.ad||'—')}</div>
+      <div class="section-sub">Motor: ${esc(m?.ad||'Bağlı değil')}</div>
+      <div class="section-sub">Sürücü: ${esc(dr?.ad||'Bağlı değil')}</div>
+      <button class="btn primary" style="margin-top:8px" onclick="selectPump('${p.id}')">P1/P2 DETAYI</button>
+    </div>`;
+   }).join('')}
+  </div>
+ </div>
+
+ <div class="card">
+  <div class="section-title">POMPA / SİSTEM TİPİ</div>
+  <div class="grid3" style="margin-top:12px">
+   ${selectField('Pompa Fiziksel Tipi','s_pompa_tipi',d.pompa_tipi,['Dalgıç','Dik Milli','Yatay','Hidrofor','Diğer'])}
+   ${selectField('Sistem Çalışma Şekli','s_calisma_sekli',d.calisma_sekli,['Hidrofor','Depoya Basma','Şebekeye Basma','Terfi Hattı','Diğer'])}
+   ${input('Emiş / Kaynak','s_emis',d.emiş_kaynagi||'')}
+   ${input('Basma Noktası','s_basma',d.basma_noktasi||'')}
+  </div>
+  <div class="field" style="margin-top:10px"><label>Sistem Açıklaması</label><textarea id="s_sistem_aciklama">${esc(d.sistem_aciklama||'')}</textarea></div>
+ </div>
+
+ <div class="card">
+  <div class="section-title">⚡ HIZLI ERİŞİM</div>
+  <div class="quick-actions">
+   <button class="btn primary" onclick="setTab('calisma')">▶ ÇALIŞMA</button>
+   <button class="btn" onclick="setTab('hmi')">🖥 HMI / PLC</button>
+   <button class="btn" onclick="setTab('surucu')">⚙ SÜRÜCÜLER</button>
+   <button class="btn" onclick="setTab('motor')">🔵 MOTORLAR</button>
+   <button class="btn" onclick="setTab('pompa')">💧 POMPALAR</button>
+  </div>
+ </div>
+
+ <div class="card">
+  <div class="section-title">TERFİ ÖZETİ</div>
+  <div class="summary">
+   <div class="stat"><div class="stat-label">Pompa</div><div class="stat-value">${pumps.length}</div><div class="stat-unit">adet</div></div>
+   <div class="stat"><div class="stat-label">Motor</div><div class="stat-value">${current.m.length}</div><div class="stat-unit">adet</div></div>
+   <div class="stat"><div class="stat-label">Sürücü</div><div class="stat-value">${current.d.length}</div><div class="stat-unit">adet</div></div>
+   <div class="stat"><div class="stat-label">HMI</div><div class="stat-value">5</div><div class="stat-unit">sayfa</div></div>
+   <div class="stat"><div class="stat-label">Çalışma</div><div class="stat-value">${current.w.length}</div><div class="stat-unit">kayıt</div></div>
+  </div>
+ </div>`;
+}
+function selectPump(id){
+ selectedPumpId=id;
+ captureScrollPosition();
+ render();
+}
+
+
+
+function pumpBody(){
+ const pumps=[...current.p].sort((a,b)=>(a.pompa_no||999)-(b.pompa_no||999));
+ if(!pumps.length) return `<div class="empty">Bu terfide pompa yok.</div>`;
+ if(!selectedPumpId || !pumps.some(p=>p.id===selectedPumpId)) selectedPumpId=pumps[0].id;
+ const p=pumps.find(x=>x.id===selectedPumpId);
+ return `
+ <div class="card">
+  <div class="top"><div><h2>💧 POMPA / P1-P${pumps.length}</h2><div class="section-sub">Her pompanın motoru ve sürücüsü bağımsız bağlıdır.</div></div></div>
+  <div class="pump-switch">
+   ${pumps.map((x,i)=>`<button class="btn ${x.id===p.id?'primary':''}" onclick="selectPump('${x.id}')">P${x.pompa_no||i+1}</button>`).join('')}
+  </div>
+ </div>
+ <div class="card pump-detail-grid">
+  <div class="pump-link-card">
+   <h3>💧 P${p.pompa_no||1} POMPA</h3>
+   <div class="grid3">
+    ${input('Pompa Adı',`p_${p.id}_ad`,p.ad||`P${p.pompa_no||1}`)}
+    ${input('Marka',`p_${p.id}_marka`,p.marka||'')}
+    ${input('Model',`p_${p.id}_model`,p.model||'')}
+    ${input('Tip',`p_${p.id}_tip`,p.tip||'')}
+    ${input('Seri No',`p_${p.id}_seri`,p.seri_no||'')}
+    ${input('Güç [kW]',`p_${p.id}_kw`,p.guc_kw??'','number')}
+    ${input('Güç [HP]',`p_${p.id}_hp`,p.guc_hp??'','number')}
+    ${input('Q Min [m³/h]',`p_${p.id}_qmin`,p.q_min_m3h??'','number')}
+    ${input('Q Max [m³/h]',`p_${p.id}_qmax`,p.q_max_m3h??'','number')}
+    ${input('H Min [m]',`p_${p.id}_hmin`,p.h_min_m??'','number')}
+    ${input('H Max [m]',`p_${p.id}_hmax`,p.h_max_m??'','number')}
+    ${selectField('Bağlı Motor',`p_${p.id}_motor`,p.motor_id||'',current.m.map(m=>({value:m.id,label:m.ad||'Motor'})))}
+    ${selectField('Bağlı Sürücü',`p_${p.id}_surucu`,p.surucu_id||'',current.d.map(d=>({value:d.id,label:d.ad||'Sürücü'})))}
+   </div>
+   <div class="field" style="margin-top:10px"><label>Etiket Notu</label><textarea id="p_${p.id}_not">${esc(p.etiket_notu||'')}</textarea></div>
+  </div>
+  <div class="pump-link-card">
+   <h3>🔵 P${p.pompa_no||1} MOTORU</h3>
+   <div class="section-sub">Motor sekmesinden tüm etiket/teknik değerleri düzenleyebilirsin.</div>
+   <button class="btn" onclick="setTab('motor')">MOTORU AÇ</button>
+  </div>
+  <div class="pump-link-card">
+   <h3>⚙ P${p.pompa_no||1} SÜRÜCÜSÜ</h3>
+   <div class="section-sub">Sürücü ailesini seçtiğinde parametre ve arıza kütüphanesi otomatik filtrelenir.</div>
+   <button class="btn" onclick="setTab('surucu')">SÜRÜCÜYÜ AÇ</button>
+   <button class="btn primary" style="margin-left:6px" onclick="setTab('parametre')">PARAMETRELER</button>
+  </div>
+ </div>`;
+}
+
+
+
+function driverBody(){
+ return `
+ <div class="card">
+  <div class="top">
+   <div><h2>⚙ SÜRÜCÜLER</h2><div class="section-sub">Sürücü ailesi seçildiğinde ACS / ACQ parametreleri ve arızaları doğru kütüphaneden gelir.</div></div>
+   ${edit?`<button class="btn ok" onclick="addDriver()">+ SÜRÜCÜ EKLE</button>`:''}
+  </div>
+ </div>
+ ${current.d.length?current.d.map((d,i)=>driverCardV2(d,i)).join(''):`<div class="empty">Bu terfide sürücü kaydı yok.</div>`}`;
+}
+function driverCardV2(d,i){
+ const pump=current.p.find(p=>p.surucu_id===d.id);
+ return `<div class="driver-card">
+  <div class="driver-header">
+   <div><h3>${i+1}. SÜRÜCÜ · ${esc(d.ad||`${i+1}. Sürücü`)}</h3><span class="badge">${esc(d.marka||'Marka')} ${d.model?'· '+esc(d.model):''}</span></div>
+   ${edit?`<button class="btn bad" onclick="deleteDriver('${d.id}')">🗑 Sürücüyü Sil</button>`:''}
+  </div>
+  <div class="grid3">
+   ${input('Sürücü Adı',`d_${d.id}_ad`,d.ad||`${i+1}. Sürücü`)}
+   ${input('Marka',`d_${d.id}_marka`,d.marka||'ABB')}
+   ${input('Model',`d_${d.id}_model`,d.model||'')}
+   ${selectField('Sürücü Ailesi',`d_${d.id}_family`,d.surucu_ailesi||'',[
+    {value:'ABB ACS580',label:'ABB ACS580'},
+    {value:'ABB ACQ580',label:'ABB ACQ580'},
+    {value:'ABB ACS550',label:'ABB ACS550'},
+    {value:'Diğer',label:'Diğer'}
+   ])}
+   ${input('Seri No',`d_${d.id}_seri`,d.seri_no||'')}
+   ${input('Güç [kW]',`d_${d.id}_kw`,d.guc_kw??'','number')}
+   ${input('Besleme [V]',`d_${d.id}_v`,d.besleme_v??'','number')}
+   ${selectField('Bağlı Motor',`d_${d.id}_motor`,d.motor_id||'',current.m.map(m=>({value:m.id,label:m.ad||'Motor'})))}
+  </div>
+  <div class="kpi" style="margin-top:8px">
+   <span>Pompa: ${esc(pump?.ad||'Bağlı değil')}</span>
+   <span>Aile: ${esc(d.surucu_ailesi||'Seçilmedi')}</span>
+  </div>
+  <div class="field" style="margin-top:10px"><label>Notlar</label><textarea id="d_${d.id}_not">${esc(d.notlar||'')}</textarea></div>
+ </div>`;
+}
+
+
+
+function parameterBody(){
+ const drivers=current.d||[];
+ const selected=(window._paramDriverId && drivers.some(d=>d.id===window._paramDriverId))
+   ? window._paramDriverId : (drivers[0]?.id||'');
+ const d=drivers.find(x=>x.id===selected);
+ const family=d?.surucu_ailesi||'';
+ const list=family ? params().filter(p=>p.driver===family) : params().filter(p=>p.driver==='ABB ACQ580'||p.driver==='ABB ACS580');
+ return `
+ <div class="card">
+  <div class="top"><div><h2>⚙️ SÜRÜCÜ PARAMETRELERİ</h2><div class="section-sub">Önce P1/P2 içindeki sürücüyü seç. Sonra yalnız o sürücü ailesine ait parametreler görünür.</div></div></div>
+  <div class="grid3" style="margin-top:10px">
+   ${selectField('Sürücü', 'param_driver_select', selected, drivers.map(x=>({value:x.id,label:x.ad||'Sürücü'})), "onchange=\"window._paramDriverId=this.value; render();\"")}
+   ${input('Aile', 'param_family', family||'—')}
+   ${input('Pompa', 'param_pump', current.p.find(p=>p.surucu_id===selected)?.ad||'—')}
+  </div>
+ </div>
+ <div class="card">
+  <div class="top"><div><h2>${esc(family||'ACS580 / ACQ580')} PARAMETRE KÜTÜPHANESİ</h2></div>${edit?`<button class="btn ok" onclick="newParam()">+ PARAMETRE EKLE</button>`:''}</div>
+  <input id="paramSearch" placeholder="Kod, ad veya açıklama ara..." oninput="filterParams()" style="width:100%;margin-top:10px;padding:12px;border-radius:10px;border:1px solid var(--line);background:#061a2d;color:#fff;outline:none;min-height:46px">
+ </div>
+ <div id="paramGrid" class="library-grid">
+  ${list.map(p=>`<div class="library-card" data-param="${esc((p.code+' '+p.name+' '+p.desc).toLowerCase())}" onclick="openParamDetail('${esc(p.code)}')">
+   <div class="library-code">${esc(p.code)}</div>
+   <div class="library-name">${esc(p.name)}</div>
+   <div class="library-desc">${esc(p.desc)}</div>
+   <div class="library-source">${esc(p.source)} · ${esc(p.unit)}</div>
+  </div>`).join('')||`<div class="empty">Bu sürücü ailesi için kütüphane kaydı yok.</div>`}
+ </div>
+ <div class="card"><h2>TERFİYE ÖZEL PARAMETRELER</h2><div class="section-sub">Buradaki kayıtlar yalnızca bu terfinin sahada tuttuğu özel değerlerdir; genel kütüphane değildir.</div>
+ ${current.tp.map(x=>`<div class="workbox"><b>${esc(x.ekran_adi||'')} · ${esc(x.parametre_adi||'')}</b><div>Değer: <strong>${esc(x.deger||'—')}</strong> ${esc(x.birim||'')}</div></div>`).join('')||`<div class="empty">Terfiye özel parametre yok.</div>`}</div>`;
+}
+
+
+
+function faultBody(){
+ const drivers=current.d||[];
+ const selected=(window._faultDriverId && drivers.some(d=>d.id===window._faultDriverId))
+  ? window._faultDriverId : (drivers[0]?.id||'');
+ const d=drivers.find(x=>x.id===selected);
+ const family=d?.surucu_ailesi||'';
+ const list=family ? faults().filter(f=>f.driver===family) : faults();
+ return `
+ <div class="card">
+  <div class="top"><div><h2>⚠️ SÜRÜCÜ ARIZA KÜTÜPHANESİ</h2><div class="section-sub">P1/P2 içindeki sürücüyü seç; yalnız o sürücü ailesinin arıza kütüphanesi gösterilsin.</div></div>${edit?`<button class="btn ok" onclick="newFault()">+ ARIZA KODU EKLE</button>`:''}</div>
+  <div class="grid3" style="margin-top:10px">
+   ${selectField('Sürücü','fault_driver_select',selected,drivers.map(x=>({value:x.id,label:x.ad||'Sürücü'})), "onchange=\"window._faultDriverId=this.value; render();\"")}
+   ${input('Aile','fault_family',family||'—')}
+   ${input('Pompa','fault_pump',current.p.find(p=>p.surucu_id===selected)?.ad||'—')}
+  </div>
+  <input id="faultSearch" placeholder="Arıza kodu veya başlık ara..." oninput="filterFaults()" style="width:100%;margin-top:10px;padding:12px;border-radius:10px;border:1px solid var(--line);background:#061a2d;color:#fff;outline:none;min-height:46px">
+ </div>
+ <div id="faultGrid" class="library-grid">
+  ${list.map(f=>`<div class="library-card" data-fault="${esc((f.code+' '+f.name+' '+f.cause+' '+f.solution).toLowerCase())}" onclick="faultDetail('${esc(f.code)}')">
+   <div class="library-code">${esc(f.code)}</div><div class="library-name">${esc(f.name)}</div><div class="library-desc">${esc(f.cause)}</div><div class="library-driver">${esc(f.driver||'')}</div>
+  </div>`).join('')||`<div class="empty">Bu sürücü ailesi için arıza kütüphanesi yok.</div>`}
+ </div>
+ <div class="card"><h2>GERÇEK SAHA ARIZASI KAYITLARI</h2><div class="section-sub">Gerçek arızaları sürücüye bağlı olarak kaydet.</div></div>`;
+}
+
+
+
+function setTab(x){
+ if(edit) touchAdminSession();
+ const y=window.scrollY||window.pageYOffset||0;
+ captureScrollPosition();
+ tab=x;
+ render();
+ requestAnimationFrame(()=>requestAnimationFrame(()=>window.scrollTo({top:y,left:0,behavior:'auto'})));
+}
+
+
+
+async function saveActive(){
+ if(!current){toast('Önce bir terfi açın.');return;}
+ if(!edit){requestAdmin();return;}
+
+ const tabBefore=tab;
+ let pumpLinks=[];
+ let driverFamilies=[];
+ if(tabBefore==='pompa'){
+  pumpLinks=current.p.map(p=>({
+   id:p.id,
+   motor_id:val(`p_${p.id}_motor`)||null,
+   surucu_id:val(`p_${p.id}_surucu`)||null,
+   pompa_no:p.pompa_no||null
+  }));
+ }
+ if(tabBefore==='surucu'){
+  driverFamilies=current.d.map(d=>({
+   id:d.id,
+   surucu_ailesi:val(`d_${d.id}_family`)||null
+  }));
+ }
+
+ await saveActiveBase();
+
+ if(tabBefore==='terfi'){
+  const payload={
+   ad:val('s_ad'),terfi_no:val('s_no'),kod:val('s_kod'),bolge:val('s_bolge'),
+   adres:val('s_adres'),aciklama:val('s_aciklama'),
+   terfi_tipi:val('s_terfi_tipi')||'Terfi',
+   kuyu_derinligi:num(val('s_kuyu_derinligi'))
+  };
+  const r=await db.from('terfiler').update(payload).eq('id',current.s.id);
+  if(r.error) alert(r.error.message);
+  else current.s={...current.s,...payload};
+ }
+ if(tabBefore==='pompa' && pumpLinks.length){
+  const r=await Promise.all(pumpLinks.map(x=>db.from('pompalar').update({
+   motor_id:x.motor_id,surucu_id:x.surucu_id,pompa_no:x.pompa_no
+  }).eq('id',x.id)));
+  const bad=r.find(x=>x.error);
+  if(bad) alert(bad.error.message);
+ }
+ if(tabBefore==='surucu' && driverFamilies.length){
+  const r=await Promise.all(driverFamilies.map(x=>db.from('suruculer').update({surucu_ailesi:x.surucu_ailesi}).eq('id',x.id)));
+  const bad=r.find(x=>x.error);
+  if(bad) alert(bad.error.message);
+ }
+ await openStation(current.s.id);
+ if(tabBefore==='pompa' && pumpLinks[0]) selectedPumpId=pumpLinks.find(x=>x.id===selectedPumpId)?.id||selectedPumpId;
+}
+
+
+
+function motorBody(){
+ const pumps=[...current.p].sort((a,b)=>(a.pompa_no||999)-(b.pompa_no||999));
+ const selected=pumps.find(p=>p.id===selectedPumpId)||pumps[0];
+ const linked=selected?.motor_id ? current.m.filter(m=>m.id===selected.motor_id) : [];
+ const list=linked.length?linked:current.m;
+ return `
+ <div class="card">
+  <div class="top"><div><h2>🔵 MOTORLAR</h2><div class="section-sub">${selected?`P${selected.pompa_no||1} seçili · yalnız bağlı motoru hızlıca açabilirsin.`:'Terfideki motor kayıtları'}</div></div>${edit?`<button class="btn ok" onclick="addMotor()">+ MOTOR EKLE</button>`:''}</div>
+  <div class="pump-switch">${pumps.map((p,i)=>`<button class="btn ${p.id===selected?.id?'primary':''}" onclick="selectPump('${p.id}')">P${p.pompa_no||i+1}</button>`).join('')}</div>
+ </div>
+ ${list.length?list.map((m)=>motorCard(m,current.m.indexOf(m))).join(''):`<div class="empty">Seçili pompaya bağlı motor yok. Önce POMPA ekranından motoru bağla.</div>`}`;
+}
+
+
+
+function hmiBody(){
+ const rec=current.h.find(x=>x.ekran_no===hmiPage);
+ const values=rec?.degerler||{};
+ const page=HMI[hmiPage-1];
+ const cols=page.columns||[];
+ const field=(i)=>`<div class="hmi-real-field"><span>${esc(page.labels[i])}</span><input id="hmi_${hmiPage}_${i}" value="${esc(values[i]??'')}" ${!edit?'readonly':''}></div>`;
+ let graphic='';
+ if(hmiPage===5){
+  graphic=`<div class="hmi-graphic"><div style="text-align:center"><b>BASINÇ AYARI</b><div style="font-size:42px">💧</div><div>AI1 → AI2 → INV AO1</div></div></div>`;
+ }else if(hmiPage===4){
+  graphic=`<div class="hmi-graphic"><svg viewBox="0 0 300 150"><path d="M20 110 C80 70,110 70,150 95 S230 70,280 40" fill="none" stroke="#1680e8" stroke-width="8"/><circle cx="35" cy="108" r="12" fill="#7bc96f"/><circle cx="265" cy="48" r="12" fill="#7bc96f"/><text x="115" y="135" font-size="15">Pompa yönetimi / uyku</text></svg></div>`;
+ }else if(hmiPage===3){
+  graphic=`<div class="hmi-graphic"><div style="text-align:center"><b>MOTOR TEKNİK</b><div style="font-size:40px">⚙️</div><div>V · A · kW · Hz · RPM</div></div></div>`;
+ }else if(hmiPage===2){
+  graphic=`<div class="hmi-graphic"><div style="text-align:center"><b>BASINÇ KORUMA</b><div style="font-size:38px">🔴 🟢</div><div>ALÇAK / YÜKSEK BASINÇ</div></div></div>`;
+ }else{
+  graphic=`<div class="hmi-graphic"><div style="text-align:center"><b>MOTOR TERMİK / HATA</b><div style="font-size:38px">⚠️</div><div>AI1 / AI2 · RESET · SENSÖR</div></div></div>`;
+ }
+ return `
+ <div class="card">
+  <div class="top"><div><h2>🖥 WEINTEK HMI / PLC</h2><div class="section-sub">5 saha ekranı; alan isimleri ve kolon yerleşimi fotoğraflardaki sıraya göre tutulur.</div></div></div>
+  <div class="hmi-tabs" style="margin-top:12px">${HMI.map((x,i)=>`<button class="hmi-tab ${hmiPage===i+1?'active':''}" onclick="setHmiPage(${i+1})">${i+1} · ${esc(x.title)}</button>`).join('')}</div>
+ </div>
+ <div class="card">
+  <div class="hmi-real">
+   <div class="hmi-real-head"><span>WEINTEK · ${esc(page.title)}</span><span>EKRAN ${hmiPage}/5</span></div>
+   <div class="hmi-real-body">
+    ${cols.map((col,ci)=>`<div class="hmi-real-col">${col.indexes.map(i=>field(i)).join('')}${ci===1?graphic:''}</div>`).join('')}
+   </div>
+   <div class="hmi-real-buttons">
+    <button class="hmi-real-btn menu">Menu</button><button class="hmi-real-btn home">Anasayfa</button><button class="hmi-real-btn arrow">◀</button><button class="hmi-real-btn arrow">▶</button><button class="hmi-real-btn save">Kaydet</button>
+   </div>
+  </div>
+ </div>`;
+}
+
+
+
+/* =========================================================
+   V2 HELPER OVERRIDES
+========================================================= */
+function selectField(label,id,value,options,extra=''){
+ const normalized=(options||[]).map(x=>typeof x==='string'?{value:x,label:x}:x);
+ return `<div class="field"><label>${esc(label)}</label><select id="${id}" ${!edit?'disabled':''} ${extra||''}>
+  <option value="">Seçilmedi</option>
+  ${normalized.map(x=>`<option value="${esc(x.value??'')}" ${String(value??'')===String(x.value??'')?'selected':''}>${esc(x.label??x.value??'')}</option>`).join('')}
+ </select></div>`;
+}
+
+async function saveActive(){
+ if(!current){toast('Önce bir terfi açın.');return;}
+ if(!edit){requestAdmin();return;}
+ const tabBefore=tab;
+ let pumpLinks=[], driverFamilies=[], terfiPayload=null;
+ if(tabBefore==='pompa'){
+  pumpLinks=current.p.map(p=>({id:p.id,motor_id:val(`p_${p.id}_motor`)||null,surucu_id:val(`p_${p.id}_surucu`)||null,pompa_no:p.pompa_no||null}));
+ }
+ if(tabBefore==='surucu'){
+  driverFamilies=current.d.map(d=>({id:d.id,surucu_ailesi:val(`d_${d.id}_family`)||null}));
+ }
+ if(tabBefore==='terfi'){
+  terfiPayload={
+   ad:val('s_ad'),terfi_no:val('s_no'),kod:val('s_kod'),bolge:val('s_bolge'),adres:val('s_adres'),aciklama:val('s_aciklama'),
+   terfi_tipi:val('s_terfi_tipi')||val('s_terfi_tipi')||'Terfi',
+   kuyu_derinligi:num(val('s_kuyu_derinligi'))
+  };
+ }
+ await saveActiveBase();
+ if(tabBefore==='terfi' && terfiPayload){
+  const r=await db.from('terfiler').update(terfiPayload).eq('id',current.s.id);
+  if(r.error){alert(r.error.message);return;}
+ }
+ if(tabBefore==='pompa' && pumpLinks.length){
+  const rr=await Promise.all(pumpLinks.map(x=>db.from('pompalar').update({motor_id:x.motor_id,surucu_id:x.surucu_id,pompa_no:x.pompa_no}).eq('id',x.id)));
+  const bad=rr.find(x=>x.error); if(bad){alert(bad.error.message);return;}
+ }
+ if(tabBefore==='surucu' && driverFamilies.length){
+  const rr=await Promise.all(driverFamilies.map(x=>db.from('suruculer').update({surucu_ailesi:x.surucu_ailesi}).eq('id',x.id)));
+  const bad=rr.find(x=>x.error); if(bad){alert(bad.error.message);return;}
+ }
+ await openStation(current.s.id);
+ if(tabBefore==='pompa' && pumpLinks.length){ selectedPumpId=pumpLinks.find(x=>x.id===selectedPumpId)?.id||pumpLinks[0].id; tab='pompa'; render(); }
+ if(tabBefore==='surucu'){ tab='surucu'; render(); }
+ if(tabBefore==='terfi'){ tab='terfi'; render(); }
+}
