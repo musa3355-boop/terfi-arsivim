@@ -1721,6 +1721,7 @@ let tab='terfi';
 let hmiPage=1;  
 let workMotor=null;  
 let selectedMotorId=null;  
+let selectedPumpId=null;
 let adminTimer=null;  
   
   
@@ -4205,34 +4206,54 @@ function setHmiPage(page){
   
 async function openStation(id){
  const sameStation=!!(current?.s?.id && current.s.id===id);
- const wantedTab=sameStation?tab:'terfi', wantedHmiPage=sameStation?hmiPage:1;
- const wantedWorkMotor=sameStation?workMotor:null, wantedSelectedMotorId=sameStation?selectedMotorId:null;
- const [s,m,p,d]=await Promise.all([
-  db.from('terfiler').select('*').eq('id',id).single(),
-  db.from('motorlar').select('*').eq('terfi_id',id).order('created_at',{ascending:true}),
-  db.from('pompalar').select('*').eq('terfi_id',id).order('pompa_no',{ascending:true}),
-  db.from('suruculer').select('*').eq('terfi_id',id).order('created_at',{ascending:true})
- ]);
- if(s.error){alert(s.error.message);return;}
- current={s:s.data,m:m.data||[],p:p.data||[],d:d.data||[],h:[],w:[],tp:[],detail:getTerfiDetail(id),location:getLocation(id),ssr:{level:'',low:'',high:'',note:''}};
+ const wantedTab=sameStation?tab:'terfi';
+ const wantedHmiPage=sameStation?hmiPage:1;
+ const wantedWorkMotor=sameStation?workMotor:null;
+ const wantedSelectedMotorId=sameStation?selectedMotorId:null;
+ const previousPumpId=sameStation?selectedPumpId:null;
+ let results;
+ try{
+  results=await Promise.all([
+   db.from('terfiler').select('*').eq('id',id).single(),
+   db.from('motorlar').select('*').eq('terfi_id',id).order('created_at',{ascending:true}),
+   db.from('pompalar').select('*').eq('terfi_id',id).order('pompa_no',{ascending:true}),
+   db.from('suruculer').select('*').eq('terfi_id',id).order('created_at',{ascending:true})
+  ]);
+ }catch(e){ alert('Terfi açılırken bağlantı hatası: '+(e?.message||e)); return; }
+ const [s,m,p,d]=results;
+ const firstError=[s,m,p,d].find(x=>x?.error);
+ if(firstError?.error){ alert('Terfi verisi yüklenemedi: '+firstError.error.message); return; }
+ if(!s?.data){ alert('Terfi kaydı bulunamadı.'); return; }
+ current={s:s.data,m:m?.data||[],p:(p?.data||[]).sort((a,b)=>(Number(a.pompa_no)||9999)-(Number(b.pompa_no)||9999)),d:d?.data||[],h:[],w:[],tp:[],detail:getTerfiDetail(id),location:getLocation(id),ssr:{level:'',low:'',high:'',note:''}};
  const ssrMap=localJSON(LOCAL_SSR_KEY,{}); current.ssr=ssrMap[id]||current.ssr;
  tab=wantedTab; hmiPage=wantedHmiPage; workMotor=wantedWorkMotor||current.m[0]?.id||null; selectedMotorId=wantedSelectedMotorId||current.m[0]?.id||null;
- const wantedPump=sameStation?current.p.find(p=>p.id===selectedPumpId):null;
- selectedPumpId=wantedPump?.id||current.p.find(x=>x.id===selectedPumpId)?.id||current.p[0]?.id||null;
- if(selectedPumpId){ const sp=current.p.find(p=>p.id===selectedPumpId); if(sp?.motor_id) selectedMotorId=sp.motor_id; if(sp?.motor_id) workMotor=sp.motor_id; }
+ const wantedPump=current.p.find(x=>x.id===previousPumpId);
+ selectedPumpId=wantedPump?.id||current.p[0]?.id||null;
+ if(selectedPumpId){ const sp=current.p.find(x=>x.id===selectedPumpId); if(sp?.motor_id){selectedMotorId=sp.motor_id;workMotor=sp.motor_id;} }
  if(edit)touchAdminSession();
  recordHistory('TERFİ AÇILDI',`${current.s.ad||''} (${current.s.kod||current.s.terfi_no||''})`);
  render(); restoreScrollPosition();
- const extras=await Promise.all([
-  db.from('hmi_kayitlari').select('*').eq('terfi_id',id).order('ekran_no',{ascending:true}),
-  db.from('motor_calisma_kayitlari').select('*').eq('terfi_id',id).order('captured_at',{ascending:false}),
-  db.from('terfi_parametreleri').select('*').eq('terfi_id',id).order('sira',{ascending:true})
- ]);
- if(current?.s?.id!==id)return;
- current.h=extras[0].data||[]; current.w=extras[1].data||[]; current.tp=extras[2].data||[];
- if(tab==='hmi'||tab==='calisma'||tab==='parametre')render();
+ // İlk açılışta pahalı HMI/çalışma/parametre sorgularını bekletme; seçili sekme gerekiyorsa getir.
+ if(['hmi','calisma','parametre'].includes(tab)){
+  await loadStationExtra(tab,id);
+ }
 }
 
+async function loadStationExtra(which,id=current?.s?.id){
+ if(!id || current?.s?.id!==id) return;
+ try{
+  let r;
+  if(which==='hmi') r=await db.from('hmi_kayitlari').select('*').eq('terfi_id',id).order('ekran_no',{ascending:true});
+  else if(which==='calisma') r=await db.from('motor_calisma_kayitlari').select('*').eq('terfi_id',id).order('captured_at',{ascending:false});
+  else if(which==='parametre') r=await db.from('terfi_parametreleri').select('*').eq('terfi_id',id).order('sira',{ascending:true});
+  else return;
+  if(r.error) throw r.error;
+  if(which==='hmi') current.h=r.data||[];
+  else if(which==='calisma') current.w=r.data||[];
+  else current.tp=r.data||[];
+ }catch(e){ toast(`${which.toUpperCase()} verisi yüklenemedi: ${e?.message||e}`); }
+ if(current?.s?.id===id) render();
+}
 /* =========================================================  
    RENDER  
 ========================================================= */  
@@ -4288,14 +4309,8 @@ function render(){
   
  captureScrollPosition();
 
- document  
-  .getElementById(  
-   'saveBar'  
-  )  
-  .classList.toggle(  
-   'hidden',  
-   !edit  
-  );  
+ const saveBar=document.getElementById('saveBar');
+ if(saveBar) saveBar.classList.toggle('hidden',!edit);  
   
  app.innerHTML=`  
   
