@@ -14099,228 +14099,91 @@ body{background:radial-gradient(circle at 85% -10%,rgba(37,174,242,.18),transpar
 `;
 if(!document.getElementById('v5css')){const st=document.createElement('style');st.id='v5css';st.textContent=v5Css;document.head.appendChild(st)}
 
-const v6PrintCss=`
+const v7PrintCss=`
 @media print{
- @page{size:A4 landscape;margin:4mm}
+ @page{size:A3 landscape;margin:5mm}
+ html,body{margin:0!important;padding:0!important;background:#fff!important}
  #app,.bottom-save,.toast{display:none!important}
- #printArea{display:block!important}
- .v6p-page{width:100%;height:190mm;box-sizing:border-box;color:#111;background:#fff;font-family:Arial,sans-serif;font-size:6.2pt;overflow:hidden}
- .v6p-head{display:flex;justify-content:space-between;border-bottom:1px solid #173a52;padding-bottom:2mm;margin-bottom:2mm}.v6p-head h1{font-size:12pt;margin:0 0 1mm}.v6p-sub{font-size:7.5pt;font-weight:700}.v6p-right{text-align:right;font-size:6pt;max-width:42%;line-height:1.4}
- .v6p-info{display:grid;grid-template-columns:repeat(4,1fr);gap:1mm;margin-bottom:2mm}.v6p-cell{border:1px solid #b8c6cf;border-radius:1.2mm;padding:1.2mm;min-height:7mm;box-sizing:border-box}.v6p-cell b{display:block;font-size:5.4pt;color:#365466;text-transform:uppercase}.v6p-cell span{display:block;font-size:6.4pt;margin-top:.5mm;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
- .v6p-section{border:1px solid #aebdc6;border-radius:1.5mm;padding:1.5mm;margin-bottom:1.7mm;break-inside:avoid}.v6p-section h2{font-size:7.2pt;margin:0 0 1.2mm;border-bottom:1px solid #d3dce1;padding-bottom:.8mm}
- .v6p-section table{width:100%;border-collapse:collapse;table-layout:fixed}.v6p-section th,.v6p-section td{border:1px solid #c5d0d7;padding:.9mm .7mm;vertical-align:middle;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.v6p-section th{font-size:5.4pt;background:#e9eff2}.v6p-section td{font-size:5.9pt}.v6p-section .num{font-weight:900;text-align:center;width:5mm}
- .v6p-two{display:grid;grid-template-columns:34% 66%;gap:1.7mm}.v6p-mini{display:grid;grid-template-columns:repeat(2,1fr);gap:1mm}.v6p-mini .v6p-cell{min-height:7mm}.v6p-hmi{display:flex;gap:2mm;margin:.5mm 0;font-size:5.5pt;line-height:1.3}.v6p-hmi b{min-width:34mm}.v6p-hmi span{flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.v6p-foot{border-top:1px solid #9aaeb9;padding-top:1.2mm;font-size:5.5pt;text-align:center;margin-top:1mm}
+ #printArea{display:block!important;width:100%!important}
+ .v7-page{width:100%;height:287mm;box-sizing:border-box;color:#111;background:#fff;font-family:Arial,sans-serif;font-size:5pt;overflow:hidden;display:flex;flex-direction:column}
+ .v7-head{display:flex;justify-content:space-between;border-bottom:1px solid #173a52;padding-bottom:1.5mm;margin-bottom:1.5mm;flex:0 0 auto}.v7-head h1{font-size:15pt;margin:0 0 .8mm}.v7-sub{font-size:7.5pt;font-weight:700}.v7-right{text-align:right;font-size:5.5pt;line-height:1.3;max-width:38%}
+ .v7-info{display:grid;grid-template-columns:repeat(6,1fr);gap:.8mm;margin-bottom:1.2mm;flex:0 0 auto}.v7-cell{border:1px solid #aebdc6;padding:.8mm;box-sizing:border-box;min-height:5.5mm;overflow:hidden}.v7-cell b{display:block;font-size:4.2pt;color:#365466;text-transform:uppercase}.v7-cell span{display:block;font-size:5.2pt;margin-top:.25mm;line-height:1.15;overflow:hidden;word-break:break-word}
+ .v7-section{border:1px solid #aebdc6;padding:1mm;margin-bottom:1mm;box-sizing:border-box;overflow:hidden}.v7-section h2{font-size:6.2pt;margin:0 0 .7mm;border-bottom:1px solid #c8d2d8;padding-bottom:.5mm}
+ .v7-pump-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:.8mm}.v7-pump{border:1px solid #9fb1bc;padding:.8mm;box-sizing:border-box;overflow:hidden}.v7-pump h3{font-size:6pt;margin:0 0 .5mm}.v7-pump .tag{font-size:4pt;font-weight:700}.v7-line{display:grid;grid-template-columns:1fr 1fr;gap:.25mm .8mm;line-height:1.15}.v7-line div{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.v7-label{font-weight:700;color:#425b68}.v7-block-title{font-weight:800;font-size:4.4pt;margin-top:.5mm;border-top:1px solid #d8e0e4;padding-top:.35mm}
+ .v7-lower{display:grid;grid-template-columns:24% 38% 38%;gap:1mm;min-height:0;flex:1}.v7-lower .v7-section{height:100%;margin-bottom:0}.v7-table{width:100%;border-collapse:collapse;table-layout:fixed}.v7-table th,.v7-table td{border:1px solid #c4d0d6;padding:.45mm;vertical-align:top;line-height:1.15;overflow:hidden;word-break:break-word}.v7-table th{font-size:4.2pt;background:#e9eff2}.v7-table td{font-size:4.5pt}.v7-hmi-row{display:grid;grid-template-columns:28mm 1fr;gap:1mm;margin:.45mm 0;line-height:1.15}.v7-hmi-row b{font-size:4.5pt}.v7-hmi-row span{font-size:4.3pt;word-break:break-word}.v7-foot{border-top:1px solid #9aaeb9;padding-top:.8mm;font-size:4.5pt;text-align:center;margin-top:.8mm;flex:0 0 auto}
 }
 `;
-if(!document.getElementById('v6printcss')){const st=document.createElement('style');st.id='v6printcss';st.textContent=v6PrintCss;document.head.appendChild(st)}
+if(!document.getElementById('v7printcss')){const st=document.createElement('style');st.id='v7printcss';st.textContent=v7PrintCss;document.head.appendChild(st)}
 
-
-function v5Esc(x){return typeof esc==='function'?esc(x??''):String(x??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
-function v5PumpNo(p,i){return Number(p?.pompa_no)||i+1}
-function v5Pumps(){return [...(current?.p||[])].sort((a,b)=>v5PumpNo(a,0)-v5PumpNo(b,0))}
-function v5SelectedPump(){const ps=v5Pumps();let p=ps.find(x=>x.id===selectedPumpId)||ps[0];if(p)selectedPumpId=p.id;return p}
-function v5RefFor(s){return typeof getTerfiReference==='function'?getTerfiReference(s):null}
-function v5Match(ref,rows){
- if(!ref)return null;
- const r=ref.rtu!=null?String(ref.rtu):'';
- return rows.find(x=>r&&String(x.terfi_no||'').replace(/\D/g,'')===r) || rows.find(x=>String(x.ad||'').trim().toLocaleLowerCase('tr-TR')===String(ref.ad||'').trim().toLocaleLowerCase('tr-TR')) || null;
+function v7Esc(x){return typeof esc==='function'?esc(x??''):String(x??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+function v7Val(x){return x===null||x===undefined||String(x)===''?'—':String(x)}
+function v7Cell(label,value){return `<div class="v7-cell"><b>${v7Esc(label)}</b><span>${v7Esc(v7Val(value))}</span></div>`}
+function v7PumpSSR(){
+ const map=localJSON(LOCAL_SSR_KEY,{}); const raw=map?.[current?.s?.id];
+ return raw&&typeof raw==='object'?raw:(current?.ssr||{});
 }
-function v5Districts(rows){
- const vals=new Set(['TÜMÜ']);
- rows.forEach(x=>{if(x.bolge)vals.add(String(x.bolge).trim().toUpperCase())});
- TERFI_DATA.forEach(x=>{if(x.bolge)vals.add(String(x.bolge).trim().toUpperCase())});
- return [...vals].sort((a,b)=>a==='TÜMÜ'?-1:b==='TÜMÜ'?1:a.localeCompare(b,'tr'));
+function v7MotorText(m){
+ if(!m)return 'YOK';
+ const type=m.motor_tipi||motorTypeFromNote?.(m.etiket_notu)||'';
+ return `${m.ad||'Motor'}${m.marka||m.model?' · '+[m.marka,m.model].filter(Boolean).join(' '):''}${type?' · '+type:''}`;
 }
-function v5SetDistrict(x){v5District=x;localStorage.setItem(V5_DISTRICT_KEY,x);home()}
-function v5PumpTabs(){
- const ps=v5Pumps(); if(!ps.length)return '';
- return `<div class="v5-pumpbar"><div class="v5-pump-title">POMPA BLOKLARI · ${ps.length} ADET</div><div class="v5-pumps">${ps.map((p,i)=>{const n=v5PumpNo(p,i),active=p.id===selectedPumpId;const color=((n-1)%6)+1;const motor=p.motor_id?current.m.find(m=>m.id===p.motor_id):null;const drv=p.surucu_id?current.d.find(d=>d.id===p.surucu_id):null;return `<button type="button" class="v5-pump c${color} ${active?'active':''}" onclick="v5OpenPump('${p.id}')"><b>P${n}</b><small>${v5Esc(p.ad&&p.ad!==`P${n}`?p.ad:`Pompa ${n}`)}</small><small>${motor?'⚙':'○'} Motor · ${drv?'▣':'○'} Sürücü</small></button>`}).join('')}</div></div>`;
+function v7DriveText(d){return d?`${d.ad||''} ${[d.marka,d.model].filter(Boolean).join(' ')}${d.seri_no?' · SN:'+d.seri_no:''}`.trim():'YOK'}
+function v7PumpCard(p,i){
+ const n=Number(p?.pompa_no)||i+1; const m=p?.motor_id?current.m.find(x=>x.id===p.motor_id):null; const d=p?.surucu_id?current.d.find(x=>x.id===p.surucu_id):null;
+ return `<div class="v7-pump"><h3>P${n} <span class="tag">${v7Esc(p.ad||'Pompa')}</span></h3>
+ <div class="v7-block-title">POMPA</div><div class="v7-line"><div><span class="v7-label">Marka:</span> ${v7Esc(p.marka||'—')}</div><div><span class="v7-label">Model:</span> ${v7Esc(p.model||'—')}</div><div><span class="v7-label">Tip:</span> ${v7Esc(p.tip||'—')}</div><div><span class="v7-label">Seri:</span> ${v7Esc(p.seri_no||'—')}</div><div><span class="v7-label">Güç:</span> ${v7Esc(p.guc_kw??'—')} kW / ${v7Esc(p.guc_hp??'—')} HP</div><div><span class="v7-label">Q:</span> ${v7Esc(p.q_min_m3h??'—')}–${v7Esc(p.q_max_m3h??'—')} m³/h</div><div><span class="v7-label">H:</span> ${v7Esc(p.h_min_m??'—')}–${v7Esc(p.h_max_m??'—')} m</div><div><span class="v7-label">Not:</span> ${v7Esc(p.etiket_notu||'—')}</div></div>
+ <div class="v7-block-title">MOTOR</div><div class="v7-line"><div><span class="v7-label">Ad:</span> ${v7Esc(m?.ad||'YOK')}</div><div><span class="v7-label">Marka/Model:</span> ${v7Esc(m?[m.marka,m.model].filter(Boolean).join(' ')||'—':'—')}</div><div><span class="v7-label">Seri:</span> ${v7Esc(m?.seri_no||'—')}</div><div><span class="v7-label">Güç:</span> ${v7Esc(m?.guc_kw??'—')} kW / ${v7Esc(m?.guc_hp??'—')} HP</div><div><span class="v7-label">V/A:</span> ${v7Esc(m?.gerilim_v??'—')} V / ${v7Esc(m?.nominal_akim_a??'—')} A</div><div><span class="v7-label">Hz/RPM:</span> ${v7Esc(m?.frekans_hz??'—')} / ${v7Esc(m?.devir_rpm??'—')}</div><div><span class="v7-label">cosφ:</span> ${v7Esc(m?.cos_phi??'—')}</div><div><span class="v7-label">Tip:</span> ${v7Esc(m?.motor_tipi||motorTypeFromNote?.(m?.etiket_notu)||'—')}</div></div>
+ <div class="v7-block-title">SÜRÜCÜ</div><div class="v7-line"><div><span class="v7-label">Ad:</span> ${v7Esc(d?.ad||'YOK')}</div><div><span class="v7-label">Marka/Model:</span> ${v7Esc(d?[d.marka,d.model].filter(Boolean).join(' ')||'—':'—')}</div><div><span class="v7-label">Seri:</span> ${v7Esc(d?.seri_no||'—')}</div><div><span class="v7-label">Güç:</span> ${v7Esc(d?.guc_kw??d?.guc??'—')}</div><div><span class="v7-label">Gerilim:</span> ${v7Esc(d?.besleme_v??d?.gerilim??'—')}</div><div><span class="v7-label">Aile:</span> ${v7Esc(d?.surucu_ailesi||'—')}</div></div></div>`;
 }
-function v5Nav(){
- const items=[['terfi','TERFİ'],['location','KONUM'],['ssr','SSR / SEVİYE'],['pompa','POMPA'],['motor','MOTOR'],['surucu','SÜRÜCÜ'],['box','BOX / KABLO'],['calisma','ÇALIŞMA'],['hmi','HMI / PLC'],['parametre','PARAMETRE'],['fault','ARIZA'],['history','GEÇMİŞ'],['photo','FOTOĞRAF'],['reference','REFERANS']];
- return `<div class="v5-nav">${items.map(x=>`<button class="${tab===x[0]?'active':''}" onclick="setTab('${x[0]}')">${x[1]}</button>`).join('')}</div>`;
+function v7BoxSummary(){
+ const rows=[]; for(const m of current.m||[]){const b=getBox(m.id); for(const sec of ['motor','surucu']){if(!b?.[sec])continue; const vals=['u','v','w'].map(t=>{const z=b[sec][t]||{};return `${t.toUpperCase()}:${[z.renk,z.detay,z.etiket].filter(Boolean).join('/')||'—'}`}).join(' · '); if(vals)rows.push(`<tr><td>${v7Esc(m.ad||'Motor')}</td><td>${v7Esc(sec.toUpperCase())}</td><td>${v7Esc(vals)}</td></tr>`);}}
+ return rows.join('')||'<tr><td colspan="3">BOX/KABLO kaydı yok.</td></tr>';
 }
-
-async function home(){
- if(!loggedIn){showLogin();return;}
- current=null;selectedPumpId=null;
- const r=await db.from('terfiler').select('id,ad,kod,terfi_no,bolge,adres,terfi_tipi,kuyu_derinligi,aciklama').order('ad',{ascending:true});
- if(r.error){app.innerHTML=`<div class="v5-login"><div class="v5-login-card"><h2>Bağlantı Hatası</h2><p class="v5-muted">${v5Esc(r.error.message)}</p><button class="btn primary" onclick="home()">TEKRAR DENE</button></div></div>`;return;}
- const rows=r.data||[], districts=v5Districts(rows); if(!districts.includes(v5District))v5District='TÜMÜ';
- const qState=window.v5HomeSearch||'';
- const refs=TERFI_DATA.map(ref=>({ref,row:v5Match(ref,rows)}));
- const filteredRefs=refs.filter(o=>v5District==='TÜMÜ'||String(o.ref.bolge||'').toUpperCase()===v5District);
- const search=qState.trim().toLocaleLowerCase('tr-TR');
- const visible=filteredRefs.filter(o=>{if(!search)return true;const z=[o.ref.ad,o.ref.rtu,o.ref.bolge,o.ref.tip,o.ref.kaynak,o.ref.cikis,o.ref.not,o.row?.ad,o.row?.adres,o.row?.terfi_no].join(' ').toLocaleLowerCase('tr-TR');return z.includes(search)});
- const dbKnown=new Set(filteredRefs.filter(x=>x.row).map(x=>x.row.id));
- const extras=rows.filter(x=>!dbKnown.has(x.id)&&(v5District==='TÜMÜ'||String(x.bolge||'').toUpperCase()===v5District)&&(!search||[x.ad,x.terfi_no,x.bolge,x.adres].join(' ').toLocaleLowerCase('tr-TR').includes(search)));
- const pumpCount=TERFI_DATA.filter(x=>x.pompa_sayisi).reduce((a,x)=>a+(Number(x.pompa_sayisi)||0),0);
- const districtCount=filteredRefs.length;
- app.innerHTML=`<div class="wrap v5-shell"><div class="v5-top"><div class="v5-head"><div class="v5-brand"><div class="v5-logo">M</div><div><div class="v5-title">MESKİ TERFİ ARŞİVİM</div><div class="v5-sub">Merkezi saha teknik arşivi · ${edit?'YÖNETİCİ':'ZİYARETÇİ'}</div></div></div><div class="v5-actions">${edit?`<button class="btn" onclick="showSettings()">⚙</button>`:''}<button class="btn ${edit?'warn':'primary'}" onclick="requestAdmin()">${edit?'🔒':'🔐'}</button><button class="btn" onclick="logout()">ÇIKIŞ</button></div></div></div>
- <div class="v5-card"><div class="v5-grid"><div class="v5-kpi"><b>${rows.length}</b><span>KAYITLI TESİS</span></div><div class="v5-kpi"><b>${pumpCount}</b><span>REFERANS POMPA</span></div><div class="v5-kpi"><b>${TERFI_DATA.length}</b><span>SAHA REFERANSI</span></div><div class="v5-kpi"><b>${districtCount}</b><span>SEÇİLİ BÖLGE KAYDI</span></div></div></div>
- <div class="v5-card"><div class="v5-section-label">BÖLGE / İLÇE</div><div class="v5-districts">${districts.map(d=>`<button class="v5-district ${d===v5District?'active':''}" onclick="v5SetDistrict('${v5Esc(d)}')">${v5Esc(d)}</button>`).join('')}</div><div style="margin-top:9px"><input id="v5search" value="${v5Esc(qState)}" placeholder="Tesis, RTU, kaynak, çıkış veya adres ara..." style="width:100%;padding:12px 13px;border-radius:12px;border:1px solid #204e6a;background:#061a2b;color:white;outline:none;min-height:45px" oninput="window.v5HomeSearch=this.value;v5RenderHomeList()"></div></div>
- <div class="v5-card"><div class="v5-head"><div><h2 style="margin:0">SAHA TESİSLERİ</h2><div class="v5-muted">İlçeyi seç · tesisi aç · pompa bloklarından P1/P2/P3... seç</div></div>${edit?`<button class="btn ok" onclick="newStation()">+ TERFİ</button>`:''}</div><div id="v5HomeList" style="margin-top:10px">${v5HomeListMarkup(visible,extras)}</div></div>
- <div class="v5-card"><div class="v5-section-label">HİDROLİK / SİSTEM REFERANSLARI</div><div class="v5-ref">${visible.filter(x=>x.ref.tip==='HİDROLİK DİYAGRAM').map(x=>`<div style="margin:8px 0"><b>${v5Esc(x.ref.ad)}</b> · ${v5Esc(x.ref.bolge)}<br>${v5Esc(x.ref.not||'')}</div>`).join('')||'Seçili bölgede hidrolik referans yok.'}</div></div>
- <div class="v5-card"><div class="v5-head"><div><h2 style="margin:0">KÜTÜPHANELER</h2><div class="v5-muted">Genel ABB/ACQ referanslarına hızlı erişim</div></div><div class="v5-actions"><button class="btn" onclick="showV5Library('fault')">⚠️ ARIZA</button><button class="btn" onclick="showV5Library('param')">⚙ PARAMETRE</button></div></div></div></div>`;
- document.getElementById('saveBar')?.classList.add('hidden');
+function v7HmiRows(){
+ const selected=v5SelectedPump(); const rows=[]; const all=Array.isArray(current.h)?current.h:[];
+ HMI.forEach((pg,i)=>{const r=all.find(x=>x.ekran_no===i+1&&selected&&x.pompa_id===selected.id)||all.find(x=>x.ekran_no===i+1&&!x.pompa_id); const vals=r?.degerler||{}; const text=pg.labels.map((lab,j)=>`${lab}: ${v7Val(vals[j])}`).join(' · '); rows.push(`<div class="v7-hmi-row"><b>${i+1}. ${v7Esc(pg.title)}</b><span>${v7Esc(text)}</span></div>`)}); return rows.join('');
 }
-function v5HomeListMarkup(items,extras){
- const a=items.map(({ref,row})=>{if(!row&&ref.tip==='HİDROLİK DİYAGRAM')return `<div class="v5-site" onclick="showV5Reference('${v5Esc(ref.id)}')"><div class="v5-site-head"><div><div class="v5-site-name">${v5Esc(ref.ad)}</div><div class="v5-site-meta">${v5Esc(ref.bolge)} · ${v5Esc(ref.tip)}</div></div><span class="v5-site-badge">REFERANS</span></div><div class="v5-ref">${v5Esc(ref.not||'')}</div></div>`;if(!row)return `<div class="v5-site"><div class="v5-site-head"><div><div class="v5-site-name">${v5Esc(ref.ad)}</div><div class="v5-site-meta">RTU ${v5Esc(ref.rtu??'YOK')} · ${v5Esc(ref.bolge)}</div></div><span class="v5-site-badge">REFERANS</span></div><div class="v5-ref">Henüz veritabanı kaydıyla eşleşmedi.</div></div>`;const pc=ref.pompa_sayisi||'—';const depth=row.kuyu_derinligi!=null?`${row.kuyu_derinligi} m kuyu`:'';return `<div class="v5-site" onclick="openStation('${row.id}')"><div class="v5-site-head"><div><div class="v5-site-name">${v5Esc(row.ad)}</div><div class="v5-site-meta">${v5Esc(row.terfi_no||'RTU YOK')} · ${v5Esc(row.bolge||ref.bolge||'')}${depth?` · ${v5Esc(depth)}`:''}</div></div><span class="v5-site-badge">${v5Esc(row.terfi_tipi||ref.tip||'TERFİ')}</span></div><div class="v5-site-bottom"><span class="v5-chip">💧 ${pc} POMPA</span>${depth?`<span class="v5-chip">⛏ ${v5Esc(depth)}</span>`:''}<span class="v5-chip ${row.adres?'ok':'warn'}">📍 ${row.adres?'KONUM VAR':'KONUM YOK'}</span><span class="v5-chip">${v5Esc(ref.kaynak||'Kaynak —')}</span><span class="v5-chip">${v5Esc(ref.cikis||'Çıkış —')}</span></div></div>`}).join('');
- const e=extras.map(row=>`<div class="v5-site" onclick="openStation('${row.id}')"><div class="v5-site-head"><div><div class="v5-site-name">${v5Esc(row.ad)}</div><div class="v5-site-meta">${v5Esc(row.terfi_no||'RTU YOK')} · ${v5Esc(row.bolge||'Bölge yok')}</div></div><span class="v5-site-badge">KAYIT</span></div></div>`).join('');
- return a+e||'<div class="v5-empty">Kayıt bulunamadı.</div>';
+function v7WorkRows(){
+ const rows=(current.w||[]).slice(0,18).map((w,i)=>`<tr><td>${i+1}</td><td>${v7Esc(w.captured_at?new Date(w.captured_at).toLocaleString('tr-TR'):'—')}</td><td>${v7Esc(current.m.find(m=>m.id===w.motor_id)?.ad||w.motor_id||'—')}</td><td>${v7Esc(w.frekans_hz??'—')}</td><td>${v7Esc(w.akim_a??'—')}</td><td>${v7Esc(w.devir_rpm??'—')}</td><td>${v7Esc(w.guc_kw??'—')}</td><td>${v7Esc(w.gerilim_v??'—')}</td><td>${v7Esc(w.set_basinci_bar??'—')}</td><td>${v7Esc(w.calisma_basinci_bar??'—')}</td><td>${v7Esc(w.durum||'—')}</td><td>${v7Esc(w.notlar||'')}</td></tr>`).join('');
+ return rows||'<tr><td colspan="12">Çalışma kaydı yok.</td></tr>';
 }
-function v5RenderHomeList(){
- const input=document.getElementById('v5search');window.v5HomeSearch=input?.value||window.v5HomeSearch||'';
- const q=window.v5HomeSearch.trim().toLocaleLowerCase('tr-TR');
- db.from('terfiler').select('id,ad,kod,terfi_no,bolge,adres,terfi_tipi,kuyu_derinligi,aciklama').order('ad',{ascending:true}).then(r=>{if(r.error)return;const rows=r.data||[];const refs=TERFI_DATA.map(ref=>({ref,row:v5Match(ref,rows)})).filter(o=>v5District==='TÜMÜ'||String(o.ref.bolge||'').toUpperCase()===v5District);const visible=refs.filter(o=>!q||[o.ref.ad,o.ref.rtu,o.ref.bolge,o.ref.tip,o.ref.kaynak,o.ref.cikis,o.ref.not,o.row?.ad,o.row?.adres,o.row?.terfi_no].join(' ').toLocaleLowerCase('tr-TR').includes(q));const ids=new Set(refs.filter(x=>x.row).map(x=>x.row.id));const extras=rows.filter(x=>!ids.has(x.id)&&(v5District==='TÜMÜ'||String(x.bolge||'').toUpperCase()===v5District)&&(!q||[x.ad,x.terfi_no,x.bolge,x.adres].join(' ').toLocaleLowerCase('tr-TR').includes(q)));const el=document.getElementById('v5HomeList');if(el)el.innerHTML=v5HomeListMarkup(visible,extras);});
+function v7ParamRows(){
+ return (current.tp||[]).map((p,i)=>`<tr><td>${i+1}</td><td>${v7Esc(p.ekran_adi||'')}</td><td>${v7Esc(p.parametre_adi||'')}</td><td>${v7Esc(p.deger??'')}</td><td>${v7Esc(p.birim||'')}</td><td>${v7Esc(p.aciklama||'')}</td></tr>`).join('')||'<tr><td colspan="6">Terfiye özel parametre kaydı yok.</td></tr>';
 }
-function showV5Library(kind){
- const list=kind==='fault'?faults():params();
- const title=kind==='fault'?'⚠️ ARIZA KÜTÜPHANESİ':'⚙ ACS / ACQ PARAMETRELERİ';
- openModal(`<h2>${title}</h2><input id="v5libSearch" placeholder="Kod, ad veya açıklama ara..." style="width:100%;padding:12px;border-radius:11px;border:1px solid #204e6a;background:#061a2b;color:white;margin:10px 0" oninput="v5FilterLibrary()"><div id="v5libGrid" class="library-grid">${list.map(x=>{const code=x.code||'';const name=x.name||'';const desc=x.desc||'';return `<div class="library-card" data-lib="${v5Esc((code+' '+name+' '+desc).toLocaleLowerCase('tr-TR'))}"><div class="library-code">${v5Esc(code)}</div><div class="library-name">${v5Esc(name)}</div><div class="library-desc">${v5Esc(desc)}</div></div>`}).join('')}</div>`);
+function v7DriverRecordRows(){
+ const ids=(current.d||[]).map(d=>d.id); return ids.length?`<div class="v7-block-title">SÜRÜCÜ PARAMETRE / ARIZA KAYITLARI</div><table class="v7-table"><thead><tr><th>Sürücü</th><th>Kod</th><th>Değer / Tespit</th><th>İşlem / Sonuç</th><th>Tarih</th></tr></thead><tbody>${(current._driverParams||[]).map(x=>`<tr><td>${v7Esc(current.d.find(d=>d.id===x.surucu_id)?.ad||x.surucu_id)}</td><td>${v7Esc(x.parametre_kodu)}</td><td>${v7Esc([x.mevcut_deger,x.yeni_deger].filter(Boolean).join(' → ')||x.amac||'')}</td><td>${v7Esc(x.uygulama_notu||'')}</td><td>${v7Esc(x.tarih||'')}</td></tr>`).join('')}${(current._driverFaults||[]).map(x=>`<tr><td>${v7Esc(current.d.find(d=>d.id===x.surucu_id)?.ad||x.surucu_id)}</td><td>${v7Esc(x.kod||x.ariza_kodu_id||'')}</td><td>${v7Esc(x.tespit||x.aciklama||'')}</td><td>${v7Esc([x.yapilan_islem,x.sonuc].filter(Boolean).join(' / '))}</td><td>${v7Esc(x.tarih||'')}</td></tr>`).join('')}</tbody></table>`:'';
 }
-function v5FilterLibrary(){const q=(document.getElementById('v5libSearch')?.value||'').toLocaleLowerCase('tr-TR').trim();document.querySelectorAll('#v5libGrid .library-card').forEach(x=>x.style.display=!q||x.dataset.lib.includes(q)?'block':'none')}
-
-function showV5Reference(id){const r=TERFI_DATA.find(x=>x.id===id);if(!r)return;openModal(`<h2>${v5Esc(r.ad)}</h2><div class="v5-muted">${v5Esc(r.bolge)} · ${v5Esc(r.tip)}</div><div class="v5-ref">${v5Esc(r.not||'')}</div><div class="v5-grid" style="margin-top:10px"><div class="v5-kpi"><b>${v5Esc(r.kaynak||'—')}</b><span>KAYNAK</span></div><div class="v5-kpi"><b>${v5Esc(r.cikis||'—')}</b><span>ÇIKIŞ</span></div><div class="v5-kpi"><b>${v5Esc(r.pompa_sayisi??'—')}</b><span>POMPA</span></div></div>`)}
-
-async function openStation(id){
- const same=!!(current?.s?.id&&current.s.id===id), wantedTab=same?tab:'terfi',wantedPump=same?selectedPumpId:null;
- const [s,m,p,d]=await Promise.all([db.from('terfiler').select('*').eq('id',id).single(),db.from('motorlar').select('*').eq('terfi_id',id).order('created_at',{ascending:true}),db.from('pompalar').select('*').eq('terfi_id',id).order('pompa_no',{ascending:true}),db.from('suruculer').select('*').eq('terfi_id',id).order('created_at',{ascending:true})]);
- const errs=[s.error,m.error,p.error,d.error].filter(Boolean);if(errs.length){alert('Terfi verileri okunamadı:\n\n'+errs.map(x=>x.message).join('\n'));return;}
- current={s:s.data,m:m.data||[],p:p.data||[],d:d.data||[],h:[],w:[],tp:[],detail:getTerfiDetail(id),location:getLocation(id),ssr:{level:'',low:'',high:'',note:''}};
- const ssrMap=localJSON(LOCAL_SSR_KEY,{});const oldSsr=ssrMap[id]||{};current.ssr=oldSsr[selectedPumpId]||oldSsr||{};
- tab=wantedTab;hmiPage=same?hmiPage:1;
- const ps=v5Pumps();selectedPumpId=ps.find(x=>x.id===wantedPump)?.id||ps[0]?.id||null;const sp=v5SelectedPump();selectedMotorId=sp?.motor_id||null;workMotor=sp?.motor_id||null;
- if(edit)touchAdminSession();render();recordHistory('TERFİ AÇILDI',`${current.s.ad||''}`);
- const extras=await Promise.all([db.from('hmi_kayitlari').select('*').eq('terfi_id',id).order('ekran_no',{ascending:true}),db.from('motor_calisma_kayitlari').select('*').eq('terfi_id',id).order('captured_at',{ascending:false}),db.from('terfi_parametreleri').select('*').eq('terfi_id',id).order('sira',{ascending:true})]);
- if(current?.s?.id!==id)return;current.h=extras[0].data||[];current.w=extras[1].data||[];current.tp=extras[2].data||[];if(['hmi','calisma','parametre'].includes(tab))render();
-}
-
-function v5OpenPump(id){if(!current?.p?.some(p=>p.id===id))return;selectedPumpId=id;const p=current.p.find(x=>x.id===id);selectedMotorId=p?.motor_id||null;workMotor=p?.motor_id||null;tab='pompa';hmiPage=1;if(edit)touchAdminSession();render();}
-function selectPump(id){v5OpenPump(id)}
-function setTab(x){if(!current)return;if(edit)touchAdminSession();tab=x;const p=v5SelectedPump();if(p){selectedMotorId=p.motor_id||null;workMotor=p.motor_id||null}render();}
-
-function stationBody(){
- const s=current.s,ref=v5RefFor(s),ps=v5Pumps(),p=v5SelectedPump(),n=p?v5PumpNo(p,0):null;
- const motor=p?.motor_id?current.m.find(m=>m.id===p.motor_id):null,drv=p?.surucu_id?current.d.find(d=>d.id===p.surucu_id):null;
- return `<div class="v5-card"><div class="v5-section-label">TESİS KİMLİĞİ</div><div class="v5-head"><div><h2 style="margin:0">${v5Esc(s.ad)}</h2><div class="v5-muted">${v5Esc(s.terfi_no||'RTU YOK')} · ${v5Esc(s.bolge||'Bölge yok')} · ${v5Esc(s.terfi_tipi||ref?.tip||'TERFİ')}</div></div><span class="v5-site-badge">${ps.length} POMPA</span></div><div class="v5-grid" style="margin-top:10px">${[['KOD',s.kod],['KAYNAK',ref?.kaynak||'—'],['ÇIKIŞ',ref?.cikis||'—']].map(x=>`<div class="v5-kpi"><b style="font-size:13px">${v5Esc(x[1])}</b><span>${x[0]}</span></div>`).join('')}</div></div>
- ${ref?`<div class="v5-card"><div class="v5-section-label">SAHA REFERANSI</div><div class="v5-ref"><b>${v5Esc(ref.tip)}</b><br>${v5Esc(ref.not||'')}</div></div>`:''}
- ${v5PumpTabs()}
- <div class="v5-card"><div class="v5-section-label">SEÇİLİ POMPA BLOĞU</div>${p?`<div class="v5-block"><div class="v5-block-head"><div><div class="v5-block-title">P${n} · ${v5Esc(p.ad||'Pompa '+n)}</div><div class="v5-muted">Bu blok P${n} için bağımsız çalışma alanıdır.</div></div><span class="v5-status">${motor?'MOTOR ✓':'MOTOR YOK'} · ${drv?'SÜRÜCÜ ✓':'SÜRÜCÜ YOK'}</span></div><div class="v5-quick"><button onclick="setTab('pompa')">💧 POMPA</button><button onclick="setTab('motor')">⚙ MOTOR</button><button onclick="setTab('surucu')">▣ SÜRÜCÜ</button><button onclick="setTab('box')">🔧 BOX</button><button onclick="setTab('calisma')">▶ ÇALIŞMA</button><button onclick="setTab('hmi')">▣ HMI</button><button onclick="setTab('parametre')">⚙ PARAM</button><button onclick="setTab('fault')">⚠ ARIZA</button></div></div>`:'<div class="v5-empty">Bu tesiste pompa kaydı yok.</div>'}</div>`;
-}
-
-function pumpBody(){
- const p=v5SelectedPump();if(!p)return `<div class="v5-card"><div class="v5-empty">Pompa kaydı yok.</div></div>`;const n=v5PumpNo(p,0);
- return `<div class="v5-card"><div class="v5-head"><div><div class="v5-section-label">POMPA BLOĞU</div><h2 style="margin:0">P${n} · ${v5Esc(p.ad||'Pompa '+n)}</h2><div class="v5-muted">Yalnızca P${n} verileri. Başka pompanın alanı bu sayfaya gelmez.</div></div>${edit?`<button class="btn bad" onclick="deletePump('${p.id}')">SİL</button>`:''}</div><div class="v5-grid" style="margin-top:12px">${input('Pompa Adı',`p_${p.id}_ad`,p.ad||`P${n}`)}${input('Marka',`p_${p.id}_marka`,p.marka||'')}${input('Model',`p_${p.id}_model`,p.model||'')}${input('Tip',`p_${p.id}_tip`,p.tip||'')}${input('Seri No',`p_${p.id}_seri`,p.seri_no||'')}${input('Güç [kW]',`p_${p.id}_kw`,p.guc_kw??'','number')}${input('Güç [HP]',`p_${p.id}_hp`,p.guc_hp??'','number')}${input('Q Min [m³/h]',`p_${p.id}_qmin`,p.q_min_m3h??'','number')}${input('Q Max [m³/h]',`p_${p.id}_qmax`,p.q_max_m3h??'','number')}${input('H Min [m]',`p_${p.id}_hmin`,p.h_min_m??'','number')}${input('H Max [m]',`p_${p.id}_hmax`,p.h_max_m??'','number')}${selectField('Bağlı Motor',`p_${p.id}_motor`,p.motor_id||'',current.m.map(m=>({value:m.id,label:m.ad||'Motor'})))}${selectField('Bağlı Sürücü',`p_${p.id}_surucu`,p.surucu_id||'',current.d.map(d=>({value:d.id,label:d.ad||d.marka_model||d.model||'Sürücü'})))}</div><div class="field" style="margin-top:10px"><label>Etiket Notu</label><textarea id="p_${p.id}_not" ${!edit?'readonly':''}>${v5Esc(p.etiket_notu||'')}</textarea></div></div>`;
-}
-function motorBody(){const p=v5SelectedPump();if(!p)return '<div class="v5-card"><div class="v5-empty">Pompa yok.</div></div>';const n=v5PumpNo(p,0),m=p.motor_id?current.m.find(x=>x.id===p.motor_id):null;return `<div class="v5-card"><div class="v5-head"><div><div class="v5-section-label">P${n} BLOĞU</div><h2 style="margin:0">P${n} · MOTOR</h2><div class="v5-muted">Motor seçimi yok. Bu sayfa doğrudan P${n} motorudur.</div></div>${edit?`<button class="btn ok" onclick="addMotor()">+ MOTOR</button>`:''}</div></div>${m?motorCard(m,current.m.indexOf(m)):`<div class="v5-card"><div class="v5-empty">P${n} için bağlı motor yok.</div></div>`}`}
-function driverBody(){const p=v5SelectedPump();if(!p)return '<div class="v5-card"><div class="v5-empty">Pompa yok.</div></div>';const n=v5PumpNo(p,0),d=p.surucu_id?current.d.find(x=>x.id===p.surucu_id):null;return `<div class="v5-card"><div class="v5-head"><div><div class="v5-section-label">P${n} BLOĞU</div><h2 style="margin:0">P${n} · SÜRÜCÜ</h2><div class="v5-muted">Motor/sürücü seçimi yok. Doğrudan P${n} sürücüsü.</div></div>${edit?`<button class="btn ok" onclick="addDriver()">+ SÜRÜCÜ</button>`:''}</div></div>${d?driverCard(d,current.d.indexOf(d)):`<div class="v5-card"><div class="v5-empty">P${n} için bağlı sürücü yok.</div></div>`}`}
-function ssrBody(){const p=v5SelectedPump(),n=p?v5PumpNo(p,0):1;const st=current.ssr||{};return `<div class="v5-card"><div class="v5-section-label">P${n} BLOĞU</div><h2>P${n} · SSR / SEVİYE</h2><div class="v5-grid">${input('Seviye','ssr_level',st.level||'')}${input('Alt Seviye','ssr_low',st.low||'','number')}${input('Üst Seviye','ssr_high',st.high||'','number')}</div><div class="field" style="margin-top:10px"><label>Not</label><textarea id="ssr_note" ${!edit?'readonly':''}>${v5Esc(st.note||'')}</textarea></div></div>`}
-function workBody(){const p=v5SelectedPump(),n=p?v5PumpNo(p,0):1,motorId=p?.motor_id||null;if(!motorId)return `<div class="v5-card"><div class="v5-empty">P${n} için motor bağlı değil.</div></div>`;workMotor=motorId;const last=current.w.find(x=>x.motor_id===motorId)||{};return `<div class="v5-card"><div class="v5-section-label">P${n} BLOĞU</div><h2>P${n} · ÇALIŞMA</h2><div class="v5-grid">${WORK.map(x=>input(x[0],'w_'+x[1],last[x[1]]??'','number')).join('')}</div>${input('Durum','w_durum',last.durum||'Sistem Normal')}<div class="field" style="margin-top:10px"><label>Not</label><textarea id="w_notlar" ${!edit?'readonly':''}>${v5Esc(last.notlar||'')}</textarea></div></div>`}
-function hmiBody(){const p=v5SelectedPump(),n=p?v5PumpNo(p,0):1,exact=current.h.filter(x=>x.pompa_id===selectedPumpId),legacy=current.h.filter(x=>!x.pompa_id),rec=exact.find(x=>x.ekran_no===hmiPage)||legacy.find(x=>x.ekran_no===hmiPage),values=rec?.degerler||{},page=HMI[hmiPage-1],cols=page.columns||[];return `<div class="v5-card"><div class="v5-section-label">P${n} BLOĞU</div><div class="v5-head"><div><h2 style="margin:0">P${n} · WEINTEK HMI / PLC</h2><div class="v5-muted">HMI değerleri P${n} pompasına bağlıdır.</div></div><span class="v5-site-badge">${hmiPage}/5</span></div><div class="v5-nav" style="margin-top:10px">${HMI.map((x,i)=>`<button class="${hmiPage===i+1?'active':''}" onclick="setHmiPage(${i+1})">${i+1} · ${v5Esc(x.title)}</button>`).join('')}</div></div><div class="v5-card"><div class="v5-grid">${cols.flatMap(col=>col.indexes).map(i=>`<div class="field"><label>${v5Esc(page.labels[i])}</label><input id="hmi_${hmiPage}_${i}" value="${v5Esc(values[i]??'')}" ${!edit?'readonly':''}></div>`).join('')}</div></div>`}
-function parameterBody(){const p=v5SelectedPump(),n=p?v5PumpNo(p,0):1,dr=p?.surucu_id?current.d.find(x=>x.id===p.surucu_id):null,family=dr?.surucu_ailesi||'Genel',list=params().filter(x=>family==='Genel'||!x.driver||x.driver===family);return `<div class="v5-card"><div class="v5-section-label">P${n} BLOĞU</div><h2>P${n} · PARAMETRELER</h2><div class="v5-muted">Bağlı sürücü: ${v5Esc(family)}</div></div><div class="v5-card"><div class="v5-section-label">TERFİYE ÖZEL</div>${current.tp.filter(x=>x.pompa_id===selectedPumpId||!x.pompa_id).map(x=>`<div class="v5-block"><b>${v5Esc(x.parametre_adi||'Parametre')}</b><div class="v5-muted">${v5Esc(x.deger||'—')} ${v5Esc(x.birim||'')}</div></div>`).join('')||'<div class="v5-empty">Pompaya özel kayıt yok.</div>'}</div><div class="v5-card"><div class="v5-section-label">ABB KÜTÜPHANESİ</div><input id="paramSearch" placeholder="Parametre kodu veya adı ara..." oninput="filterParams()" style="width:100%;padding:12px;border-radius:11px;border:1px solid #204e6a;background:#061a2b;color:white"><div id="paramGrid" class="library-grid" style="margin-top:9px">${list.map(x=>`<div class="library-card" data-param="${v5Esc((x.code+' '+x.name+' '+x.desc).toLocaleLowerCase('tr-TR'))}" onclick="openParamDetail('${v5Esc(x.code)}')"><div class="library-code">${v5Esc(x.code)}</div><div class="library-name">${v5Esc(x.name)}</div><div class="library-desc">${v5Esc(x.desc)}</div><div class="library-source">${v5Esc(x.driver||'Genel')} · ${v5Esc(x.unit)}</div></div>`).join('')}</div></div>`}
-function faultBody(){const p=v5SelectedPump(),n=p?v5PumpNo(p,0):1,dr=p?.surucu_id?current.d.find(x=>x.id===p.surucu_id):null,family=dr?.surucu_ailesi||'Genel',list=faults().filter(x=>!x.driver||family==='Genel'||x.driver===family);return `<div class="v5-card"><div class="v5-section-label">P${n} BLOĞU</div><h2>P${n} · ARIZA KÜTÜPHANESİ</h2><div class="v5-muted">Sürücü ailesi: ${v5Esc(family)}</div></div><div class="v5-card"><input id="faultSearch" placeholder="Arıza kodu veya açıklama ara..." oninput="filterFaults()" style="width:100%;padding:12px;border-radius:11px;border:1px solid #204e6a;background:#061a2b;color:white"><div id="faultGrid" class="library-grid" style="margin-top:9px">${list.map(f=>`<div class="library-card" data-fault="${v5Esc((f.code+' '+f.name+' '+(f.desc||'')).toLocaleLowerCase('tr-TR'))}"><div class="library-code">${v5Esc(f.code)}</div><div class="library-name">${v5Esc(f.name)}</div><div class="library-desc">${v5Esc(f.desc||'')}</div></div>`).join('')}</div></div>`}
-
-function saveActive(){
- if(!current){toast('Önce bir terfi açın.');return}
- if(!edit){requestAdmin();return}
- touchAdminSession();
- const t=tab,p=v5SelectedPump();
- (async()=>{try{
-  if(t==='terfi'){
-   const r=await db.from('terfiler').update({ad:val('s_ad'),terfi_no:val('s_no'),kod:val('s_kod'),bolge:val('s_bolge'),adres:val('s_adres'),aciklama:val('s_aciklama'),terfi_tipi:val('s_terfi_tipi')||'Terfi',kuyu_derinligi:num(val('s_kuyu_derinligi'))}).eq('id',current.s.id);if(r.error)throw r.error;
-   saveTerfiDetail(current.s.id,{pompa_tipi:val('s_pompa_tipi'),calisma_sekli:val('s_calisma_sekli'),emiş_kaynagi:val('s_emis'),basma_noktasi:val('s_basma'),sistem_aciklama:val('s_sistem_aciklama')});
-  }
-  if(t==='ssr'){current.ssr={level:val('ssr_level'),low:val('ssr_low'),high:val('ssr_high'),note:val('ssr_note')};const map=localJSON(LOCAL_SSR_KEY,{});map[current.s.id]=map[current.s.id]||{};map[current.s.id][p?.id||'__site__']=current.ssr;saveLocal(LOCAL_SSR_KEY,map)}
-  if(t==='pompa'&&p){const patch={ad:val(`p_${p.id}_ad`),marka:val(`p_${p.id}_marka`),model:val(`p_${p.id}_model`),tip:val(`p_${p.id}_tip`),seri_no:val(`p_${p.id}_seri`),guc_kw:num(val(`p_${p.id}_kw`)),guc_hp:num(val(`p_${p.id}_hp`)),q_min_m3h:num(val(`p_${p.id}_qmin`)),q_max_m3h:num(val(`p_${p.id}_qmax`)),h_min_m:num(val(`p_${p.id}_hmin`)),h_max_m:num(val(`p_${p.id}_hmax`)),etiket_notu:val(`p_${p.id}_not`),motor_id:val(`p_${p.id}_motor`)||null,surucu_id:val(`p_${p.id}_surucu`)||null};const r=await db.from('pompalar').update(patch).eq('id',p.id);if(r.error)throw r.error}
-  if(t==='motor'&&p?.motor_id){const m=current.m.find(x=>x.id===p.motor_id);if(m){const r=await db.from('motorlar').update({ad:val(`m_${m.id}_ad`),marka:val(`m_${m.id}_marka`),model:val(`m_${m.id}_model`),seri_no:val(`m_${m.id}_seri`),guc_kw:num(val(`m_${m.id}_kw`)),guc_hp:num(val(`m_${m.id}_hp`)),gerilim_v:num(val(`m_${m.id}_v`)),nominal_akim_a:num(val(`m_${m.id}_a`)),frekans_hz:num(val(`m_${m.id}_hz`)),devir_rpm:num(val(`m_${m.id}_rpm`)),cos_phi:num(val(`m_${m.id}_cos`)),motor_tipi:val(`m_${m.id}_tip`),notlar:val(`m_${m.id}_not`)}).eq('id',m.id);if(r.error)throw r.error}}
-  if(t==='surucu'&&p?.surucu_id){const d=current.d.find(x=>x.id===p.surucu_id);if(d){const r=await db.from('suruculer').update({ad:val(`d_${d.id}_ad`),marka:val(`d_${d.id}_marka`),model:val(`d_${d.id}_model`),seri_no:val(`d_${d.id}_seri`),guc_kw:num(val(`d_${d.id}_kw`)),besleme_v:val(`d_${d.id}_v`),motor_id:val(`d_${d.id}_motor`)||p.motor_id||null,notlar:val(`d_${d.id}_not`),surucu_ailesi:val(`d_${d.id}_family`)||d.surucu_ailesi||null}).eq('id',d.id);if(r.error)throw r.error}}
-  if(t==='hmi'){const old=current.h.find(x=>x.pompa_id===p?.id&&x.ekran_no===hmiPage)||current.h.find(x=>!x.pompa_id&&x.ekran_no===hmiPage);const values={};HMI[hmiPage-1].labels.forEach((_,i)=>values[i]=val(`hmi_${hmiPage}_${i}`));let r;if(old)r=await db.from('hmi_kayitlari').update({degerler:values,pompa_id:p?.id||null}).eq('id',old.id);else r=await db.from('hmi_kayitlari').insert({terfi_id:current.s.id,ekran_no:hmiPage,degerler:values,pompa_id:p?.id||null});if(r.error)throw r.error}
-  if(t==='calisma'&&p?.motor_id){const r=await db.from('motor_calisma_kayitlari').insert({terfi_id:current.s.id,motor_id:p.motor_id,captured_at:new Date().toISOString(),frekans_hz:num(val('w_frekans_hz')),akim_a:num(val('w_akim_a')),devir_rpm:num(val('w_devir_rpm')),guc_kw:num(val('w_guc_kw')),gerilim_v:num(val('w_gerilim_v')),set_basinci_bar:num(val('w_set_basinci_bar')),calisma_basinci_bar:num(val('w_calisma_basinci_bar')),tasarruf_kwh:num(val('w_tasarruf_kwh')),surucu_sicaklik_c:num(val('w_surucu_sicaklik_c')),durum:val('w_durum'),notlar:val('w_notlar')});if(r.error)throw r.error}
-  await openStation(current.s.id);tab=t;selectedPumpId=p?.id||selectedPumpId;render();toast('Değişiklik kaydedildi.');
- }catch(e){alert('Kaydetme hatası:\n\n'+(e?.message||e));}})();
-}
-
-async function addMotor(){if(!edit){requestAdmin();return}const p=v5SelectedPump();if(!p){toast('Önce pompa seçin.');return}const r=await db.from('motorlar').insert({terfi_id:current.s.id,ad:`P${v5PumpNo(p,0)} Motor`}).select().single();if(r.error){alert(r.error.message);return}await db.from('pompalar').update({motor_id:r.data.id}).eq('id',p.id);await openStation(current.s.id);selectedPumpId=p.id;tab='motor';render();}
-async function addDriver(){if(!edit){requestAdmin();return}const p=v5SelectedPump();if(!p){toast('Önce pompa seçin.');return}const r=await db.from('suruculer').insert({terfi_id:current.s.id,ad:`P${v5PumpNo(p,0)} Sürücü`,motor_id:p.motor_id||null}).select().single();if(r.error){alert(r.error.message);return}await db.from('pompalar').update({surucu_id:r.data.id}).eq('id',p.id);await openStation(current.s.id);selectedPumpId=p.id;tab='surucu';render();}
-async function addPump(){if(!edit){requestAdmin();return}const max=Math.max(0,...v5Pumps().map((p,i)=>v5PumpNo(p,i)));const r=await db.from('pompalar').insert({terfi_id:current.s.id,ad:`P${max+1}`,pompa_no:max+1}).select().single();if(r.error){alert(r.error.message);return}await openStation(current.s.id);selectedPumpId=r.data.id;tab='pompa';render();}
-
-function requestAdmin(){
- if(edit){clearAdminSession();edit=false;render();toast('Yönetici modu kilitlendi.');return}
- openModal(`<h2>🔐 Yönetici Girişi</h2><div class="v5-muted">Teknik kayıt, ekleme, silme ve ayarlar için yönetici şifresi.</div><div class="field" style="margin-top:12px"><label>Yönetici Şifresi</label><input id="adminPasswordBox" type="password" inputmode="numeric" autocomplete="off" onkeydown="if(event.key==='Enter')checkAdmin()"></div><button class="btn primary big" style="width:100%;margin-top:10px" onclick="checkAdmin()">YÖNETİCİ MODUNA GİR</button>`);setTimeout(()=>document.getElementById('adminPasswordBox')?.focus(),50)
-}
-function checkAdmin(){const entered=String(document.getElementById('adminPasswordBox')?.value||'').trim();const expected=String(prefs?.adminPassword||DEFAULT_ADMIN_PASSWORD||'6872').trim();if(entered!==expected){toast('Yönetici şifresi hatalı.');const e=document.getElementById('adminPasswordBox');if(e){e.value='';e.focus()}return}edit=true;setSession();closeModal();touchAdminSession();render();toast('Yönetici modu aktif.');}
-
-function render(){
- if(!loggedIn){showLogin();return}
- if(!current){home();return}
- if(edit)touchAdminSession();
- const s=current.s,p=v5SelectedPump(),n=p?v5PumpNo(p,0):null;
- app.innerHTML=`<div class="wrap v5-shell"><div class="v5-top"><div class="v5-head"><div class="v5-brand"><button class="btn" onclick="home()">‹</button><div class="v5-logo">M</div><div style="min-width:0"><div class="v5-title">${v5Esc(s.ad)}</div><div class="v5-sub">${v5Esc(s.terfi_no||'RTU YOK')} · ${v5Esc(s.bolge||'')} ${n?`· P${n}`:''}</div></div></div><div class="v5-actions"><button class="btn" onclick="home()">ANA SAYFA</button><button class="btn" onclick="makePDF()">📄 PDF</button><button class="btn ${edit?'warn':'primary'}" onclick="requestAdmin()">${edit?'🔒':'🔐'}</button></div></div>${v5PumpTabs()}${v5Nav()}</div><div id="body">${body()}</div></div>`;
- const sb=document.getElementById('saveBar');if(sb){sb.classList.toggle('hidden',!edit);sb.style.display=edit?'block':'none';}
-}
-
-// Ziyaretçi modunda sabit eski kayıt çubuğunu kesin olarak kapat.
-const oldSaveBar=document.getElementById('saveBar');if(oldSaveBar){oldSaveBar.classList.add('hidden');oldSaveBar.style.display='none';}
-
-// İlk giriş ekranını da V5 görünümüne al.
-showLogin=function(){clearAdminSession();loggedIn=false;app.innerHTML=`<div class="v5-login"><div class="v5-login-card"><div class="v5-logo" style="margin-bottom:14px">M</div><div class="v5-title">MESKİ TERFİ ARŞİVİM</div><div class="v5-sub" style="margin-bottom:18px">Merkezi saha teknik arşivi</div><div class="field"><label>Site Giriş Şifresi</label><input id="sitePassword" type="password" inputmode="numeric" autocomplete="off" onkeydown="if(event.key==='Enter')loginSite()"></div><button class="btn ok big" style="width:100%;margin-top:10px" onclick="loginSite()">GİRİŞ YAP</button><div class="v5-note" style="text-align:center;margin-top:12px">Teknik saha kayıtları · MESKİ</div></div></div>`;setTimeout(()=>document.getElementById('sitePassword')?.focus(),60)};
-
-// SSR artık pompa bazında saklanır.
-const oldSSRStorage=localJSON(LOCAL_SSR_KEY,{});function loadPumpSSR(){if(!current?.s)return;const x=oldSSRStorage[current.s.id];if(x&&x[selectedPumpId])current.ssr=x[selectedPumpId];}
-const _v5OriginalSelectPump=selectPump;
-
-
-/* =========================================================
-   V6 TEK SAYFA PDF
-   Terfi raporu A4 yatay tek sayfa olacak şekilde sıkıştırılır.
-========================================================= */
-function v6PdfEsc(x){return v5Esc(x??'')}
-function v6PdfCell(label,value){return `<div class="v6p-cell"><b>${v6PdfEsc(label)}</b><span>${v6PdfEsc(value==null||value===''?'—':value)}</span></div>`}
-function v6CompactReportHTML(){
- const s=current?.s||{};
- const detail=current?.detail||getTerfiDetail(s.id)||{};
- const pumps=v5Pumps();
- const loc=current?.location||getLocation(s.id);
- const selected=v5SelectedPump();
- const hmi=Array.isArray(current?.h)?current.h:[];
- const hmiText=HMI.map((pg,i)=>{
-   const r=hmi.find(x=>x.ekran_no===i+1 && (!selected || x.pompa_id===selected.id)) || hmi.find(x=>x.ekran_no===i+1 && !x.pompa_id);
-   const vals=r?.degerler||{};
-   const parts=pg.labels.slice(0,8).map((lab,j)=>`${lab}: ${vals[j]??'—'}`);
-   return `<div class="v6p-hmi"><b>${i+1}. ${v6PdfEsc(pg.title)}</b><span>${v6PdfEsc(parts.join(' · '))}</span></div>`;
- }).join('');
- const pumpRows=pumps.map((p,i)=>{
-   const n=v5PumpNo(p,i), m=p.motor_id?current.m.find(x=>x.id===p.motor_id):null, d=p.surucu_id?current.d.find(x=>x.id===p.surucu_id):null;
-   return `<tr><td class="num">P${n}</td><td>${v6PdfEsc(p.ad||`P${n}`)}</td><td>${v6PdfEsc(`${p.marka||''} ${p.model||''}`.trim())}</td><td>${v6PdfEsc(p.tip||'')}</td><td>${v6PdfEsc(`${p.guc_kw??'—'} kW`)}</td><td>${v6PdfEsc(m?.ad||'YOK')}</td><td>${v6PdfEsc(`${d?.marka||''} ${d?.model||''}`.trim()||d?.ad||'YOK')}</td><td>${v6PdfEsc(d?.surucu_ailesi||'')}</td></tr>`;
- }).join('');
- return `<div class="v6p-page">
- <div class="v6p-head"><div><h1>MESKİ TERFİ TEKNİK ARŞİVİ</h1><div class="v6p-sub">${v6PdfEsc(s.ad||'')} · ${v6PdfEsc(s.terfi_no||s.kod||'RTU YOK')} · ${v6PdfEsc(s.bolge||'')}</div></div><div class="v6p-right">${v6PdfEsc(s.adres||'')}<br>${v6PdfEsc(now())}</div></div>
- <div class="v6p-info">
-  ${v6PdfCell('Terfi Tipi',s.terfi_tipi||detail.tip||'Terfi')}${v6PdfCell('Kuyu Derinliği',s.kuyu_derinligi!=null?`${s.kuyu_derinligi} m`:'—')}${v6PdfCell('Kaynak',detail.emiş_kaynagi||'')}${v6PdfCell('Basma',detail.basma_noktasi||'')}${v6PdfCell('Pompa Tipi',detail.pompa_tipi||'')}${v6PdfCell('Çalışma',detail.calisma_sekli||'')}${v6PdfCell('GPS',loc?`${Number(loc.lat).toFixed(5)}, ${Number(loc.lng).toFixed(5)}`:'Kayıt yok')}${v6PdfCell('Açıklama',s.aciklama||detail.sistem_aciklama||'')}
+function v7CompactReportHTML(){
+ const s=current?.s||{}, detail=current?.detail||getTerfiDetail(s.id)||{}, loc=current?.location||getLocation(s.id)||null, ssr=v7PumpSSR(); const pumps=v5Pumps(); const photos=localPhotos?.[s.id]||[]; const hist=(changeHistory||[]).filter(x=>x.terfi_id===s.id).slice(0,10);
+ const pumpCount=pumps.length; const selected=v5SelectedPump();
+ const historyText=hist.map(x=>`${x.date||x.tarih||''} ${x.action||x.eylem||''} ${x.detail||x.detay||''}`).join(' · ');
+ return `<div class="v7-page">
+ <div class="v7-head"><div><h1>MESKİ TERFİ TEKNİK ARŞİVİ</h1><div class="v7-sub">${v7Esc(s.ad||'')} · ${v7Esc(s.terfi_no||s.kod||'RTU YOK')} · ${v7Esc(s.bolge||'')} · ${pumpCount} POMPA</div></div><div class="v7-right">${v7Esc(s.adres||'Adres girilmemiş')}<br>${v7Esc(now())}<br>Fotoğraf: ${photos.length} adet</div></div>
+ <div class="v7-info">${v7Cell('Terfi Tipi',s.terfi_tipi||detail.tip||'Terfi')}${v7Cell('Kuyu Derinliği',s.kuyu_derinligi!=null?`${s.kuyu_derinligi} m`:'—')}${v7Cell('Kaynak / Emiş',detail.emiş_kaynagi)}${v7Cell('Basma Noktası',detail.basma_noktasi)}${v7Cell('Pompa Tipi',detail.pompa_tipi)}${v7Cell('Çalışma Şekli',detail.calisma_sekli)}${v7Cell('Bölge',s.bolge)}${v7Cell('RTU / Kod',s.terfi_no||s.kod)}${v7Cell('GPS',loc?`${Number(loc.lat).toFixed(6)}, ${Number(loc.lng).toFixed(6)}`:'Kayıt yok')}${v7Cell('GPS Doğruluk',loc?.accuracy)}${v7Cell('Sistem Açıklaması',detail.sistem_aciklama)}${v7Cell('Terfi Açıklaması',s.aciklama)}</div>
+ <div class="v7-section"><h2>POMPA + MOTOR + SÜRÜCÜ · HER POMPA AYRI BLOK</h2><div class="v7-pump-grid">${pumps.map(v7PumpCard).join('')||'<div>Pompa kaydı yok.</div>'}</div></div>
+ <div class="v7-lower">
+  <div class="v7-section"><h2>SSR / SEVİYE</h2>${v7Cell('Seviye',ssr.level)}${v7Cell('Alt',ssr.low)}${v7Cell('Üst',ssr.high)}${v7Cell('Not',ssr.note)}<h2 style="margin-top:1mm">BOX / KABLO</h2><table class="v7-table"><thead><tr><th>Motor</th><th>Bölüm</th><th>U / V / W</th></tr></thead><tbody>${v7BoxSummary()}</tbody></table><h2 style="margin-top:1mm">GEÇMİŞ</h2><div style="line-height:1.15">${v7Esc(historyText||'Kayıt yok')}</div></div>
+  <div class="v7-section"><h2>HMI / PLC · SEÇİLİ POMPA ${selected?'P'+v5PumpNo(selected,0):'—'} · TÜM 5 EKRAN</h2>${v7HmiRows()}<h2 style="margin-top:1mm">TERFİYE ÖZEL PARAMETRELER</h2><table class="v7-table"><thead><tr><th>#</th><th>Ekran</th><th>Parametre</th><th>Değer</th><th>Birim</th><th>Açıklama</th></tr></thead><tbody>${v7ParamRows()}</tbody></table></div>
+  <div class="v7-section"><h2>ÇALIŞMA KAYITLARI</h2><table class="v7-table"><thead><tr><th>#</th><th>Tarih</th><th>Motor</th><th>Hz</th><th>A</th><th>RPM</th><th>kW</th><th>V</th><th>Set bar</th><th>Çalışma bar</th><th>Durum</th><th>Not</th></tr></thead><tbody>${v7WorkRows()}</tbody></table>${v7DriverRecordRows()}<h2 style="margin-top:1mm">FOTOĞRAF ARŞİVİ</h2><div>${photos.map((p,i)=>`${i+1}. ${v7Esc(p.name||'Fotoğraf')} · ${v7Esc(p.date||'')}`).join(' · ')||'Fotoğraf yok'}</div></div>
  </div>
- <div class="v6p-section"><h2>POMPA / MOTOR / SÜRÜCÜ BLOKLARI · ${pumps.length} ADET</h2><table><thead><tr><th>P</th><th>Pompa</th><th>Marka / Model</th><th>Tip</th><th>Güç</th><th>Motor</th><th>Sürücü</th><th>Aile</th></tr></thead><tbody>${pumpRows||'<tr><td colspan="8">Pompa kaydı yok.</td></tr>'}</tbody></table></div>
- <div class="v6p-two"><div class="v6p-section"><h2>SSR / SEVİYE · ${selected?'P'+v5PumpNo(selected,0):'TERFİ'}</h2><div class="v6p-mini">${v6PdfCell('Seviye',current?.ssr?.level||'')}${v6PdfCell('Alt',current?.ssr?.low||'')}${v6PdfCell('Üst',current?.ssr?.high||'')}${v6PdfCell('Not',current?.ssr?.note||'')}</div></div><div class="v6p-section"><h2>HMI / PLC · SEÇİLİ POMPA ${selected?'P'+v5PumpNo(selected,0):'—'}</h2>${hmiText}</div></div>
- <div class="v6p-foot">MESKİ TERFİ ARŞİVİM · Tek sayfa teknik özet · ${v6PdfEsc(s.kod||s.terfi_no||'')}</div>
+ <div class="v7-foot">MESKİ TERFİ ARŞİVİM · TEK SAYFA TAM TEKNİK ÖZET · ${v7Esc(s.kod||s.terfi_no||'')}</div>
  </div>`;
 }
 async function makePDF(){
- if(!current){toast('Önce terfi açın.');return;}
- if(edit)touchAdminSession();
+ if(!current){toast('Önce terfi açın.');return;} if(edit)touchAdminSession();
+ const id=current.s.id;
  try{
-  const id=current.s.id;
-  const [h,w,tp]=await Promise.all([
-   db.from('hmi_kayitlari').select('*').eq('terfi_id',id),
-   db.from('motor_calisma_kayitlari').select('*').eq('terfi_id',id).order('captured_at',{ascending:false}).limit(8),
-   db.from('terfi_parametreleri').select('*').eq('terfi_id',id).order('sira',{ascending:true})
+  const driverIds=(current.d||[]).map(d=>d.id);
+  const [h,w,tp,dp,df]=await Promise.all([
+   db.from('hmi_kayitlari').select('*').eq('terfi_id',id).order('ekran_no',{ascending:true}),
+   db.from('motor_calisma_kayitlari').select('*').eq('terfi_id',id).order('captured_at',{ascending:false}),
+   db.from('terfi_parametreleri').select('*').eq('terfi_id',id).order('sira',{ascending:true}),
+   driverIds.length?db.from('surucu_parametre_kayitlari').select('*').in('surucu_id',driverIds).order('tarih',{ascending:false}):Promise.resolve({data:[]}),
+   driverIds.length?db.from('surucu_ariza_kayitlari').select('*').in('surucu_id',driverIds).order('tarih',{ascending:false}):Promise.resolve({data:[]})
   ]);
-  if(h?.data)current.h=h.data;
-  if(w?.data)current.w=w.data;
-  if(tp?.data)current.tp=tp.data;
- }catch(e){/* PDF yine de mevcut verilerle oluşturulur. */}
- document.getElementById('printArea')?.remove();
- const area=document.createElement('div');area.id='printArea';area.className='print-only';area.innerHTML=v6CompactReportHTML();document.body.appendChild(area);
- setTimeout(()=>window.print(),120);
+  current.h=h?.data||[];current.w=w?.data||[];current.tp=tp?.data||[];current._driverParams=dp?.data||[];current._driverFaults=df?.data||[];
+ }catch(e){console.warn('PDF veri yükleme:',e);}
+ document.getElementById('printArea')?.remove(); const area=document.createElement('div');area.id='printArea';area.className='print-only';area.innerHTML=v7CompactReportHTML();document.body.appendChild(area);setTimeout(()=>window.print(),180);
 }
 
 // V5 fonksiyonlarını global bağlama taşı: HTML onclick ve mevcut uygulama gövdesi bunları kullanır.
