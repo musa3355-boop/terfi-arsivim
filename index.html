@@ -1638,6 +1638,171 @@ h4{
 
 
 .wrap{animation:appIn .18s ease-out}.card{background:linear-gradient(145deg,rgba(12,45,70,.97),rgba(7,28,47,.97));box-shadow:0 8px 24px rgba(0,0,0,.12)}.btn{transition:transform .12s ease,filter .12s ease,box-shadow .12s ease}.btn:active{transform:translateY(1px)}.station{transition:transform .14s ease,border-color .14s ease,box-shadow .14s ease}.station:hover{transform:translateY(-1px);box-shadow:0 8px 20px rgba(0,0,0,.12)}@keyframes appIn{from{opacity:.75;transform:translateY(3px)}to{opacity:1;transform:none}}
+
+/* =========================================================
+   V9 MODERN INDUSTRIAL SCADA THEME
+========================================================= */
+:root{
+ --bg:#07111d;
+ --bg2:#0b1724;
+ --card:#0d1d2c;
+ --card2:#102538;
+ --line:#1d3c55;
+ --line2:#2b5875;
+ --text:#edf6ff;
+ --muted:#89a4b8;
+ --blue:#18a9ff;
+ --blue2:#61c8ff;
+ --ok:#13c982;
+ --danger:#f04452;
+ --warn:#f0aa25;
+ --purple:#8b5cf6;
+ --shadow:0 14px 36px rgba(0,0,0,.32);
+ --radius:18px;
+}
+html{background:#07111d}
+body{
+ background:
+   radial-gradient(circle at 85% -10%,rgba(24,169,255,.16),transparent 30%),
+   radial-gradient(circle at 5% 35%,rgba(19,201,130,.07),transparent 25%),
+   linear-gradient(145deg,#050d16 0%,#071521 52%,#0a1725 100%);
+ letter-spacing:.1px;
+}
+body:before{
+ content:"";position:fixed;inset:0;pointer-events:none;opacity:.035;
+ background-image:linear-gradient(rgba(255,255,255,.7) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.7) 1px,transparent 1px);
+ background-size:32px 32px;z-index:-1;
+}
+.wrap{max-width:1480px;padding:20px 22px 110px}
+.top{gap:18px}
+.logo{
+ width:58px;height:58px;border-radius:16px;
+ background:linear-gradient(145deg,#19b5ff,#075c9c);
+ box-shadow:0 8px 24px rgba(24,169,255,.22),inset 0 1px rgba(255,255,255,.25);
+ font-weight:900;font-size:27px;display:grid;place-items:center;
+}
+.page-title{font-size:24px;font-weight:900;letter-spacing:.4px}
+.page-sub{color:#7894a9;font-size:13px;margin-top:3px}
+.top-right{gap:9px}
+.btn{
+ border:1px solid #24475f!important;
+ background:linear-gradient(180deg,#14334b,#10283b)!important;
+ color:#edf7ff!important;border-radius:13px!important;
+ min-height:46px;padding:10px 16px!important;
+ box-shadow:inset 0 1px rgba(255,255,255,.07),0 5px 14px rgba(0,0,0,.15);
+ font-weight:800;transition:.18s ease;white-space:nowrap;
+}
+.btn:hover{transform:translateY(-1px);border-color:#347da5!important}
+.btn.primary{background:linear-gradient(180deg,#19aef4,#087fc0)!important;border-color:#3bc0ff!important}
+.btn.ok{background:linear-gradient(180deg,#15ca89,#079e68)!important;border-color:#28e19d!important}
+.btn.warn{background:linear-gradient(180deg,#e7a92d,#ad7410)!important;border-color:#f2c24d!important}
+.btn.bad{background:linear-gradient(180deg,#ef5662,#b82d39)!important;border-color:#ff737d!important}
+.card,.station,.pump-card,.location-card,.detail-banner{
+ background:linear-gradient(145deg,rgba(14,32,48,.97),rgba(8,23,36,.97))!important;
+ border:1px solid #1e4058!important;
+ box-shadow:var(--shadow),inset 0 1px rgba(255,255,255,.035)!important;
+ border-radius:18px!important;
+}
+.card{padding:20px!important}
+.section-title,h2,h3{letter-spacing:.25px}
+.section-title{font-weight:900;font-size:20px}
+.section-sub{color:#7894a9!important}
+.field label,.stat-label{color:#8faabd!important;font-weight:750}
+input,select,textarea{
+ background:#071a2a!important;color:#edf7ff!important;
+ border:1px solid #285675!important;border-radius:12px!important;
+ box-shadow:inset 0 2px 7px rgba(0,0,0,.22)!important;
+}
+input:focus,select:focus,textarea:focus{border-color:#24b6ff!important;box-shadow:0 0 0 3px rgba(24,169,255,.12)!important;outline:none}
+.summary{gap:12px!important}
+.stat{
+ background:linear-gradient(145deg,#0d2133,#0a1927)!important;
+ border:1px solid #1d4058!important;border-radius:16px!important;
+ padding:17px!important;min-height:112px;
+}
+.stat-value{font-size:34px!important;font-weight:900;color:#f3f9ff!important}
+.station{padding:20px!important;position:relative;overflow:hidden}
+.station:after{
+ content:"";position:absolute;left:0;top:0;bottom:0;width:4px;
+ background:linear-gradient(#18a9ff,#13c982);opacity:.85;
+}
+.station:hover{border-color:#2d6d92!important;transform:translateY(-1px);transition:.16s}
+.station-title{font-size:22px!important;font-weight:900!important}
+.station-meta{color:#88a5b9!important}
+.station-badges{gap:7px!important}
+.badge,.tag{
+ background:#10334a!important;border:1px solid #1c526f!important;
+ color:#9edcff!important;border-radius:999px!important;font-weight:800!important;
+}
+.badge.ok{background:rgba(19,201,130,.12)!important;color:#53e4ae!important;border-color:rgba(19,201,130,.35)!important}
+.badge.warn{background:rgba(240,170,37,.14)!important;color:#ffd267!important;border-color:rgba(240,170,37,.4)!important}
+.badge.danger,.badge.bad{background:rgba(240,68,82,.12)!important;color:#ff7b85!important;border-color:rgba(240,68,82,.35)!important}
+.nav,.tabs,.tabbar{background:rgba(6,17,28,.88)!important;border-color:#1b3b52!important;backdrop-filter:blur(14px)}
+.nav button,.tabs button,.tabbar button{
+ border:1px solid #20455e!important;background:#102b40!important;color:#cfe3f0!important;
+ border-radius:13px!important;font-weight:850!important;
+}
+.nav button.active,.tabs button.active,.tabbar button.active{
+ background:linear-gradient(180deg,#19aef4,#087fc0)!important;color:white!important;
+ border-color:#48c3ff!important;box-shadow:0 0 0 1px rgba(72,195,255,.18),0 8px 18px rgba(0,127,192,.2)
+}
+/* Pump blocks: each P is visually a separate technical unit */
+.pump-card{border-left:4px solid #18a9ff!important}
+.pump-header{padding-bottom:13px!important;border-bottom:1px solid #193a51!important;margin-bottom:15px!important}
+.pump-header h3{font-size:21px!important}
+/* Selected pump area */
+.pump-selector,.pump-tabs,.pump-switcher{
+ display:flex!important;gap:10px!important;overflow-x:auto!important;padding:4px 2px 10px!important;
+ scrollbar-width:none;
+}
+.pump-selector::-webkit-scrollbar,.pump-tabs::-webkit-scrollbar,.pump-switcher::-webkit-scrollbar{display:none}
+.pump-selector button,.pump-tabs button,.pump-switcher button{
+ min-width:92px!important;min-height:72px!important;border-radius:15px!important;
+ border:1px solid #31526a!important;background:#f1f5f8!important;color:#152331!important;
+ font-weight:900!important;box-shadow:0 6px 14px rgba(0,0,0,.16)!important;
+}
+.pump-selector button.active,.pump-tabs button.active,.pump-switcher button.active{
+ background:linear-gradient(145deg,#d9283d,#a81428)!important;color:white!important;border-color:#ff596a!important;
+ box-shadow:0 0 0 2px rgba(255,79,99,.18),0 10px 22px rgba(150,18,35,.28)!important;
+}
+/* Technical dashboard blocks */
+.tech-grid,.dashboard-grid{gap:12px!important}
+.tech-panel,.dashboard-panel{
+ background:linear-gradient(145deg,#0e2436,#0a1a29)!important;
+ border:1px solid #21465f!important;border-radius:16px!important;
+ box-shadow:inset 0 1px rgba(255,255,255,.035),0 8px 20px rgba(0,0,0,.18)!important;
+}
+/* HMI */
+.hmi-real{background:#081522!important;border-color:#21445c!important;border-radius:18px!important}
+.hmi-screen{box-shadow:0 18px 40px rgba(0,0,0,.35)!important;border-radius:16px!important}
+/* Sticky save bar: only visible for administrator via existing hidden/edit logic */
+#saveBar{background:rgba(5,14,23,.92)!important;border-top:1px solid #1c4259!important;backdrop-filter:blur(16px)!important}
+#saveBar .btn{width:min(100%,1100px);font-size:16px!important}
+/* desktop density */
+@media(min-width:1000px){
+ .wrap{padding-left:30px;padding-right:30px}
+ .summary{grid-template-columns:repeat(4,1fr)!important}
+ .station{padding:22px 24px!important}
+}
+@media(max-width:700px){
+ .wrap{padding:12px 12px 96px}
+ .top{align-items:center}
+ .logo{width:48px;height:48px;border-radius:14px}
+ .page-title{font-size:18px}
+ .page-sub{font-size:11px}
+ .top-right{overflow-x:auto;max-width:100%;padding-bottom:2px}
+ .top-right .btn{min-height:40px;padding:8px 11px!important;font-size:12px}
+ .card{padding:14px!important}
+ .station{padding:16px!important}
+ .station-title{font-size:19px!important}
+ .stat{min-height:92px;padding:13px!important}
+ .stat-value{font-size:28px!important}
+ .nav,.tabs,.tabbar{overflow-x:auto!important}
+ .nav button,.tabs button,.tabbar button{min-width:max-content!important}
+ input,select,textarea{font-size:16px!important}
+ .pump-selector button,.pump-tabs button,.pump-switcher button{min-width:82px!important;min-height:64px!important}
+}
+
 </style>  
 <style id="v8-modern-theme">
 :root{
