@@ -13900,11 +13900,6 @@ function exportCSV(){
  showLogin();  
   
 })();  
-</script>  
-  
-</body>  
-</html>  
-
 
 /* =========================================================
    V2 PARAMETRE AİLELERİ
@@ -14322,58 +14317,6 @@ function setTab(x){
 
 
 
-async function saveActive(){
- if(!current){toast('Önce bir terfi açın.');return;}
- if(!edit){requestAdmin();return;}
-
- const tabBefore=tab;
- let pumpLinks=[];
- let driverFamilies=[];
- if(tabBefore==='pompa'){
-  pumpLinks=current.p.map(p=>({
-   id:p.id,
-   motor_id:val(`p_${p.id}_motor`)||null,
-   surucu_id:val(`p_${p.id}_surucu`)||null,
-   pompa_no:p.pompa_no||null
-  }));
- }
- if(tabBefore==='surucu'){
-  driverFamilies=current.d.map(d=>({
-   id:d.id,
-   surucu_ailesi:val(`d_${d.id}_family`)||null
-  }));
- }
-
- await saveActiveBase();
-
- if(tabBefore==='terfi'){
-  const payload={
-   ad:val('s_ad'),terfi_no:val('s_no'),kod:val('s_kod'),bolge:val('s_bolge'),
-   adres:val('s_adres'),aciklama:val('s_aciklama'),
-   terfi_tipi:val('s_terfi_tipi')||'Terfi',
-   kuyu_derinligi:num(val('s_kuyu_derinligi'))
-  };
-  const r=await db.from('terfiler').update(payload).eq('id',current.s.id);
-  if(r.error) alert(r.error.message);
-  else current.s={...current.s,...payload};
- }
- if(tabBefore==='pompa' && pumpLinks.length){
-  const r=await Promise.all(pumpLinks.map(x=>db.from('pompalar').update({
-   motor_id:x.motor_id,surucu_id:x.surucu_id,pompa_no:x.pompa_no
-  }).eq('id',x.id)));
-  const bad=r.find(x=>x.error);
-  if(bad) alert(bad.error.message);
- }
- if(tabBefore==='surucu' && driverFamilies.length){
-  const r=await Promise.all(driverFamilies.map(x=>db.from('suruculer').update({surucu_ailesi:x.surucu_ailesi}).eq('id',x.id)));
-  const bad=r.find(x=>x.error);
-  if(bad) alert(bad.error.message);
- }
- await openStation(current.s.id);
- if(tabBefore==='pompa' && pumpLinks[0]) selectedPumpId=pumpLinks.find(x=>x.id===selectedPumpId)?.id||selectedPumpId;
-}
-
-
 
 function motorBody(){
  const pumps=[...current.p].sort((a,b)=>(a.pompa_no||999)-(b.pompa_no||999));
@@ -14475,3 +14418,8 @@ async function saveActive(){
  if(tabBefore==='surucu'){ tab='surucu'; render(); }
  if(tabBefore==='terfi'){ tab='terfi'; render(); }
 }
+
+</script>
+
+</body>
+</html>
