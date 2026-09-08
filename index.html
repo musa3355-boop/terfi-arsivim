@@ -142,6 +142,24 @@ function pm(){
  return s.pumps[state.pump];
 }
 function tabs(){return [["GENEL","Genel Bakış","♟"],["POMPA","Pompa Bilgileri","♧"],["MOTOR","Motor Bilgileri","⚙"],["SURUCU","Sürücü Bilgileri","▣"],["PANO","Pano / Kablo","⚡"],["SSR","SSR / Seviye","♣"],["HMI","HMI / PLC","▱"],["PARAM","Parametreler","⚙"],["CALISMA","Çalışma Kayıtları","☷"],["ARIZA","Arıza Kayıtları","⚠"],["FOTO","Fotoğraflar","▧"],["NOT","Notlar","▤"]]}
+
+function render(){
+ const s=st();
+ if(!s){renderHome();return}
+ const x=pm();
+ document.getElementById("crumb").innerHTML=`<span onclick="home()" style="cursor:pointer">Ana Sayfa</span>　›　<span>${esc(s.bolge||"—")}</span>　›　<b>${esc(s.ad)}</b>　›　<b>P${state.pump+1}</b>`;
+ document.getElementById("siteTitle").textContent=s.ad||"MESKİ TERFİ TEKNİK ARŞİV";
+ document.getElementById("siteSub").textContent=`RTU ${esc(s.rtu||"—")}　•　${esc(s.bolge||"—")}　•　${esc(s.altBolge||"—")}`;
+ const vals={kaynak:s.kaynak,basma:s.basma,tip:s.terfiTipi,pompa:s.pompaTipi,calisma:s.calisma,kuyu:s.kuyu?s.kuyu+" m":"—",gps:s.gps,aciklama:s.aciklama};
+ document.querySelectorAll("[data-site]").forEach(e=>e.textContent=vals[e.dataset.site]||"—");
+ document.getElementById("pumpList").innerHTML=(s.pumps||[]).map((p,i)=>`<div class="pump ${i===state.pump?"sel":""}"><div class="pumpin"><div class="motorico">⚙</div><div><h3>P${i+1}</h3><p>${i+1}. Pompa</p><div class="status"><i></i>${p.aktif===false?"Pasif":"Aktif"}</div></div></div><button type="button" onclick="selectPump(${i})"></button></div>`).join("")+`<div class="pump add"><div style="text-align:center"><div style="font-size:25px">＋</div><b>Pompa Ekle</b></div><button type="button" onclick="addPump()"></button></div>`;
+ document.getElementById("pumpCount").innerHTML=`Toplam ${(s.pumps||[]).length} Pompa ${isAdmin()?`<button class="smallbtn danger" style="margin-left:8px;height:27px" onclick="removeCurrentPump()">Seçili Pompayı Sil</button>`:""}`;
+ document.getElementById("sysTitle").textContent=`P${state.pump+1}`;
+ document.getElementById("sysSub").innerHTML=`${state.pump+1}. Pompa Sistemi <span>(Pompa + Motor + Sürücü + Pano)</span>`;
+ document.getElementById("innerNav").innerHTML=tabs().map(t=>`<button type="button" class="${t[0]===state.tab?"active":""}" onclick="setTab('${t[0]}')"><span class="ii">${t[2]}</span>${t[1]}</button>`).join("");
+ renderContent();
+}
+
 function setTab(t){state.tab=t;render()}
 function selectPump(i){state.pump=i;state.tab="GENEL";render()}
 function general(){
@@ -236,6 +254,15 @@ function showAdmin(){
  d.onclick=()=>{sessionStorage.removeItem(ADMIN);sessionStorage.removeItem("meski_admin_time");d.remove();toast("Yönetici modu kapatıldı.");render()};
  document.body.appendChild(d);
 }
+
+function siteEdit(){
+ if(!requireAdmin())return;
+ const s=st();
+ if(!s){toast("Önce bir terfi açın.");return}
+ const keys=["ad","rtu","bolge","altBolge","kaynak","basma","terfiTipi","pompaTipi","calisma","kuyu","gps","aciklama"];
+ modal("TERFİ BİLGİLERİNİ DÜZENLE",`<div class="formgrid">${keys.map(k=>`<div class="field"><label>${esc(labelSite(k))}</label><input data-siteedit="${k}" value="${esc(s[k]||"")}"></div>`).join("")}</div><div class="formactions"><button class="smallbtn" onclick="saveSiteEdit()">KAYDET</button></div>`);
+}
+
 function labelSite(k){return ({ad:"Terfi Adı",rtu:"RTU No",bolge:"Bölge",altBolge:"Alt Bölge",kaynak:"Kaynak",basma:"Basma",terfiTipi:"Terfi Tipi",pompaTipi:"Pompa Tipi",calisma:"Çalışma",kuyu:"Kuyu Derinliği (m)",gps:"GPS",aciklama:"Açıklama"}[k]||k)}
 function saveSiteEdit(){if(!requireAdmin())return;const s=st();document.querySelectorAll("[data-siteedit]").forEach(e=>s[e.dataset.siteedit]=e.value);saveAll();closeAnyModal();render()}
 function stationManager(){
@@ -285,7 +312,11 @@ function renderHome(){
  document.getElementById("sysTitle").textContent="TERFİLER";document.getElementById("sysSub").textContent="Bölge bazlı teknik arşiv";document.getElementById("innerNav").innerHTML="";
  document.getElementById("content").innerHTML=`<div style="display:flex;gap:8px;margin-bottom:9px"><input id="homeSearch" value="${esc(state.search)}" oninput="state.search=this.value;renderHome()" placeholder="Terfi / RTU / bölge ara..." style="flex:1;background:#071a29;border:1px solid #24536b;color:#fff;border-radius:8px;padding:11px"><button class="smallbtn" onclick="stationManager()">TERFİ YÖNETİMİ</button></div>${groups.map(g=>{let a=matches.filter(s=>s.bolge===g);return a.length?`<div class="card" style="margin-top:9px"><h3>⌂ ${g} <span style="float:right">${a.length} terfi</span></h3><div style="padding:10px" class="grid">${a.map(s=>`<div class="card"><h3>${esc(s.ad)}</h3>${rows([["RTU",s.rtu],["Pompa",s.pumps?.length||0],["Tip",s.terfiTipi||"—"],["Kaynak",s.kaynak||"—"]])}<div style="padding:8px"><button class="smallbtn" onclick="openStation('${esc(s.id)}')">TERFİYİ AÇ</button></div></div>`).join("")}</div></div>`:""}).join("")}${matches.length?"":`<div class="card" style="margin-top:9px"><h3>Sonuç</h3><div style="padding:15px">Bu filtreyle terfi bulunamadı.</div></div>`}`;
 }
-function openStation(id){state.stationId=id;state.pump=0;state.tab="GENEL";render()}
+function openStation(id){
+ const found=state.stations.find(s=>s.id===id);
+ if(!found){toast("Terfi bulunamadı.");return}
+ state.stationId=id;state.pump=0;state.tab="GENEL";render();
+}
 function saveCurrent(){if(!requireAdmin())return;saveAll();toast("Tüm değişiklikler kaydedildi.")}
 function exportData(){if(!requireAdmin())return;const b=new Blob([JSON.stringify(state.stations,null,2)],{type:"application/json"}),a=document.createElement("a");a.href=URL.createObjectURL(b);a.download="meski-terfi-arsiv-yedek.json";a.click();setTimeout(()=>URL.revokeObjectURL(a.href),500)}
 function importData(inp){if(!requireAdmin())return;const f=inp.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{try{const x=JSON.parse(r.result);if(!Array.isArray(x))throw Error();state.stations=x;state.stationId=x[0].id;state.pump=0;saveAll();render();toast("Yedek geri yüklendi.")}catch(e){toast("Geçersiz yedek dosyası.")}};r.readAsText(f)}
