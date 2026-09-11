@@ -55,33 +55,35 @@ button,input,textarea,select{font:inherit}button{cursor:pointer}input,textarea,s
 .pressure{background:linear-gradient(135deg,#0d2537,#07131f);color:#fff;border-radius:6px;padding:18px;min-height:310px}
 .pressure-main{display:flex;justify-content:center;gap:50px;margin:25px 0}.pressure-main div{text-align:center}.pressure-main label{display:block;font-size:14px;margin-bottom:7px}.pressure-main b{display:inline-block;background:#f5f5f5;color:#54708a;padding:10px 28px;min-width:100px}.pressure-io{display:flex;justify-content:center;gap:25px;font-size:11px}.pressure-io b{background:#f5f5f5;color:#54708a;padding:4px 8px}.hmi-graphic{text-align:center;color:#5ed0ff;font-size:18px;margin:18px}
 @media(max-width:800px){.hmi-real-grid,.relay-layout,.protect-real{grid-template-columns:1fr}.hmi-real-row{grid-template-columns:minmax(0,1fr) 68px}.relay-map{display:none}.pressure-main{gap:15px}.pressure-io{flex-wrap:wrap}}
-/* PDF: tek A3 yatay sayfa, bölümler birbirine girmeden */
 .print-hmi-screen{break-inside:avoid;page-break-inside:avoid}
 #printRoot{display:none}
 @media print{
- @page{size:A3 landscape;margin:4mm}
- html,body{margin:0!important;padding:0!important;background:#fff!important}
- body>*:not(#printRoot){display:none!important}
- #printRoot{display:block!important;width:100%;margin:0!important;padding:0!important}
- .print-page{width:100%;height:289mm;max-height:289mm;box-sizing:border-box;color:#111;background:#fff;font-family:Arial,sans-serif;font-size:4.2pt;line-height:1.05;overflow:hidden;padding:0}
+@page{size:A4 landscape;margin:6mm}body{background:#fff!important;color:#111!important}.shell,.adminbar,.toast{display:none!important}#printRoot{display:block!important}.print-page{page-break-after:always;break-after:page;color:#111;background:#fff;font-family:Arial,sans-serif;font-size:7pt;min-height:180mm;overflow:hidden}.print-page:last-child{page-break-after:auto;break-after:auto}.print-head{display:flex;justify-content:space-between;border-bottom:2px solid #193b50;padding-bottom:3mm;margin-bottom:2.5mm}.print-head h1{font-size:15pt;margin:0 0 1mm}.print-head p{margin:0;font-size:8pt;font-weight:700}.pgrid{display:grid;grid-template-columns:repeat(5,1fr);gap:1.5mm;margin-bottom:2mm}.pcell{border:1px solid #a9b7bf;padding:1.5mm;min-height:8mm}.pcell b{display:block;font-size:5.5pt;color:#526d7c;text-transform:uppercase}.pcell span{font-size:7pt;font-weight:700}.pcols{display:grid;grid-template-columns:1fr 1fr;gap:2.5mm}.psec{border:1px solid #a9b7bf;padding:2mm;margin-bottom:2.5mm;break-inside:avoid}.psec h2{font-size:8pt;margin:0 0 1.5mm;border-bottom:1px solid #ccd4d9;padding-bottom:1mm}.pmini{display:grid;grid-template-columns:repeat(3,1fr);gap:1mm}.pmini div{border:1px solid #c2ccd1;padding:1mm}.pmini b{display:block;font-size:5pt;color:#627987}.pmini span{font-size:6.5pt;font-weight:700}.ptable{width:100%;border-collapse:collapse}.ptable th,.ptable td{border:1px solid #b8c4ca;padding:1mm;font-size:5.5pt;text-align:left}.ptable th{background:#edf1f3}.hmi-print{display:grid;grid-template-columns:repeat(2,1fr);gap:1.2mm}.hmi-pbox{border:1px solid #b8c4ca;padding:1mm;break-inside:avoid}.hmi-pbox h3{font-size:7pt;margin:0 0 1mm}.hmi-pbox table{width:100%;border-collapse:collapse}.hmi-pbox td{border:1px solid #c3ccd1;padding:.8mm;font-size:5.8pt;line-height:1.1}.hmi-pbox td:first-child{font-weight:700;background:#f2f4f5;width:70%}.hmi-pbox td:last-child{font-weight:800;font-size:6.2pt;color:#111}.print-foot{border-top:1px solid #a9b7bf;padding-top:1.5mm;text-align:center;font-size:5.5pt;margin-top:1.5mm}
+}
+
+/* V6 PDF + Teknik Kütüphane düzeltmeleri */
+@media print{
+ @page{size:A3 landscape;margin:5mm}
+ .print-page{page-break-after:always;break-after:page;min-height:0!important;height:auto!important;overflow:visible!important;color:#111;background:#fff}
  .print-page:last-child{page-break-after:auto;break-after:auto}
- .print-head{display:flex;justify-content:space-between;align-items:flex-start;border-bottom:1.2px solid #193b50;padding-bottom:1mm;margin-bottom:1mm}
- .print-head h1{font-size:12pt;margin:0 0 .5mm}.print-head p{margin:0;font-size:6pt;font-weight:700}.print-head .print-meta{text-align:right;font-size:5pt}
- .psec{border:1px solid #a9b7bf;padding:.55mm;margin-bottom:.55mm;break-inside:avoid;box-sizing:border-box;overflow:hidden}
- .psec h2{font-size:5.3pt;margin:0 0 .35mm;border-bottom:1px solid #ccd4d9;padding-bottom:.2mm}
- .print-top{display:grid;grid-template-columns:1fr 1.35fr .8fr;gap:.55mm;margin-bottom:.55mm}
- .pmini{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:.22mm}
- .pcell-lite{border:1px solid #c2ccd1;padding:.22mm;min-height:3.35mm;box-sizing:border-box;overflow:hidden}
- .pcell-lite b{display:block;font-size:3pt;color:#627987;line-height:1}.pcell-lite span{font-size:3.55pt;font-weight:700;word-break:break-word;line-height:1.0}
- .ptable{width:100%;border-collapse:collapse;table-layout:fixed}.ptable th,.ptable td{border:1px solid #b8c4ca;padding:.16mm .22mm;font-size:3.15pt;text-align:left;vertical-align:top;word-break:break-word;line-height:1.0}.ptable th{background:#edf1f3;font-weight:800;font-size:3pt}
- .hmi-print{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:.45mm}
- .hmi-pbox{border:1px solid #b8c4ca;padding:.22mm;break-inside:avoid;box-sizing:border-box;overflow:hidden}
- .hmi-pbox h3{font-size:3.9pt;margin:0 0 .15mm;line-height:1}
- .hmi-pbox table{width:100%;border-collapse:collapse;table-layout:fixed}.hmi-pbox td{border:1px solid #c3ccd1;padding:.1mm .15mm;font-size:2.55pt;line-height:.9;vertical-align:top;word-break:break-word}.hmi-pbox th{border:1px solid #c3ccd1;padding:.1mm .15mm;font-size:2.5pt;line-height:.9;background:#edf1f3}.hmi-pbox td:first-child{font-weight:700;background:#f2f4f5;width:74%}.hmi-pbox td:last-child{font-weight:800;font-size:2.7pt;color:#111;width:26%}
- .print-bottom{display:grid;grid-template-columns:1.5fr .75fr;gap:.5mm}.print-bottom .psec{margin-bottom:.45mm}
- .print-note{font-size:3.1pt;margin-top:.15mm;white-space:pre-wrap;word-break:break-word;line-height:1.0}
- .print-foot{border-top:1px solid #a9b7bf;padding-top:.25mm;text-align:center;font-size:2.8pt;margin-top:.25mm}
-}</style>
+ .print-top{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr));gap:2mm;margin-bottom:2mm}
+ .print-top .psec{margin-bottom:0!important}
+ .print-hmi-full{margin-bottom:2mm!important}
+ .hmi-print{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:1.2mm!important}
+ .hmi-pbox{min-height:0!important;height:auto!important;overflow:visible!important;padding:1.2mm!important}
+ .hmi-pbox td{font-size:5.7pt!important;line-height:1.08!important;padding:.65mm!important}
+ .hmi-pbox td:last-child{font-size:6.3pt!important}
+ .print-bottom{display:grid!important;grid-template-columns:1.25fr .75fr;gap:2mm}
+ .print-bottom .psec{margin-bottom:0!important}
+ .ptable{min-width:0!important}
+ .ptable th,.ptable td{font-size:5.3pt!important;padding:.75mm!important}
+ .print-foot{margin-top:1.2mm!important}
+}
+@media screen and (max-width:520px){
+ .modal .library-grid{grid-template-columns:1fr 1fr!important}
+ .modal{width:100%!important;max-height:94vh!important}
+}
+</style>
 </head>
 <body>
 <div id="app"></div><div id="modalRoot"></div><div id="toast" class="toast"></div><div id="printRoot"></div>
@@ -179,7 +181,7 @@ function normalize(saved){const map=new Map(saved.map(s=>[s.ad,s]));return makeD
 function load(){try{const raw=localStorage.getItem(STORE);if(raw){const x=JSON.parse(raw);if(Array.isArray(x)&&x.length)return normalize(x)}}catch(e){}return makeDB()}
 function save(){localStorage.setItem(STORE,JSON.stringify(db));toast("Kayıt kaydedildi.")}
 function station(){return db.find(s=>s.id===stationId)||null}
-function pump(){const s=station();return s?.pumps.find(p=>p.id===pumpId)||null}
+function pump(){const s=station();return s?.pumps.find(p=>p.id===pumpId)||s?.pumps[0]||null}
 function needAdmin(){if(admin)return true;adminLogin();return false}
 function adminLogin(){if(admin){admin=false;render();toast("Yönetici modu kapatıldı.");return}openModal("YÖNETİCİ GİRİŞİ",'<div class="field"><label>Yönetici şifresi</label><input id="adminPass" type="password" inputmode="numeric"></div><div class="actions"><button class="btn primary" onclick="checkAdmin()">GİRİŞ</button></div>')}
 function checkAdmin(){if(document.getElementById("adminPass")?.value===ADMIN_PASSWORD){admin=true;closeModal();render();toast("Yönetici modu aktif.")}else toast("Şifre hatalı.")}
@@ -319,100 +321,12 @@ function editStation(){if(!needAdmin())return;const s=station();openModal("TERF�
 function openModal(title,body){document.getElementById("modalRoot").innerHTML='<div class="modal-back" onclick="if(event.target===this)closeModal()"><div class="modal"><div class="modal-head"><h2>'+esc(title)+'</h2><button class="btn" onclick="closeModal()">✕</button></div>'+body+'</div></div>'}
 function closeModal(){document.getElementById("modalRoot").innerHTML=""}
 
-function statRows(obj){return Object.entries(obj).map(([k,v])=>'<div class="pcell"><b>'+esc(k)+'</b><span>'+esc(v!==undefined&&v!==null&&String(v)!==''?String(v):'—')+'</span></div>').join('')}
-function liteRows(obj){return Object.entries(obj).map(([k,v])=>'<div class="pcell-lite"><b>'+esc(k)+'</b><span>'+esc(v!==undefined&&v!==null&&String(v)!==''?String(v):'—')+'</span></div>').join('')}
-function boxRows(prefix,o){return {[''+prefix+' U']:o.U.renk+' / '+o.U.etiket+' / '+o.U.detay,[''+prefix+' V']:o.V.renk+' / '+o.V.etiket+' / '+o.V.detay,[''+prefix+' W']:o.W.renk+' / '+o.W.etiket+' / '+o.W.detay}}
-function hmiPrint(p){
- const pages=Array.isArray(HMI)?HMI:[];
- return pages.slice(0,6).map((pg,i)=>{
-  const vals=(p.hmi&&p.hmi[i])||{};
-  const rows=(pg.labels||[]).map((lab,j)=>{
-   const z=vals[j];
-   return '<tr><td>'+esc(lab)+'</td><td><strong>'+esc(z!==undefined&&z!==null&&String(z)!==''?String(z):'—')+'</strong></td></tr>';
-  }).join('');
-  return '<div class="hmi-pbox"><h3>HMI '+esc(pg.no||i+1)+' · '+esc(pg.title||'')+'</h3><table><tr><th>Alan</th><th>Değer</th></tr>'+rows+'</table></div>';
- }).join('');
-}
-function compactTable(headers,rows,empty){
- return '<table class="ptable"><tr>'+headers.map(x=>'<th>'+esc(x)+'</th>').join('')+'</tr>'+
- (rows.length?rows.map(r=>'<tr>'+r.map(x=>'<td>'+esc(x!==undefined&&x!==null&&String(x)!==''?String(x):'—')+'</td>').join('')+'</tr>').join(''):'<tr><td colspan="'+headers.length+'">'+esc(empty||'Kayıt yok')+'</td></tr>')+'</table>';
-}
-function flatValue(v){
- if(v===undefined||v===null||v==='')return '—';
- if(typeof v==='boolean')return v?'Evet':'Hayır';
- if(typeof v==='object'){try{return JSON.stringify(v)}catch(e){return String(v)}}
- return String(v)
-}
-function allObjectRows(obj,prefix){
- const out=[];
- const walk=(v,path)=>{
-  if(v===undefined||v===null||v==='')return;
-  if(Array.isArray(v)){v.forEach((x,i)=>walk(x,path+' ['+(i+1)+']'));return;}
-  if(typeof v==='object'){Object.keys(v).forEach(k=>walk(v[k],path?path+' / '+k:k));return;}
-  out.push([path,String(v)]);
- };
- walk(obj,prefix||'Kayıt'); return out;
-}
-function shortRows(rows,max=9999){return rows.slice(0,max)}
-function compactAllRows(rows){return rows.length?rows:[['Kayıt','—']]}
-function pumpPrint(s,p){
- const no=Number(p?.no)||1;
- const pm=p.pump||{},m=p.motor||{},d=p.driver||{},ss=p.ssr||{},b=p.box||{},w=p.work?.current||{};
- const hmi=Array.isArray(p.hmi)?p.hmi:[];
- const defs=Array.isArray(HMI)?HMI.slice(0,6):[];
- const name=p.ad||pm.ad||('P'+no);
- const show=(v)=>flatValue(v);
- const cellRows=(obj,labels)=>labels.map(([label,key])=>[label,show(obj?.[key])]);
- const stationInfo=statRows({
-  'Terfi':s.ad,'RTU':s.rtu,'Bölge':s.bolge,'Terfi tipi':s.tip,'Teknik pompa no':'P'+no,'Pompa adı':name,
-  'Adres':s.address,'Kaynak / Emiş':s.source,'Basma / Çıkış':s.outlet,'Kuyu':s.depth?(s.depth+' m'):'—','GPS':s.gps,
-  'Saha açıklaması':s.note,'Referans':s.referenceNote
- });
- const pumpMotor=liteRows({
-  'Pompa marka':pm.marka,'Pompa model':pm.model,'Pompa tip':pm.tip,'Pompa seri':pm.seri_no,'Pompa güç':pm.guc_kw?(pm.guc_kw+' kW'):'—','Pompa HP':pm.guc_hp,
-  'Q min':pm.q_min,'Q max':pm.q_max,'H min':pm.h_min,'H max':pm.h_max,'Basma / Çıkış':pm.cikis,'Pompa not':pm.not,
-  'Motor marka':m.marka,'Motor model':m.model,'Motor seri':m.seri_no,'Motor tip':m.motor_tipi,'Motor güç':m.guc_kw?(m.guc_kw+' kW'):'—','Motor HP':m.guc_hp,
-  'Motor gerilim':m.gerilim_v?(m.gerilim_v+' V'):'—','Motor akım':m.nominal_akim_a?(m.nominal_akim_a+' A'):'—','Motor frekans':m.frekans_hz?(m.frekans_hz+' Hz'):'—','Motor devir':m.devir_rpm?(m.devir_rpm+' rpm'):'—','Cos φ':m.cos_phi,
-  'Montaj tarihi':m.montaj_tarihi,'Değişim tarihi':m.degisim_tarihi,'Motor not':m.not
- });
- const driverSSR=liteRows({
-  'Sürücü marka':d.marka,'Sürücü model':d.model,'Sürücü seri':d.seri_no,'Sürücü aile':d.surucu_ailesi,'Güç':d.guc_kw?(d.guc_kw+' kW'):'—','Besleme':d.besleme_v?(d.besleme_v+' V'):'—',
-  'Firmware':d.firmware,'Kontrol':d.kontrol,'Sürücü not':d.not,
-  'SSR seviye':ss.level,'SSR alt':ss.low,'SSR üst':ss.high,'Pompa giriş basıncı':ss.pump_in,'Alçak koruma girme':ss.low_enter,'Yüksek koruma girme':ss.high_enter,'Alçak koruma çıkma':ss.low_exit,'Yüksek koruma çıkma':ss.high_exit,'SSR not':ss.note
- });
- const cableRows=[];
- [['MOTOR → BOX','motor'],['BOX → SÜRÜCÜ','out'],['SÜRÜCÜ','driver']].forEach(g=>['U','V','W'].forEach(ph=>{const z=b?.[g[1]]?.[ph]||{};cableRows.push([g[0]+' · '+ph,show(z.renk)+' / '+show(z.etiket)+' / '+show(z.detay)])}));
- const workCurrent=liteRows({'Frekans':w.frekans_hz?(w.frekans_hz+' Hz'):'—','Akım':w.akim_a?(w.akim_a+' A'):'—','Devir':w.devir_rpm?(w.devir_rpm+' rpm'):'—','Güç':w.guc_kw?(w.guc_kw+' kW'):'—','Gerilim':w.gerilim_v?(w.gerilim_v+' V'):'—','Sürücü sıcaklık':w.surucu_sicaklik_c?(w.surucu_sicaklik_c+' °C'):'—','Set basıncı':w.set_basinci_bar?(w.set_basinci_bar+' bar'):'—','Çalışma basıncı':w.calisma_basinci_bar?(w.calisma_basinci_bar+' bar'):'—','Tasarruf':w.tasarruf_kwh?(w.tasarruf_kwh+' kWh'):'—','Durum':w.durum});
- const workHist=(p.work?.history||[]).map(x=>[x.date,x.frekans_hz,x.akim_a,x.guc_kw,x.devir_rpm,x.gerilim_v,x.set_basinci_bar,x.calisma_basinci_bar,x.surucu_sicaklik_c,x.durum,x.notlar]);
- const faults=(p.faults||[]).map(x=>[x.date,x.code,x.name,x.cause,x.action,x.result,x.note]);
- const params=(p.params||[]).map(x=>[x.code,x.name,x.value,x.unit,x.note]);
- const photos=(p.photos||[]).map(x=>[x.date,x.name,x.note,x.url||x.path||x.file||'']);
- const stationHist=(s.history||[]).map(x=>[x.date,x.action,x.detail]);
- const extraPump=allObjectRows(p,'Pompa kaydı').filter(r=>!/^Pompa kaydı \/ (id|no|ad|pump|motor|driver|box|hmi|work|ssr|params|faults|photos)$/i.test(r[0]));
- const extraStation=allObjectRows(s,'Terfi kaydı').filter(r=>!/^Terfi kaydı \/ (id|ad|rtu|bolge|tip|address|source|outlet|depth|gps|note|history|pumps|referenceNote)$/i.test(r[0]));
- const pageHead='<div class="print-head"><div><h1>MESKİ TERFİ TEKNİK ARŞİVİ</h1><p>'+esc(s.ad||'—')+' · '+esc(s.rtu?'RTU '+s.rtu:'RTU YOK')+' · TEKNİK POMPA P'+esc(no)+' · '+esc(name)+'</p></div><div class="print-meta">'+esc(now())+'<br>'+esc(s.bolge||'—')+'<br><b>SEÇİLİ POMPA: P'+esc(no)+'</b></div></div>';
- const hmiHtml=defs.map((pg,i)=>{const vals=hmi[i]||{};const labels=pg.labels||[];const rows=labels.map((lab,j)=>'<tr><td>'+esc(lab)+'</td><td>'+esc(show(vals[j]))+'</td></tr>').join('');return '<div class="hmi-pbox"><h3>HMI '+esc(pg.no||i+1)+' · '+esc(pg.title||'')+'</h3><table><tr><th>Alan</th><th>Değer</th></tr>'+rows+'</table></div>'}).join('');
- return '<div class="print-page">'+pageHead+
- '<div class="psec"><h2>TERFİ / SEÇİLİ POMPA BİLGİLERİ</h2><div class="pmini">'+stationInfo+'</div></div>'+ 
- '<div class="print-top">'+
- '<div class="psec"><h2>POMPA / MOTOR · TÜM ALANLAR</h2><div class="pmini">'+pumpMotor+'</div></div>'+ 
- '<div class="psec"><h2>SÜRÜCÜ / SSR · TÜM ALANLAR</h2><div class="pmini">'+driverSSR+'</div><h2 style="margin-top:.45mm">BOX / KABLO · U/V/W</h2>'+compactTable(['Hat','Değer'],cableRows,'Kablo kaydı yok.')+'</div>'+ 
- '<div class="psec"><h2>ANLIK ÇALIŞMA · TÜM ALANLAR</h2><div class="pmini">'+workCurrent+'</div><div class="print-note"><b>Teknik not:</b> '+esc(w.notlar||'—')+'</div></div>'+ 
- '</div>'+ 
- '<div class="psec"><h2>HMI / PLC · 6 EKRAN · TEKNİK POMPA P'+esc(no)+'</h2><div class="hmi-print">'+hmiHtml+'</div></div>'+ 
- '<div class="print-bottom"><div>'+ 
- '<div class="psec"><h2>TERFİ ÖZEL PARAMETRELER</h2>'+compactTable(['Kod','Ad','Değer','Birim','Not'],params,'Özel parametre kaydı yok.')+'</div>'+ 
- '<div class="psec"><h2>ARIZA KAYITLARI</h2>'+compactTable(['Tarih','Kod','Başlık','Tespit','İşlem','Sonuç','Not'],faults,'Arıza kaydı yok.')+'</div>'+ 
- '<div class="psec"><h2>ÇALIŞMA GEÇMİŞİ</h2>'+compactTable(['Tarih','Hz','A','kW','RPM','V','Set','Çalışma','°C','Durum','Not'],workHist,'Çalışma geçmişi yok.')+'</div>'+ 
- '</div><div>'+ 
- '<div class="psec"><h2>FOTOĞRAF / DOKÜMAN KAYITLARI</h2>'+compactTable(['Tarih','Ad','Not','Dosya/URL'],photos,'Fotoğraf/doküman kaydı yok.')+'</div>'+ 
- '<div class="psec"><h2>TERFİ SAHA / GEÇMİŞ</h2><div class="print-note"><b>Açıklama:</b> '+esc(s.note||'—')+'<br><b>Referans:</b> '+esc(s.referenceNote||'—')+'<br><b>Adres:</b> '+esc(s.address||'—')+'<br><b>Kaynak:</b> '+esc(s.source||'—')+'<br><b>Basma:</b> '+esc(s.outlet||'—')+'<br><b>Kuyu:</b> '+esc(s.depth||'—')+'<br><b>GPS:</b> '+esc(s.gps||'—')+'</div>'+compactTable(['Tarih','İşlem','Detay'],stationHist,'Terfi geçmişi yok.')+'</div>'+ 
- '<div class="psec"><h2>EK TEKNİK ALANLAR</h2>'+compactTable(['Alan','Değer'],shortRows(extraPump.concat(extraStation),40),'Ek alan yok.')+'</div>'+ 
- '</div></div><div class="print-foot">MESKİ TERFİ ARŞİVİM · '+esc(s.ad)+' · TEKNİK POMPA P'+esc(no)+' · SEÇİLİ POMPANIN TÜM KAYITLARI · A3 YATAY · TEK SAYFA</div></div>';
-}
+function statRows(obj){return Object.entries(obj).map(([k,v])=>'<div class="pcell"><b>'+esc(k)+'</b><span>'+esc(v||"—")+'</span></div>').join("")}
+function hmiPrint(p){return HMI.map((pg,i)=>'<div class="hmi-pbox print-hmi-screen"><h3>HMI '+pg.no+' · '+esc(pg.title)+'</h3><table>'+pg.labels.map((lab,j)=>{const z=(p.hmi[i]||{})[j];return '<tr><td>'+esc(lab)+'</td><td><strong>'+esc(z!==undefined&&z!==''?z:'—')+'</strong></td></tr>'}).join('')+'</table></div>').join('')}
+function pumpPrint(s,p){const w=p.work.current||{};return '<div class="print-page"><div class="print-head"><div><h1>MESKİ TERFİ TEKNİK ARŞİVİ</h1><p>'+esc(s.ad)+' · '+esc(s.rtu==='YOK'?'RTU YOK':'RTU '+s.rtu)+' · P'+p.no+' · '+esc(p.ad)+'</p></div><div>'+esc(now())+'<br>'+esc(s.bolge)+'</div></div><div class="pgrid">'+statRows({'Terfi':s.ad,'RTU':s.rtu,'Bölge':s.bolge,'Tip':s.tip,'Pompa':p.ad,'Adres':s.address,'Kaynak':s.source,'Basma':s.outlet,'Kuyu':s.depth?s.depth+' m':'—','GPS':s.gps})+'</div><div class="print-top"><div class="psec"><h2>POMPA / MOTOR</h2><div class="pmini">'+statRows({'Pompa marka':p.pump.marka,'Pompa model':p.pump.model,'Pompa tip':p.pump.tip,'Pompa seri':p.pump.seri_no,'Q min':p.pump.q_min,'Q max':p.pump.q_max,'H min':p.pump.h_min,'H max':p.pump.h_max,'Motor marka':p.motor.marka,'Motor model':p.motor.model,'Motor seri':p.motor.seri_no,'Motor tip':p.motor.motor_tipi,'Motor güç':p.motor.guc_kw+' kW','Motor gerilim':p.motor.gerilim_v+' V','Motor akım':p.motor.nominal_akim_a+' A','Motor frekans':p.motor.frekans_hz+' Hz','Motor devir':p.motor.devir_rpm+' rpm','Cos φ':p.motor.cos_phi})+'</div></div><div class="psec"><h2>SÜRÜCÜ / SSR / BOX-KABLO</h2><div class="pmini">'+statRows({'Sürücü marka':p.driver.marka,'Sürücü model':p.driver.model,'Sürücü seri':p.driver.seri_no,'Sürücü aile':p.driver.surucu_ailesi,'Güç':p.driver.guc_kw+' kW','Besleme':p.driver.besleme_v+' V','SSR seviye':p.ssr.level,'SSR alt':p.ssr.low,'SSR üst':p.ssr.high,'Basınç giriş':p.ssr.pump_in,'Motor U':p.box.motor.U.renk+' / '+p.box.motor.U.etiket,'Motor V':p.box.motor.V.renk+' / '+p.box.motor.V.etiket,'Motor W':p.box.motor.W.renk+' / '+p.box.motor.W.etiket,'Sürücü U':p.box.driver.U.renk+' / '+p.box.driver.U.etiket,'Sürücü V':p.box.driver.V.renk+' / '+p.box.driver.V.etiket,'Sürücü W':p.box.driver.W.renk+' / '+p.box.driver.W.etiket})+'</div></div><div class="psec"><h2>ANLIK ÇALIŞMA</h2><div class="pmini live-print">'+statRows({'Frekans':w.frekans_hz+' Hz','Akım':w.akim_a+' A','Devir':w.devir_rpm+' rpm','Güç':w.guc_kw+' kW','Gerilim':w.gerilim_v+' V','Sürücü sıcaklık':w.surucu_sicaklik_c+' °C','Set basıncı':w.set_basinci_bar+' bar','Çalışma basıncı':w.calisma_basinci_bar+' bar','Tasarruf':w.tasarruf_kwh+' kWh','Durum':w.durum})+'</div></div></div><div class="psec print-hmi-full"><h2>HMI / PLC · 6 AYRI EKRAN</h2><div class="hmi-print">'+hmiPrint(p)+'</div></div><div class="print-bottom"><div class="psec"><h2>TERFİYE ÖZEL PARAMETRELER</h2><table class="ptable"><tr><th>Kod</th><th>Ad</th><th>Değer</th><th>Birim</th><th>Not</th></tr>'+(p.params.map(x=>'<tr><td>'+esc(x.code)+'</td><td>'+esc(x.name)+'</td><td><strong>'+esc(x.value||'—')+'</strong></td><td>'+esc(x.unit)+'</td><td>'+esc(x.note)+'</td></tr>').join('')||'<tr><td colspan="5">Kayıt yok</td></tr>')+'</table></div><div class="psec"><h2>ARIZA KAYITLARI</h2><table class="ptable"><tr><th>Tarih</th><th>Kod</th><th>Başlık</th><th>Tespit</th><th>İşlem</th><th>Sonuç</th></tr>'+(p.faults.map(x=>'<tr><td>'+esc(x.date)+'</td><td>'+esc(x.code)+'</td><td>'+esc(x.name)+'</td><td>'+esc(x.cause)+'</td><td>'+esc(x.action)+'</td><td>'+esc(x.result)+'</td></tr>').join('')||'<tr><td colspan="6">Kayıt yok</td></tr>')+'</table></div></div><div class="print-foot">MESKİ TERFİ ARŞİVİM · '+esc(s.ad)+' · P'+p.no+' · 6 HMI ekranı + 1 Anlık Çalışma · A3 yatay · tek pompa = tek sayfa</div></div>'}
+
 function pdfSelected(){const s=station(),p=pump();if(!s||!p)return;document.getElementById("printRoot").innerHTML=pumpPrint(s,p);window.print()}
-function pdfAll(){const s=station();if(!s||!s.pumps.length)return;document.getElementById("printRoot").innerHTML=s.pumps.map(p=>pumpPrint(s,p)).join("");window.print()}
-window.addEventListener("afterprint",()=>{const e=document.getElementById("printRoot");if(e)e.innerHTML=""})
+function pdfAll(){const s=station();if(!s)return;document.getElementById("printRoot").innerHTML=s.pumps.map(p=>pumpPrint(s,p)).join("");window.print()}
 
 function render(){const root=document.getElementById("app");root.innerHTML='<div class="shell">'+sidebar()+'<main class="main">'+topbar()+(view==="home"?homeView():stationView())+'<div class="footer">MESKİ TERFİ ARŞİVİM · '+db.length+' TERFİ · '+db.reduce((n,x)=>n+x.pumps.length,0)+' POMPA · TEK DOSYA</div></main></div>';document.querySelectorAll(".adminbar").forEach(x=>x.remove());if(admin){const a=document.createElement("div");a.className="adminbar";a.textContent="● YÖNETİCİ MODU AKTİF · KİLİT";a.onclick=adminLogin;document.body.appendChild(a)}}
 db=load();loadLibraries();render();
