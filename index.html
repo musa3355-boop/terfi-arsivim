@@ -58,20 +58,10 @@ button,input,textarea,select{font:inherit}button{cursor:pointer}input,textarea,s
 /* PDF: tek A3 yatay sayfa, bölümler birbirine girmeden */
 .print-hmi-screen{break-inside:avoid;page-break-inside:avoid}
 #printRoot{display:none}
-@media print{#printRoot{display:block!important;width:100%!important;background:#fff!important;color:#000!important}body{background:#fff!important;color:#000!important}}
 
 .hmi-direct-input{display:inline-block;min-width:72px;max-width:145px;padding:5px 7px!important;border:1px solid #b9c5ce!important;border-radius:4px!important;background:#f7f9fb!important;color:#17364d!important;font-weight:900!important;text-align:center;box-shadow:inset 0 1px 2px #0001!important}.hmi-direct-input:focus{border-color:#18b7ef!important;outline:2px solid #18b7ef55!important}.hmi-real-row .hmi-direct-input{width:92px;margin-left:6px}.pressure-main .hmi-direct-input{font-size:16px;min-width:110px}.pressure-io .hmi-direct-input{min-width:55px}.hmi-screen-item .hmi-direct-input{width:100%}
 @media print{
  @page{size:A3 landscape;margin:6mm}
- /* PDF SABİT: beyaz zemin + siyah yazı */
- *{color:#000!important;background:#fff!important;box-shadow:none!important;text-shadow:none!important}
- .print-page,.print-page *{color:#000!important;background:#fff!important}
- .print-head,.psec,.pdf-kvgrid>div,.ptable,.ptable th,.ptable td,.print-hmi-screen,.hmi-pdf-row,.hmi-pdf-row span{border-color:#555!important}
- .print-head h1,.print-hmi-title,.psec h2{color:#000!important}
- .print-hmi-screen h3{color:#000!important;border:1px solid #555!important}
- .ptable th{background:#eee!important;color:#000!important}
- .hmi-pdf-row span{background:#fff!important;color:#000!important}
- .print-foot{color:#000!important;border-color:#555!important}
  html,body{margin:0!important;padding:0!important;background:#fff!important}
  body>*:not(#printRoot){display:none!important}
  #printRoot{display:block!important;width:100%!important;margin:0!important;padding:0!important}
@@ -207,7 +197,7 @@ const DEFAULT_HYD=[{name:"KIRSAL AKDENİZ",bolge:"AKDENİZ",source:"Saha hidroli
 const LIB_STORE="MESKI_TEKNIK_KUTUPHANE_2026";
 let PARAMS=[],FAULTS=[],DRIVER_SERIES=[],HYD=[];
 function loadLibraries(){try{const x=JSON.parse(localStorage.getItem(LIB_STORE)||"null");PARAMS=Array.isArray(x?.params)?x.params:clone(DEFAULT_PARAMS);FAULTS=Array.isArray(x?.faults)?x.faults:clone(DEFAULT_FAULTS);DRIVER_SERIES=Array.isArray(x?.drivers)?x.drivers:clone(DEFAULT_DRIVER_SERIES);HYD=Array.isArray(x?.hyd)?x.hyd:clone(DEFAULT_HYD)}catch(e){PARAMS=clone(DEFAULT_PARAMS);FAULTS=clone(DEFAULT_FAULTS);DRIVER_SERIES=clone(DEFAULT_DRIVER_SERIES);HYD=clone(DEFAULT_HYD)}}
-function saveLibraries(){try{localStorage.setItem(LIB_STORE,JSON.stringify({version:2,params:PARAMS,faults:FAULTS,drivers:DRIVER_SERIES,hyd:HYD}))}catch(e){console.error(e);toast("Teknik kütüphane kaydedilemedi.")}}
+function saveLibraries(){localStorage.setItem(LIB_STORE,JSON.stringify({params:PARAMS,faults:FAULTS,drivers:DRIVER_SERIES,hyd:HYD}))}
 
 let db=[],view="home",stationId=null,pumpId=null,tab="genel",hmiPage=1,district="TÜMÜ",search="",admin=false,libraryMode="all";
 
@@ -223,66 +213,12 @@ motor:{marka:"",model:"",seri_no:"",motor_tipi:"",guc_kw:"",guc_hp:"",gerilim_v:
 driver:{marka:"ABB",model:"",seri_no:"",surucu_ailesi:"",guc_kw:"",besleme_v:"",firmware:"",kontrol:"",not:""},
 box:{motor:{U:{renk:"",etiket:"U",detay:""},V:{renk:"",etiket:"V",detay:""},W:{renk:"",etiket:"W",detay:""}},out:{U:{renk:"",etiket:"U",detay:""},V:{renk:"",etiket:"V",detay:""},W:{renk:"",etiket:"W",detay:""}},driver:{U:{renk:"",etiket:"U",detay:""},V:{renk:"",etiket:"V",detay:""},W:{renk:"",etiket:"W",detay:""}}},
 hmi:hmiBlank(),work:{current:{frekans_hz:"",akim_a:"",devir_rpm:"",guc_kw:"",gerilim_v:"",surucu_sicaklik_c:"",set_basinci_bar:"",calisma_basinci_bar:"",tasarruf_kwh:"",durum:"Sistem Normal",notlar:""},history:[]},
-ssr:{level:"",low:"",high:"",pump_in:"",low_enter:"",high_enter:"",low_exit:"",high_exit:"",note:""},params:[],faults:[],photos:[],events:[],note:""}}
-function blankStation(id="",ad="Yeni Terfi",rtu="RTU YOK",bolge="MERKEZ",tip="TERFİ"){
- return {id:id||uid(),ad,rtu,bolge,tip,address:"",source:"",outlet:"",depth:"",gps:"",location_updated:"",note:"",referenceNote:"",history:[],pumps:[]};
-}
-function makeDB(){return SEED.map(s=>{const x=blankStation(s.id,s.ad,s.rtu,s.bolge,s.tip);x.referenceNote=s.referenceNote||"";x.pumps=(s.pumps||[]).map(p=>pumpTemplate(p.no,p.ad));return x})}
-function mergeDeep(src,base){
- if(src===undefined||src===null)return clone(base);
- if(Array.isArray(src))return clone(src);
- if(typeof src!=="object")return src;
- const out={...(base&&typeof base==="object"&&!Array.isArray(base)?base:{})};
- Object.keys(src).forEach(k=>{out[k]=src[k]&&typeof src[k]==="object"&&!Array.isArray(src[k])?mergeDeep(src[k],out[k]||{}):clone(src[k])});
- return out;
-}
-function normalizePump(raw,index){
- const base=pumpTemplate(Number(raw?.no)||index+1,raw?.ad||("P"+(Number(raw?.no)||index+1)));
- return mergeDeep(raw||{},base);
-}
-function normalizeStation(raw,fallback){
- const base=fallback||blankStation(raw?.id,raw?.ad,raw?.rtu,raw?.bolge,raw?.tip);
- const x=mergeDeep(raw||{},base);
- const rawPumps=Array.isArray(raw?.pumps)?raw.pumps:null;
- const basePumps=Array.isArray(base.pumps)?base.pumps:[];
- x.pumps=rawPumps!==null?rawPumps.map((p,i)=>normalizePump(p,i)):basePumps.map((p,i)=>normalizePump(p,i));
- x.history=Array.isArray(x.history)?x.history:[];
- return x;
-}
-function normalize(saved){
- if(!Array.isArray(saved))return makeDB();
- const seeds=makeDB();
- const byId=new Map(saved.map(s=>[String(s.id||""),s]));
- const byName=new Map(saved.map(s=>[String(s.ad||"").trim().toLocaleLowerCase("tr-TR"),s]));
- const used=new Set();
- const result=seeds.map(seed=>{
-  const raw=byId.get(String(seed.id))||byName.get(String(seed.ad).trim().toLocaleLowerCase("tr-TR"));
-  if(!raw)return seed;
-  used.add(raw);
-  return normalizeStation(raw,seed);
- });
- saved.forEach(raw=>{
-  if(used.has(raw))return;
-  const x=normalizeStation(raw);
-  if(!x.id)x.id=uid();
-  result.push(x);
- });
- return result;
-}
-function load(){
- try{
-  const raw=localStorage.getItem(STORE);
-  if(!raw)return makeDB();
-  const x=JSON.parse(raw);
-  if(Array.isArray(x)&&x.length)return normalize(x);
-  if(Array.isArray(x?.stations)&&x.stations.length)return normalize(x.stations);
- }catch(e){console.warn("Arşiv yükleme hatası",e)}
- return makeDB();
-}
-function save(show=true){
- try{localStorage.setItem(STORE,JSON.stringify(db));if(show)toast("Kayıt kaydedildi.")}
- catch(e){console.error(e);toast("Kayıt yapılamadı. Tarayıcı depolama alanını kontrol edin.")}
-}
+ssr:{level:"",low:"",high:"",pump_in:"",low_enter:"",high_enter:"",low_exit:"",high_exit:"",note:""},params:[],faults:[],photos:[],note:""}}
+function makeDB(){return SEED.map(s=>({...clone(s),address:"",source:"",outlet:"",depth:"",gps:"",note:"",history:[],pumps:s.pumps.map(p=>pumpTemplate(p.no,p.ad))}))}
+function mergeDeep(src,base){if(!src||typeof src!=="object")return src??base;const o={...base};for(const k of Object.keys(base||{})){if(src[k]===undefined)continue;o[k]=src[k]&&typeof src[k]==="object"&&!Array.isArray(src[k])?mergeDeep(src[k],base[k]):src[k]}return o}
+function normalize(saved){const map=new Map(saved.map(s=>[s.ad,s]));return makeDB().map(b=>{const s=map.get(b.ad);if(!s)return b;const x=mergeDeep(s,b);x.pumps=b.pumps.map(bp=>{const old=(s.pumps||[]).find(p=>p.no===bp.no)||{};return mergeDeep(old,bp)});return x})}
+function load(){try{const raw=localStorage.getItem(STORE);if(raw){const x=JSON.parse(raw);if(Array.isArray(x)&&x.length)return normalize(x)}}catch(e){}return makeDB()}
+function save(){localStorage.setItem(STORE,JSON.stringify(db));toast("Kayıt kaydedildi.")}
 function station(){return db.find(s=>s.id===stationId)||null}
 function pump(){const s=station();return s?.pumps.find(p=>p.id===pumpId)||null}
 function needAdmin(){if(admin)return true;adminLogin();return false}
@@ -293,30 +229,21 @@ function setDistrict(d){district=d;view="home";stationId=null;pumpId=null;render
 function requestLocation(id){if(!needAdmin())return;const s=db.find(x=>x.id===id);if(!s)return;if(!navigator.geolocation){toast("Bu cihaz konum bilgisini desteklemiyor.");return}toast("Konum alınıyor…");navigator.geolocation.getCurrentPosition(pos=>{s.gps=pos.coords.latitude.toFixed(6)+", "+pos.coords.longitude.toFixed(6);s.location_updated=now();save();render();toast("Konum kaydedildi.")},err=>{const m=err.code===1?"Konum izni verilmedi.":err.code===2?"Konum alınamadı.":"Konum alma zaman aşımına uğradı.";toast(m)},{enableHighAccuracy:true,timeout:15000,maximumAge:0})}
 function openLocationForStation(id){const s=db.find(x=>x.id===id);if(!s)return;if(!s.gps){requestLocation(id);return}const q=encodeURIComponent(s.gps);openModal("KONUM · "+esc(s.ad),'<div class="data"><h3>📍 KAYITLI KONUM</h3><div class="kv"><span>Terfi</span><span>'+esc(s.ad)+'</span></div><div class="kv"><span>GPS</span><span>'+esc(s.gps)+'</span></div><div class="kv"><span>Güncelleme</span><span>'+esc(s.location_updated||"—")+'</span></div></div><div class="actions" style="justify-content:flex-start"><button class="btn primary" onclick="openGoogleMaps(\''+q+'\')">GOOGLE MAPS</button><button class="btn" onclick="openAppleMaps(\''+q+'\')">APPLE HARİTALAR</button>'+(admin?'<button class="btn bad" onclick="deleteLocation(\''+id+'\')">KONUMU SİL</button>':"")+'</div>')}
 function openGoogleMaps(q){window.open("https://www.google.com/maps/search/?api=1&query="+q,"_blank")}
-function openAppleMaps(q){window.open("https://maps.apple.com/?q="+q,"_blank")}
+function openAppleMaps(q){window.open("http://maps.apple.com/?q="+q,"_blank")}
 function deleteLocation(id){if(!needAdmin())return;const s=db.find(x=>x.id===id);if(!s)return;if(!confirm("Bu terfinin kayıtlı konumu silinsin mi?"))return;s.gps="";s.location_updated="";save();closeModal();render();toast("Konum silindi.")}
 function openStation(id){const s=db.find(x=>x.id===id);if(!s)return;view="station";stationId=id;pumpId=s.pumps[0]?.id||null;tab="genel";hmiPage=1;render()}
-function backFromStation(){view="home";stationId=null;pumpId=null;tab="genel";hmiPage=1;render()}
 function selectPump(id){const s=station();if(!s?.pumps.some(p=>p.id===id))return;pumpId=id;tab="genel";hmiPage=1;render()}
 function setTab(t){tab=t;render()}
-function setHmiPage(n){syncCurrentHMIFromDOM();save(false);hmiPage=n;render()}
-function resetAll(){if(!needAdmin())return;if(!confirm("Bu cihazdaki arşiv silinip başlangıç verilerine dönsün mü?"))return;db=makeDB();save(false);home();toast("Başlangıç yapısı yenilendi.")}
+function setHmiPage(n){syncCurrentHMIFromDOM();save();hmiPage=n;render()}
+function resetAll(){if(!needAdmin())return;if(!confirm("Tüm bu cihazdaki arşiv silinip 42 terfi / 109 pompa başlangıç yapısına dönsün mü?"))return;db=makeDB();save();home();toast("Başlangıç yapısı yenilendi.")}
 function setPath(o,path,v){const k=path.split(".").filter(Boolean);let x=o;for(let i=0;i<k.length-1;i++)x=x[k[i]]||(x[k[i]]={});if(k.length)x[k[k.length-1]]=v}
 function inp(label,path,value,type="text"){return'<div class="field"><label>'+esc(label)+'</label><input data-path="'+esc(path)+'" value="'+esc(value??"")+'" type="'+type+'" '+(admin?"":"readonly")+'></div>'}
 function txt(label,path,value){return'<div class="field"><label>'+esc(label)+'</label><textarea data-path="'+esc(path)+'" '+(admin?"":"readonly")+'>'+esc(value??"")+'</textarea></div>'}
-function kv(title,obj){return'<div class="data"><h3>'+title+'</h3>'+Object.entries(obj).map(([k,v])=>'<div class="kv"><span>'+esc(k)+'</span><span>'+esc(v!==undefined&&v!==null&&String(v)!==""?String(v):"—")+'</span></div>').join("")+'</div>'}
+function kv(title,obj){return'<div class="data"><h3>'+title+'</h3>'+Object.entries(obj).map(([k,v])=>'<div class="kv"><span>'+esc(k)+'</span><span>'+esc(v||"—")+'</span></div>').join("")+'</div>'}
 
-function getDistricts(){return Array.from(new Set((Array.isArray(window.DISTRICTS)?window.DISTRICTS:[]).concat(db.map(s=>s.bolge).filter(Boolean)))).filter(Boolean)}
-function saveDistricts(){try{localStorage.setItem("MESKI_ILCELER_2026",JSON.stringify(getDistricts()))}catch(e){console.error(e)}}
-function loadDistricts(){try{const x=JSON.parse(localStorage.getItem("MESKI_ILCELER_2026")||"null");window.DISTRICTS=Array.isArray(x)&&x.length?x:["AKDENİZ","MEZİTLİ","TOROSLAR","YENİŞEHİR","MERKEZ"]}catch(e){window.DISTRICTS=["AKDENİZ","MEZİTLİ","TOROSLAR","YENİŞEHİR","MERKEZ"]}}
-function openDistricts(){if(!needAdmin())return;openModal("İLÇE YÖNETİMİ",districtHTML())}
-function districtHTML(){const ds=getDistricts();return '<div class="muted" style="margin-bottom:8px">Yeni ilçe ekleyebilir, mevcut ilçeyi değiştirebilir veya boş ilçeyi silebilirsin.</div><div id="districtList">'+ds.map((d,i)=>'<div class="data" style="margin:7px 0"><div class="section-head"><b>'+esc(d)+'</b><div class="actions"><button class="btn" onclick="renameDistrict('+i+')">DÜZENLE</button><button class="btn bad" onclick="deleteDistrict('+i+')">SİL</button></div></div><div class="muted">'+db.filter(s=>s.bolge===d).length+' terfi</div></div>').join('')+'</div><div class="actions" style="justify-content:flex-start;margin-top:10px"><button class="btn ok" onclick="addDistrict()">+ YENİ İLÇE</button></div>'}
-function addDistrict(){if(!needAdmin())return;const n=prompt("Yeni ilçe adı:","");if(!n)return;const name=n.trim().toLocaleUpperCase("tr-TR");if(!name)return;const ds=getDistricts();if(ds.includes(name)){toast("Bu ilçe zaten var.");return}ds.push(name);window.DISTRICTS=ds;saveDistricts();closeModal();openDistricts();render()}
-function renameDistrict(i){if(!needAdmin())return;const ds=getDistricts(),old=ds[i];const n=prompt("Yeni ilçe adı:",old);if(!n)return;const name=n.trim().toLocaleUpperCase("tr-TR");if(!name||name===old)return;if(ds.includes(name)){toast("Bu ilçe zaten var.");return}db.filter(s=>s.bolge===old).forEach(s=>{s.bolge=name;s.history.unshift({date:now(),action:"İLÇE DEĞİŞTİ",detail:old+" → "+name})});ds[i]=name;window.DISTRICTS=ds;saveDistricts();save(false);closeModal();openDistricts();render()}
-function deleteDistrict(i){if(!needAdmin())return;const ds=getDistricts(),name=ds[i],count=db.filter(s=>s.bolge===name).length;if(count){toast("Bu ilçede terfi kayıtları var. Önce kayıtların ilçesini değiştir.");return}if(!confirm(name+" ilçesi silinsin mi?"))return;ds.splice(i,1);window.DISTRICTS=ds;saveDistricts();closeModal();openDistricts();render()}
-function openMapOverview(){const rows=db.filter(s=>s.gps);const body='<div class="muted" style="margin-bottom:9px">Kayıtlı GPS konumları. Haritalar yalnızca harita işlevini açar; hidrolik ekranıyla bağlantılı değildir.</div>'+(rows.length?'<div class="library-grid">'+rows.map(s=>'<div class="library-item"><div class="library-name">'+esc(s.ad)+'</div><div class="library-desc">'+esc(s.bolge)+' · '+esc(s.gps)+'</div><div class="library-actions"><button class="btn primary" onclick="openGoogleMaps(encodeURIComponent(\''+esc(s.gps)+'\'))">GOOGLE</button><button class="btn" onclick="openAppleMaps(encodeURIComponent(\''+esc(s.gps)+'\'))">APPLE</button></div></div>').join('')+'</div>':'<div class="empty">Henüz kayıtlı GPS konumu yok. Terfi kartından KONUM AL ile ekleyebilirsin.</div>');openModal("HARİTA",body)}
+function sidebar(){return'<aside class="side"><div class="brand"><div class="logo">M</div><div><b>MESKİ TERFİ ARŞİVİM</b><small>SAHA · POMPA · MOTOR · HMI</small></div></div><div class="side-title">ANA MENÜ</div><button onclick="home()">⌂ Ana Sayfa</button>'+["AKDENİZ","MEZİTLİ","TOROSLAR","YENİŞEHİR","MERKEZ"].map(d=>'<button class="'+(district===d?"active":"")+'" onclick="setDistrict(\''+d+'\')">● '+d+'</button>').join("")+'<div class="side-title">TEKNİK KÜTÜPHANE</div><button onclick="openLibrary(\'all\')">🧰 Teknik Kütüphane</button><div class="side-title">VERİ</div><button onclick="backup()">⇩ JSON Yedek</button><button onclick="document.getElementById(\'restore\').click()">⇧ JSON Geri Yükle</button><button onclick="resetAll()">↻ Başlangıç Verilerine Dön</button><button onclick="adminLogin()">⚙ '+(admin?"Yönetici Kilitle":"Yönetici")+'</button><input id="restore" type="file" accept=".json" hidden onchange="restore(event)"><div style="margin-top:20px;color:#587f93;font-size:8px;line-height:1.6">'+db.length+' TERFİ<br>'+db.reduce((n,x)=>n+x.pumps.length,0)+' POMPA<br>5 BÖLGE</div></aside>'}
+function topbar(){return'<div class="top"><div style="min-width:0;display:flex;align-items:center;gap:7px"><button class="btn mobile" onclick="home()">☰</button><div class="crumb">ANA SAYFA / '+(station()?esc(station().ad):"TERFİ LİSTESİ")+(station()?" / P"+(pump()?.no||1):"")+'</div></div><div class="actions">'+(station()?'<button class="btn primary" onclick="pdfSelected()">PDF · P'+(pump()?.no||1)+'</button><button class="btn" onclick="pdfAll()">PDF · TÜM POMPALAR</button><button class="btn" onclick="editStation()">DÜZENLE</button>':'<button class="btn ok" onclick="newStation()">+ YENİ TERFİ</button>')+'<button class="btn '+(admin?"warn":"primary")+'" onclick="adminLogin()">'+(admin?"🔒 KİLİT":"🔐 YÖNETİCİ")+'</button></div></div>'}
 
-function sidebar(){const ds=getDistricts();return'<aside class="side"><div class="brand"><div class="logo">M</div><div><b>MESKİ TERFİ ARŞİVİM</b><small>SAHA · POMPA · MOTOR · HMI</small></div></div><div class="side-title">ANA MENÜ</div><button onclick="home()">⌂ Ana Sayfa</button><button onclick="openMapOverview()">🗺️ Haritalar</button>'+ds.map(d=>'<button class="'+(district===d?"active":"")+'" onclick="setDistrict(\''+esc(d)+'\')">● '+esc(d)+'</button>').join('')+'<div class="side-title">TEKNİK KÜTÜPHANE</div><button onclick="openLibrary(\'all\')">🧰 Teknik Kütüphane</button><div class="side-title">YÖNETİM</div><button onclick="openDistricts()">📍 İlçeler</button><button onclick="adminLogin()">⚙ '+(admin?"Yönetici Kilitle":"Yönetici")+'</button><div class="side-title">VERİ</div><button onclick="backup()">⇩ JSON Yedek</button><button onclick="document.getElementById(\'restore\').click()">⇧ JSON Geri Yükle</button><button onclick="resetAll()">↻ Başlangıç Verilerine Dön</button><input id="restore" type="file" accept=".json" hidden onchange="restore(event)"><div style="margin-top:20px;color:#587f93;font-size:8px;line-height:1.6">'+db.length+' TERFİ<br>'+db.reduce((n,x)=>n+x.pumps.length,0)+' POMPA<br>'+ds.length+' İLÇE</div></aside>'}
 function stationLocationHome(s){
   if(!s.gps){
     return admin?'<button class="btn primary" onclick="event.stopPropagation();requestLocation(\''+s.id+'\')">📍 KONUM AL</button>':'';
@@ -331,9 +258,9 @@ function stationLocationGPS(s){
   if(admin) return '<button class="btn" style="padding:4px 6px;font-size:8px" onclick="openLocationForStation(\''+s.id+'\')">'+esc(s.gps)+'</button>';
   return '<button class="btn primary" style="padding:4px 6px;font-size:8px" onclick="openGoogleMaps(encodeURIComponent(\''+s.gps+'\'))">🗺️ KONUMA GİT</button>';
 }
-function homeView(){const q=search.toLocaleLowerCase("tr-TR");const rows=db.filter(s=>(district==="TÜMÜ"||s.bolge===district)&&(!q||(s.ad+" "+s.rtu+" "+s.bolge+" "+s.tip+" "+s.pumps.map(p=>p.ad).join(" ")).toLocaleLowerCase("tr-TR").includes(q)));const groups={};rows.forEach(s=>(groups[s.bolge]??=[]).push(s));return'<div class="hero"><div class="hero-row"><div class="hero-icon">💧</div><div><h1>MESKİ TERFİ TEKNİK ARŞİV</h1><div class="hero-sub">TERFİ → POMPA BLOĞU → MOTOR / SÜRÜCÜ / BOX / SSR / HMI / ANLIK ÇALIŞMA / PARAMETRE / ARIZA</div></div></div></div><div class="card"><div class="stats"><div class="stat"><small>TERFİ</small><strong>'+db.length+'</strong><span>kayıtlı saha</span></div><div class="stat"><small>POMPA</small><strong>'+db.reduce((n,x)=>n+x.pumps.length,0)+'</strong><span>kayıtlı pompa</span></div><div class="stat"><small>BÖLGE</small><strong>'+getDistricts().length+'</strong><span>kayıtlı ilçe</span></div><div class="stat"><small>HMI</small><strong>6</strong><span>ayrı HMI ekranı</span></div></div></div><div class="card"><div class="districts">'+["TÜMÜ"].concat(getDistricts()).map(d=>'<button class="district '+(district===d?"active":"")+'" onclick="setDistrict(\''+d+'\')">'+d+'</button>').join("")+'</div><div class="filterbar"><input value="'+esc(search)+'" placeholder="Terfi, RTU, bölge veya pompa ara..." oninput="search=this.value;render()"></div><div class="muted" style="margin-top:7px">SCADA/hidrolik kaydında adı geçen fakat pompa sayısı doğrulanmamış tesisler listeden çıkarılmadı; yönetici sonradan pompa ekleyebilir.</div></div>'+Object.keys(groups).sort((a,b)=>a.localeCompare(b,"tr")).map(b=>'<section class="group"><div class="group-title"><b>📍 '+esc(b)+'</b><span>'+groups[b].length+' TERFİ</span></div><div class="station-grid">'+groups[b].map(s=>'<article class="card station" onclick="openStation(\''+s.id+'\')"><div class="section-head"><div><h3>'+esc(s.ad)+'</h3><div class="station-meta">'+esc(s.rtu==="YOK"?"RTU YOK":"RTU "+s.rtu)+' · '+esc(s.tip)+'</div></div><span class="badge '+(s.pumps.length?'ok':'warn')+'">'+(s.pumps.length?s.pumps.length+' POMPA':'POMPA SAYISI GİRİLECEK')+'</span></div><div class="actions" style="justify-content:flex-start;margin:7px 0 4px">'+stationLocationHome(s)+'</div><div class="chips">'+s.pumps.slice(0,8).map(p=>'<span class="chip">'+esc(p.ad)+'</span>').join("")+(s.pumps.length>8?'<span class="chip">+'+(s.pumps.length-8)+'</span>':(s.pumps.length===0?'<span class="chip warn">Pompa sayısı sahadan girilecek</span>':""))+'</div>'+(s.referenceNote?'<div class="muted" style="margin-top:7px">'+esc(s.referenceNote)+'</div>':"")+'</article>').join("")+'</div></section>').join("")||'<div class="empty">Bu bölgede kayıt yok.</div>'}
+function homeView(){const q=search.toLocaleLowerCase("tr-TR");const rows=db.filter(s=>(district==="TÜMÜ"||s.bolge===district)&&(!q||(s.ad+" "+s.rtu+" "+s.bolge+" "+s.tip+" "+s.pumps.map(p=>p.ad).join(" ")).toLocaleLowerCase("tr-TR").includes(q)));const groups={};rows.forEach(s=>(groups[s.bolge]??=[]).push(s));return'<div class="hero"><div class="hero-row"><div class="hero-icon">💧</div><div><h1>MESKİ TERFİ TEKNİK ARŞİV</h1><div class="hero-sub">TERFİ → POMPA BLOĞU → MOTOR / SÜRÜCÜ / BOX / SSR / HMI / ANLIK ÇALIŞMA / PARAMETRE / ARIZA</div></div></div></div><div class="card"><div class="stats"><div class="stat"><small>TERFİ</small><strong>'+db.length+'</strong><span>kayıtlı saha</span></div><div class="stat"><small>POMPA</small><strong>'+db.reduce((n,x)=>n+x.pumps.length,0)+'</strong><span>kayıtlı pompa</span></div><div class="stat"><small>BÖLGE</small><strong>5</strong><span>Akdeniz · Mezitli · Toroslar · Yenişehir · Merkez</span></div><div class="stat"><small>HMI</small><strong>6</strong><span>ayrı HMI ekranı</span></div></div></div><div class="card"><div class="districts">'+["TÜMÜ","AKDENİZ","MEZİTLİ","TOROSLAR","YENİŞEHİR","MERKEZ"].map(d=>'<button class="district '+(district===d?"active":"")+'" onclick="setDistrict(\''+d+'\')">'+d+'</button>').join("")+'</div><div class="filterbar"><input value="'+esc(search)+'" placeholder="Terfi, RTU, bölge veya pompa ara..." oninput="search=this.value;render()"></div><div class="muted" style="margin-top:7px">SCADA/hidrolik kaydında adı geçen fakat pompa sayısı doğrulanmamış tesisler listeden çıkarılmadı; yönetici sonradan pompa ekleyebilir.</div></div>'+Object.keys(groups).sort((a,b)=>a.localeCompare(b,"tr")).map(b=>'<section class="group"><div class="group-title"><b>📍 '+esc(b)+'</b><span>'+groups[b].length+' TERFİ</span></div><div class="station-grid">'+groups[b].map(s=>'<article class="card station" onclick="openStation(\''+s.id+'\')"><div class="section-head"><div><h3>'+esc(s.ad)+'</h3><div class="station-meta">'+esc(s.rtu==="YOK"?"RTU YOK":"RTU "+s.rtu)+' · '+esc(s.tip)+'</div></div><span class="badge '+(s.pumps.length?'ok':'warn')+'">'+(s.pumps.length?s.pumps.length+' POMPA':'POMPA SAYISI GİRİLECEK')+'</span></div><div class="actions" style="justify-content:flex-start;margin:7px 0 4px">'+stationLocationHome(s)+'</div><div class="chips">'+s.pumps.slice(0,8).map(p=>'<span class="chip">'+esc(p.ad)+'</span>').join("")+(s.pumps.length>8?'<span class="chip">+'+(s.pumps.length-8)+'</span>':(s.pumps.length===0?'<span class="chip warn">Pompa sayısı sahadan girilecek</span>':""))+'</div>'+(s.referenceNote?'<div class="muted" style="margin-top:7px">'+esc(s.referenceNote)+'</div>':"")+'</article>').join("")+'</div></section>').join("")||'<div class="empty">Bu bölgede kayıt yok.</div>'}
 
-function stationView(){const s=station(),p=pump();if(!p)return'<div class="actions" style="justify-content:flex-start;margin-bottom:10px"><button class="btn" onclick="backFromStation()">← GERİ</button></div><div class="hero"><div class="hero-row"><div class="hero-icon">💧</div><div style="min-width:0"><h1>'+esc(s?.ad||'TERFİ')+'</h1><div class="hero-sub">'+esc(s?.rtu==='YOK'?'RTU YOK':'RTU '+(s?.rtu||''))+' · '+esc(s?.bolge||'')+' · '+esc(s?.tip||'')+'</div></div><span class="badge warn">POMPA SAYISI GİRİLECEK</span></div><div class="meta"><div class="cell"><span>RTU</span><b>'+esc(s?.rtu||'YOK')+'</b></div><div class="cell"><span>BÖLGE</span><b>'+esc(s?.bolge||'—')+'</b></div><div class="cell"><span>TİP</span><b>'+esc(s?.tip||'—')+'</b></div><div class="cell"><span>POMPA</span><b>0</b></div><div class="cell"><span>GPS</span><b>'+stationLocationGPS(s)+'</b></div></div></div><div class="card"><div class="section-head"><b>BU KAYITTA HENÜZ POMPA YOK</b>'+(admin?'<button class="btn ok" onclick="addPump()">+ İLK POMPA</button>':"")+'</div><div class="empty">Bu tesis önceki SCADA/hidrolik referanslarında geçiyor ancak pompa sayısı burada doğrulanmış değil. Yönetici olarak ilk pompayı ekleyebilirsin.</div></div><div class="card">'+(s.referenceNote?'<div class="section-title">REFERANS NOTU</div><div class="muted">'+esc(s.referenceNote)+'</div>':"")+'</div>';return'<div class="actions" style="justify-content:flex-start;margin-bottom:10px"><button class="btn" onclick="backFromStation()">← GERİ</button></div><div class="hero"><div class="hero-row"><div class="hero-icon">💧</div><div style="min-width:0"><h1>'+esc(s.ad)+'</h1><div class="hero-sub">'+esc(s.rtu==="YOK"?"RTU YOK":"RTU "+s.rtu)+' · '+esc(s.bolge)+' · '+esc(s.tip)+'</div></div><span class="badge '+(s.pumps.length?'ok':'warn')+'">'+(s.pumps.length?s.pumps.length+' POMPA':'POMPA SAYISI GİRİLECEK')+'</span></div><div class="meta"><div class="cell"><span>RTU</span><b>'+esc(s.rtu)+'</b></div><div class="cell"><span>BÖLGE</span><b>'+esc(s.bolge)+'</b></div><div class="cell"><span>TERFİ TİPİ</span><b>'+esc(s.tip)+'</b></div><div class="cell"><span>POMPA</span><b>'+s.pumps.length+'</b></div><div class="cell"><span>KUYU</span><b>'+esc(s.depth||"—")+'</b></div><div class="cell"><span>GPS</span><b>'+stationLocationGPS(s)+'</b></div></div></div><div class="card"><div class="section-head"><b>POMPA BLOKLARI · BAĞIMSIZ SİSTEM</b>'+(admin?'<button class="btn ok" onclick="addPump()">+ POMPA</button>':"")+'</div><div class="pumps" style="margin-top:8px">'+s.pumps.map((x,i)=>'<button class="pump c'+((i%6)+1)+' '+(x.id===p.id?"active":"")+'" onclick="selectPump(\''+x.id+'\')"><b>P'+x.no+'</b><small>'+esc(x.ad)+'</small></button>').join("")+'</div></div><div class="card system"><div class="system-head"><div class="section-head"><div><h2>P'+p.no+' · '+esc(p.ad)+'</h2><div class="muted" style="color:#ffe0e4">SEÇİLİ POMPA · TÜM TEKNİK KAYITLAR SADECE P'+p.no+' BLOĞUNA AİT</div></div><div class="actions">'+(admin?'<button class="btn" onclick="event.stopPropagation();editPump()">✏️ AD / NO</button><button class="btn bad" onclick="event.stopPropagation();deletePump()">🗑️ POMPAYI SİL</button>':'')+'<span class="badge">P'+p.no+'</span></div></div></div><div class="system-nav">'+[["genel","GENEL"],["pompa","POMPA"],["motor","MOTOR"],["surucu","SÜRÜCÜ"],["box","BOX / KABLO"],["ssr","SSR / SEVİYE"],["hmi","HMI / PLC"],["calisma","ANLIK ÇALIŞMA"],["param","PARAMETRE"],["ariza","ARIZA"],["olay","ALARM / OLAY"],["photo","FOTOĞRAF"],["gecmis","GEÇMİŞ"]].map(x=>'<button class="'+(tab===x[0]?"active":"")+'" onclick="setTab(\''+x[0]+'\')">'+x[1]+'</button>').join("")+'</div><div class="content">'+tabBody()+'</div></div>'}
+function stationView(){const s=station(),p=pump();if(!p)return'<div class="hero"><div class="hero-row"><div class="hero-icon">💧</div><div style="min-width:0"><h1>'+esc(s?.ad||'TERFİ')+'</h1><div class="hero-sub">'+esc(s?.rtu==='YOK'?'RTU YOK':'RTU '+(s?.rtu||''))+' · '+esc(s?.bolge||'')+' · '+esc(s?.tip||'')+'</div></div><span class="badge warn">POMPA SAYISI GİRİLECEK</span></div><div class="meta"><div class="cell"><span>RTU</span><b>'+esc(s?.rtu||'YOK')+'</b></div><div class="cell"><span>BÖLGE</span><b>'+esc(s?.bolge||'—')+'</b></div><div class="cell"><span>TİP</span><b>'+esc(s?.tip||'—')+'</b></div><div class="cell"><span>POMPA</span><b>0</b></div><div class="cell"><span>GPS</span><b>'+stationLocationGPS(s)+'</b></div></div></div><div class="card"><div class="section-head"><b>BU KAYITTA HENÜZ POMPA YOK</b>'+(admin?'<button class="btn ok" onclick="addPump()">+ İLK POMPA</button>':"")+'</div><div class="empty">Bu tesis önceki SCADA/hidrolik referanslarında geçiyor ancak pompa sayısı burada doğrulanmış değil. Yönetici olarak ilk pompayı ekleyebilirsin.</div></div><div class="card">'+(s.referenceNote?'<div class="section-title">REFERANS NOTU</div><div class="muted">'+esc(s.referenceNote)+'</div>':"")+'</div>';return'<div class="hero"><div class="hero-row"><div class="hero-icon">💧</div><div style="min-width:0"><h1>'+esc(s.ad)+'</h1><div class="hero-sub">'+esc(s.rtu==="YOK"?"RTU YOK":"RTU "+s.rtu)+' · '+esc(s.bolge)+' · '+esc(s.tip)+'</div></div><span class="badge '+(s.pumps.length?'ok':'warn')+'">'+(s.pumps.length?s.pumps.length+' POMPA':'POMPA SAYISI GİRİLECEK')+'</span></div><div class="meta"><div class="cell"><span>RTU</span><b>'+esc(s.rtu)+'</b></div><div class="cell"><span>BÖLGE</span><b>'+esc(s.bolge)+'</b></div><div class="cell"><span>TERFİ TİPİ</span><b>'+esc(s.tip)+'</b></div><div class="cell"><span>POMPA</span><b>'+s.pumps.length+'</b></div><div class="cell"><span>KUYU</span><b>'+esc(s.depth||"—")+'</b></div><div class="cell"><span>GPS</span><b>'+stationLocationGPS(s)+'</b></div></div></div><div class="card"><div class="section-head"><b>POMPA BLOKLARI · BAĞIMSIZ SİSTEM</b>'+(admin?'<button class="btn ok" onclick="addPump()">+ POMPA</button>':"")+'</div><div class="pumps" style="margin-top:8px">'+s.pumps.map((x,i)=>'<button class="pump c'+((i%6)+1)+' '+(x.id===p.id?"active":"")+'" onclick="selectPump(\''+x.id+'\')"><b>P'+x.no+'</b><small>'+esc(x.ad)+'</small></button>').join("")+'</div></div><div class="card system"><div class="system-head"><div class="section-head"><div><h2>P'+p.no+' · '+esc(p.ad)+'</h2><div class="muted" style="color:#ffe0e4">SEÇİLİ POMPA · TÜM TEKNİK KAYITLAR SADECE P'+p.no+' BLOĞUNA AİT</div></div><div class="actions">'+(admin?'<button class="btn" onclick="event.stopPropagation();editPump()">✏️ AD / NO</button><button class="btn bad" onclick="event.stopPropagation();deletePump()">🗑️ POMPAYI SİL</button>':'')+'<span class="badge">P'+p.no+'</span></div></div></div><div class="system-nav">'+[["genel","GENEL"],["pompa","POMPA"],["motor","MOTOR"],["surucu","SÜRÜCÜ"],["box","BOX / KABLO"],["ssr","SSR / SEVİYE"],["hmi","HMI / PLC"],["calisma","ANLIK ÇALIŞMA"],["param","PARAMETRE"],["ariza","ARIZA"],["photo","FOTOĞRAF"],["gecmis","GEÇMİŞ"]].map(x=>'<button class="'+(tab===x[0]?"active":"")+'" onclick="setTab(\''+x[0]+'\')">'+x[1]+'</button>').join("")+'</div><div class="content">'+tabBody()+'</div></div>'}
 
 function formCard(title,obj,root,fields,saveFn){return'<div class="card"><div class="section-head"><div><h3>'+title+'</h3><div class="muted">Yalnızca seçili P'+pump().no+' için.</div></div>'+(admin?'<button class="btn ok" onclick="'+saveFn+'()">KAYDET</button>':"")+'</div><div class="grid3" style="margin-top:9px">'+fields.map(f=>inp(f[0],root+"."+f[1],obj[f[1]],f[2]||"text")).join("")+'</div></div>'}
 function tabBody(){const p=pump(),s=station();
@@ -341,7 +268,7 @@ if(tab==="genel")return'<div class="grid3" style="margin-top:10px">'+kv("💧 PO
 if(tab==="pompa")return formCard("💧 POMPA ETİKETİ",p.pump,"pump",[["Pompa Adı","ad"],["Marka","marka"],["Model","model"],["Tip","tip"],["Seri No","seri_no"],["Güç kW","guc_kw","number"],["Güç HP","guc_hp","number"],["Q Min","q_min","number"],["Q Max","q_max","number"],["H Min","h_min","number"],["H Max","h_max","number"],["Basma / Çıkış","cikis"]],"savePump");
 if(tab==="motor")return formCard("⚙ MOTOR ETİKETİ",p.motor,"motor",[["Marka","marka"],["Model","model"],["Seri No","seri_no"],["Motor Tipi","motor_tipi"],["Güç kW","guc_kw","number"],["Güç HP","guc_hp","number"],["Gerilim V","gerilim_v","number"],["Nominal Akım A","nominal_akim_a","number"],["Frekans Hz","frekans_hz","number"],["Devir RPM","devir_rpm","number"],["Cos φ","cos_phi"],["Montaj Tarihi","montaj_tarihi"],["Değişim Tarihi","degisim_tarihi"]],"saveMotor");
 if(tab==="surucu")return formCard("🔌 SÜRÜCÜ",p.driver,"driver",[["Marka","marka"],["Model","model"],["Seri No","seri_no"],["Sürücü Ailesi","surucu_ailesi"],["Güç kW","guc_kw","number"],["Besleme V","besleme_v","number"],["Firmware","firmware"],["Kontrol","kontrol"]],"saveDriver");
-if(tab==="box")return boxTab(p);if(tab==="ssr")return ssrTab(p);if(tab==="hmi")return hmiTab(p);if(tab==="calisma")return workTab(p);if(tab==="param")return paramTab(p);if(tab==="ariza")return faultTab(p);if(tab==="olay")return eventTab(p);if(tab==="photo")return photoTab(p);return historyTab(s,p)}
+if(tab==="box")return boxTab(p);if(tab==="ssr")return ssrTab(p);if(tab==="hmi")return hmiTab(p);if(tab==="calisma")return workTab(p);if(tab==="param")return paramTab(p);if(tab==="ariza")return faultTab(p);if(tab==="photo")return photoTab(p);return historyTab(s,p)}
 function savePump(){if(!needAdmin())return;const p=pump();document.querySelectorAll('[data-path^="pump."]').forEach(e=>setPath(p.pump,e.dataset.path.slice(5),e.value));p.ad=p.pump.ad||p.ad;save();render()}
 function saveMotor(){if(!needAdmin())return;const p=pump();document.querySelectorAll('[data-path^="motor."]').forEach(e=>setPath(p.motor,e.dataset.path.slice(6),e.value));save();render()}
 function saveDriver(){if(!needAdmin())return;const p=pump();document.querySelectorAll('[data-path^="driver."]').forEach(e=>setPath(p.driver,e.dataset.path.slice(7),e.value));save();render()}
@@ -469,64 +396,22 @@ function paramTab(p){return'<div class="card"><div class="section-head"><div><h3
 function addPumpParam(){if(!needAdmin())return;const p=pump(),x={id:uid(),code:"",name:"",value:"",unit:"",note:""};p.params.push(x);save();editPumpParam(x.id)}
 function editPumpParam(id){const p=pump(),x=p.params.find(y=>y.id===id);if(!x)return;openModal("POMPA PARAMETRESİ",'<div class="grid2">'+inp("Kod","x.code",x.code)+inp("Ad","x.name",x.name)+inp("Değer","x.value",x.value)+inp("Birim","x.unit",x.unit)+txt("Not","x.note",x.note)+'</div><div class="actions"><button class="btn ok" onclick="savePumpParam(\''+id+'\')">KAYDET</button></div>')}
 function savePumpParam(id){if(!needAdmin())return;const p=pump(),x=p.params.find(y=>y.id===id);document.querySelectorAll('[data-path^="x."]').forEach(e=>setPath(x,e.dataset.path.slice(2),e.value));save();closeModal();render()}
-function faultTab(p){
- const rows=p.faults.length?p.faults.map(x=>`<tr><td>${esc(x.date)}</td><td>${esc(x.code)}</td><td>${esc(x.name)}</td><td>${esc(x.cause)}</td><td>${esc(x.action)}</td><td>${esc(x.result)}</td>${admin?`<td><button class="btn" onclick="editFault(${JSON.stringify(x.id)})">DÜZENLE</button></td>`:""}</tr>`).join(""):`<tr><td colspan="${admin?7:6}"><div class="empty">Arıza kaydı yok.</div></td></tr>`;
- const lib=FAULTS.map(x=>`<div class="library-item" onclick="openFaultDetail(${JSON.stringify(x.code)})"><div class="library-code">${esc(x.code)}</div><div class="library-name">${esc(x.name)}</div><div class="library-desc">${esc(x.cause)}</div></div>`).join("");
- return `<div class="card"><div class="section-head"><div><h3>⚠ P${p.no} · ARIZA KAYITLARI</h3><div class="muted">Seçili pompanın gerçek saha arıza geçmişi.</div></div>${admin?`<button class="btn bad" onclick="addFault()">+ ARIZA</button>`:""}</div><div class="table-wrap"><table><tr><th>Tarih</th><th>Kod</th><th>Başlık</th><th>Tespit</th><th>Yapılan İşlem</th><th>Sonuç</th>${admin?`<th>İşlem</th>`:""}</tr>${rows}</table></div></div><div class="card"><div class="section-head"><h3>ABB ARIZA KÜTÜPHANESİ</h3><button class="btn" onclick="openLibrary('fault')">TÜMÜNÜ AÇ</button></div><div class="library-grid" style="margin-top:8px">${lib}</div></div>`;
-}
+function faultTab(p){return'<div class="card"><div class="section-head"><div><h3>⚠ P'+p.no+' · ARIZA KAYITLARI</h3><div class="muted">Seçili pompanın saha arıza geçmişi.</div></div>'+(admin?'<button class="btn bad" onclick="addFault()">+ ARIZA</button>':"")+'</div><div class="table-wrap"><table><tr><th>Tarih</th><th>Kod</th><th>Başlık</th><th>Tespit</th><th>Yapılan İşlem</th><th>Sonuç</th></tr>'+p.faults.map(x=>'<tr><td>'+esc(x.date)+'</td><td>'+esc(x.code)+'</td><td>'+esc(x.name)+'</td><td>'+esc(x.cause)+'</td><td>'+esc(x.action)+'</td><td>'+esc(x.result)+'</td></tr>').join("")||'<tr><td colspan="6"><div class="empty">Arıza kaydı yok.</div></td></tr>'+'</table></div></div><div class="card"><h3>ABB ARIZA KÜTÜPHANESİ</h3><div class="library-grid" style="margin-top:8px">'+FAULTS.slice(0,9).map(x=>'<div class="library-item" onclick="openFaultDetail(\''+esc(x.code)+'\')"><div class="library-code">'+esc(x.code)+'</div><div class="library-name">'+esc(x.name)+'</div><div class="library-desc">'+esc(x.cause)+'</div></div>').join("")+'</div></div>'}
 function addFault(){if(!needAdmin())return;const p=pump(),x={id:uid(),date:now(),code:"",name:"",cause:"",action:"",result:""};p.faults.push(x);save();editFault(x.id)}
 function editFault(id){const p=pump(),x=p.faults.find(y=>y.id===id);openModal("ARIZA KAYDI",'<div class="grid2">'+inp("Kod","x.code",x.code)+inp("Başlık","x.name",x.name)+txt("Tespit","x.cause",x.cause)+txt("Yapılan İşlem","x.action",x.action)+txt("Sonuç","x.result",x.result)+'</div><div class="actions"><button class="btn ok" onclick="saveFault(\''+id+'\')">KAYDET</button></div>')}
 function saveFault(id){if(!needAdmin())return;const p=pump(),x=p.faults.find(y=>y.id===id);document.querySelectorAll('[data-path^="x."]').forEach(e=>setPath(x,e.dataset.path.slice(2),e.value));save();closeModal();render()}
 function openFaultDetail(code){const x=FAULTS.find(f=>f.code===code);if(x)openModal(x.code+" · "+x.name,'<div class="data"><b>Neden</b><div class="muted">'+esc(x.cause)+'</div><br><b>Kontrol / Çözüm</b><div class="muted">'+esc(x.solution)+'</div><br><b>Sürücü</b><div class="muted">'+esc(x.driver)+'</div></div>')}
-function photoTab(p){
- return '<div class="card"><div class="section-head"><div><h3>📷 P'+p.no+' · FOTOĞRAF / DOKÜMAN</h3><div class="muted">Fotoğrafı gerçekten dosya olarak arşive ekleyebilir, not ve açıklama tutabilirsin.</div></div>'+(admin?'<button class="btn ok" onclick="addPhoto()">+ FOTOĞRAF / DOSYA</button>':"")+ '</div>'+(p.photos.length?p.photos.map(x=>'<div class="data" style="margin-top:8px"><div class="section-head"><div><div class="kv"><span>Tarih</span><span>'+esc(x.date)+'</span></div><div class="kv"><span>Ad</span><span>'+esc(x.name)+'</span></div></div>'+(admin?'<div class="actions"><button class="btn" onclick="editPhoto(\''+x.id+'\')">DÜZENLE</button><button class="btn bad" onclick="deletePhoto(\''+x.id+'\')">SİL</button></div>':"")+'</div>'+(x.data?'<div style="margin-top:8px"><img src="'+x.data+'" alt="'+esc(x.name)+'" style="display:block;max-width:100%;max-height:320px;border:1px solid #28566e;border-radius:9px;margin:auto"></div>':"")+'<div class="muted" style="margin-top:6px">'+esc(x.note||"")+'</div></div>').join(""):'<div class="empty">Fotoğraf / doküman kaydı yok.</div>')+'</div>';
-}
-function addPhoto(){
- if(!needAdmin())return;
- openModal("FOTOĞRAF / DOKÜMAN EKLE",'<div>'+inp("Ad","photo.name","Saha fotoğrafı")+'</div><div class="field" style="margin-top:8px"><label>FOTOĞRAF / DOSYA SEÇ</label><input id="photoFile" type="file" accept="image/*,.pdf,.txt,.doc,.docx"></div><div style="margin-top:8px">'+txt("Not","photo.note","")+'</div><div class="actions"><button class="btn ok" onclick="savePhoto()">KAYDET</button></div>');
-}
-function savePhoto(){
- if(!needAdmin())return;
- const p=pump(),file=document.getElementById("photoFile")?.files?.[0],name=document.querySelector('[data-path="photo.name"]')?.value||file?.name||"Dosya";
- const note=document.querySelector('[data-path="photo.note"]')?.value||"";
- const finish=data=>{p.photos.push({id:uid(),name,date:now(),note,data:data||"",fileName:file?.name||""});save();closeModal();render();toast("Dosya arşive eklendi.")};
- if(!file){finish("");return}
- if(file.size>2*1024*1024){toast("Dosya 2 MB'dan küçük olmalı.");return}
- const r=new FileReader();r.onload=()=>finish(String(r.result||""));r.onerror=()=>toast("Dosya okunamadı.");r.readAsDataURL(file);
-}
-function editPhoto(id){
- if(!needAdmin())return;
- const p=pump(),x=p.photos.find(y=>y.id===id);if(!x)return;
- openModal("FOTOĞRAF / DOKÜMAN DÜZENLE",'<div>'+inp("Ad","photo.name",x.name)+'</div><div style="margin-top:8px">'+txt("Not","photo.note",x.note||"")+'</div><div class="actions"><button class="btn ok" onclick="savePhotoEdit(\''+id+'\')">KAYDET</button></div>');
-}
-function savePhotoEdit(id){
- if(!needAdmin())return;
- const p=pump(),x=p.photos.find(y=>y.id===id);if(!x)return;
- x.name=document.querySelector('[data-path="photo.name"]')?.value||x.name;x.note=document.querySelector('[data-path="photo.note"]')?.value||"";save();closeModal();render();toast("Fotoğraf kaydı güncellendi.");
-}
-function deletePhoto(id){
- if(!needAdmin())return;
- const p=pump(),x=p.photos.find(y=>y.id===id);if(!x)return;
- if(!confirm("Bu fotoğraf/doküman kaydı silinsin mi?"))return;
- p.photos=p.photos.filter(y=>y.id!==id);save();render();toast("Fotoğraf kaydı silindi.");
-}
-function eventTab(p){const rows=Array.isArray(p.events)?p.events:[];return'<div class="card"><div class="section-head"><div><h3>🔔 ALARM / OLAY KAYITLARI</h3><div class="muted">Bu bölüm gerçek zamanlı alarm üretmez. Sahada görülen alarm, uyarı, duruş, müdahale ve önemli olayları kayıt altına alır.</div></div>'+(admin?'<button class="btn ok" onclick="addEvent()">+ OLAY EKLE</button>':'')+'</div>'+(rows.length?rows.map(x=>'<div class="data" style="margin-top:8px"><div class="section-head"><b>'+esc(x.type||'OLAY')+'</b><span class="badge '+(x.level==='KRİTİK'?'warn':'ok')+'">'+esc(x.level||'BİLGİ')+'</span></div><div class="kv"><span>Tarih</span><span>'+esc(x.date||'—')+'</span></div><div class="kv"><span>Başlık</span><span>'+esc(x.title||'—')+'</span></div><div class="kv"><span>Açıklama</span><span>'+esc(x.detail||'—')+'</span></div><div class="kv"><span>Yapılan İşlem</span><span>'+esc(x.action||'—')+'</span></div><div class="kv"><span>Sonuç</span><span>'+esc(x.result||'—')+'</span></div>'+(admin?'<div class="actions"><button class="btn" onclick="editEvent(\''+x.id+'\')">DÜZENLE</button><button class="btn bad" onclick="deleteEvent(\''+x.id+'\')">SİL</button></div>':'')+'</div>').join(''):'<div class="empty">Henüz alarm/olay kaydı yok.</div>')+'</div>'}
-function addEvent(){if(!needAdmin())return;const p=pump();const x={id:uid(),date:now(),type:'ALARM',level:'BİLGİ',title:'',detail:'',action:'',result:''};p.events=p.events||[];p.events.unshift(x);save(false);editEvent(x.id)}
-function editEvent(id){if(!needAdmin())return;const p=pump(),x=(p.events||[]).find(a=>a.id===id);if(!x)return;openModal('ALARM / OLAY DÜZENLE','<div class="grid2">'+inp('Tarih','e.date',x.date)+inp('Tür','e.type',x.type)+inp('Seviye','e.level',x.level)+inp('Başlık','e.title',x.title)+'</div>'+txt('Açıklama','e.detail',x.detail)+txt('Yapılan İşlem','e.action',x.action)+txt('Sonuç','e.result',x.result)+'<div class="actions"><button class="btn ok" onclick="saveEvent(\''+id+'\')">KAYDET</button></div>')}
-function saveEvent(id){if(!needAdmin())return;const p=pump(),x=(p.events||[]).find(a=>a.id===id);if(!x)return;document.querySelectorAll('[data-path^="e."]').forEach(e=>setPath(x,e.dataset.path.slice(2),e.value));save(false);closeModal();render();toast('Alarm/olay kaydedildi.')}
-function deleteEvent(id){if(!needAdmin())return;const p=pump();if(!confirm('Bu alarm/olay kaydı silinsin mi?'))return;p.events=(p.events||[]).filter(x=>x.id!==id);save();render()}
+function photoTab(p){return'<div class="card"><div class="section-head"><div><h3>📷 P'+p.no+' · FOTOĞRAF / DOKÜMAN</h3><div class="muted">Fotoğraf/doküman adı ve notu seçili pompa altında tutulur.</div></div>'+(admin?'<button class="btn ok" onclick="addPhoto()">+ EKLE</button>':"")+'</div>'+p.photos.map(x=>'<div class="data" style="margin-top:7px"><div class="kv"><span>'+esc(x.date)+'</span><span>'+esc(x.name)+'</span></div><div class="muted">'+esc(x.note||"")+'</div></div>').join("")||'<div class="empty">Fotoğraf/doküman kaydı yok.</div>'+'</div>'}
+function addPhoto(){if(!needAdmin())return;const name=prompt("Fotoğraf / doküman adı");if(!name)return;pump().photos.push({id:uid(),name,date:now(),note:""});save();render()}
+function historyTab(s,p){return'<div class="card"><h3>🕘 GEÇMİŞ · P'+p.no+'</h3>'+s.history.map(x=>'<div class="kv"><span>'+esc(x.date)+'</span><span>'+esc(x.action)+' · '+esc(x.detail)+'</span></div>').join("")||'<div class="empty">Geçmiş kaydı yok.</div>'+'</div>'}
 
-function historyTab(s,p){const rows=Array.isArray(s.history)?s.history:[];return '<div class="card"><div class="section-head"><div><h3>🕘 GEÇMİŞ · P'+p.no+'</h3><div class="muted">Terfi üzerinde yapılan önemli değişikliklerin kaydı.</div></div>'+(admin?'<button class="btn" onclick="addHistoryNote()">+ NOT EKLE</button>':'')+'</div>'+(rows.length?rows.map(x=>'<div class="kv"><span>'+esc(x.date||'—')+'</span><span>'+esc(x.action||'—')+' · '+esc(x.detail||'—')+'</span></div>').join(''):'<div class="empty">Geçmiş kaydı yok.</div>')+'</div>'} 
-function addHistoryNote(){if(!needAdmin())return;const s=station();if(!s)return;const text=prompt('Geçmişe eklenecek not:','');if(!text)return;s.history=Array.isArray(s.history)?s.history:[];s.history.unshift({date:now(),action:'SAHA NOTU',detail:text.trim()});save();render()}
-
-function editStation(){if(!needAdmin())return;const s=station();if(!s)return;openModal("TERFİ BİLGİLERİ",'<div class="grid2">'+inp("Terfi Adı","s.ad",s.ad)+inp("RTU / Terfi No","s.rtu",s.rtu)+'<div class="field"><label>İlçe</label><select data-path="s.bolge" '+(admin?'':'disabled')+'>'+getDistricts().map(d=>'<option '+(d===s.bolge?'selected':'')+'>'+esc(d)+'</option>').join('')+'</select></div>'+inp("Terfi Tipi","s.tip",s.tip)+inp("Adres","s.address",s.address)+inp("Kaynak / Emiş","s.source",s.source)+inp("Basma / Çıkış","s.outlet",s.outlet)+inp("Kuyu Derinliği [m]","s.depth",s.depth,"number")+inp("GPS","s.gps",s.gps)+'</div>'+txt("Açıklama","s.note",s.note)+'<div class="actions"><button class="btn ok" onclick="saveStation()">KAYDET</button><button class="btn bad" onclick="deleteStation()">TERFİYİ SİL</button></div>')}
-function deleteStation(){if(!needAdmin())return;const s=station();if(!s)return;if(!confirm("Bu terfi ve altındaki tüm pompa kayıtları silinsin mi?"))return;db=db.filter(x=>x.id!==s.id);save(false);closeModal();home();toast("Terfi silindi.")}
+function editStation(){if(!needAdmin())return;const s=station();openModal("TERFİ BİLGİLERİ",'<div class="grid2">'+inp("Terfi Adı","s.ad",s.ad)+inp("RTU / Terfi No","s.rtu",s.rtu)+inp("Bölge","s.bolge",s.bolge)+inp("Terfi Tipi","s.tip",s.tip)+inp("Adres","s.address",s.address)+inp("Kaynak / Emiş","s.source",s.source)+inp("Basma / Çıkış","s.outlet",s.outlet)+inp("Kuyu Derinliği [m]","s.depth",s.depth,"number")+inp("GPS","s.gps",s.gps)+'</div>'+txt("Açıklama","s.note",s.note)+'<div class="actions"><button class="btn ok" onclick="saveStation()">KAYDET</button></div>')}
 function saveStation(){if(!needAdmin())return;const s=station();document.querySelectorAll('[data-path^="s."]').forEach(e=>setPath(s,e.dataset.path.slice(2),e.value));s.history.unshift({date:now(),action:"TERFİ DÜZENLENDİ",detail:s.ad});save();closeModal();render()}
-function addPump(){if(!needAdmin())return;const s=station(),no=(s.pumps.reduce((m,p)=>Math.max(m,Number(p.no)||0),0)+1);s.pumps.push(pumpTemplate(no,"P"+no));pumpId=s.pumps.at(-1).id;save();render()}
+function addPump(){if(!needAdmin())return;const s=station(),no=s.pumps.length+1;s.pumps.push(pumpTemplate(no,"P"+no));pumpId=s.pumps.at(-1).id;save();render()}
 function editPump(){if(!needAdmin())return;const p=pump();if(!p)return;openModal("POMPA BLOĞU DÜZENLE",'<div class="grid2">'+inp("Pompa No","p.no",p.no,"number")+inp("Pompa Adı","p.ad",p.ad)+'</div><div class="actions"><button class="btn ok" onclick="savePumpMeta()">KAYDET</button></div>')}
 function savePumpMeta(){if(!needAdmin())return;const p=pump();if(!p)return;document.querySelectorAll('[data-path^="p."]').forEach(e=>setPath(p,e.dataset.path.slice(2),e.value));p.ad=p.ad||('P'+p.no);save();closeModal();render()}
 function deletePump(){if(!needAdmin())return;const s=station();if(s.pumps.length<=1){toast("En az 1 pompa kalmalı.");return}if(!confirm("Seçili pompa silinsin mi?"))return;s.pumps=s.pumps.filter(p=>p.id!==pumpId);pumpId=s.pumps[0].id;save();render()}
-function newStation(){if(!needAdmin())return;openModal("YENİ TERFİ",'<div class="grid2">'+inp("Terfi Adı","n.ad","Yeni Terfi")+inp("RTU","n.rtu","RTU YOK")+'<div class="field"><label>İlçe</label><select id="n_bolge">'+getDistricts().map(d=>'<option>'+esc(d)+'</option>').join('')+'</select></div><div class="field"><label>Tip</label><select id="n_tip"><option>TERFİ</option><option>KUYU</option><option>POMPA İSTASYONU</option></select></div>'+inp("Pompa Sayısı","n.count","2","number")+'</div><div class="actions"><button class="btn ok" onclick="createStation()">OLUŞTUR</button></div>')}
+function newStation(){if(!needAdmin())return;openModal("YENİ TERFİ",'<div class="grid2">'+inp("Terfi Adı","n.ad","Yeni Terfi")+inp("RTU","n.rtu","RTU YOK")+'<div class="field"><label>Bölge</label><select id="n_bolge"><option>AKDENİZ</option><option>MEZİTLİ</option><option>TOROSLAR</option><option>YENİŞEHİR</option><option>MERKEZ</option></select></div><div class="field"><label>Tip</label><select id="n_tip"><option>TERFİ</option><option>KUYU</option><option>POMPA İSTASYONU</option></select></div>'+inp("Pompa Sayısı","n.count","2","number")+'</div><div class="actions"><button class="btn ok" onclick="createStation()">OLUŞTUR</button></div>')}
 function createStation(){if(!needAdmin())return;const ad=document.querySelector('[data-path="n.ad"]').value||"Yeni Terfi",rtu=document.querySelector('[data-path="n.rtu"]').value||"RTU YOK",b=document.getElementById("n_bolge").value,t=document.getElementById("n_tip").value,c=Math.max(1,Math.min(50,parseInt(document.querySelector('[data-path="n.count"]').value||"2",10)||2));const s={id:uid(),ad,rtu,bolge:b,tip:t,address:"",source:"",outlet:"",depth:"",gps:"",note:"",history:[],pumps:Array.from({length:c},(_,i)=>pumpTemplate(i+1,"P"+(i+1)))};db.push(s);stationId=s.id;pumpId=s.pumps[0].id;save();closeModal();view="station";render()}
 
 function libraryTabButtons(){return '<div class="actions" style="justify-content:flex-start;flex-wrap:wrap;margin-bottom:10px">'+[['all','🧰 TÜMÜ'],['fault','⚠ ARIZA'],['param','≡ ACS / ACQ'],['driver','▣ SÜRÜCÜ'],['hyd','⌁ HİDROLİK']].map(x=>'<button class="btn '+(libraryMode===x[0]?'primary':'')+'" onclick="openLibrary(\''+x[0]+'\')">'+x[1]+'</button>').join('')+'</div>'}
@@ -547,35 +432,10 @@ function editHyd(i){if(!needAdmin())return;const x=HYD[i];openModal('HİDROLİK 
 function saveHyd(i){if(!needAdmin())return;const x=HYD[i];document.querySelectorAll('[data-path^="x."]').forEach(e=>setPath(x,e.dataset.path.slice(2),e.value));saveLibraries();closeModal();openLibrary('hyd')}
 function deleteHyd(i){if(!needAdmin())return;if(confirm('Silinsin mi?')){HYD.splice(i,1);saveLibraries();openLibrary('hyd')}}
 
-function backup(){
- const payload={version:2,app:"MESKİ Terfi Arşivim",savedAt:new Date().toISOString(),stations:db,libraries:{params:PARAMS,faults:FAULTS,drivers:DRIVER_SERIES,hyd:HYD}};
- const blob=new Blob([JSON.stringify(payload,null,2)],{type:"application/json"});
- const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download="meski-terfi-arsiv-yedek.json";a.click();setTimeout(()=>URL.revokeObjectURL(a.href),500);toast("Tam yedek oluşturuldu.");
-}
-function restore(e){
- const f=e.target.files?.[0];if(!f)return;
- const r=new FileReader();
- r.onload=()=>{
-  try{
-   const x=JSON.parse(r.result);
-   const stations=Array.isArray(x)?x:x?.stations;
-   if(!Array.isArray(stations))throw Error("Geçersiz MESKİ yedeği.");
-   db=normalize(stations);
-   if(x?.libraries){
-    PARAMS=Array.isArray(x.libraries.params)?x.libraries.params:PARAMS;
-    FAULTS=Array.isArray(x.libraries.faults)?x.libraries.faults:FAULTS;
-    DRIVER_SERIES=Array.isArray(x.libraries.drivers)?x.libraries.drivers:DRIVER_SERIES;
-    HYD=Array.isArray(x.libraries.hyd)?x.libraries.hyd:HYD;
-    saveLibraries();
-   }
-   save(false);home();toast("Yedek geri yüklendi.");
-  }catch(err){console.error(err);toast(err.message||"Yedek okunamadı.")}
- };
- r.readAsText(f);e.target.value="";
-}
+function backup(){const blob=new Blob([JSON.stringify(db,null,2)],{type:"application/json"}),a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download="meski-terfi-arsiv-yedek.json";a.click();setTimeout(()=>URL.revokeObjectURL(a.href),500)}
+function restore(e){const f=e.target.files?.[0];if(!f)return;const r=new FileReader();r.onload=()=>{try{const x=JSON.parse(r.result);if(!Array.isArray(x))throw Error("Geçersiz JSON");db=normalize(x);save();home();toast("Yedek geri yüklendi.")}catch(err){toast(err.message)}};r.readAsText(f);e.target.value=""}
 
-function editStation(){if(!needAdmin())return;const s=station();if(!s)return;openModal("TERFİ BİLGİLERİ",'<div class="grid2">'+inp("Terfi Adı","s.ad",s.ad)+inp("RTU / Terfi No","s.rtu",s.rtu)+'<div class="field"><label>İlçe</label><select data-path="s.bolge" '+(admin?'':'disabled')+'>'+getDistricts().map(d=>'<option '+(d===s.bolge?'selected':'')+'>'+esc(d)+'</option>').join('')+'</select></div>'+inp("Terfi Tipi","s.tip",s.tip)+inp("Adres","s.address",s.address)+inp("Kaynak / Emiş","s.source",s.source)+inp("Basma / Çıkış","s.outlet",s.outlet)+inp("Kuyu Derinliği [m]","s.depth",s.depth,"number")+inp("GPS","s.gps",s.gps)+'</div>'+txt("Açıklama","s.note",s.note)+'<div class="actions"><button class="btn ok" onclick="saveStation()">KAYDET</button><button class="btn bad" onclick="deleteStation()">TERFİYİ SİL</button></div>')}
-function deleteStation(){if(!needAdmin())return;const s=station();if(!s)return;if(!confirm("Bu terfi ve altındaki tüm pompa kayıtları silinsin mi?"))return;db=db.filter(x=>x.id!==s.id);save(false);closeModal();home();toast("Terfi silindi.")}
+function editStation(){if(!needAdmin())return;const s=station();openModal("TERFİ BİLGİLERİ",'<div class="grid2">'+inp("Terfi Adı","s.ad",s.ad)+inp("RTU / Terfi No","s.rtu",s.rtu)+inp("Bölge","s.bolge",s.bolge)+inp("Terfi Tipi","s.tip",s.tip)+inp("Adres","s.address",s.address)+inp("Kaynak / Emiş","s.source",s.source)+inp("Basma / Çıkış","s.outlet",s.outlet)+inp("Kuyu Derinliği [m]","s.depth",s.depth,"number")+inp("GPS","s.gps",s.gps)+'</div>'+txt("Açıklama","s.note",s.note)+'<div class="actions"><button class="btn ok" onclick="saveStation()">KAYDET</button></div>')}
 function openModal(title,body){document.getElementById("modalRoot").innerHTML='<div class="modal-back" onclick="if(event.target===this)closeModal()"><div class="modal"><div class="modal-head"><h2>'+esc(title)+'</h2><button class="btn" onclick="closeModal()">✕</button></div>'+body+'</div></div>'}
 function closeModal(){document.getElementById("modalRoot").innerHTML=""}
 
@@ -606,13 +466,12 @@ function pdfRecords(s,p){
  const hist=(p.work?.history||[]).map(x=>[x.date,x.frekans_hz,x.akim_a,x.guc_kw,x.devir_rpm,x.gerilim_v,x.set_basinci_bar,x.calisma_basinci_bar,x.surucu_sicaklik_c,x.durum]);
  const photos=(p.photos||[]).map(x=>[x.date,x.name,x.note,x.url||x.path||x.file||'']);
  const stationHist=(s.history||[]).map(x=>[x.date,x.action,x.detail]);
- const events=(p.events||[]).map(x=>[x.date,x.type,x.level,x.title,x.detail,x.action,x.result]);
  return '<div class="records-grid">'+
  '<div class="psec"><h2>TERFİ ÖZEL PARAMETRELER</h2>'+compactTable(['Kod','Ad','Değer','Birim','Not'],params,'Özel parametre kaydı yok.')+'</div>'+
  '<div class="psec"><h2>ARIZA KAYITLARI</h2>'+compactTable(['Tarih','Kod','Başlık','Tespit','İşlem','Sonuç'],faults,'Arıza kaydı yok.')+'</div>'+
  '<div class="psec"><h2>ÇALIŞMA GEÇMİŞİ</h2>'+compactTable(['Tarih','Hz','A','kW','RPM','V','Set','Çalışma','°C','Durum'],hist,'Çalışma geçmişi yok.')+'</div>'+
  '<div class="psec"><h2>FOTOĞRAF / DOKÜMAN</h2>'+compactTable(['Tarih','Ad','Not','Dosya/URL'],photos,'Fotoğraf/doküman kaydı yok.')+'</div>'+
- '<div class="psec"><h2>ALARM / OLAY KAYITLARI</h2>'+compactTable(['Tarih','Tür','Seviye','Başlık','Açıklama','İşlem','Sonuç'],events,'Alarm/olay kaydı yok.')+'</div><div class="psec"><h2>TERFİ GEÇMİŞİ</h2>'+compactTable(['Tarih','İşlem','Detay'],stationHist,'Terfi geçmişi yok.')+'</div>'+
+ '<div class="psec"><h2>TERFİ GEÇMİŞİ</h2>'+compactTable(['Tarih','İşlem','Detay'],stationHist,'Terfi geçmişi yok.')+'</div>'+
  '</div>';
 }
 function compactTable(headers,rows,emptyText){
@@ -668,7 +527,7 @@ function pdfAll(){
 window.addEventListener("afterprint",()=>{const e=document.getElementById("printRoot");if(e)e.innerHTML=""})
 
 function render(){const root=document.getElementById("app");root.innerHTML='<div class="shell">'+sidebar()+'<main class="main">'+topbar()+(view==="home"?homeView():stationView())+'<div class="footer">MESKİ TERFİ ARŞİVİM · '+db.length+' TERFİ · '+db.reduce((n,x)=>n+x.pumps.length,0)+' POMPA · TEK DOSYA</div></main></div>';document.querySelectorAll(".adminbar").forEach(x=>x.remove());if(admin){const a=document.createElement("div");a.className="adminbar";a.textContent="● YÖNETİCİ MODU AKTİF · KİLİT";a.onclick=adminLogin;document.body.appendChild(a)}}
-db=load();loadLibraries();loadDistricts();render();
+db=load();loadLibraries();render();
 </script>
 </body>
 </html>
