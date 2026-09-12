@@ -451,6 +451,19 @@ function pdfRecords(s,p){
  '<div class="psec"><h2>TERFİ GEÇMİŞİ</h2>'+compactTable(['Tarih','İşlem','Detay'],stationHist,'Terfi geçmişi yok.')+'</div>'+
  '</div>';
 }
+function compactTable(headers,rows,emptyText){
+ const data=Array.isArray(rows)?rows:[];
+ const th=headers.map(h=>'<th>'+esc(h)+'</th>').join('');
+ if(!data.length)return '<table class="ptable"><thead><tr>'+th+'</tr></thead><tbody><tr><td colspan="'+headers.length+'">'+esc(emptyText||'Kayıt yok.')+'</td></tr></tbody></table>';
+ return '<table class="ptable"><thead><tr>'+th+'</tr></thead><tbody>'+data.map(r=>'<tr>'+headers.map((_,i)=>'<td>'+esc(r?.[i]!==undefined&&r?.[i]!==null&&String(r[i])!==''?String(r[i]):'—')+'</td>').join('')+'</tr>').join('')+'</tbody></table>';
+}
+function pdfHeader(s,p){
+ const no=Number(p?.no)||1;
+ return '<div class="print-head"><div><h1>MESKİ TERFİ TEKNİK ARŞİVİ</h1><p>'+esc(s?.ad||'TERFİ')+' · '+esc(s?.rtu||'RTU YOK')+' · TEKNİK POMPA P'+no+' · P'+no+'</p></div><div class="print-meta">'+esc(new Date().toLocaleString('tr-TR'))+'<br><b>SEÇİLİ POMPA: P'+no+'</b><br>'+esc(s?.bolge||'')+'</div></div>';
+}
+function pdfFooter(s,p,n){
+ return '<div class="print-foot">MESKİ TERFİ ARŞİVİM · '+esc(s?.ad||'')+' · P'+(Number(p?.no)||1)+' · SAYFA '+n+'</div>';
+}
 function pumpPrint(s,p){
  const no=Number(p?.no)||1,pm=p.pump||{},m=p.motor||{},d=p.driver||{},ss=p.ssr||{},b=p.box||{},w=p.work?.current||{};
  const stationInfo=[['Terfi',s.ad],['RTU',s.rtu||'YOK'],['Bölge',s.bolge],['Terfi Tipi',s.tip],['Teknik Pompa No','P'+no],['Pompa Adı',p.ad||'P'+no],['Adres',s.address],['Kaynak / Emiş',s.source],['Basma / Çıkış',s.outlet],['Kuyu',s.depth?String(s.depth)+' m':'—'],['GPS',s.gps],['Saha Açıklaması',s.note],['Referans',s.referenceNote]];
@@ -466,8 +479,30 @@ function pumpPrint(s,p){
  const page5='<div class="print-page">'+pdfHeader(s,p)+pdfRecords(s,p)+pdfFooter(s,p,5)+'</div>';
  return page1+page2+page3+page4+page5;
 }
-function pdfSelected(){const s=station(),p=pump();if(!s||!p)return;syncCurrentHMIFromDOM();save();const html=pumpPrint(s,p);document.getElementById("printRoot").innerHTML=html;window.print()}
-function pdfAll(){const s=station();if(!s||!s.pumps.length)return;syncCurrentHMIFromDOM();save();document.getElementById("printRoot").innerHTML=s.pumps.map(p=>pumpPrint(s,p)).join("");window.print()}
+function pdfSelected(){
+ const s=station(),p=pump();
+ if(!s||!p){toast('Önce bir terfi ve pompa seçin.');return;}
+ try{
+  syncCurrentHMIFromDOM();
+  save();
+  const root=document.getElementById('printRoot');
+  if(!root)throw new Error('PDF alanı bulunamadı');
+  root.innerHTML=pumpPrint(s,p);
+  requestAnimationFrame(()=>setTimeout(()=>window.print(),80));
+ }catch(e){console.error('PDF HATASI',e);toast('PDF oluşturulamadı: '+e.message);}
+}
+function pdfAll(){
+ const s=station();
+ if(!s||!s.pumps.length){toast('Bu terfide pompa bulunamadı.');return;}
+ try{
+  syncCurrentHMIFromDOM();
+  save();
+  const root=document.getElementById('printRoot');
+  if(!root)throw new Error('PDF alanı bulunamadı');
+  root.innerHTML=s.pumps.map(p=>pumpPrint(s,p)).join('');
+  requestAnimationFrame(()=>setTimeout(()=>window.print(),80));
+ }catch(e){console.error('PDF HATASI',e);toast('PDF oluşturulamadı: '+e.message);}
+}
 window.addEventListener("afterprint",()=>{const e=document.getElementById("printRoot");if(e)e.innerHTML=""})
 
 function render(){const root=document.getElementById("app");root.innerHTML='<div class="shell">'+sidebar()+'<main class="main">'+topbar()+(view==="home"?homeView():stationView())+'<div class="footer">MESKİ TERFİ ARŞİVİM · '+db.length+' TERFİ · '+db.reduce((n,x)=>n+x.pumps.length,0)+' POMPA · TEK DOSYA</div></main></div>';document.querySelectorAll(".adminbar").forEach(x=>x.remove());if(admin){const a=document.createElement("div");a.className="adminbar";a.textContent="● YÖNETİCİ MODU AKTİF · KİLİT";a.onclick=adminLogin;document.body.appendChild(a)}}
