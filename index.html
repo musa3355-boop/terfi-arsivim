@@ -61,81 +61,44 @@ button,input,textarea,select{font:inherit}button{cursor:pointer}input,textarea,s
 
 .hmi-direct-input{display:inline-block;min-width:72px;max-width:145px;padding:5px 7px!important;border:1px solid #b9c5ce!important;border-radius:4px!important;background:#f7f9fb!important;color:#17364d!important;font-weight:900!important;text-align:center;box-shadow:inset 0 1px 2px #0001!important}.hmi-direct-input:focus{border-color:#18b7ef!important;outline:2px solid #18b7ef55!important}.hmi-real-row .hmi-direct-input{width:92px;margin-left:6px}.pressure-main .hmi-direct-input{font-size:16px;min-width:110px}.pressure-io .hmi-direct-input{min-width:55px}.hmi-screen-item .hmi-direct-input{width:100%}
 @media print{
- @page{size:A3 landscape;margin:4mm}
+ @page{size:A3 landscape;margin:6mm}
  html,body{margin:0!important;padding:0!important;background:#fff!important}
  body>*:not(#printRoot){display:none!important}
- #printRoot{display:block!important;width:100%;margin:0!important;padding:0!important}
- .print-page{width:100%;height:289mm;max-height:289mm;box-sizing:border-box;color:#111;background:#fff;font-family:Arial,sans-serif;font-size:4.2pt;line-height:1.05;overflow:hidden;padding:0}
+ #printRoot{display:block!important;width:100%!important;margin:0!important;padding:0!important}
+ .print-page{width:100%;box-sizing:border-box;color:#111;background:#fff;font-family:Arial,sans-serif;font-size:6pt;line-height:1.15;padding:0;page-break-after:always;break-after:page}
  .print-page:last-child{page-break-after:auto;break-after:auto}
- .print-head{display:flex;justify-content:space-between;align-items:flex-start;border-bottom:1.2px solid #193b50;padding-bottom:1mm;margin-bottom:1mm}
- .print-head h1{font-size:12pt;margin:0 0 .5mm}.print-head p{margin:0;font-size:6pt;font-weight:700}.print-head .print-meta{text-align:right;font-size:5pt}
- .psec{border:1px solid #a9b7bf;padding:.55mm;margin-bottom:.55mm;break-inside:avoid;box-sizing:border-box;overflow:hidden}
- .psec h2{font-size:5.3pt;margin:0 0 .35mm;border-bottom:1px solid #ccd4d9;padding-bottom:.2mm}
- .print-top{display:grid;grid-template-columns:1fr 1.35fr .8fr;gap:.55mm;margin-bottom:.55mm}
- .pmini{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:.22mm}
- .pcell-lite{border:1px solid #c2ccd1;padding:.22mm;min-height:3.35mm;box-sizing:border-box;overflow:hidden}
- .pcell-lite b{display:block;font-size:3pt;color:#627987;line-height:1}.pcell-lite span{font-size:3.55pt;font-weight:700;word-break:break-word;line-height:1.0}
- .ptable{width:100%;border-collapse:collapse;table-layout:fixed}.ptable th,.ptable td{border:1px solid #b8c4ca;padding:.16mm .22mm;font-size:3.15pt;text-align:left;vertical-align:top;word-break:break-word;line-height:1.0}.ptable th{background:#edf1f3;font-weight:800;font-size:3pt}
- .hmi-print{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:.35mm}.hmi-audit{display:none}
- .hmi-pbox{border:1px solid #b8c4ca;padding:.22mm;break-inside:avoid;box-sizing:border-box;overflow:hidden}
- .hmi-pbox h3{font-size:3.9pt;margin:0 0 .15mm;line-height:1}
- .hmi-pbox table{width:100%;border-collapse:collapse;table-layout:fixed}.hmi-pbox td{border:1px solid #c3ccd1;padding:.16mm .2mm;font-size:2.75pt;line-height:1.0;vertical-align:top;word-break:break-word}.hmi-pbox th{border:1px solid #c3ccd1;padding:.1mm .15mm;font-size:2.5pt;line-height:.9;background:#edf1f3}.hmi-pbox td:first-child{font-weight:700;background:#f2f4f5;width:74%}.hmi-pbox td:last-child{font-weight:800;font-size:3pt;color:#111;width:26%}
- .print-bottom{display:grid;grid-template-columns:1.5fr .75fr;gap:.5mm}.print-bottom .psec{margin-bottom:.45mm}
- .print-note{font-size:3.1pt;margin-top:.15mm;white-space:pre-wrap;word-break:break-word;line-height:1.0}
- .print-foot{border-top:1px solid #a9b7bf;padding-top:.25mm;text-align:center;font-size:2.8pt;margin-top:.25mm}
+ .print-head{display:flex;justify-content:space-between;align-items:flex-start;border-bottom:1.4px solid #193b50;padding-bottom:2mm;margin-bottom:2mm}
+ .print-head h1{font-size:15pt;margin:0 0 1mm}.print-head p{margin:0;font-size:7pt;font-weight:700}.print-head .print-meta{text-align:right;font-size:6pt;line-height:1.35}
+ .psec{border:1px solid #a9b7bf;padding:1.4mm;margin-bottom:1.5mm;box-sizing:border-box;break-inside:avoid;page-break-inside:avoid;overflow:visible}
+ .psec h2{font-size:7.5pt;margin:0 0 1mm;border-bottom:1px solid #ccd4d9;padding-bottom:.7mm}
+ .pdf-kvgrid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:1mm}
+ .pdf-kvgrid.two{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .pdf-kvgrid>div{border:1px solid #c2cdd2;padding:1.2mm;min-height:8mm;box-sizing:border-box;overflow:visible}
+ .pdf-kvgrid b{display:block;font-size:5.5pt;color:#5e7481;line-height:1;margin-bottom:.8mm}.pdf-kvgrid span{display:block;font-size:7.5pt;font-weight:700;line-height:1.1;overflow-wrap:anywhere}
+ .pdf-three{display:grid;grid-template-columns:1.25fr 1.05fr .9fr;gap:1.5mm;align-items:start}.pdf-three>.psec{min-height:0;height:auto}
+ .live-pdf .pdf-kvgrid>div{min-height:10mm}.live-pdf .pdf-kvgrid span{font-size:8pt;font-weight:800}
+ .ptable{width:100%;border-collapse:collapse;table-layout:fixed}.ptable th,.ptable td{border:1px solid #b8c4ca;padding:1mm 1.1mm;font-size:5.8pt;text-align:left;vertical-align:top;word-break:break-word;line-height:1.12}.ptable th{background:#eaf0f3;font-size:5.6pt;font-weight:800}
+ .print-hmi-pair{display:grid;grid-template-columns:1fr 1fr;gap:2mm;align-items:start}
+ .print-hmi-screen{border:1px solid #8fa3ad;padding:1.5mm;box-sizing:border-box;break-inside:avoid;page-break-inside:avoid;background:#fff}
+ .print-hmi-screen h3{font-size:8.5pt;margin:0 0 1.2mm;line-height:1.05;background:#123a50;color:#fff;padding:1.4mm}
+ .hmi-pdf-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1mm;align-items:start}
+ .hmi-pdf-col{min-width:0}
+ .hmi-pdf-row{display:grid;grid-template-columns:minmax(0,1fr) 34%;gap:1mm;align-items:center;border-bottom:1px solid #c4ced3;min-height:7.2mm;padding:.55mm .6mm;box-sizing:border-box}
+ .hmi-pdf-row label{font-size:5.7pt;line-height:1.08;overflow-wrap:anywhere}.hmi-pdf-row span{display:block;border:1px solid #aebbc3;background:#f3f6f8;color:#17364d;font-size:6.4pt;font-weight:900;text-align:center;padding:1mm .8mm;min-height:5.4mm;box-sizing:border-box;overflow-wrap:anywhere}
+ .hmi-pdf-single .hmi-pdf-grid{grid-template-columns:1fr 1fr 1fr}.hmi-pdf-single .hmi-pdf-row{grid-template-columns:minmax(0,1fr) 38%}
+ .print-hmi-title{font-size:9pt;font-weight:900;margin:0 0 1.5mm;color:#193b50}
+ .records-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.5mm;align-items:start}.records-grid .psec{margin-bottom:0}.records-grid .psec:nth-child(3){grid-column:1/-1}.records-grid .psec:nth-child(3) .ptable td,.records-grid .psec:nth-child(3) .ptable th{font-size:5.2pt;padding:.8mm}
+ .print-foot{border-top:1px solid #a9b7bf;padding-top:1mm;text-align:center;font-size:5pt;margin-top:1.5mm}
 }
 @media screen{
- .hmi-real-row b:has(.hmi-direct-input), .pressure-main b:has(.hmi-direct-input), .pressure-io b:has(.hmi-direct-input), .hmi-screen-item b:has(.hmi-direct-input){background:transparent!important;color:inherit!important;padding:0!important;min-height:0!important;box-shadow:none!important;border-radius:0!important}
+ .hmi-real-row b:has(.hmi-direct-input),.pressure-main b:has(.hmi-direct-input),.pressure-io b:has(.hmi-direct-input),.hmi-screen-item b:has(.hmi-direct-input){background:transparent!important;color:inherit!important;padding:0!important;min-height:0!important;box-shadow:none!important;border-radius:0!important}
  .hmi-real-grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
- .hmi-real-row{grid-template-columns:minmax(0,1fr) 122px;gap:12px;margin:8px 0;min-width:0}
- .hmi-real-row label{min-width:0;overflow-wrap:anywhere}
- .hmi-real-row .hmi-direct-input{width:122px;max-width:122px;margin-left:0}
+ .hmi-real-row{grid-template-columns:minmax(0,1fr) 140px!important;gap:12px!important;margin:8px 0;min-width:0}
+ .hmi-real-row label{min-width:0;overflow-wrap:anywhere;font-size:11px;line-height:1.15}
+ .hmi-real-row .hmi-input-slot .hmi-direct-input{width:122px;max-width:122px;margin:0}
  .relay-layout{grid-template-columns:1fr 1fr 1fr;gap:18px}
 }
-@media(max-width:800px){.hmi-real-grid{grid-template-columns:1fr}.hmi-real-row{grid-template-columns:minmax(0,1fr) 110px}.hmi-real-row .hmi-direct-input{width:110px;max-width:110px}}
-@media print{
- .print-page{height:289mm;max-height:none;overflow:hidden;page-break-after:always;break-after:page}
- .print-page:last-child{page-break-after:auto;break-after:auto}
- .print-head{margin-bottom:1.5mm}
- .psec{overflow:visible}
- .hmi-print{grid-template-columns:1fr;gap:1mm}
- .hmi-pbox{break-inside:avoid;page-break-inside:avoid}
- .hmi-pbox table{table-layout:fixed}
- .hmi-pbox td:first-child{width:72%}.hmi-pbox td:last-child{width:28%;font-size:4.2pt}
-}
-/* PDF V17: okunabilir 4 sayfa düzeni + HMI tek giriş kutusu */
-.hmi-input-slot{display:flex;align-items:center;justify-content:flex-end;min-width:0}.hmi-input-slot small{color:#9bb2c0;margin-left:4px}
-.hmi-real-row .hmi-input-slot .hmi-direct-input{display:block;width:122px;max-width:122px;margin:0}
-@media screen{
- .hmi-real-row{grid-template-columns:minmax(0,1fr) 140px!important;gap:12px!important;align-items:center}
- .hmi-real-row label{font-size:11px;line-height:1.15;min-width:0;overflow-wrap:anywhere}
- .hmi-real-grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
-}
-@media(max-width:800px){.hmi-real-grid{grid-template-columns:1fr!important}.hmi-real-row{grid-template-columns:minmax(0,1fr) 125px!important}.hmi-real-row .hmi-input-slot .hmi-direct-input{width:125px;max-width:125px}}
-@media print{
- @page{size:A3 landscape;margin:7mm}
- body>*:not(#printRoot){display:none!important}
- #printRoot{display:block!important;width:100%!important;padding:0!important;margin:0!important}
- .print-page{width:100%;height:282mm;max-height:282mm;overflow:hidden!important;box-sizing:border-box;padding:0;color:#111;background:#fff;font-family:Arial,sans-serif;font-size:6pt;line-height:1.12;page-break-after:always;break-after:page}
- .print-page:last-child{page-break-after:auto;break-after:auto}
- .print-head{display:flex;justify-content:space-between;align-items:flex-start;border-bottom:1.5px solid #183c51;padding-bottom:2mm;margin-bottom:2mm}
- .print-head h1{font-size:17pt;margin:0 0 1mm}.print-head p{font-size:8pt;font-weight:700;margin:0}.print-head .print-meta{font-size:7pt;text-align:right}
- .psec{border:1px solid #a8b8c1;padding:1.5mm;margin-bottom:1.5mm;box-sizing:border-box;break-inside:avoid;page-break-inside:avoid;overflow:hidden}
- .psec h2{font-size:8pt;margin:0 0 1mm;border-bottom:1px solid #c6d0d5;padding-bottom:.7mm}
- .pdf-kvgrid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:.8mm}
- .pdf-kvgrid.two{grid-template-columns:repeat(2,minmax(0,1fr));gap:.7mm}
- .pdf-kvgrid>div{border:1px solid #c2cdd2;padding:1mm;min-height:7mm;overflow:hidden}
- .pdf-kvgrid b{display:block;font-size:5.2pt;color:#5e7481;line-height:1;margin-bottom:.7mm}.pdf-kvgrid span{display:block;font-size:7pt;font-weight:700;line-height:1.08;word-break:break-word}
- .pdf-three{display:grid;grid-template-columns:1.15fr 1fr .82fr;gap:1.5mm;align-items:start}.pdf-three>.psec{height:105mm}
- .live-pdf .pdf-kvgrid>div{min-height:10mm}.live-pdf .pdf-kvgrid span{font-size:8pt;font-weight:800}
- .ptable{width:100%;border-collapse:collapse;table-layout:fixed}.ptable th,.ptable td{border:1px solid #b8c4ca;padding:.8mm 1mm;font-size:5.6pt;line-height:1.08;vertical-align:top;word-break:break-word}.ptable th{background:#eaf0f3;font-size:5.4pt;font-weight:800}
- .hmi-print{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1.5mm;align-items:start}
- .hmi-pbox{border:1px solid #aebdc5;padding:1.2mm;break-inside:avoid;page-break-inside:avoid;overflow:hidden;min-height:235mm}
- .hmi-pbox h3{font-size:8pt;margin:0 0 1mm;line-height:1.05;background:#123a50;color:#fff;padding:1.2mm}
- .hmi-pbox .ptable td,.hmi-pbox .ptable th{font-size:6.2pt;padding:.9mm 1mm;line-height:1.05}.hmi-pbox .ptable td:first-child{width:70%;font-weight:700}.hmi-pbox .ptable td:last-child{width:30%;font-weight:900;font-size:6.5pt;color:#111}
- .records-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.5mm}.records-grid .psec{min-height:60mm}.records-grid .psec:nth-child(3){grid-column:1 / -1}.records-grid .psec:nth-child(4),.records-grid .psec:nth-child(5){min-height:48mm}
- .print-foot{border-top:1px solid #a9b7bf;padding-top:1mm;text-align:center;font-size:5pt;margin-top:1mm}
-}
+@media(max-width:800px){.hmi-real-grid{grid-template-columns:1fr!important}.hmi-real-row{grid-template-columns:minmax(0,1fr) 110px!important}.hmi-real-row .hmi-input-slot .hmi-direct-input{width:110px;max-width:110px}.relay-layout{grid-template-columns:1fr}.protect-real{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
@@ -248,7 +211,7 @@ function deleteLocation(id){if(!needAdmin())return;const s=db.find(x=>x.id===id)
 function openStation(id){const s=db.find(x=>x.id===id);if(!s)return;view="station";stationId=id;pumpId=s.pumps[0]?.id||null;tab="genel";hmiPage=1;render()}
 function selectPump(id){const s=station();if(!s?.pumps.some(p=>p.id===id))return;pumpId=id;tab="genel";hmiPage=1;render()}
 function setTab(t){tab=t;render()}
-function setHmiPage(n){hmiPage=n;render()}
+function setHmiPage(n){syncCurrentHMIFromDOM();save();hmiPage=n;render()}
 function resetAll(){if(!needAdmin())return;if(!confirm("Tüm bu cihazdaki arşiv silinip 42 terfi / 109 pompa başlangıç yapısına dönsün mü?"))return;db=makeDB();save();home();toast("Başlangıç yapısı yenilendi.")}
 function setPath(o,path,v){const k=path.split(".").filter(Boolean);let x=o;for(let i=0;i<k.length-1;i++)x=x[k[i]]||(x[k[i]]={});if(k.length)x[k[k.length-1]]=v}
 function inp(label,path,value,type="text"){return'<div class="field"><label>'+esc(label)+'</label><input data-path="'+esc(path)+'" value="'+esc(value??"")+'" type="'+type+'" '+(admin?"":"readonly")+'></div>'}
@@ -456,77 +419,55 @@ function closeModal(){document.getElementById("modalRoot").innerHTML=""}
 function statRows(obj){return Object.entries(obj).map(([k,v])=>'<div class="pcell"><b>'+esc(k)+'</b><span>'+esc(v!==undefined&&v!==null&&String(v)!==''?String(v):'—')+'</span></div>').join('')}
 function liteRows(obj){return Object.entries(obj).map(([k,v])=>'<div class="pcell-lite"><b>'+esc(k)+'</b><span>'+esc(v!==undefined&&v!==null&&String(v)!==''?String(v):'—')+'</span></div>').join('')}
 function boxRows(prefix,o){return {[''+prefix+' U']:o.U.renk+' / '+o.U.etiket+' / '+o.U.detay,[''+prefix+' V']:o.V.renk+' / '+o.V.etiket+' / '+o.V.detay,[''+prefix+' W']:o.W.renk+' / '+o.W.etiket+' / '+o.W.detay}}
-function hmiPrint(p){
- return hmiPdfPages(p).map(x=>'<div class="hmi-pbox"><h3>HMI '+esc(x.pg.no||x.pi+1)+' · '+esc(x.pg.title||'')+'</h3>'+compactTable(['Alan','Değer'],x.rows,'Kayıt yok.')+'</div>').join('');
+function hmiPrintRows(pg,pi,p){
+ const cols=[[],[],[]];
+ const labels=pg.labels||[];
+ labels.forEach((lab,fi)=>{
+  const row='<div class="hmi-pdf-row"><label>'+esc(lab)+'</label><span>'+esc(hmiPdfValue(p,pi,fi,lab)||'—')+'</span></div>';
+  cols[fi%3].push(row);
+ });
+ return '<div class="hmi-pdf-grid">'+cols.map(c=>'<div class="hmi-pdf-col">'+c.join('')+'</div>').join('')+'</div>';
 }
-function compactTable(headers,rows,empty){
- return '<table class="ptable"><tr>'+headers.map(x=>'<th>'+esc(x)+'</th>').join('')+'</tr>'+
- (rows.length?rows.map(r=>'<tr>'+r.map(x=>'<td>'+esc(x!==undefined&&x!==null&&String(x)!==''?String(x):'—')+'</td>').join('')+'</tr>').join(''):'<tr><td colspan="'+headers.length+'">'+esc(empty||'Kayıt yok')+'</td></tr>')+'</table>';
+function hmiPrintScreen(p,pi){
+ const pg=HMI?.[pi];
+ if(!pg)return '';
+ if(pg.no==='3'){
+  const rows=(pg.labels||[]).map((lab,fi)=>'<div class="hmi-pdf-row"><label>'+esc(lab)+'</label><span>'+esc(hmiPdfValue(p,pi,fi,lab)||'—')+'</span></div>').join('');
+  return '<div class="print-hmi-screen hmi-pdf-single"><h3>HMI '+esc(pg.no)+' · '+esc(pg.title||'')+'</h3><div class="hmi-pdf-grid">'+['0','1','2'].map((_,ci)=>'<div class="hmi-pdf-col">'+(pg.labels||[]).filter((_,i)=>i%3===ci).map((lab,fi2)=>{const fi=(pg.labels||[]).indexOf(lab);return '<div class="hmi-pdf-row"><label>'+esc(lab)+'</label><span>'+esc(hmiPdfValue(p,pi,fi,lab)||'—')+'</span></div>'}).join('')+'</div>').join('')+'</div></div>';
+ }
+ return '<div class="print-hmi-screen"><h3>HMI '+esc(pg.no)+' · '+esc(pg.title||'')+'</h3>'+hmiPrintRows(pg,pi,p)+'</div>';
 }
-function flatValue(v){
- if(v===undefined||v===null||v==='')return '—';
- if(typeof v==='boolean')return v?'Evet':'Hayır';
- if(typeof v==='object'){try{return JSON.stringify(v)}catch(e){return String(v)}}
- return String(v)
-}
-function allObjectRows(obj,prefix){
- const out=[];
- const walk=(v,path)=>{
-  if(v===undefined||v===null||v==='')return;
-  if(Array.isArray(v)){v.forEach((x,i)=>walk(x,path+' ['+(i+1)+']'));return;}
-  if(typeof v==='object'){Object.keys(v).forEach(k=>walk(v[k],path?path+' / '+k:k));return;}
-  out.push([path,String(v)]);
- };
- walk(obj,prefix||'Kayıt'); return out;
-}
-function liteRows(obj){return Object.entries(obj).map(([k,v])=>'<div class="pcell-lite"><b>'+esc(k)+'</b><span>'+esc(v!==undefined&&v!==null&&String(v)!==''?String(v):'—')+'</span></div>').join('')}
-function hmiPdfValue(p,pageIndex,fieldIndex,label){
- const page=hmiPageData(p,pageIndex);
- const candidates=[];
- const push=v=>{if(v!==undefined&&v!==null&&String(v)!=='')candidates.push(v)};
- const containers=[page,page?.degerler,page?.values,page?.veriler,page?.data,page?.fields,page?.alanlar];
- const keys=[fieldIndex,String(fieldIndex),String(fieldIndex+1),label,hmiKey(label),'alan_'+fieldIndex,'field_'+fieldIndex,'deger_'+fieldIndex,'value_'+fieldIndex,'alan_'+(fieldIndex+1),'field_'+(fieldIndex+1),'deger_'+(fieldIndex+1),'value_'+(fieldIndex+1)];
- for(const c of containers){if(!c||typeof c!=='object')continue;for(const k of keys){if(Object.prototype.hasOwnProperty.call(c,k))push(c[k]);}const nk=Object.keys(c).find(k=>hmiKey(k)===hmiKey(label));if(nk)push(c[nk]);}
- return candidates.length?candidates[0]:'';
-}
-function hmiPdfPages(p){
- return (Array.isArray(HMI)?HMI.slice(0,6):[]).map((pg,pi)=>({pg,pi,rows:(pg.labels||[]).map((lab,fi)=>[lab,hmiPdfValue(p,pi,fi,lab)])}));
-}
-function hmiValueFromDOM(pageIndex,fieldIndex){const e=document.querySelector('[data-hmi="'+fieldIndex+'"]');return e?e.value:''}
-function syncCurrentHMIFromDOM(){
- const p=pump();if(!p)return false;
- if(!Array.isArray(p.hmi))p.hmi=hmiBlank();
- const pi=Math.max(0,hmiPage-1);
- if(!p.hmi[pi]||typeof p.hmi[pi]!=='object'||Array.isArray(p.hmi[pi]))p.hmi[pi]={};
- document.querySelectorAll('[data-hmi]').forEach(e=>{const i=Number(e.dataset.hmi);p.hmi[pi][i]=e.value;const lab=HMI[pi]?.labels?.[i];if(lab)p.hmi[pi][hmiKey(lab)]=e.value;});
- p.hmiData=p.hmi;
- return true;
-}
-function pdfHeader(s,p){
- const no=Number(p?.no)||1;
- return '<div class="print-head"><div><h1>MESKİ TERFİ TEKNİK ARŞİVİ</h1><p>'+esc(s.ad||'—')+' · '+esc(s.rtu?'RTU '+s.rtu:'RTU YOK')+' · TEKNİK POMPA P'+esc(no)+' · '+esc(p.ad||'P'+no)+'</p></div><div class="print-meta">'+esc(now())+'<br>'+esc(s.bolge||'—')+'<br><b>SEÇİLİ POMPA: P'+esc(no)+'</b></div></div>';
-}
-function pdfFooter(s,p,page){return '<div class="print-foot">MESKİ TERFİ ARŞİVİM · '+esc(s.ad||'')+' · P'+esc(p.no||'')+' · SAYFA '+page+'/4</div>'}
-function pumpPrint(s,p){
- const no=Number(p?.no)||1, pm=p.pump||{},m=p.motor||{},d=p.driver||{},ss=p.ssr||{},b=p.box||{},w=p.work?.current||{};
- const stationInfo=[['Terfi',s.ad],['RTU',s.rtu||'YOK'],['Bölge',s.bolge],['Terfi Tipi',s.tip],['Teknik Pompa No','P'+no],['Pompa Adı',p.ad||'P'+no],['Adres',s.address],['Kaynak / Emiş',s.source],['Basma / Çıkış',s.outlet],['Kuyu',s.depth?String(s.depth)+' m':'—'],['GPS',s.gps],['Saha Açıklaması',s.note]];
- const pumpMotor=[['Pompa marka',pm.marka],['Pompa model',pm.model],['Pompa tip',pm.tip],['Pompa seri',pm.seri_no],['Pompa güç',pm.guc_kw?pm.guc_kw+' kW':'—'],['Pompa HP',pm.guc_hp],['Q min',pm.q_min],['Q max',pm.q_max],['H min',pm.h_min],['H max',pm.h_max],['Basma / Çıkış',pm.cikis],['Pompa not',pm.not],['Motor marka',m.marka],['Motor model',m.model],['Motor seri',m.seri_no],['Motor tip',m.motor_tipi],['Motor güç',m.guc_kw?m.guc_kw+' kW':'—'],['Motor HP',m.guc_hp],['Motor gerilim',m.gerilim_v?m.gerilim_v+' V':'—'],['Motor akım',m.nominal_akim_a?m.nominal_akim_a+' A':'—'],['Motor frekans',m.frekans_hz?m.frekans_hz+' Hz':'—'],['Motor devir',m.devir_rpm?m.devir_rpm+' rpm':'—'],['Cos φ',m.cos_phi],['Montaj tarihi',m.montaj_tarihi],['Değişim tarihi',m.degisim_tarihi],['Motor not',m.not]];
- const driver=[['Sürücü marka',d.marka],['Sürücü model',d.model],['Sürücü seri',d.seri_no],['Sürücü aile',d.surucu_ailesi],['Güç',d.guc_kw?d.guc_kw+' kW':'—'],['Besleme',d.besleme_v?d.besleme_v+' V':'—'],['Firmware',d.firmware],['Kontrol',d.kontrol],['Sürücü not',d.not],['SSR seviye',ss.level],['SSR alt',ss.low],['SSR üst',ss.high],['Pompa giriş basıncı',ss.pump_in],['Alçak koruma girme',ss.low_enter],['Yüksek koruma girme',ss.high_enter],['Alçak koruma çıkma',ss.low_exit],['Yüksek koruma çıkma',ss.high_exit],['SSR not',ss.note]];
- const work=[['Frekans',w.frekans_hz?w.frekans_hz+' Hz':'—'],['Akım',w.akim_a?w.akim_a+' A':'—'],['Devir',w.devir_rpm?w.devir_rpm+' rpm':'—'],['Güç',w.guc_kw?w.guc_kw+' kW':'—'],['Gerilim',w.gerilim_v?w.gerilim_v+' V':'—'],['Sürücü sıcaklık',w.surucu_sicaklik_c?w.surucu_sicaklik_c+' °C':'—'],['Set basıncı',w.set_basinci_bar?w.set_basinci_bar+' bar':'—'],['Çalışma basıncı',w.calisma_basinci_bar?w.calisma_basinci_bar+' bar':'—'],['Tasarruf',w.tasarruf_kwh?w.tasarruf_kwh+' kWh':'—'],['Durum',w.durum],['Teknik not',w.notlar]];
- const cable=[];[['MOTOR → BOX','motor'],['BOX → SÜRÜCÜ','out'],['SÜRÜCÜ','driver']].forEach(g=>['U','V','W'].forEach(ph=>{const z=b?.[g[1]]?.[ph]||{};cable.push([g[0]+' · '+ph,(z.renk||'—')+' / '+(z.etiket||'—')+' / '+(z.detay||'—')])}));
+function pdfRecords(s,p){
  const params=(p.params||[]).map(x=>[x.code,x.name,x.value,x.unit,x.note]);
  const faults=(p.faults||[]).map(x=>[x.date,x.code,x.name,x.cause,x.action,x.result]);
  const hist=(p.work?.history||[]).map(x=>[x.date,x.frekans_hz,x.akim_a,x.guc_kw,x.devir_rpm,x.gerilim_v,x.set_basinci_bar,x.calisma_basinci_bar,x.surucu_sicaklik_c,x.durum]);
  const photos=(p.photos||[]).map(x=>[x.date,x.name,x.note,x.url||x.path||x.file||'']);
  const stationHist=(s.history||[]).map(x=>[x.date,x.action,x.detail]);
- const hp=hmiPdfPages(p);
- const hmiPage=(from,to,pageNo)=>'<div class="print-page">'+pdfHeader(s,p)+'<div class="psec"><h2>HMI / PLC · EKRAN '+from+'–'+to+' · TEKNİK POMPA P'+no+'</h2><div class="hmi-print">'+hp.slice(from-1,to).map(x=>'<div class="hmi-pbox"><h3>HMI '+esc(x.pg.no||x.pi+1)+' · '+esc(x.pg.title||'')+'</h3>'+compactTable(['Alan','Değer'],x.rows,'Kayıt yok.')+'</div>').join('')+'</div></div>'+pdfFooter(s,p,pageNo)+'</div>';
+ return '<div class="records-grid">'+
+ '<div class="psec"><h2>TERFİ ÖZEL PARAMETRELER</h2>'+compactTable(['Kod','Ad','Değer','Birim','Not'],params,'Özel parametre kaydı yok.')+'</div>'+
+ '<div class="psec"><h2>ARIZA KAYITLARI</h2>'+compactTable(['Tarih','Kod','Başlık','Tespit','İşlem','Sonuç'],faults,'Arıza kaydı yok.')+'</div>'+
+ '<div class="psec"><h2>ÇALIŞMA GEÇMİŞİ</h2>'+compactTable(['Tarih','Hz','A','kW','RPM','V','Set','Çalışma','°C','Durum'],hist,'Çalışma geçmişi yok.')+'</div>'+
+ '<div class="psec"><h2>FOTOĞRAF / DOKÜMAN</h2>'+compactTable(['Tarih','Ad','Not','Dosya/URL'],photos,'Fotoğraf/doküman kaydı yok.')+'</div>'+
+ '<div class="psec"><h2>TERFİ GEÇMİŞİ</h2>'+compactTable(['Tarih','İşlem','Detay'],stationHist,'Terfi geçmişi yok.')+'</div>'+
+ '</div>';
+}
+function pumpPrint(s,p){
+ const no=Number(p?.no)||1,pm=p.pump||{},m=p.motor||{},d=p.driver||{},ss=p.ssr||{},b=p.box||{},w=p.work?.current||{};
+ const stationInfo=[['Terfi',s.ad],['RTU',s.rtu||'YOK'],['Bölge',s.bolge],['Terfi Tipi',s.tip],['Teknik Pompa No','P'+no],['Pompa Adı',p.ad||'P'+no],['Adres',s.address],['Kaynak / Emiş',s.source],['Basma / Çıkış',s.outlet],['Kuyu',s.depth?String(s.depth)+' m':'—'],['GPS',s.gps],['Saha Açıklaması',s.note],['Referans',s.referenceNote]];
+ const pumpMotor=[['Pompa marka',pm.marka],['Pompa model',pm.model],['Pompa tip',pm.tip],['Pompa seri',pm.seri_no],['Pompa güç',pm.guc_kw?pm.guc_kw+' kW':'—'],['Pompa HP',pm.guc_hp],['Q min',pm.q_min],['Q max',pm.q_max],['H min',pm.h_min],['H max',pm.h_max],['Basma / Çıkış',pm.cikis],['Pompa not',pm.not],['Motor marka',m.marka],['Motor model',m.model],['Motor seri',m.seri_no],['Motor tip',m.motor_tipi],['Motor güç',m.guc_kw?m.guc_kw+' kW':'—'],['Motor HP',m.guc_hp],['Motor gerilim',m.gerilim_v?m.gerilim_v+' V':'—'],['Motor akım',m.nominal_akim_a?m.nominal_akim_a+' A':'—'],['Motor frekans',m.frekans_hz?m.frekans_hz+' Hz':'—'],['Motor devir',m.devir_rpm?m.devir_rpm+' rpm':'—'],['Cos φ',m.cos_phi],['Montaj tarihi',m.montaj_tarihi],['Değişim tarihi',m.degisim_tarihi],['Motor not',m.not]];
+ const driver=[['Sürücü marka',d.marka],['Sürücü model',d.model],['Sürücü seri',d.seri_no],['Sürücü aile',d.surucu_ailesi],['Güç',d.guc_kw?d.guc_kw+' kW':'—'],['Besleme',d.besleme_v?d.besleme_v+' V':'—'],['Firmware',d.firmware],['Kontrol',d.kontrol],['Sürücü not',d.not],['SSR seviye',ss.level],['SSR alt',ss.low],['SSR üst',ss.high],['Pompa giriş basıncı',ss.pump_in],['Alçak koruma girme',ss.low_enter],['Yüksek koruma girme',ss.high_enter],['Alçak koruma çıkma',ss.low_exit],['Yüksek koruma çıkma',ss.high_exit],['SSR not',ss.note]];
+ const work=[['Frekans',w.frekans_hz?w.frekans_hz+' Hz':'—'],['Akım',w.akim_a?w.akim_a+' A':'—'],['Devir',w.devir_rpm?w.devir_rpm+' rpm':'—'],['Güç',w.guc_kw?w.guc_kw+' kW':'—'],['Gerilim',w.gerilim_v?w.gerilim_v+' V':'—'],['Sürücü sıcaklık',w.surucu_sicaklik_c?w.surucu_sicaklik_c+' °C':'—'],['Set basıncı',w.set_basinci_bar?w.set_basinci_bar+' bar':'—'],['Çalışma basıncı',w.calisma_basinci_bar?w.calisma_basinci_bar+' bar':'—'],['Tasarruf',w.tasarruf_kwh?w.tasarruf_kwh+' kWh':'—'],['Durum',w.durum],['Teknik not',w.notlar]];
+ const cable=[];[['MOTOR → BOX','motor'],['BOX → SÜRÜCÜ','out'],['SÜRÜCÜ','driver']].forEach(g=>['U','V','W'].forEach(ph=>{const z=b?.[g[1]]?.[ph]||{};cable.push([g[0]+' · '+ph,(z.renk||'—')+' / '+(z.etiket||'—')+' / '+(z.detay||'—')])}));
+ const hp=(Array.isArray(HMI)?HMI.slice(0,6):[]);
  const page1='<div class="print-page">'+pdfHeader(s,p)+'<div class="psec"><h2>TERFİ / SEÇİLİ POMPA BİLGİLERİ</h2><div class="pdf-kvgrid">'+stationInfo.map(x=>'<div><b>'+esc(x[0])+'</b><span>'+esc(x[1]!==undefined&&x[1]!==null&&String(x[1])!==''?String(x[1]):'—')+'</span></div>').join('')+'</div></div><div class="pdf-three"><div class="psec"><h2>POMPA / MOTOR · TÜM ALANLAR</h2><div class="pdf-kvgrid two">'+pumpMotor.map(x=>'<div><b>'+esc(x[0])+'</b><span>'+esc(x[1]!==undefined&&x[1]!==null&&String(x[1])!==''?String(x[1]):'—')+'</span></div>').join('')+'</div></div><div class="psec"><h2>SÜRÜCÜ / SSR · TÜM ALANLAR</h2><div class="pdf-kvgrid two">'+driver.map(x=>'<div><b>'+esc(x[0])+'</b><span>'+esc(x[1]!==undefined&&x[1]!==null&&String(x[1])!==''?String(x[1]):'—')+'</span></div>').join('')+'</div></div><div class="psec live-pdf"><h2>ANLIK ÇALIŞMA · TÜM ALANLAR</h2><div class="pdf-kvgrid two">'+work.map(x=>'<div><b>'+esc(x[0])+'</b><span>'+esc(x[1]!==undefined&&x[1]!==null&&String(x[1])!==''?String(x[1]):'—')+'</span></div>').join('')+'</div></div></div><div class="psec"><h2>BOX / KABLO · U / V / W</h2>'+compactTable(['Hat','Değer'],cable,'Kablo kaydı yok.')+'</div>'+pdfFooter(s,p,1)+'</div>';
- const page4='<div class="print-page">'+pdfHeader(s,p)+'<div class="records-grid"><div class="psec"><h2>TERFİ ÖZEL PARAMETRELER</h2>'+compactTable(['Kod','Ad','Değer','Birim','Not'],params,'Özel parametre kaydı yok.')+'</div><div class="psec"><h2>ARIZA KAYITLARI</h2>'+compactTable(['Tarih','Kod','Başlık','Tespit','İşlem','Sonuç'],faults,'Arıza kaydı yok.')+'</div><div class="psec"><h2>ÇALIŞMA GEÇMİŞİ</h2>'+compactTable(['Tarih','Hz','A','kW','RPM','V','Set','Çalışma','°C','Durum'],hist,'Çalışma geçmişi yok.')+'</div><div class="psec"><h2>FOTOĞRAF / DOKÜMAN</h2>'+compactTable(['Tarih','Ad','Not','Dosya/URL'],photos,'Fotoğraf/doküman kaydı yok.')+'</div><div class="psec"><h2>TERFİ GEÇMİŞİ</h2>'+compactTable(['Tarih','İşlem','Detay'],stationHist,'Terfi geçmişi yok.')+'</div></div>'+pdfFooter(s,p,4)+'</div>';
- return page1+hmiPage(1,3,2)+hmiPage(4,6,3)+page4;
+ const page2='<div class="print-page">'+pdfHeader(s,p)+'<div class="print-hmi-title">HMI / PLC · EKRAN 1–2 · TEKNİK POMPA P'+no+'</div><div class="print-hmi-pair">'+hmiPrintScreen(p,0)+hmiPrintScreen(p,1)+'</div>'+pdfFooter(s,p,2)+'</div>';
+ const page3='<div class="print-page">'+pdfHeader(s,p)+'<div class="print-hmi-title">HMI / PLC · EKRAN 3–4 · TEKNİK POMPA P'+no+'</div><div class="print-hmi-pair">'+hmiPrintScreen(p,2)+hmiPrintScreen(p,3)+'</div>'+pdfFooter(s,p,3)+'</div>';
+ const page4='<div class="print-page">'+pdfHeader(s,p)+'<div class="print-hmi-title">HMI / PLC · EKRAN 5–6 · TEKNİK POMPA P'+no+'</div><div class="print-hmi-pair">'+hmiPrintScreen(p,4)+hmiPrintScreen(p,5)+'</div>'+pdfFooter(s,p,4)+'</div>';
+ const page5='<div class="print-page">'+pdfHeader(s,p)+pdfRecords(s,p)+pdfFooter(s,p,5)+'</div>';
+ return page1+page2+page3+page4+page5;
 }
 function pdfSelected(){const s=station(),p=pump();if(!s||!p)return;syncCurrentHMIFromDOM();save();const html=pumpPrint(s,p);document.getElementById("printRoot").innerHTML=html;window.print()}
-function pdfAll(){const s=station();if(!s||!s.pumps.length)return;document.getElementById("printRoot").innerHTML=s.pumps.map(p=>pumpPrint(s,p)).join("");window.print()}
+function pdfAll(){const s=station();if(!s||!s.pumps.length)return;syncCurrentHMIFromDOM();save();document.getElementById("printRoot").innerHTML=s.pumps.map(p=>pumpPrint(s,p)).join("");window.print()}
 window.addEventListener("afterprint",()=>{const e=document.getElementById("printRoot");if(e)e.innerHTML=""})
 
 function render(){const root=document.getElementById("app");root.innerHTML='<div class="shell">'+sidebar()+'<main class="main">'+topbar()+(view==="home"?homeView():stationView())+'<div class="footer">MESKİ TERFİ ARŞİVİM · '+db.length+' TERFİ · '+db.reduce((n,x)=>n+x.pumps.length,0)+' POMPA · TEK DOSYA</div></main></div>';document.querySelectorAll(".adminbar").forEach(x=>x.remove());if(admin){const a=document.createElement("div");a.className="adminbar";a.textContent="● YÖNETİCİ MODU AKTİF · KİLİT";a.onclick=adminLogin;document.body.appendChild(a)}}
