@@ -83,7 +83,27 @@ button,input,textarea,select{font:inherit}button{cursor:pointer}input,textarea,s
  .print-bottom{display:grid;grid-template-columns:1.5fr .75fr;gap:.5mm}.print-bottom .psec{margin-bottom:.45mm}
  .print-note{font-size:3.1pt;margin-top:.15mm;white-space:pre-wrap;word-break:break-word;line-height:1.0}
  .print-foot{border-top:1px solid #a9b7bf;padding-top:.25mm;text-align:center;font-size:2.8pt;margin-top:.25mm}
-}</style>
+}
+@media screen{
+ .hmi-real-row b:has(.hmi-direct-input), .pressure-main b:has(.hmi-direct-input), .pressure-io b:has(.hmi-direct-input), .hmi-screen-item b:has(.hmi-direct-input){background:transparent!important;color:inherit!important;padding:0!important;min-height:0!important;box-shadow:none!important;border-radius:0!important}
+ .hmi-real-grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
+ .hmi-real-row{grid-template-columns:minmax(0,1fr) 122px;gap:12px;margin:8px 0;min-width:0}
+ .hmi-real-row label{min-width:0;overflow-wrap:anywhere}
+ .hmi-real-row .hmi-direct-input{width:122px;max-width:122px;margin-left:0}
+ .relay-layout{grid-template-columns:1fr 1fr 1fr;gap:18px}
+}
+@media(max-width:800px){.hmi-real-grid{grid-template-columns:1fr}.hmi-real-row{grid-template-columns:minmax(0,1fr) 110px}.hmi-real-row .hmi-direct-input{width:110px;max-width:110px}}
+@media print{
+ .print-page{height:289mm;max-height:none;overflow:hidden;page-break-after:always;break-after:page}
+ .print-page:last-child{page-break-after:auto;break-after:auto}
+ .print-head{margin-bottom:1.5mm}
+ .psec{overflow:visible}
+ .hmi-print{grid-template-columns:1fr;gap:1mm}
+ .hmi-pbox{break-inside:avoid;page-break-inside:avoid}
+ .hmi-pbox table{table-layout:fixed}
+ .hmi-pbox td:first-child{width:72%}.hmi-pbox td:last-child{width:28%;font-size:4.2pt}
+}
+</style>
 </head>
 <body>
 <div id="app"></div><div id="modalRoot"></div><div id="toast" class="toast"></div><div id="printRoot"></div>
@@ -308,6 +328,21 @@ function hmiReadValue(p,pageIndex,fieldIndex,label){
  for(const c of containers){const v=hmiSearchObject(c,keys);if(v!==''&&v!==undefined&&v!==null)return v;}
  return '';
 }
+function hmiPdfValue(p,pageIndex,fieldIndex,label){
+ const candidates=[];
+ const push=v=>{if(v!==undefined&&v!==null&&String(v)!=='')candidates.push(v)};
+ const raw=Array.isArray(p?.hmi)?p.hmi[pageIndex]:null;
+ const data=raw&&typeof raw==='object'?raw:{};
+ push(data[fieldIndex]); push(data[String(fieldIndex)]); push(data[String(fieldIndex+1)]);
+ const k=hmiKey(label); push(data[k]); push(data[label]);
+ ['degerler','values','veriler','data','fields','alanlar'].forEach(n=>{
+  const o=data[n]; if(o&&typeof o==='object'){push(o[fieldIndex]);push(o[String(fieldIndex)]);push(o[String(fieldIndex+1)]);push(o[k]);push(o[label]);}
+ });
+ return candidates.length?candidates[0]:'';
+}
+function hmiPdfPages(p){
+ return (Array.isArray(HMI)?HMI.slice(0,6):[]).map((pg,pi)=>({pg,pi,rows:(pg.labels||[]).map((lab,fi)=>[lab,hmiPdfValue(p,pi,fi,lab)])}));
+}
 function hmiValueFromDOM(pageIndex,fieldIndex){
  const e=document.querySelector('[data-hmi="'+fieldIndex+'"]');
  return e?e.value:'';
@@ -384,21 +419,8 @@ function statRows(obj){return Object.entries(obj).map(([k,v])=>'<div class="pcel
 function liteRows(obj){return Object.entries(obj).map(([k,v])=>'<div class="pcell-lite"><b>'+esc(k)+'</b><span>'+esc(v!==undefined&&v!==null&&String(v)!==''?String(v):'—')+'</span></div>').join('')}
 function boxRows(prefix,o){return {[''+prefix+' U']:o.U.renk+' / '+o.U.etiket+' / '+o.U.detay,[''+prefix+' V']:o.V.renk+' / '+o.V.etiket+' / '+o.V.detay,[''+prefix+' W']:o.W.renk+' / '+o.W.etiket+' / '+o.W.detay}}
 function hmiPrint(p){
- const pages=Array.isArray(HMI)?HMI.slice(0,6):[];
- return pages.map((pg,pi)=>{
-  const raw=hmiPageData(p,pi)||{};
-  const rows=(pg.labels||[]).map((lab,fi)=>{
-   let z=hmiReadValue(p,pi,fi,lab);
-   if(z===''||z===undefined||z===null){
-    const key=hmiKey(lab);
-    if(Object.prototype.hasOwnProperty.call(raw,fi)) z=raw[fi];
-    else if(Object.prototype.hasOwnProperty.call(raw,String(fi))) z=raw[String(fi)];
-    else if(Object.prototype.hasOwnProperty.call(raw,String(fi+1))) z=raw[String(fi+1)];
-    else if(Object.prototype.hasOwnProperty.call(raw,key)) z=raw[key];
-   }
-   return '<tr><td>'+esc(lab)+'</td><td><strong>'+esc(flatValue(z))+'</strong></td></tr>';
-  }).join('');
-  return '<div class="hmi-pbox"><h3>HMI '+esc(pg.no||pi+1)+' · '+esc(pg.title||'')+'</h3><table><tr><th>Alan</th><th>Değer</th></tr>'+rows+'</table></div>';
+ return hmiPdfPages(p).map(({pg,pi,rows})=>{
+  return '<div class="hmi-pbox"><h3>HMI '+esc(pg.no||pi+1)+' · '+esc(pg.title||'')+'</h3><table><tr><th>Alan</th><th>Değer</th></tr>'+rows.map(r=>'<tr><td>'+esc(r[0])+'</td><td><strong>'+esc(flatValue(r[1]))+'</strong></td></tr>').join('')+'</table></div>';
  }).join('');
 }
 function compactTable(headers,rows,empty){
@@ -426,63 +448,25 @@ function compactAllRows(rows){return rows.length?rows:[['Kayıt','—']]}
 function pumpPrint(s,p){
  const no=Number(p?.no)||1;
  const pm=p.pump||{},m=p.motor||{},d=p.driver||{},ss=p.ssr||{},b=p.box||{},w=p.work?.current||{};
- const defs=Array.isArray(HMI)?HMI.slice(0,6):[];
- const name=p.ad||pm.ad||('P'+no);
- const show=(v)=>flatValue(v);
- const cellRows=(obj,labels)=>labels.map(([label,key])=>[label,show(obj?.[key])]);
- const stationInfo=statRows({
-  'Terfi':s.ad,'RTU':s.rtu,'Bölge':s.bolge,'Terfi tipi':s.tip,'Teknik pompa no':'P'+no,'Pompa adı':name,
-  'Adres':s.address,'Kaynak / Emiş':s.source,'Basma / Çıkış':s.outlet,'Kuyu':s.depth?(s.depth+' m'):'—','GPS':s.gps,
-  'Saha açıklaması':s.note,'Referans':s.referenceNote
- });
- const pumpMotor=liteRows({
-  'Pompa marka':pm.marka,'Pompa model':pm.model,'Pompa tip':pm.tip,'Pompa seri':pm.seri_no,'Pompa güç':pm.guc_kw?(pm.guc_kw+' kW'):'—','Pompa HP':pm.guc_hp,
-  'Q min':pm.q_min,'Q max':pm.q_max,'H min':pm.h_min,'H max':pm.h_max,'Basma / Çıkış':pm.cikis,'Pompa not':pm.not,
-  'Motor marka':m.marka,'Motor model':m.model,'Motor seri':m.seri_no,'Motor tip':m.motor_tipi,'Motor güç':m.guc_kw?(m.guc_kw+' kW'):'—','Motor HP':m.guc_hp,
-  'Motor gerilim':m.gerilim_v?(m.gerilim_v+' V'):'—','Motor akım':m.nominal_akim_a?(m.nominal_akim_a+' A'):'—','Motor frekans':m.frekans_hz?(m.frekans_hz+' Hz'):'—','Motor devir':m.devir_rpm?(m.devir_rpm+' rpm'):'—','Cos φ':m.cos_phi,
-  'Montaj tarihi':m.montaj_tarihi,'Değişim tarihi':m.degisim_tarihi,'Motor not':m.not
- });
- const driverSSR=liteRows({
-  'Sürücü marka':d.marka,'Sürücü model':d.model,'Sürücü seri':d.seri_no,'Sürücü aile':d.surucu_ailesi,'Güç':d.guc_kw?(d.guc_kw+' kW'):'—','Besleme':d.besleme_v?(d.besleme_v+' V'):'—',
-  'Firmware':d.firmware,'Kontrol':d.kontrol,'Sürücü not':d.not,
-  'SSR seviye':ss.level,'SSR alt':ss.low,'SSR üst':ss.high,'Pompa giriş basıncı':ss.pump_in,'Alçak koruma girme':ss.low_enter,'Yüksek koruma girme':ss.high_enter,'Alçak koruma çıkma':ss.low_exit,'Yüksek koruma çıkma':ss.high_exit,'SSR not':ss.note
- });
- const cableRows=[];
- [['MOTOR → BOX','motor'],['BOX → SÜRÜCÜ','out'],['SÜRÜCÜ','driver']].forEach(g=>['U','V','W'].forEach(ph=>{const z=b?.[g[1]]?.[ph]||{};cableRows.push([g[0]+' · '+ph,show(z.renk)+' / '+show(z.etiket)+' / '+show(z.detay)])}));
+ const name=p.ad||pm.ad||('P'+no), show=flatValue;
+ const stationInfo=statRows({'Terfi':s.ad,'RTU':s.rtu,'Bölge':s.bolge,'Terfi tipi':s.tip,'Teknik pompa no':'P'+no,'Pompa adı':name,'Adres':s.address,'Kaynak / Emiş':s.source,'Basma / Çıkış':s.outlet,'Kuyu':s.depth?(s.depth+' m'):'—','GPS':s.gps,'Saha açıklaması':s.note,'Referans':s.referenceNote});
+ const pumpMotor=liteRows({'Pompa marka':pm.marka,'Pompa model':pm.model,'Pompa tip':pm.tip,'Pompa seri':pm.seri_no,'Pompa güç':pm.guc_kw?(pm.guc_kw+' kW'):'—','Pompa HP':pm.guc_hp,'Q min':pm.q_min,'Q max':pm.q_max,'H min':pm.h_min,'H max':pm.h_max,'Basma / Çıkış':pm.cikis,'Pompa not':pm.not,'Motor marka':m.marka,'Motor model':m.model,'Motor seri':m.seri_no,'Motor tip':m.motor_tipi,'Motor güç':m.guc_kw?(m.guc_kw+' kW'):'—','Motor HP':m.guc_hp,'Motor gerilim':m.gerilim_v?(m.gerilim_v+' V'):'—','Motor akım':m.nominal_akim_a?(m.nominal_akim_a+' A'):'—','Motor frekans':m.frekans_hz?(m.frekans_hz+' Hz'):'—','Motor devir':m.devir_rpm?(m.devir_rpm+' rpm'):'—','Cos φ':m.cos_phi,'Montaj tarihi':m.montaj_tarihi,'Değişim tarihi':m.degisim_tarihi,'Motor not':m.not});
+ const driverSSR=liteRows({'Sürücü marka':d.marka,'Sürücü model':d.model,'Sürücü seri':d.seri_no,'Sürücü aile':d.surucu_ailesi,'Güç':d.guc_kw?(d.guc_kw+' kW'):'—','Besleme':d.besleme_v?(d.besleme_v+' V'):'—','Firmware':d.firmware,'Kontrol':d.kontrol,'Sürücü not':d.not,'SSR seviye':ss.level,'SSR alt':ss.low,'SSR üst':ss.high,'Pompa giriş basıncı':ss.pump_in,'Alçak koruma girme':ss.low_enter,'Yüksek koruma girme':ss.high_enter,'Alçak koruma çıkma':ss.low_exit,'Yüksek koruma çıkma':ss.high_exit,'SSR not':ss.note});
+ const cableRows=[];[['MOTOR → BOX','motor'],['BOX → SÜRÜCÜ','out'],['SÜRÜCÜ','driver']].forEach(g=>['U','V','W'].forEach(ph=>{const z=b?.[g[1]]?.[ph]||{};cableRows.push([g[0]+' · '+ph,show(z.renk)+' / '+show(z.etiket)+' / '+show(z.detay)])}));
  const workCurrent=liteRows({'Frekans':w.frekans_hz?(w.frekans_hz+' Hz'):'—','Akım':w.akim_a?(w.akim_a+' A'):'—','Devir':w.devir_rpm?(w.devir_rpm+' rpm'):'—','Güç':w.guc_kw?(w.guc_kw+' kW'):'—','Gerilim':w.gerilim_v?(w.gerilim_v+' V'):'—','Sürücü sıcaklık':w.surucu_sicaklik_c?(w.surucu_sicaklik_c+' °C'):'—','Set basıncı':w.set_basinci_bar?(w.set_basinci_bar+' bar'):'—','Çalışma basıncı':w.calisma_basinci_bar?(w.calisma_basinci_bar+' bar'):'—','Tasarruf':w.tasarruf_kwh?(w.tasarruf_kwh+' kWh'):'—','Durum':w.durum});
  const workHist=(p.work?.history||[]).map(x=>[x.date,x.frekans_hz,x.akim_a,x.guc_kw,x.devir_rpm,x.gerilim_v,x.set_basinci_bar,x.calisma_basinci_bar,x.surucu_sicaklik_c,x.durum,x.notlar]);
  const faults=(p.faults||[]).map(x=>[x.date,x.code,x.name,x.cause,x.action,x.result,x.note]);
  const params=(p.params||[]).map(x=>[x.code,x.name,x.value,x.unit,x.note]);
  const photos=(p.photos||[]).map(x=>[x.date,x.name,x.note,x.url||x.path||x.file||'']);
  const stationHist=(s.history||[]).map(x=>[x.date,x.action,x.detail]);
- const extraPump=allObjectRows(p,'Pompa kaydı').filter(r=>!/^Pompa kaydı \/ (id|no|ad|pump|motor|driver|box|hmi|work|ssr|params|faults|photos)$/i.test(r[0]));
- const extraStation=allObjectRows(s,'Terfi kaydı').filter(r=>!/^Terfi kaydı \/ (id|ad|rtu|bolge|tip|address|source|outlet|depth|gps|note|history|pumps|referenceNote)$/i.test(r[0]));
- const mappedPumpKeys=new Set(['id','no','ad','pump','motor','driver','box','hmi','hmiData','work','ssr','params','faults','photos','note']);
- const mappedStationKeys=new Set(['id','ad','rtu','bolge','tip','address','source','outlet','depth','gps','note','history','pumps','referenceNote']);
- const pumpExtraAll=allObjectRows(p,'Pompa kaydı').filter(r=>{const root=(r[0]||'').split(' / ')[1]?.split(' ')[0]||'';return !mappedPumpKeys.has(root)});
- const stationExtraAll=allObjectRows(s,'Terfi kaydı').filter(r=>{const root=(r[0]||'').split(' / ')[1]?.split(' ')[0]||'';return !mappedStationKeys.has(root)});
- const allHmiRows=[];
- defs.forEach((pg,pi)=>{(pg.labels||[]).forEach((lab,fi)=>{let v=hmiReadValue(p,pi,fi,lab);if(v===''||v===undefined||v===null)v=hmiValueFromDOM(pi,fi);allHmiRows.push(['HMI '+(pi+1),lab,flatValue(v)]);});});
-
+ const extraRows=allObjectRows(p,'Pompa kaydı').concat(allObjectRows(s,'Terfi kaydı'));
  const pageHead='<div class="print-head"><div><h1>MESKİ TERFİ TEKNİK ARŞİVİ</h1><p>'+esc(s.ad||'—')+' · '+esc(s.rtu?'RTU '+s.rtu:'RTU YOK')+' · TEKNİK POMPA P'+esc(no)+' · '+esc(name)+'</p></div><div class="print-meta">'+esc(now())+'<br>'+esc(s.bolge||'—')+'<br><b>SEÇİLİ POMPA: P'+esc(no)+'</b></div></div>';
- const hmiHtml=hmiPrint(p);
- return '<div class="print-page">'+pageHead+
- '<div class="psec"><h2>TERFİ / SEÇİLİ POMPA BİLGİLERİ</h2><div class="pmini">'+stationInfo+'</div></div>'+ 
- '<div class="print-top">'+
- '<div class="psec"><h2>POMPA / MOTOR · TÜM ALANLAR</h2><div class="pmini">'+pumpMotor+'</div></div>'+ 
- '<div class="psec"><h2>SÜRÜCÜ / SSR · TÜM ALANLAR</h2><div class="pmini">'+driverSSR+'</div><h2 style="margin-top:.45mm">BOX / KABLO · U/V/W</h2>'+compactTable(['Hat','Değer'],cableRows,'Kablo kaydı yok.')+'</div>'+ 
- '<div class="psec"><h2>ANLIK ÇALIŞMA · TÜM ALANLAR</h2><div class="pmini">'+workCurrent+'</div><div class="print-note"><b>Teknik not:</b> '+esc(w.notlar||'—')+'</div></div>'+ 
- '</div>'+ 
- '<div class="psec"><h2>HMI / PLC · 6 EKRAN · TEKNİK POMPA P'+esc(no)+'</h2><div class="hmi-print">'+hmiHtml+'</div></div>'+ 
- '<div class="print-bottom"><div>'+ 
- '<div class="psec"><h2>TERFİ ÖZEL PARAMETRELER</h2>'+compactTable(['Kod','Ad','Değer','Birim','Not'],params,'Özel parametre kaydı yok.')+'</div>'+ 
- '<div class="psec"><h2>ARIZA KAYITLARI</h2>'+compactTable(['Tarih','Kod','Başlık','Tespit','İşlem','Sonuç','Not'],faults,'Arıza kaydı yok.')+'</div>'+ 
- '<div class="psec"><h2>ÇALIŞMA GEÇMİŞİ</h2>'+compactTable(['Tarih','Hz','A','kW','RPM','V','Set','Çalışma','°C','Durum','Not'],workHist,'Çalışma geçmişi yok.')+'</div>'+ 
- '</div><div>'+ 
- '<div class="psec"><h2>FOTOĞRAF / DOKÜMAN KAYITLARI</h2>'+compactTable(['Tarih','Ad','Not','Dosya/URL'],photos,'Fotoğraf/doküman kaydı yok.')+'</div>'+ 
- '<div class="psec"><h2>TERFİ SAHA / GEÇMİŞ</h2><div class="print-note"><b>Açıklama:</b> '+esc(s.note||'—')+'<br><b>Referans:</b> '+esc(s.referenceNote||'—')+'<br><b>Adres:</b> '+esc(s.address||'—')+'<br><b>Kaynak:</b> '+esc(s.source||'—')+'<br><b>Basma:</b> '+esc(s.outlet||'—')+'<br><b>Kuyu:</b> '+esc(s.depth||'—')+'<br><b>GPS:</b> '+esc(s.gps||'—')+'</div>'+compactTable(['Tarih','İşlem','Detay'],stationHist,'Terfi geçmişi yok.')+'</div>'+ 
- '<div class="psec"><h2>TÜM KAYITLAR · ATLANMAYAN EK ALANLAR</h2>'+compactTable(['Alan','Değer'],compactAllRows(extraPump.concat(extraStation).map(r=>[r[0],r[1]])),'Ek alan yok.')+'</div>'+ 
- '</div></div><div class="print-foot">MESKİ TERFİ ARŞİVİM · '+esc(s.ad)+' · TEKNİK POMPA P'+esc(no)+' · SEÇİLİ POMPANIN TÜM KAYITLARI · A3 YATAY · TEK SAYFA</div></div>';
+ const footer='<div class="print-foot">MESKİ TERFİ ARŞİVİM · '+esc(s.ad)+' · TEKNİK POMPA P'+esc(no)+' · TÜM KAYITLAR · A3 YATAY</div>';
+ const hmiPages=hmiPdfPages(p);
+ const hmiPage=(from,to)=>'<div class="print-page">'+pageHead+'<div class="psec"><h2>HMI / PLC · EKRAN '+from+'–'+to+' · TEKNİK POMPA P'+esc(no)+'</h2><div class="hmi-print">'+hmiPages.slice(from-1,to).map(x=>'<div class="hmi-pbox"><h3>HMI '+esc(x.pg.no||x.pi+1)+' · '+esc(x.pg.title||'')+'</h3><table><tr><th>Alan</th><th>Değer</th></tr>'+x.rows.map(r=>'<tr><td>'+esc(r[0])+'</td><td><strong>'+esc(flatValue(r[1]))+'</strong></td></tr>').join('')+'</table></div>').join('')+'</div></div>'+footer+'</div>';
+ const p1='<div class="print-page">'+pageHead+ '<div class="psec"><h2>TERFİ / SEÇİLİ POMPA BİLGİLERİ</h2><div class="pmini">'+stationInfo+'</div></div>'+ '<div class="print-top"><div class="psec"><h2>POMPA / MOTOR · TÜM ALANLAR</h2><div class="pmini">'+pumpMotor+'</div></div><div class="psec"><h2>SÜRÜCÜ / SSR · TÜM ALANLAR</h2><div class="pmini">'+driverSSR+'</div><h2 style="margin-top:.45mm">BOX / KABLO · U/V/W</h2>'+compactTable(['Hat','Değer'],cableRows,'Kablo kaydı yok.')+'</div><div class="psec"><h2>ANLIK ÇALIŞMA · TÜM ALANLAR</h2><div class="pmini">'+workCurrent+'</div><div class="print-note"><b>Teknik not:</b> '+esc(w.notlar||'—')+'</div></div></div>'+ '<div class="psec"><h2>TERFİ SAHA / KONUM</h2><div class="pmini">'+statRows({'Açıklama':s.note,'Referans':s.referenceNote,'Adres':s.address,'Kaynak':s.source,'Basma':s.outlet,'Kuyu':s.depth,'GPS':s.gps})+'</div></div>'+footer+'</div>';
+ const p4='<div class="print-page">'+pageHead+'<div class="psec"><h2>TERFİ ÖZEL PARAMETRELER</h2>'+compactTable(['Kod','Ad','Değer','Birim','Not'],params,'Özel parametre kaydı yok.')+'</div><div class="psec"><h2>ARIZA KAYITLARI</h2>'+compactTable(['Tarih','Kod','Başlık','Tespit','İşlem','Sonuç','Not'],faults,'Arıza kaydı yok.')+'</div><div class="psec"><h2>ÇALIŞMA GEÇMİŞİ</h2>'+compactTable(['Tarih','Hz','A','kW','RPM','V','Set','Çalışma','°C','Durum','Not'],workHist,'Çalışma geçmişi yok.')+'</div><div class="psec"><h2>FOTOĞRAF / DOKÜMAN KAYITLARI</h2>'+compactTable(['Tarih','Ad','Not','Dosya/URL'],photos,'Fotoğraf/doküman kaydı yok.')+'</div><div class="psec"><h2>TERFİ GEÇMİŞİ</h2>'+compactTable(['Tarih','İşlem','Detay'],stationHist,'Terfi geçmişi yok.')+'</div><div class="psec"><h2>TÜM EK ALANLAR</h2>'+compactTable(['Alan','Değer'],extraRows.map(r=>[r[0],r[1]]),'Ek alan yok.')+'</div>'+footer+'</div>';
+ return p1+hmiPage(1,3)+hmiPage(4,6)+p4;
 }
 function pdfSelected(){const s=station(),p=pump();if(!s||!p)return;syncCurrentHMIFromDOM();save();const html=pumpPrint(s,p);document.getElementById("printRoot").innerHTML=html;window.print()}
 function pdfAll(){const s=station();if(!s||!s.pumps.length)return;document.getElementById("printRoot").innerHTML=s.pumps.map(p=>pumpPrint(s,p)).join("");window.print()}
