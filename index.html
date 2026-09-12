@@ -122,32 +122,118 @@ button,input,textarea,select{font:inherit}button{cursor:pointer}input,textarea,s
  .relay-layout,.protect-real{grid-template-columns:1fr!important}
 }
 @media(max-width:800px){.hmi-real-grid{grid-template-columns:1fr!important}.hmi-real-row{grid-template-columns:minmax(0,1fr) 110px!important}.hmi-real-row .hmi-input-slot .hmi-direct-input{width:110px;max-width:110px}.relay-layout{grid-template-columns:1fr}.protect-real{grid-template-columns:1fr}}
+</style>
+<style id="visual-revision">
 
-/* ===== V2.1 PREMIUM GENEL TERFİ GÖRÜNÜMÜ ===== */
-.premium-station{margin-top:10px}
-.premium-head{position:relative;overflow:hidden;background:radial-gradient(circle at 85% 15%,#164d70aa 0,transparent 34%),linear-gradient(135deg,#0d2d45,#071722 58%,#06111b);border:1px solid #276782;border-radius:20px;padding:16px;box-shadow:0 18px 45px rgba(0,0,0,.34)}
-.premium-head:after{content:"";position:absolute;right:-80px;bottom:-110px;width:300px;height:300px;border-radius:50%;border:1px solid #18b7ef22;box-shadow:0 0 0 30px #18b7ef0b,0 0 0 60px #18b7ef07}
-.premium-brandline{display:flex;justify-content:space-between;gap:12px;align-items:flex-start;position:relative;z-index:1}
-.premium-title{display:flex;gap:12px;align-items:center;min-width:0}
-.premium-logo{width:58px;height:58px;flex:0 0 auto;border-radius:16px;background:linear-gradient(145deg,#18b7ef,#07547d);display:grid;place-items:center;font-size:27px;font-weight:1000;border:1px solid #52d7ff;box-shadow:0 0 24px #18b7ef25}
-.premium-title h1{font-size:25px;letter-spacing:.2px;line-height:1.05}
-.premium-kicker{font-size:8px;color:#63cbed;font-weight:950;letter-spacing:1.4px;margin-bottom:4px}
-.premium-sub{font-size:10px;color:#8eacbd;margin-top:5px}
-.premium-user{text-align:right;position:relative;z-index:1}.premium-user small{display:block;color:#6e93a6;font-size:7px;font-weight:900}.premium-user b{display:block;font-size:11px;margin-top:3px}
-.premium-meta{display:grid;grid-template-columns:repeat(6,1fr);gap:7px;margin-top:14px;position:relative;z-index:1}
-.premium-meta .cell{background:#061824aa;border:1px solid #1d536c;border-radius:11px;padding:8px}.premium-meta span{display:block;color:#63899c;font-size:7px;font-weight:950}.premium-meta b{display:block;margin-top:3px;font-size:9px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.premium-body{display:grid;grid-template-columns:minmax(0,1.55fr) minmax(280px,.75fr);gap:10px;margin-top:10px}
-.scene-card,.info-card{background:linear-gradient(145deg,#0b2639,#071824);border:1px solid #1e536b;border-radius:18px;box-shadow:var(--shadow);overflow:hidden}
-.scene-head,.info-head{padding:12px 14px;border-bottom:1px solid #173f55;display:flex;justify-content:space-between;align-items:center;gap:8px}.scene-head b,.info-head b{font-size:10px;letter-spacing:.3px}.scene-head span{font-size:7px;color:#6d93a6}
-.scene-wrap{min-height:390px;padding:8px;background:radial-gradient(circle at 50% 10%,#123d58 0,transparent 45%),linear-gradient(180deg,#06131d,#030b11)}.scene-wrap svg{width:100%;height:100%;min-height:375px;display:block}
-.scene-note{padding:10px 13px;border-top:1px solid #173f55;color:#7999aa;font-size:8px;line-height:1.45}
-.info-stack{display:grid;gap:10px}.info-card .body{padding:12px}
-.status-line{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:8px 0;border-bottom:1px solid #ffffff0d}.status-line:last-child{border-bottom:0}.status-line span{font-size:8px;color:#7899aa}.status-line b{font-size:9px;text-align:right}
-.premium-pumps{display:grid;grid-template-columns:repeat(2,1fr);gap:7px}.pump-mini{border:1px solid #245a72;background:#081d2d;border-radius:11px;padding:9px;text-align:left;color:#e6f6ff}.pump-mini strong{font-size:16px}.pump-mini small{display:block;color:#7899aa;font-size:7px;margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.pump-mini .mini-state{margin-top:7px;font-size:7px;font-weight:950;color:#63e2b2}.pump-mini.active{box-shadow:0 0 0 2px #20c3f5}
-.label-real{border:1px solid #526d7c;border-radius:12px;background:linear-gradient(145deg,#d8e0e4,#aebbc2);color:#182c37;padding:10px;box-shadow:inset 0 0 0 2px #ffffff55,0 8px 18px #0005}.label-real .label-top{display:flex;justify-content:space-between;gap:7px;font-size:7px;font-weight:950}.label-real .label-name{font-size:14px;font-weight:1000;letter-spacing:.5px;margin:5px 0}.label-real .label-grid{display:grid;grid-template-columns:1fr 1fr;gap:4px;font-size:7px}.label-real .label-grid div{background:#eef3f5aa;border:1px solid #7e9099;padding:4px;border-radius:4px}
-.quick-premium{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;margin-top:10px}.quick-premium button{border:1px solid #20536b;background:linear-gradient(145deg,#0e3046,#081c2b);color:#dff4fb;border-radius:12px;padding:10px 8px;font-size:8px;font-weight:900}.quick-premium button:hover{border-color:#36c8f7;transform:translateY(-1px)}
-@media(max-width:900px){.premium-body{grid-template-columns:1fr}.premium-meta{grid-template-columns:repeat(3,1fr)}.scene-wrap{min-height:330px}.scene-wrap svg{min-height:315px}}
-@media(max-width:520px){.premium-title h1{font-size:18px}.premium-logo{width:48px;height:48px;font-size:22px}.premium-user{display:none}.premium-meta{grid-template-columns:repeat(2,1fr)}.premium-pumps{grid-template-columns:1fr 1fr}.quick-premium{grid-template-columns:repeat(2,1fr)}}
+/* ========================= GÖRÜNTÜ REVİZYONU =========================
+   SADECE GÖRSEL KATMAN. JAVASCRIPT / VERİ / FONKSİYONLAR DEĞİŞTİRİLMEDİ.
+*/
+:root{
+ --bg:#040b14;--panel:#081827;--panel2:#0b2133;--line:#1b4259;
+ --text:#eef9ff;--muted:#7e9aaa;--cyan:#20c7f4;--cyan2:#0b8fc4;
+ --green:#21d28d;--red:#ef4d5b;--yellow:#e6b13d;
+ --shadow:0 18px 50px rgba(0,0,0,.34);--radius:18px;
+}
+html,body{
+ background:
+ radial-gradient(900px 500px at 85% -10%,rgba(25,153,204,.18),transparent 62%),
+ radial-gradient(700px 500px at 5% 20%,rgba(14,86,125,.12),transparent 65%),
+ #040b14;
+}
+body{letter-spacing:.01em}
+button,input,textarea,select{font-family:inherit}
+button{-webkit-tap-highlight-color:transparent}
+
+/* SOL MENÜ */
+.shell{grid-template-columns:248px minmax(0,1fr);background:linear-gradient(90deg,#050d16 0,#06131e 248px,transparent 248px)}
+.side{
+ background:linear-gradient(180deg,#071522 0%,#06111c 100%);
+ border-right:1px solid #18384b;padding:18px 14px;box-shadow:10px 0 35px #0003;
+}
+.brand{padding:5px 6px 18px;border-bottom:1px solid #18394c}
+.logo{width:44px;height:44px;border-radius:13px;background:linear-gradient(145deg,#28cdf7,#0875a9);box-shadow:0 8px 24px #0a9ed344, inset 0 1px 0 #ffffff55}
+.brand b{font-size:11px;letter-spacing:.5px}.brand small{font-size:8px;color:#7195a8;letter-spacing:.8px}
+.side-title{margin:21px 7px 8px;font-size:8px;letter-spacing:1.5px;color:#507286}
+.side button{border:1px solid transparent;border-radius:10px;padding:10px 10px;font-size:9px;color:#9db8c6;transition:.18s}
+.side button:hover,.side button.active{background:linear-gradient(90deg,#0d3148,#0b263a);border-color:#21566f;color:#fff;box-shadow:inset 3px 0 0 var(--cyan),0 5px 18px #0002}
+
+/* ANA GÖVDE / ÜST BAR */
+.main{padding:14px 22px 80px;max-width:1800px;width:100%;margin:auto}
+.top{min-height:54px;border-bottom:1px solid #183b50;padding:0 0 12px;margin-bottom:16px;gap:12px}
+.crumb{font-size:10px;color:#7899aa;letter-spacing:.4px}
+.actions{gap:7px}
+.top .actions::before{content:"MUSA ER  ·  YÖNETİCİ";display:flex;align-items:center;white-space:nowrap;color:#6e93a6;font-size:8px;font-weight:900;letter-spacing:1px;padding:0 7px}
+.btn{border:1px solid #214e65;background:linear-gradient(180deg,#102d41,#0b2132);border-radius:10px;padding:9px 11px;font-size:8px;letter-spacing:.3px;box-shadow:0 5px 14px #0002;transition:.16s}
+.btn:hover{transform:translateY(-1px);border-color:#2c7696}.btn.primary{background:linear-gradient(180deg,#1cb9ed,#0878ae);border-color:#35cdf8;box-shadow:0 6px 18px #0aa8e333}.btn.ok{background:linear-gradient(180deg,#19c985,#078e5c);border-color:#28e69f}.btn.bad{background:linear-gradient(180deg,#ed4b5a,#a72c38);border-color:#ff6874}.btn.warn{background:linear-gradient(180deg,#a87818,#654b0e);border-color:#d7a62e}
+
+/* KARTLAR */
+.card{background:linear-gradient(145deg,rgba(13,36,54,.96),rgba(6,19,31,.98));border:1px solid #1a455c;border-radius:var(--radius);padding:14px;margin:11px 0;box-shadow:var(--shadow);position:relative;overflow:hidden}
+.card::after{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(120deg,#ffffff06,transparent 28%);opacity:.7}
+.section-head{position:relative;z-index:1}
+
+/* ANA SAYFA HERO */
+.hero{background:linear-gradient(120deg,#0b263b 0%,#071522 58%,#09243a 100%);border:1px solid #21536c;border-radius:22px;padding:20px;box-shadow:0 20px 60px #0004;overflow:hidden;position:relative}
+.hero::before{content:"";position:absolute;width:360px;height:360px;border-radius:50%;right:-120px;top:-220px;background:radial-gradient(circle,#1cc3f533,transparent 68%);pointer-events:none}
+.hero::after{content:"SCADA  •  TEKNİK ARŞİV  •  SAHA KAYITLARI";position:absolute;right:18px;bottom:13px;color:#3b6377;font-size:7px;letter-spacing:1.6px;font-weight:900}
+.hero-row{gap:16px;position:relative;z-index:1}
+.hero-icon{width:74px;height:74px;border-radius:20px;background:linear-gradient(145deg,#0fa9dd,#073e60);border:1px solid #35cdf8;box-shadow:0 10px 30px #079bd933,inset 0 1px 0 #ffffff44;font-size:32px}
+.hero h1{font-size:26px;letter-spacing:.3px}.hero-sub{font-size:9px;color:#82aabd;letter-spacing:.5px}
+.meta{gap:7px;margin-top:14px;position:relative;z-index:1}.meta .cell{background:#061521;border:1px solid #183e53;border-radius:11px;padding:9px}.meta span{font-size:7px;color:#5f8497;letter-spacing:.7px}.meta b{font-size:9px}
+
+/* ANA SAYFA İSTATİSTİKLER */
+.stats{gap:9px}.stat{background:linear-gradient(145deg,#0a2234,#071723);border:1px solid #1a455c;border-radius:14px;padding:13px;min-height:88px}.stat small{font-size:7px;letter-spacing:1px;color:#5f8699}.stat strong{font-size:25px;line-height:1.1}.stat span{font-size:8px;color:#7799aa}
+.districts{gap:7px}.district{border:1px solid #1d4b62;background:#081e30;padding:8px 12px;font-size:8px;transition:.15s}.district:hover{border-color:#2a7594;color:#fff}.district.active{background:linear-gradient(180deg,#159bce,#0b6d9d);border-color:#48d3fa;box-shadow:0 5px 16px #079fd233}
+.filterbar{margin:10px 0}.filterbar input{background:#061622;border-color:#1b465c;border-radius:11px;padding:11px 12px;font-size:9px}
+
+/* TERFİ KARTLARI */
+.group{margin-top:20px}.group-title{font-size:12px;margin:0 3px 9px}.group-title b{letter-spacing:.2px}.group-title span{font-size:8px;color:#648798;letter-spacing:1px}
+.station-grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.station{min-height:132px;padding:13px;cursor:pointer;transition:.18s;background:linear-gradient(145deg,#0c2639,#071824)}
+.station:hover{transform:translateY(-3px);border-color:#2abfeF;box-shadow:0 18px 38px #0005,0 0 0 1px #1ab5e622}
+.station h3{font-size:11px;letter-spacing:.15px}.station-meta{font-size:8px;color:#6f92a4;margin-top:4px}.badge{padding:5px 8px;font-size:7px;letter-spacing:.4px;background:#0a334a}.badge.ok{background:#083f32;color:#62e6b2}.badge.warn{background:#4b3813;color:#f5cd6a}
+.chips{margin-top:9px}.chip{background:#0a3045;border:1px solid #174b62;color:#83c8e2;padding:4px 7px;font-size:7px}
+
+/* TERFİ DETAY ÜST KISMI */
+.pumps{gap:8px;padding:3px 0 7px}.pump{min-width:112px;border:1px solid #24536a;background:linear-gradient(145deg,#102f43,#0a1e2e);border-radius:13px;padding:11px;box-shadow:0 7px 18px #0002}.pump b{font-size:20px;color:#e9faff}.pump small{font-size:8px}.pump.active{box-shadow:0 0 0 2px #20c8f5,0 8px 24px #00aee533;background:linear-gradient(145deg,#124e68,#0b2b3d)}
+.pump.c2{background:linear-gradient(145deg,#124838,#092c25)}.pump.c3{background:linear-gradient(145deg,#51262f,#2f171c)}.pump.c4{background:linear-gradient(145deg,#4b3a18,#2c220e)}.pump.c5{background:linear-gradient(145deg,#3d2b61,#241a39)}.pump.c6{background:linear-gradient(145deg,#164550,#0c2b32)}
+
+/* TEKNİK SİSTEM ALANI */
+.system{border-radius:20px;border-color:#244f65;box-shadow:0 24px 65px #0005}
+.system-head{background:linear-gradient(100deg,#09283d 0%,#0b344b 55%,#082238 100%);padding:16px 17px;border-bottom:1px solid #23627c}
+.system-head h2{font-size:20px;letter-spacing:.2px}.system-head .muted{color:#86b2c5!important;font-size:8px}
+.system-nav{gap:5px;padding:8px;background:#05131f;border-bottom:1px solid #1b4358}.system-nav button{border:1px solid #19465d;background:#092337;color:#8eafbd;border-radius:9px;padding:8px 10px;font-size:7px;letter-spacing:.35px;transition:.14s}.system-nav button:hover{color:#fff;border-color:#2a7592}.system-nav button.active{background:linear-gradient(180deg,#19bce9,#0a719e);border-color:#3bd1fa;color:#fff;box-shadow:0 5px 16px #079fd22b}
+.content{padding:3px 12px 14px}.data{background:linear-gradient(145deg,#091f30,#061622);border:1px solid #1a455b;border-radius:13px;padding:11px}.data h3{font-size:10px;color:#bfe6f5}.kv{font-size:8px;padding:7px 0}.kv span:first-child{color:#668b9e}
+
+/* FORM / TEKNİK SAYFALAR */
+.field label{font-size:7px;color:#7193a3;letter-spacing:.7px}.field input,.field select{background:#061622;border-color:#1b465d;border-radius:9px;padding:9px;font-size:9px}.field textarea{background:#061622;border-color:#1b465d;border-radius:9px;font-size:9px}
+.grid2,.grid3,.grid4{gap:9px}.table-wrap{border-radius:12px}.table-wrap table{background:#071824}th{background:#0d2b40;color:#a5c4d1}th,td{border-color:#1b465c}
+.library-item{background:linear-gradient(145deg,#0a2234,#061722);border-color:#1b465c;border-radius:13px}.library-code{color:#65d9ff}.library-actions{gap:6px}
+
+/* ANLIK ÇALIŞMA / HMI */
+.live-kpi{background:linear-gradient(145deg,#092238,#061622);border-color:#1b465c;border-radius:13px}.live-kpi strong{font-size:20px}.chart{background:#061622;border-color:#1b465c;border-radius:13px}.hmi-preview-wrap{background:#05121d;border-color:#1a455b;border-radius:14px}
+
+/* MODAL / TOAST */
+.modal-back{backdrop-filter:blur(7px);background:#000b}.modal{background:linear-gradient(145deg,#0b2538,#061722);border-color:#27627c;border-radius:18px;box-shadow:0 30px 90px #0008}.modal h2{font-size:15px}.toast{background:#0b293d;border-color:#2b6c89;box-shadow:0 12px 35px #0006}
+.adminbar{left:16px;bottom:16px;box-shadow:0 8px 24px #0005}
+.footer{color:#4f7182}
+
+/* MOBİL / TABLET */
+@media(max-width:1050px){.station-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.meta{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:800px){
+ .shell{display:block;background:none}.side{display:none}.main{padding:8px 8px 70px}.top{padding-bottom:9px;margin-bottom:10px}.top .actions::before{display:none}
+ .hero{padding:15px;border-radius:17px}.hero h1{font-size:19px}.hero-sub{font-size:8px}.hero::after{display:none}.hero-icon{width:58px;height:58px;border-radius:15px;font-size:27px}
+ .stats{gap:6px}.stat{padding:10px;min-height:78px}.stat strong{font-size:21px}
+ .station-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:7px}.station{min-height:118px;padding:9px}.station h3{font-size:9px}.station-meta{font-size:7px}.station .actions{gap:4px}.station .btn{font-size:7px;padding:6px 7px}
+ .group{margin-top:14px}.group-title{font-size:10px}.pumps{gap:6px}.pump{min-width:98px;padding:9px}.pump b{font-size:17px}.system-head{padding:13px}.system-head h2{font-size:17px}.system-nav{padding:6px}.system-nav button{padding:7px 8px;font-size:7px}
+ .content{padding:2px 7px 10px}.card{border-radius:15px;padding:11px}.data{padding:9px}.grid2,.grid3,.grid4{gap:6px}
+}
+@media(max-width:520px){
+ .main{padding:6px 6px 65px}.top{min-height:42px}.crumb{font-size:8px}.actions{gap:4px}.actions .btn{padding:7px 7px;font-size:7px}
+ .hero-row{gap:10px}.hero h1{font-size:15px}.hero-sub{font-size:7px}.hero-icon{width:50px;height:50px;font-size:23px}.meta{grid-template-columns:repeat(2,1fr);gap:5px}.meta .cell{padding:7px}.meta b{font-size:8px}
+ .stats{grid-template-columns:repeat(2,1fr)}.districts{gap:5px}.district{padding:7px 9px;font-size:7px}.filterbar input{padding:9px;font-size:8px}
+ .station-grid{grid-template-columns:1fr 1fr;gap:6px}.station{min-height:110px;padding:8px}.station h3{font-size:9px}.badge{padding:4px 6px;font-size:6px}.chips{gap:3px}.chip{font-size:6px;padding:3px 5px}
+ .system-nav button{padding:6px 7px;font-size:6.5px}.live-grid{grid-template-columns:repeat(2,1fr)}
+}
 
 </style>
 </head>
@@ -227,19 +313,6 @@ function loadLibraries(){try{const x=JSON.parse(localStorage.getItem(LIB_STORE)|
 function saveLibraries(){localStorage.setItem(LIB_STORE,JSON.stringify({params:PARAMS,faults:FAULTS,drivers:DRIVER_SERIES,hyd:HYD}))}
 
 let db=[],view="home",stationId=null,pumpId=null,tab="genel",hmiPage=1,district="TÜMÜ",search="",admin=false,libraryMode="all";
-const DISTRICT_STORE="MESKI_TERFI_ILCELERI_2026";
-let EXTRA_DISTRICTS=[];
-function loadDistricts(){try{const x=JSON.parse(localStorage.getItem(DISTRICT_STORE)||"[]");EXTRA_DISTRICTS=Array.isArray(x)?x.filter(Boolean):[]}catch(e){EXTRA_DISTRICTS=[]}}
-function saveDistricts(){localStorage.setItem(DISTRICT_STORE,JSON.stringify(EXTRA_DISTRICTS))}
-function districtList(){return [...new Set(["AKDENİZ","MEZİTLİ","TOROSLAR","YENİŞEHİR","MERKEZ",...EXTRA_DISTRICTS,...db.map(s=>s.bolge).filter(Boolean)])].sort((a,b)=>a.localeCompare(b,"tr"))}
-function districtOptions(selected){return districtList().map(d=>'<option '+(selected===d?'selected':'')+'>'+esc(d)+'</option>').join('')}
-function openDistrictManager(){
-  if(!needAdmin())return;
-  const rows=districtList().map(d=>'<div class="kv"><span>'+esc(d)+'</span><span>'+db.filter(s=>s.bolge===d).length+' terfi</span></div>').join('');
-  openModal("İLÇE / BÖLGE YÖNETİMİ",'<div class="data"><h3>AKTİF İLÇELER</h3>'+rows+'</div><div class="card"><div class="field"><label>Yeni ilçe / bölge adı</label><input id="newDistrictName" placeholder="Örn. ERDEMLİ"></div><div class="actions"><button class="btn ok" onclick="addDistrict()">+ İLÇE EKLE</button></div><div class="muted" style="margin-top:8px">Yeni ilçe eklendiğinde yeni terfi oluşturma ekranında otomatik olarak seçilebilir. Mevcut ilçeler korunur.</div></div>');
-}
-function addDistrict(){if(!needAdmin())return;const e=document.getElementById("newDistrictName"),name=(e?.value||"").trim().toLocaleUpperCase("tr-TR");if(!name){toast("İlçe adı girin.");return}if(districtList().includes(name)){toast("Bu ilçe zaten var.");return}EXTRA_DISTRICTS.push(name);saveDistricts();district=name;closeModal();render();toast(name+" eklendi.")}
-
 
 function esc(v){return String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
 function clone(v){return JSON.parse(JSON.stringify(v))}
@@ -281,16 +354,7 @@ function inp(label,path,value,type="text"){return'<div class="field"><label>'+es
 function txt(label,path,value){return'<div class="field"><label>'+esc(label)+'</label><textarea data-path="'+esc(path)+'" '+(admin?"":"readonly")+'>'+esc(value??"")+'</textarea></div>'}
 function kv(title,obj){return'<div class="data"><h3>'+title+'</h3>'+Object.entries(obj).map(([k,v])=>'<div class="kv"><span>'+esc(k)+'</span><span>'+esc(v||"—")+'</span></div>').join("")+'</div>'}
 
-function sidebar(){
-  return'<aside class="side"><div class="brand"><div class="logo">M</div><div><b>MESKİ TERFİ ARŞİVİM</b><small>SAHA · POMPA · MOTOR · HMI</small></div></div>'+
-  '<div class="side-title">ANA MENÜ</div><button onclick="home()">⌂ Ana Sayfa</button>'+
-  '<div class="side-title">İLÇELER / BÖLGELER</div><button class="'+(district==="TÜMÜ"?"active":"")+'" onclick="setDistrict(\'TÜMÜ\')">● TÜMÜ</button>'+
-  districtList().map(d=>'<button class="'+(district===d?"active":"")+'" onclick="setDistrict(\''+esc(d).replace(/'/g,"\\'")+'\')">● '+esc(d)+'</button>').join("")+
-  (admin?'<button onclick="openDistrictManager()">＋ İlçe / Bölge Ekle</button>':'')+
-  '<div class="side-title">TEKNİK KÜTÜPHANE</div><button onclick="openLibrary(\'all\')">🧰 Teknik Kütüphane</button>'+
-  '<div class="side-title">VERİ</div><button onclick="backup()">⇩ JSON Yedek</button><button onclick="document.getElementById(\'restore\').click()">⇧ JSON Geri Yükle</button><button onclick="resetAll()">↻ Başlangıç Verilerine Dön</button><button onclick="adminLogin()">⚙ '+(admin?"Yönetici Kilitle":"Yönetici")+'</button>'+
-  '<input id="restore" type="file" accept=".json" hidden onchange="restore(event)"><div style="margin-top:20px;color:#587f93;font-size:8px;line-height:1.6">'+db.length+' TERFİ<br>'+db.reduce((n,x)=>n+x.pumps.length,0)+' POMPA<br>'+districtList().length+' İLÇE / BÖLGE</div></aside>'
-}
+function sidebar(){return'<aside class="side"><div class="brand"><div class="logo">M</div><div><b>MESKİ TERFİ ARŞİVİM</b><small>SAHA · POMPA · MOTOR · HMI</small></div></div><div class="side-title">ANA MENÜ</div><button onclick="home()">⌂ Ana Sayfa</button>'+["AKDENİZ","MEZİTLİ","TOROSLAR","YENİŞEHİR","MERKEZ"].map(d=>'<button class="'+(district===d?"active":"")+'" onclick="setDistrict(\''+d+'\')">● '+d+'</button>').join("")+'<div class="side-title">TEKNİK KÜTÜPHANE</div><button onclick="openLibrary(\'all\')">🧰 Teknik Kütüphane</button><div class="side-title">VERİ</div><button onclick="backup()">⇩ JSON Yedek</button><button onclick="document.getElementById(\'restore\').click()">⇧ JSON Geri Yükle</button><button onclick="resetAll()">↻ Başlangıç Verilerine Dön</button><button onclick="adminLogin()">⚙ '+(admin?"Yönetici Kilitle":"Yönetici")+'</button><input id="restore" type="file" accept=".json" hidden onchange="restore(event)"><div style="margin-top:20px;color:#587f93;font-size:8px;line-height:1.6">'+db.length+' TERFİ<br>'+db.reduce((n,x)=>n+x.pumps.length,0)+' POMPA<br>5 BÖLGE</div></aside>'}
 function topbar(){return'<div class="top"><div style="min-width:0;display:flex;align-items:center;gap:7px"><button class="btn mobile" onclick="home()">☰</button><div class="crumb">ANA SAYFA / '+(station()?esc(station().ad):"TERFİ LİSTESİ")+(station()?" / P"+(pump()?.no||1):"")+'</div></div><div class="actions">'+(station()?'<button class="btn primary" onclick="pdfSelected()">PDF · P'+(pump()?.no||1)+'</button><button class="btn" onclick="pdfAll()">PDF · TÜM POMPALAR</button><button class="btn" onclick="editStation()">DÜZENLE</button>':'<button class="btn ok" onclick="newStation()">+ YENİ TERFİ</button>')+'<button class="btn '+(admin?"warn":"primary")+'" onclick="adminLogin()">'+(admin?"🔒 KİLİT":"🔐 YÖNETİCİ")+'</button></div></div>'}
 
 function stationLocationHome(s){
@@ -307,32 +371,10 @@ function stationLocationGPS(s){
   if(admin) return '<button class="btn" style="padding:4px 6px;font-size:8px" onclick="openLocationForStation(\''+s.id+'\')">'+esc(s.gps)+'</button>';
   return '<button class="btn primary" style="padding:4px 6px;font-size:8px" onclick="openGoogleMaps(encodeURIComponent(\''+s.gps+'\'))">🗺️ KONUMA GİT</button>';
 }
-function homeView(){const q=search.toLocaleLowerCase("tr-TR");const rows=db.filter(s=>(district==="TÜMÜ"||s.bolge===district)&&(!q||(s.ad+" "+s.rtu+" "+s.bolge+" "+s.tip+" "+s.pumps.map(p=>p.ad).join(" ")).toLocaleLowerCase("tr-TR").includes(q)));const groups={};rows.forEach(s=>(groups[s.bolge]??=[]).push(s));return'<div class="hero"><div class="hero-row"><div class="hero-icon">💧</div><div><h1>MESKİ TERFİ TEKNİK ARŞİV</h1><div class="hero-sub">TERFİ → POMPA BLOĞU → MOTOR / SÜRÜCÜ / BOX / SSR / HMI / ANLIK ÇALIŞMA / PARAMETRE / ARIZA</div></div></div></div><div class="card"><div class="stats"><div class="stat"><small>TERFİ</small><strong>'+db.length+'</strong><span>kayıtlı saha</span></div><div class="stat"><small>POMPA</small><strong>'+db.reduce((n,x)=>n+x.pumps.length,0)+'</strong><span>kayıtlı pompa</span></div><div class="stat"><small>BÖLGE</small><strong>'+districtList().length+'</strong><span>aktif ilçe / bölge</span></div><div class="stat"><small>HMI</small><strong>6</strong><span>ayrı HMI ekranı</span></div></div></div><div class="card"><div class="districts">'+["TÜMÜ",...districtList()].map(d=>'<button class="district '+(district===d?"active":"")+'" onclick="setDistrict(\''+d.replace(/\'/g,"\\\'")+'\')">'+esc(d)+'</button>').join("")+'</div><div class="filterbar"><input value="'+esc(search)+'" placeholder="Terfi, RTU, bölge veya pompa ara..." oninput="search=this.value;render()"></div><div class="muted" style="margin-top:7px">SCADA/hidrolik kaydında adı geçen fakat pompa sayısı doğrulanmamış tesisler listeden çıkarılmadı; yönetici sonradan pompa ekleyebilir.</div></div>'+Object.keys(groups).sort((a,b)=>a.localeCompare(b,"tr")).map(b=>'<section class="group"><div class="group-title"><b>📍 '+esc(b)+'</b><span>'+groups[b].length+' TERFİ</span></div><div class="station-grid">'+groups[b].map(s=>'<article class="card station" onclick="openStation(\''+s.id+'\')"><div class="section-head"><div><h3>'+esc(s.ad)+'</h3><div class="station-meta">'+esc(s.rtu==="YOK"?"RTU YOK":"RTU "+s.rtu)+' · '+esc(s.tip)+'</div></div><span class="badge '+(s.pumps.length?'ok':'warn')+'">'+(s.pumps.length?s.pumps.length+' POMPA':'POMPA SAYISI GİRİLECEK')+'</span></div><div class="actions" style="justify-content:flex-start;margin:7px 0 4px">'+stationLocationHome(s)+'</div><div class="chips">'+s.pumps.slice(0,8).map(p=>'<span class="chip">'+esc(p.ad)+'</span>').join("")+(s.pumps.length>8?'<span class="chip">+'+(s.pumps.length-8)+'</span>':(s.pumps.length===0?'<span class="chip warn">Pompa sayısı sahadan girilecek</span>':""))+'</div>'+(s.referenceNote?'<div class="muted" style="margin-top:7px">'+esc(s.referenceNote)+'</div>':"")+'</article>').join("")+'</div></section>').join("")||'<div class="empty">Bu bölgede kayıt yok.</div>'}
+function homeView(){const q=search.toLocaleLowerCase("tr-TR");const rows=db.filter(s=>(district==="TÜMÜ"||s.bolge===district)&&(!q||(s.ad+" "+s.rtu+" "+s.bolge+" "+s.tip+" "+s.pumps.map(p=>p.ad).join(" ")).toLocaleLowerCase("tr-TR").includes(q)));const groups={};rows.forEach(s=>(groups[s.bolge]??=[]).push(s));return'<div class="hero"><div class="hero-row"><div class="hero-icon">💧</div><div><h1>MESKİ TERFİ TEKNİK ARŞİV</h1><div class="hero-sub">TERFİ → POMPA BLOĞU → MOTOR / SÜRÜCÜ / BOX / SSR / HMI / ANLIK ÇALIŞMA / PARAMETRE / ARIZA</div></div></div></div><div class="card"><div class="stats"><div class="stat"><small>TERFİ</small><strong>'+db.length+'</strong><span>kayıtlı saha</span></div><div class="stat"><small>POMPA</small><strong>'+db.reduce((n,x)=>n+x.pumps.length,0)+'</strong><span>kayıtlı pompa</span></div><div class="stat"><small>BÖLGE</small><strong>5</strong><span>Akdeniz · Mezitli · Toroslar · Yenişehir · Merkez</span></div><div class="stat"><small>HMI</small><strong>6</strong><span>ayrı HMI ekranı</span></div></div></div><div class="card"><div class="districts">'+["TÜMÜ","AKDENİZ","MEZİTLİ","TOROSLAR","YENİŞEHİR","MERKEZ"].map(d=>'<button class="district '+(district===d?"active":"")+'" onclick="setDistrict(\''+d+'\')">'+d+'</button>').join("")+'</div><div class="filterbar"><input value="'+esc(search)+'" placeholder="Terfi, RTU, bölge veya pompa ara..." oninput="search=this.value;render()"></div><div class="muted" style="margin-top:7px">SCADA/hidrolik kaydında adı geçen fakat pompa sayısı doğrulanmamış tesisler listeden çıkarılmadı; yönetici sonradan pompa ekleyebilir.</div></div>'+Object.keys(groups).sort((a,b)=>a.localeCompare(b,"tr")).map(b=>'<section class="group"><div class="group-title"><b>📍 '+esc(b)+'</b><span>'+groups[b].length+' TERFİ</span></div><div class="station-grid">'+groups[b].map(s=>'<article class="card station" onclick="openStation(\''+s.id+'\')"><div class="section-head"><div><h3>'+esc(s.ad)+'</h3><div class="station-meta">'+esc(s.rtu==="YOK"?"RTU YOK":"RTU "+s.rtu)+' · '+esc(s.tip)+'</div></div><span class="badge '+(s.pumps.length?'ok':'warn')+'">'+(s.pumps.length?s.pumps.length+' POMPA':'POMPA SAYISI GİRİLECEK')+'</span></div><div class="actions" style="justify-content:flex-start;margin:7px 0 4px">'+stationLocationHome(s)+'</div><div class="chips">'+s.pumps.slice(0,8).map(p=>'<span class="chip">'+esc(p.ad)+'</span>').join("")+(s.pumps.length>8?'<span class="chip">+'+(s.pumps.length-8)+'</span>':(s.pumps.length===0?'<span class="chip warn">Pompa sayısı sahadan girilecek</span>':""))+'</div>'+(s.referenceNote?'<div class="muted" style="margin-top:7px">'+esc(s.referenceNote)+'</div>':"")+'</article>').join("")+'</div></section>').join("")||'<div class="empty">Bu bölgede kayıt yok.</div>'}
 
-function stationSceneSVG(s,p){
-  const tip=String(s?.tip||"TERFİ").toLocaleUpperCase("tr-TR");
-  const isKuyu=tip.includes("KUYU"), isPump=tip.includes("POMPA İSTASYONU");
-  const count=Math.max(1,Math.min(8,s?.pumps?.length||1));
-  const xs=Array.from({length:count},(_,i)=>82+(i%4)*104);
-  const title=isKuyu?"KUYU / POMPA GRUBU":isPump?"POMPA İSTASYONU":"TERFİ / POMPA GRUBU";
-  const pumps=xs.map((x,i)=>{const y=i<4?286:368;return '<g><rect x="'+x+'" y="'+(y-34)+'" width="64" height="68" rx="10" fill="#102f42" stroke="#2c7898"/><rect x="'+(x+20)+'" y="'+(y-24)+'" width="24" height="42" rx="6" fill="#c7d1d6"/><circle cx="'+(x+32)+'" cy="'+(y-27)+'" r="9" fill="#1bb8ee" stroke="#75defe"/><path d="M '+(x+32)+' '+(y+18)+' L '+(x+32)+' '+(y+38)+'" stroke="#7de1ff" stroke-width="4"/><text x="'+(x+32)+'" y="'+(y+58)+'" text-anchor="middle" fill="#dff8ff" font-size="11" font-weight="900">P'+(i+1)+'</text></g>'}).join("");
-  const labels=s.pumps.slice(0,8).map((p,i)=>'<text x="'+(xs[i]+32)+'" y="'+((i<4?286:368)+74)+'" text-anchor="middle" fill="#7099aa" font-size="7">'+esc(p.ad)+'</text>').join("");
-  return '<svg viewBox="0 0 520 470" role="img" aria-label="Genel terfi görünümü"><rect x="22" y="22" width="476" height="426" rx="20" fill="#06131d" stroke="#1e536b"/><text x="42" y="54" fill="#67d7ff" font-size="11" font-weight="900" letter-spacing="1">'+esc(title)+'</text><text x="42" y="72" fill="#779aaa" font-size="8">'+esc(tip)+' · ortak genel görünüm</text><rect x="42" y="92" width="436" height="92" rx="12" fill="#0a2232" stroke="#1d536b"/><rect x="58" y="109" width="120" height="56" rx="7" fill="#0d3044" stroke="#356c82"/><text x="118" y="130" text-anchor="middle" fill="#a7c6d4" font-size="8">MESKİ TERFİ</text><text x="118" y="151" text-anchor="middle" fill="#fff" font-size="12" font-weight="900">'+esc((s.ad||"TERFİ").slice(0,18))+'</text><path d="M 178 137 H 432" stroke="#18b7ef" stroke-width="6" stroke-linecap="round"/><path d="M 178 137 H 432" stroke="#b8eaff" stroke-width="1.5"/><polygon points="432,137 416,128 416,146" fill="#18b7ef"/><circle cx="218" cy="137" r="9" fill="#16c883"/><text x="218" y="140" text-anchor="middle" fill="#04251b" font-size="8" font-weight="900">✓</text><text x="448" y="125" text-anchor="end" fill="#6d94a6" font-size="7">ÇIKIŞ HATTI</text><text x="448" y="153" text-anchor="end" fill="#fff" font-size="10" font-weight="900">'+esc(s.outlet||"BASMA / ŞEBEKE")+'</text><path d="M 82 220 H 438" stroke="#2a718e" stroke-width="8" stroke-linecap="round"/><path d="M 82 220 H 438" stroke="#8ee6ff" stroke-width="2"/><text x="82" y="208" fill="#6e95a6" font-size="7">EMİŞ / KAYNAK</text><text x="438" y="208" text-anchor="end" fill="#6e95a6" font-size="7">BASINÇLI HAT</text>'+pumps+labels+'<path d="M 60 430 H 460" stroke="#17475d" stroke-width="1"/><circle cx="86" cy="410" r="8" fill="#16c883"/><text x="102" y="414" fill="#8bb0c0" font-size="8">SİSTEM ÇEVRİMİÇİ</text><text x="438" y="414" text-anchor="end" fill="#8bb0c0" font-size="8">'+count+' POMPA · '+esc(s.bolge||"")+'</text></svg>';
-}
-function stationView(){
-  const s=station(),p=pump();
-  if(!s)return '<div class="empty">Terfi bulunamadı.</div>';
-  if(!p&&!s.pumps.length)return '<div class="premium-station"><div class="premium-head"><div class="premium-brandline"><div class="premium-title"><div class="premium-logo">M</div><div><div class="premium-kicker">MESKİ · TERFİ TEKNİK ARŞİVİ</div><h1>'+esc(s.ad)+'</h1><div class="premium-sub">'+esc(s.rtu==="YOK"?"RTU YOK":"RTU "+s.rtu)+' · '+esc(s.bolge)+' · '+esc(s.tip)+'</div></div></div><div class="premium-user"><small>YÖNETİCİ</small><b>Musa ER</b></div></div></div><div class="card"><div class="section-head"><b>BU KAYITTA HENÜZ POMPA YOK</b>'+(admin?'<button class="btn ok" onclick="addPump()">+ İLK POMPA</button>':"")+'</div><div class="empty">Bu tesisin pompa sayısı henüz doğrulanmadı.</div></div></div>';
-  const w=p.work?.current||{}, live=(v,u)=>v!==undefined&&v!==null&&String(v)!==""?esc(v)+" "+u:"—";
-  return '<div class="premium-station"><div class="premium-head"><div class="premium-brandline"><div class="premium-title"><div class="premium-logo">M</div><div style="min-width:0"><div class="premium-kicker">MESKİ · TERFİ TEKNİK ARŞİVİ</div><h1>'+esc(s.ad)+'</h1><div class="premium-sub">'+esc(s.rtu==="YOK"?"RTU YOK":"RTU "+s.rtu)+' · '+esc(s.bolge)+' · '+esc(s.tip)+'</div></div></div><div class="premium-user"><small>YÖNETİCİ</small><b>Musa ER</b><span class="badge ok" style="margin-top:6px">● ÇEVRİMİÇİ ARŞİV</span></div></div><div class="premium-meta"><div class="cell"><span>RTU / NO</span><b>'+esc(s.rtu)+'</b></div><div class="cell"><span>İLÇE / BÖLGE</span><b>'+esc(s.bolge)+'</b></div><div class="cell"><span>TERFİ TİPİ</span><b>'+esc(s.tip)+'</b></div><div class="cell"><span>POMPA</span><b>'+s.pumps.length+'</b></div><div class="cell"><span>KAYNAK</span><b>'+esc(s.source||"—")+'</b></div><div class="cell"><span>ÇIKIŞ</span><b>'+esc(s.outlet||"—")+'</b></div></div></div>'+
-  '<div class="premium-body"><div class="scene-card"><div class="scene-head"><b>GENEL TERFİ GÖRÜNÜMÜ</b><span>Terfi tipine göre içerik · ortak ekran düzeni</span></div><div class="scene-wrap">'+stationSceneSVG(s,p)+'</div><div class="scene-note">Gerçek SCADA ekranının birebir kopyası değildir. Amaç tüm terfilerde aynı anlaşılır görünümü koruyarak tesisin temel yapısını tek bakışta göstermektir.</div></div>'+
-  '<div class="info-stack"><div class="info-card"><div class="info-head"><b>ANLIK DURUM</b><span class="badge ok">NORMAL</span></div><div class="body"><div class="status-line"><span>Frekans</span><b>'+live(w.frekans_hz,"Hz")+'</b></div><div class="status-line"><span>Akım</span><b>'+live(w.akim_a,"A")+'</b></div><div class="status-line"><span>Güç</span><b>'+live(w.guc_kw,"kW")+'</b></div><div class="status-line"><span>Set / Çalışma Basıncı</span><b>'+live(w.set_basinci_bar,"bar")+' / '+live(w.calisma_basinci_bar,"bar")+'</b></div></div></div>'+
-  '<div class="info-card"><div class="info-head"><b>POMPA GRUBU</b><span>'+s.pumps.length+' POMPA</span></div><div class="body"><div class="premium-pumps">'+s.pumps.slice(0,8).map(x=>'<button class="pump-mini '+(x.id===p.id?"active":"")+'" onclick="selectPump(\''+x.id+'\')"><strong>P'+x.no+'</strong><small>'+esc(x.ad)+'</small><div class="mini-state">'+(x.id===p.id?"● SEÇİLİ":"○ TEKNİK KAYIT")+'</div></button>').join("")+'</div></div></div>'+
-  '<div class="info-card"><div class="info-head"><b>EKİPMAN ETİKETİ</b><span>GERÇEK ETİKET FORMATI</span></div><div class="body"><div class="label-real"><div class="label-top"><span>MESKİ · TERFİ EKİPMANI</span><span>NO: P'+p.no+'</span></div><div class="label-name">'+esc(p.pump.marka||"POMPA")+'</div><div class="label-grid"><div>MODEL<br><b>'+esc(p.pump.model||"—")+'</b></div><div>GÜÇ<br><b>'+esc(p.pump.guc_kw?p.pump.guc_kw+" kW":"—")+'</b></div><div>Q<br><b>'+esc(p.pump.q_max?p.pump.q_max+" m³/h":"—")+'</b></div><div>H<br><b>'+esc(p.pump.h_max?p.pump.h_max+" m":"—")+'</b></div></div></div></div></div>'+
-  '<div class="info-card"><div class="info-head"><b>SAHA BİLGİLERİ</b></div><div class="body"><div class="status-line"><span>Adres</span><b>'+esc(s.address||"—")+'</b></div><div class="status-line"><span>Kuyu / Derinlik</span><b>'+esc(s.depth?s.depth+" m":"—")+'</b></div><div class="status-line"><span>GPS</span><b>'+stationLocationGPS(s)+'</b></div></div></div></div></div>'+
-  '<div class="quick-premium"><button onclick="setTab(\'genel\')">▣ TEKNİK ÖZET</button><button onclick="setTab(\'hmi\')">▤ HMI EKRANI</button><button onclick="setTab(\'calisma\')">◉ ANLIK VERİLER</button><button onclick="setTab(\'photo\')">▧ FOTOĞRAFLAR</button></div>'+
-  '<div class="card system" style="margin-top:10px"><div class="system-head"><div class="section-head"><div><h2>P'+p.no+' · '+esc(p.ad)+'</h2><div class="muted" style="color:#ffe0e4">SEÇİLİ POMPA · TÜM TEKNİK KAYITLAR SADECE P'+p.no+' BLOĞUNA AİT</div></div><div class="actions">'+(admin?'<button class="btn" onclick="event.stopPropagation();editPump()">✏️ AD / NO</button><button class="btn bad" onclick="event.stopPropagation();deletePump()">🗑️ POMPAYI SİL</button>':'')+'<span class="badge">P'+p.no+'</span></div></div></div><div class="system-nav">'+[["genel","GENEL"],["pompa","POMPA"],["motor","MOTOR"],["surucu","SÜRÜCÜ"],["box","BOX / KABLO"],["ssr","SSR / SEVİYE"],["hmi","HMI / PLC"],["calisma","ANLIK ÇALIŞMA"],["param","PARAMETRE"],["ariza","ARIZA"],["photo","FOTOĞRAF"],["gecmis","GEÇMİŞ"]].map(x=>'<button class="'+(tab===x[0]?"active":"")+'" onclick="setTab(\''+x[0]+'\')">'+x[1]+'</button>').join("")+'</div><div class="content">'+tabBody()+'</div></div></div>';
-}
+function stationView(){const s=station(),p=pump();if(!p)return'<div class="hero"><div class="hero-row"><div class="hero-icon">💧</div><div style="min-width:0"><h1>'+esc(s?.ad||'TERFİ')+'</h1><div class="hero-sub">'+esc(s?.rtu==='YOK'?'RTU YOK':'RTU '+(s?.rtu||''))+' · '+esc(s?.bolge||'')+' · '+esc(s?.tip||'')+'</div></div><span class="badge warn">POMPA SAYISI GİRİLECEK</span></div><div class="meta"><div class="cell"><span>RTU</span><b>'+esc(s?.rtu||'YOK')+'</b></div><div class="cell"><span>BÖLGE</span><b>'+esc(s?.bolge||'—')+'</b></div><div class="cell"><span>TİP</span><b>'+esc(s?.tip||'—')+'</b></div><div class="cell"><span>POMPA</span><b>0</b></div><div class="cell"><span>GPS</span><b>'+stationLocationGPS(s)+'</b></div></div></div><div class="card"><div class="section-head"><b>BU KAYITTA HENÜZ POMPA YOK</b>'+(admin?'<button class="btn ok" onclick="addPump()">+ İLK POMPA</button>':"")+'</div><div class="empty">Bu tesis önceki SCADA/hidrolik referanslarında geçiyor ancak pompa sayısı burada doğrulanmış değil. Yönetici olarak ilk pompayı ekleyebilirsin.</div></div><div class="card">'+(s.referenceNote?'<div class="section-title">REFERANS NOTU</div><div class="muted">'+esc(s.referenceNote)+'</div>':"")+'</div>';return'<div class="hero"><div class="hero-row"><div class="hero-icon">💧</div><div style="min-width:0"><h1>'+esc(s.ad)+'</h1><div class="hero-sub">'+esc(s.rtu==="YOK"?"RTU YOK":"RTU "+s.rtu)+' · '+esc(s.bolge)+' · '+esc(s.tip)+'</div></div><span class="badge '+(s.pumps.length?'ok':'warn')+'">'+(s.pumps.length?s.pumps.length+' POMPA':'POMPA SAYISI GİRİLECEK')+'</span></div><div class="meta"><div class="cell"><span>RTU</span><b>'+esc(s.rtu)+'</b></div><div class="cell"><span>BÖLGE</span><b>'+esc(s.bolge)+'</b></div><div class="cell"><span>TERFİ TİPİ</span><b>'+esc(s.tip)+'</b></div><div class="cell"><span>POMPA</span><b>'+s.pumps.length+'</b></div><div class="cell"><span>KUYU</span><b>'+esc(s.depth||"—")+'</b></div><div class="cell"><span>GPS</span><b>'+stationLocationGPS(s)+'</b></div></div></div><div class="card"><div class="section-head"><b>POMPA BLOKLARI · BAĞIMSIZ SİSTEM</b>'+(admin?'<button class="btn ok" onclick="addPump()">+ POMPA</button>':"")+'</div><div class="pumps" style="margin-top:8px">'+s.pumps.map((x,i)=>'<button class="pump c'+((i%6)+1)+' '+(x.id===p.id?"active":"")+'" onclick="selectPump(\''+x.id+'\')"><b>P'+x.no+'</b><small>'+esc(x.ad)+'</small></button>').join("")+'</div></div><div class="card system"><div class="system-head"><div class="section-head"><div><h2>P'+p.no+' · '+esc(p.ad)+'</h2><div class="muted" style="color:#ffe0e4">SEÇİLİ POMPA · TÜM TEKNİK KAYITLAR SADECE P'+p.no+' BLOĞUNA AİT</div></div><div class="actions">'+(admin?'<button class="btn" onclick="event.stopPropagation();editPump()">✏️ AD / NO</button><button class="btn bad" onclick="event.stopPropagation();deletePump()">🗑️ POMPAYI SİL</button>':'')+'<span class="badge">P'+p.no+'</span></div></div></div><div class="system-nav">'+[["genel","GENEL"],["pompa","POMPA"],["motor","MOTOR"],["surucu","SÜRÜCÜ"],["box","BOX / KABLO"],["ssr","SSR / SEVİYE"],["hmi","HMI / PLC"],["calisma","ANLIK ÇALIŞMA"],["param","PARAMETRE"],["ariza","ARIZA"],["photo","FOTOĞRAF"],["gecmis","GEÇMİŞ"]].map(x=>'<button class="'+(tab===x[0]?"active":"")+'" onclick="setTab(\''+x[0]+'\')">'+x[1]+'</button>').join("")+'</div><div class="content">'+tabBody()+'</div></div>'}
+
 function formCard(title,obj,root,fields,saveFn){return'<div class="card"><div class="section-head"><div><h3>'+title+'</h3><div class="muted">Yalnızca seçili P'+pump().no+' için.</div></div>'+(admin?'<button class="btn ok" onclick="'+saveFn+'()">KAYDET</button>':"")+'</div><div class="grid3" style="margin-top:9px">'+fields.map(f=>inp(f[0],root+"."+f[1],obj[f[1]],f[2]||"text")).join("")+'</div></div>'}
 function tabBody(){const p=pump(),s=station();
 if(tab==="genel")return'<div class="grid3" style="margin-top:10px">'+kv("💧 POMPA",{"Ad":p.ad,"Marka":p.pump.marka,"Model":p.pump.model,"Tip":p.pump.tip,"Q min/max":(p.pump.q_min||p.pump.q_max)?(p.pump.q_min||"—")+" / "+(p.pump.q_max||"—")+" m³/h":"—"})+kv("⚙ MOTOR",{"Marka":p.motor.marka,"Model":p.motor.model,"Güç":p.motor.guc_kw?p.motor.guc_kw+" kW":"—","Akım":p.motor.nominal_akim_a?p.motor.nominal_akim_a+" A":"—","Devir":p.motor.devir_rpm?p.motor.devir_rpm+" rpm":"—"})+kv("🔌 SÜRÜCÜ",{"Marka":p.driver.marka,"Model":p.driver.model,"Seri":p.driver.seri_no,"Aile":p.driver.surucu_ailesi})+kv("🟢 SSR",{"Seviye":p.ssr.level,"Alt":p.ssr.low,"Üst":p.ssr.high,"Basınç Giriş":p.ssr.pump_in})+kv("🖥 HMI / PLC",{"Ekran":"6 adet","Kayıtlı":p.hmi.filter(x=>Object.keys(x).length).length,"Seçili":hmiPage})+kv("▶ ANLIK ÇALIŞMA",{"Frekans":p.work.current.frekans_hz?p.work.current.frekans_hz+" Hz":"—","Akım":p.work.current.akim_a?p.work.current.akim_a+" A":"—","Güç":p.work.current.guc_kw?p.work.current.guc_kw+" kW":"—","Durum":p.work.current.durum})+'</div><div class="card"><div class="section-head"><b>TERFİ SAHA BİLGİLERİ</b>'+(admin?'<button class="btn" onclick="editStation()">DÜZENLE</button>':"")+'</div><div class="grid3" style="margin-top:8px">'+kv("KAYNAK / ÇIKIŞ",{"Kaynak":s.source,"Basma / Çıkış":s.outlet,"Adres":s.address})+kv("SAHA",{"Kuyu":s.depth?s.depth+" m":"—","GPS":s.gps,"Tip":s.tip})+kv("NOT",{"Açıklama":s.note})+'</div></div>';
@@ -482,7 +524,7 @@ function addPump(){if(!needAdmin())return;const s=station(),no=s.pumps.length+1;
 function editPump(){if(!needAdmin())return;const p=pump();if(!p)return;openModal("POMPA BLOĞU DÜZENLE",'<div class="grid2">'+inp("Pompa No","p.no",p.no,"number")+inp("Pompa Adı","p.ad",p.ad)+'</div><div class="actions"><button class="btn ok" onclick="savePumpMeta()">KAYDET</button></div>')}
 function savePumpMeta(){if(!needAdmin())return;const p=pump();if(!p)return;document.querySelectorAll('[data-path^="p."]').forEach(e=>setPath(p,e.dataset.path.slice(2),e.value));p.ad=p.ad||('P'+p.no);save();closeModal();render()}
 function deletePump(){if(!needAdmin())return;const s=station();if(s.pumps.length<=1){toast("En az 1 pompa kalmalı.");return}if(!confirm("Seçili pompa silinsin mi?"))return;s.pumps=s.pumps.filter(p=>p.id!==pumpId);pumpId=s.pumps[0].id;save();render()}
-function newStation(){if(!needAdmin())return;openModal("YENİ TERFİ",'<div class="grid2">'+inp("Terfi Adı","n.ad","Yeni Terfi")+inp("RTU","n.rtu","RTU YOK")+'<div class="field"><label>İlçe / Bölge</label><select id="n_bolge">'+districtOptions(district==="TÜMÜ"?"AKDENİZ":district)+'</select></div><div class="field"><label>Tip</label><select id="n_tip"><option>TERFİ</option><option>KUYU</option><option>POMPA İSTASYONU</option></select></div>'+inp("Pompa Sayısı","n.count","2","number")+'</div><div class="actions"><button class="btn ok" onclick="createStation()">OLUŞTUR</button></div>')}
+function newStation(){if(!needAdmin())return;openModal("YENİ TERFİ",'<div class="grid2">'+inp("Terfi Adı","n.ad","Yeni Terfi")+inp("RTU","n.rtu","RTU YOK")+'<div class="field"><label>Bölge</label><select id="n_bolge"><option>AKDENİZ</option><option>MEZİTLİ</option><option>TOROSLAR</option><option>YENİŞEHİR</option><option>MERKEZ</option></select></div><div class="field"><label>Tip</label><select id="n_tip"><option>TERFİ</option><option>KUYU</option><option>POMPA İSTASYONU</option></select></div>'+inp("Pompa Sayısı","n.count","2","number")+'</div><div class="actions"><button class="btn ok" onclick="createStation()">OLUŞTUR</button></div>')}
 function createStation(){if(!needAdmin())return;const ad=document.querySelector('[data-path="n.ad"]').value||"Yeni Terfi",rtu=document.querySelector('[data-path="n.rtu"]').value||"RTU YOK",b=document.getElementById("n_bolge").value,t=document.getElementById("n_tip").value,c=Math.max(1,Math.min(50,parseInt(document.querySelector('[data-path="n.count"]').value||"2",10)||2));const s={id:uid(),ad,rtu,bolge:b,tip:t,address:"",source:"",outlet:"",depth:"",gps:"",note:"",history:[],pumps:Array.from({length:c},(_,i)=>pumpTemplate(i+1,"P"+(i+1)))};db.push(s);stationId=s.id;pumpId=s.pumps[0].id;save();closeModal();view="station";render()}
 
 function libraryTabButtons(){return '<div class="actions" style="justify-content:flex-start;flex-wrap:wrap;margin-bottom:10px">'+[['all','🧰 TÜMÜ'],['fault','⚠ ARIZA'],['param','≡ ACS / ACQ'],['driver','▣ SÜRÜCÜ'],['hyd','⌁ HİDROLİK']].map(x=>'<button class="btn '+(libraryMode===x[0]?'primary':'')+'" onclick="openLibrary(\''+x[0]+'\')">'+x[1]+'</button>').join('')+'</div>'}
@@ -598,7 +640,7 @@ function pdfAll(){
 window.addEventListener("afterprint",()=>{const e=document.getElementById("printRoot");if(e)e.innerHTML=""})
 
 function render(){const root=document.getElementById("app");root.innerHTML='<div class="shell">'+sidebar()+'<main class="main">'+topbar()+(view==="home"?homeView():stationView())+'<div class="footer">MESKİ TERFİ ARŞİVİM · '+db.length+' TERFİ · '+db.reduce((n,x)=>n+x.pumps.length,0)+' POMPA · TEK DOSYA</div></main></div>';document.querySelectorAll(".adminbar").forEach(x=>x.remove());if(admin){const a=document.createElement("div");a.className="adminbar";a.textContent="● YÖNETİCİ MODU AKTİF · KİLİT";a.onclick=adminLogin;document.body.appendChild(a)}}
-db=load();loadLibraries();loadDistricts();render();
+db=load();loadLibraries();render();
 </script>
 </body>
 </html>
