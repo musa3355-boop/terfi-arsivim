@@ -99,6 +99,28 @@ button,input,textarea,select{font:inherit}button{cursor:pointer}input,textarea,s
  .hmi-real-row .hmi-input-slot .hmi-direct-input{width:122px;max-width:122px;margin:0}
  .relay-layout{grid-template-columns:1fr 1fr 1fr;gap:18px}
 }
+/* TABLET / iPAD RESPONSIVE: landscape 2 columns, portrait 1 column. Never squeeze HMI labels into a narrow third column. */
+@media screen and (max-width:1200px) and (orientation:landscape){
+ .shell{display:block!important}
+ .side{display:none!important}
+ .main{padding:12px!important;min-width:0!important}
+ .hmi-real-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:14px!important}
+ .hmi-real-row{grid-template-columns:minmax(0,1fr) minmax(105px,122px)!important;gap:10px!important}
+ .hmi-real-row label{font-size:12px!important;line-height:1.18!important;overflow-wrap:normal!important;word-break:normal!important}
+ .hmi-real-row .hmi-input-slot .hmi-direct-input{width:100%!important;max-width:122px!important;box-sizing:border-box!important}
+ .relay-layout{grid-template-columns:1fr 1fr!important}
+ .protect-real{grid-template-columns:1fr 1fr!important}
+}
+@media screen and (max-width:1200px) and (orientation:portrait){
+ .shell{display:block!important}
+ .side{display:none!important}
+ .main{padding:10px!important;min-width:0!important}
+ .hmi-real-grid{grid-template-columns:1fr!important;gap:10px!important}
+ .hmi-real-row{grid-template-columns:minmax(0,1fr) minmax(105px,130px)!important;gap:10px!important}
+ .hmi-real-row label{font-size:12px!important;line-height:1.18!important;overflow-wrap:normal!important;word-break:normal!important}
+ .hmi-real-row .hmi-input-slot .hmi-direct-input{width:100%!important;max-width:130px!important;box-sizing:border-box!important}
+ .relay-layout,.protect-real{grid-template-columns:1fr!important}
+}
 @media(max-width:800px){.hmi-real-grid{grid-template-columns:1fr!important}.hmi-real-row{grid-template-columns:minmax(0,1fr) 110px!important}.hmi-real-row .hmi-input-slot .hmi-direct-input{width:110px;max-width:110px}.relay-layout{grid-template-columns:1fr}.protect-real{grid-template-columns:1fr}}
 </style>
 </head>
