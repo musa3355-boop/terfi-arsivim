@@ -67,6 +67,7 @@ button,input,textarea,select{font:inherit}button{cursor:pointer}input,textarea,s
  #printRoot{display:block!important;width:100%!important;margin:0!important;padding:0!important}
  .print-page{width:100%;box-sizing:border-box;color:#111;background:#fff;font-family:Arial,sans-serif;font-size:6pt;line-height:1.15;padding:0;page-break-after:always;break-after:page}
  .print-page:last-child{page-break-after:auto;break-after:auto}
+ .hmi-page-grid{height:252mm}
  .print-head{display:flex;justify-content:space-between;align-items:flex-start;border-bottom:1.4px solid #193b50;padding-bottom:2mm;margin-bottom:2mm}
  .print-head h1{font-size:15pt;margin:0 0 1mm}.print-head p{margin:0;font-size:7pt;font-weight:700}.print-head .print-meta{text-align:right;font-size:6pt;line-height:1.35}
  .psec{border:1px solid #a9b7bf;padding:1.4mm;margin-bottom:1.5mm;box-sizing:border-box;break-inside:avoid;page-break-inside:avoid;overflow:visible}
@@ -78,16 +79,16 @@ button,input,textarea,select{font:inherit}button{cursor:pointer}input,textarea,s
  .pdf-three{display:grid;grid-template-columns:1.25fr 1.05fr .9fr;gap:1.5mm;align-items:start}.pdf-three>.psec{min-height:0;height:auto}
  .live-pdf .pdf-kvgrid>div{min-height:10mm}.live-pdf .pdf-kvgrid span{font-size:8pt;font-weight:800}
  .ptable{width:100%;border-collapse:collapse;table-layout:fixed}.ptable th,.ptable td{border:1px solid #b8c4ca;padding:1mm 1.1mm;font-size:5.8pt;text-align:left;vertical-align:top;word-break:break-word;line-height:1.12}.ptable th{background:#eaf0f3;font-size:5.6pt;font-weight:800}
- .print-hmi-pair{display:grid;grid-template-columns:1fr 1fr;gap:2mm;align-items:start}
- .print-hmi-screen{border:1px solid #8fa3ad;padding:1.5mm;box-sizing:border-box;break-inside:avoid;page-break-inside:avoid;background:#fff}
- .print-hmi-screen h3{font-size:8.5pt;margin:0 0 1.2mm;line-height:1.05;background:#123a50;color:#fff;padding:1.4mm}
- .hmi-pdf-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1mm;align-items:start}
+ .hmi-page-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));grid-template-rows:1fr 1fr;gap:1.6mm;align-items:stretch}
+ .print-hmi-screen{border:1px solid #8fa3ad;padding:1.2mm;box-sizing:border-box;break-inside:avoid;page-break-inside:avoid;background:#fff;min-width:0;overflow:hidden}
+ .print-hmi-screen h3{font-size:7.2pt;margin:0 0 1mm;line-height:1.02;background:#123a50;color:#fff;padding:1.15mm}
+ .hmi-pdf-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:.7mm;align-items:start}
  .hmi-pdf-col{min-width:0}
- .hmi-pdf-row{display:grid;grid-template-columns:minmax(0,1fr) 34%;gap:1mm;align-items:center;border-bottom:1px solid #c4ced3;min-height:7.2mm;padding:.55mm .6mm;box-sizing:border-box}
- .hmi-pdf-row label{font-size:5.7pt;line-height:1.08;overflow-wrap:anywhere}.hmi-pdf-row span{display:block;border:1px solid #aebbc3;background:#f3f6f8;color:#17364d;font-size:6.4pt;font-weight:900;text-align:center;padding:1mm .8mm;min-height:5.4mm;box-sizing:border-box;overflow-wrap:anywhere}
- .hmi-pdf-single .hmi-pdf-grid{grid-template-columns:1fr 1fr 1fr}.hmi-pdf-single .hmi-pdf-row{grid-template-columns:minmax(0,1fr) 38%}
- .print-hmi-title{font-size:9pt;font-weight:900;margin:0 0 1.5mm;color:#193b50}
- .records-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.5mm;align-items:start}.records-grid .psec{margin-bottom:0}.records-grid .psec:nth-child(3){grid-column:1/-1}.records-grid .psec:nth-child(3) .ptable td,.records-grid .psec:nth-child(3) .ptable th{font-size:5.2pt;padding:.8mm}
+ .hmi-pdf-row{display:grid;grid-template-columns:minmax(0,1fr) 35%;gap:.7mm;align-items:center;border-bottom:1px solid #c4ced3;min-height:5.2mm;padding:.35mm .45mm;box-sizing:border-box}
+ .hmi-pdf-row label{font-size:4.6pt;line-height:1.03;overflow-wrap:anywhere}.hmi-pdf-row span{display:block;border:1px solid #aebbc3;background:#f3f6f8;color:#17364d;font-size:5.3pt;font-weight:900;text-align:center;padding:.55mm .45mm;min-height:4mm;box-sizing:border-box;overflow-wrap:anywhere}
+ .hmi-pdf-single .hmi-pdf-grid{grid-template-columns:repeat(3,minmax(0,1fr))}.hmi-pdf-single .hmi-pdf-row{grid-template-columns:minmax(0,1fr) 38%}
+ .print-hmi-title{font-size:9pt;font-weight:900;margin:0 0 1.2mm;color:#193b50}
+ .records-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.2mm;align-items:start}.records-grid .psec{margin-bottom:0}.records-grid .psec:nth-child(3){grid-column:1/-1}.records-grid .psec:nth-child(3) .ptable td,.records-grid .psec:nth-child(3) .ptable th{font-size:5.2pt;padding:.8mm}
  .print-foot{border-top:1px solid #a9b7bf;padding-top:1mm;text-align:center;font-size:5pt;margin-top:1.5mm}
 }
 @media screen{
@@ -473,11 +474,9 @@ function pumpPrint(s,p){
  const cable=[];[['MOTOR → BOX','motor'],['BOX → SÜRÜCÜ','out'],['SÜRÜCÜ','driver']].forEach(g=>['U','V','W'].forEach(ph=>{const z=b?.[g[1]]?.[ph]||{};cable.push([g[0]+' · '+ph,(z.renk||'—')+' / '+(z.etiket||'—')+' / '+(z.detay||'—')])}));
  const hp=(Array.isArray(HMI)?HMI.slice(0,6):[]);
  const page1='<div class="print-page">'+pdfHeader(s,p)+'<div class="psec"><h2>TERFİ / SEÇİLİ POMPA BİLGİLERİ</h2><div class="pdf-kvgrid">'+stationInfo.map(x=>'<div><b>'+esc(x[0])+'</b><span>'+esc(x[1]!==undefined&&x[1]!==null&&String(x[1])!==''?String(x[1]):'—')+'</span></div>').join('')+'</div></div><div class="pdf-three"><div class="psec"><h2>POMPA / MOTOR · TÜM ALANLAR</h2><div class="pdf-kvgrid two">'+pumpMotor.map(x=>'<div><b>'+esc(x[0])+'</b><span>'+esc(x[1]!==undefined&&x[1]!==null&&String(x[1])!==''?String(x[1]):'—')+'</span></div>').join('')+'</div></div><div class="psec"><h2>SÜRÜCÜ / SSR · TÜM ALANLAR</h2><div class="pdf-kvgrid two">'+driver.map(x=>'<div><b>'+esc(x[0])+'</b><span>'+esc(x[1]!==undefined&&x[1]!==null&&String(x[1])!==''?String(x[1]):'—')+'</span></div>').join('')+'</div></div><div class="psec live-pdf"><h2>ANLIK ÇALIŞMA · TÜM ALANLAR</h2><div class="pdf-kvgrid two">'+work.map(x=>'<div><b>'+esc(x[0])+'</b><span>'+esc(x[1]!==undefined&&x[1]!==null&&String(x[1])!==''?String(x[1]):'—')+'</span></div>').join('')+'</div></div></div><div class="psec"><h2>BOX / KABLO · U / V / W</h2>'+compactTable(['Hat','Değer'],cable,'Kablo kaydı yok.')+'</div>'+pdfFooter(s,p,1)+'</div>';
- const page2='<div class="print-page">'+pdfHeader(s,p)+'<div class="print-hmi-title">HMI / PLC · EKRAN 1–2 · TEKNİK POMPA P'+no+'</div><div class="print-hmi-pair">'+hmiPrintScreen(p,0)+hmiPrintScreen(p,1)+'</div>'+pdfFooter(s,p,2)+'</div>';
- const page3='<div class="print-page">'+pdfHeader(s,p)+'<div class="print-hmi-title">HMI / PLC · EKRAN 3–4 · TEKNİK POMPA P'+no+'</div><div class="print-hmi-pair">'+hmiPrintScreen(p,2)+hmiPrintScreen(p,3)+'</div>'+pdfFooter(s,p,3)+'</div>';
- const page4='<div class="print-page">'+pdfHeader(s,p)+'<div class="print-hmi-title">HMI / PLC · EKRAN 5–6 · TEKNİK POMPA P'+no+'</div><div class="print-hmi-pair">'+hmiPrintScreen(p,4)+hmiPrintScreen(p,5)+'</div>'+pdfFooter(s,p,4)+'</div>';
- const page5='<div class="print-page">'+pdfHeader(s,p)+pdfRecords(s,p)+pdfFooter(s,p,5)+'</div>';
- return page1+page2+page3+page4+page5;
+ const hmiPage='<div class="print-page">'+pdfHeader(s,p)+'<div class="print-hmi-title">HMI / PLC · 6 EKRAN · TEKNİK POMPA P'+no+'</div><div class="hmi-page-grid">'+[0,1,2,3,4,5].map(i=>hmiPrintScreen(p,i)).join('')+'</div>'+pdfFooter(s,p,2)+'</div>';
+ const recordsPage='<div class="print-page">'+pdfHeader(s,p)+pdfRecords(s,p)+pdfFooter(s,p,3)+'</div>';
+ return page1+hmiPage+recordsPage;
 }
 function pdfSelected(){
  const s=station(),p=pump();
