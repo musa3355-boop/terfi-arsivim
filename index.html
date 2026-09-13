@@ -121,6 +121,7 @@ button,input,textarea,select{font:inherit}button{cursor:pointer}input,textarea,s
  .hmi-real-row .hmi-input-slot .hmi-direct-input{width:100%!important;max-width:130px!important;box-sizing:border-box!important}
  .relay-layout,.protect-real{grid-template-columns:1fr!important}
 }
+.hmi-source-layout .hmi-two-col{grid-template-columns:1fr 1fr!important;gap:28px!important}.hmi-screen-6 .hmi-two-col>div{min-width:0}.hmi-status-row{display:grid;grid-template-columns:minmax(0,1fr) 150px;align-items:center;gap:10px;margin:8px 0}.hmi-status-row label{font-size:11px;line-height:1.15;color:#f1f4f6}.hmi-status-pair{display:grid;grid-template-columns:1fr 1fr;gap:8px}.hmi-status{display:block;text-align:center;border-radius:18px;padding:7px 6px;font-size:10px;font-weight:900;border:2px solid #53626b;box-shadow:inset 0 0 0 1px #ffffff22}.hmi-status.off{background:#e4473f;color:#fff}.hmi-status.on{background:#39a963;color:#fff}.hmi-source-layout .hmi-real-row{margin:8px 0}.hmi-source-layout .hmi-real-row label{word-break:normal;overflow-wrap:normal}@media(max-width:800px){.hmi-source-layout .hmi-two-col{grid-template-columns:1fr!important;gap:8px!important}.hmi-status-row{grid-template-columns:minmax(0,1fr) 130px}}
 @media(max-width:800px){.hmi-real-grid{grid-template-columns:1fr!important}.hmi-real-row{grid-template-columns:minmax(0,1fr) 110px!important}.hmi-real-row .hmi-input-slot .hmi-direct-input{width:110px;max-width:110px}.relay-layout{grid-template-columns:1fr}.protect-real{grid-template-columns:1fr}}
 </style>
 </head>
@@ -306,12 +307,13 @@ function hmiPreview(p,page,vals){
  if(page.no==="5"){
   const L=[["Röle 1 Yapılandırma",0],["Röle 2 Yapılandırma",1],["Röle 3 Yapılandırma",2],["Röle 4 Yapılandırma",3]];
   const M=[["Kilitleme [DI1-DI5]",4],["Çalışma Süresi [h]",5],["Otomatik Değişim Aralığı",6],["Oto Değişim Seviyesi (%)",7]];
-  return '<div class="hmi-screen dark-real"><div class="hmi-title">Röle Yapılandırma / Sistem Ayarları</div><div class="hmi-real-grid">'+[L,M,[]].map(col=>'<div>'+col.map(x=>row(x[0],x[1])).join('')+'</div>').join('')+'</div></div>';
+  return '<div class="hmi-screen dark-real hmi-source-layout"><div class="hmi-title">Röle Yapılandırma / Sistem Ayarları</div><div class="hmi-real-grid hmi-two-col">'+[L,M].map(col=>'<div>'+col.map(x=>row(x[0],x[1])).join('')+'</div>').join('')+'</div></div>';
  }
  if(page.no==="6"){
-  const L=[["Alçak Basınç Koruması Min. Değer (bar)",0],["Alçak Basınç Koruması Pompa Giriş Basıncı (bar)",1],["Yüksek Basınç Koruması Max. Değer (bar)",2],["Yüksek Basınç Koruması Durumu",3],["Alçak Basınç Koruması Durumu",4]];
-  const M=[["Alçak Basınç Koruma Girme Zamanı (sn)",5],["Yüksek Basınç Koruma Girme Zamanı (sn)",6],["Alçak Basınç Koruma Çıkma Zamanı (sn)",7],["Yüksek Basınç Koruma Çıkma Zamanı (sn)",8],["Röle 2 Yapılandırma",9],["Röle 3 Yapılandırma",10]];
-  return '<div class="hmi-screen dark-real"><div class="hmi-title">Alçak / Yüksek Basınç Koruması</div><div class="hmi-real-grid">'+[L,M,[]].map(col=>'<div>'+col.map(x=>row(x[0],x[1])).join('')+'</div>').join('')+'</div></div>';
+  const left=[["Alçak Basınç Koruması Min. Değer (bar)",0],["Alçak Basınç Koruması Pompa Giriş Basıncı (bar)",1],["Yüksek Basınç Koruması Max. Değer (Bar.)",2]];
+  const right=[["Röle 2 Yapılandırma",9],["Röle 3 Yapılandırma",10],["Alçak Basınç Koruma Girme Zamanı(sn)",5],["Yüksek Basınç Koruma Girme Zamanı(sn)",6],["Alçak Basınç Koruma Çıkma Zamanı(sn)",7],["Yüksek Basınç Koruma Çıkma Zamanı(sn)",8]];
+  const status=(label,i)=>'<div class="hmi-status-row"><label>'+esc(label)+'</label><div class="hmi-status-pair"><span class="hmi-status off">Kapat</span><span class="hmi-status on">Aç</span></div></div>';
+  return '<div class="hmi-screen dark-real hmi-source-layout hmi-screen-6"><div class="hmi-title">Alçak / Yüksek Basınç Koruması</div><div class="hmi-real-grid hmi-two-col hmi-six-layout"><div>'+left.map(x=>row(x[0],x[1])).join('')+status('Yüksek Basınç Koruması Durumu',3)+status('Alçak Basınç Koruması Durumu',4)+'</div><div>'+right.map(x=>row(x[0],x[1])).join('')+'</div></div></div>';
  }
  return '<div class="hmi-screen dark-real"><div class="hmi-title">'+esc(page.title)+'</div><div class="hmi-real-grid">'+page.labels.map((lab,i)=>row(lab,i)).join('')+'</div></div>';
 }
