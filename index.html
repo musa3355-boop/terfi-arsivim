@@ -217,9 +217,39 @@ hmi:hmiBlank(),work:{current:{frekans_hz:"",akim_a:"",devir_rpm:"",guc_kw:"",ger
 ssr:{level:"",low:"",high:"",pump_in:"",low_enter:"",high_enter:"",low_exit:"",high_exit:"",note:""},params:[],faults:[],photos:[],note:""}}
 function makeDB(){return SEED.map(s=>({...clone(s),address:"",source:"",outlet:"",depth:"",gps:"",note:"",history:[],pumps:s.pumps.map(p=>pumpTemplate(p.no,p.ad))}))}
 function mergeDeep(src,base){if(!src||typeof src!=="object")return src??base;const o={...base};for(const k of Object.keys(base||{})){if(src[k]===undefined)continue;o[k]=src[k]&&typeof src[k]==="object"&&!Array.isArray(src[k])?mergeDeep(src[k],base[k]):src[k]}return o}
-function normalize(saved){const map=new Map(saved.map(s=>[s.ad,s]));return makeDB().map(b=>{const s=map.get(b.ad);if(!s)return b;const x=mergeDeep(s,b);x.pumps=b.pumps.map(bp=>{const old=(s.pumps||[]).find(p=>p.no===bp.no)||{};return mergeDeep(old,bp)});return x})}
+function normalize(saved){
+  const list=Array.isArray(saved)?saved:[];
+  const byId=new Map(list.filter(x=>x&&x.id).map(x=>[x.id,x]));
+  const byAd=new Map(list.filter(x=>x&&x.ad).map(x=>[String(x.ad).trim().toLocaleLowerCase("tr-TR"),x]));
+  const used=new Set();
+  const result=makeDB().map(base=>{
+    const key=String(base.ad||"").trim().toLocaleLowerCase("tr-TR");
+    const savedStation=byId.get(base.id)||byAd.get(key);
+    if(!savedStation)return base;
+    used.add(savedStation.id);
+    const x=mergeDeep(savedStation,base);
+    const savedPumps=Array.isArray(savedStation.pumps)?savedStation.pumps:[];
+    const basePumps=Array.isArray(base.pumps)?base.pumps:[];
+    const pumps=basePumps.map(bp=>{
+      const old=savedPumps.find(sp=>Number(sp.no)===Number(bp.no)||sp.id===bp.id)||{};
+      return mergeDeep(old,bp);
+    });
+    savedPumps.filter(sp=>!pumps.some(pp=>pp.id===sp.id)||!pumps.some(pp=>Number(pp.no)===Number(sp.no))).forEach(sp=>{
+      if(!pumps.some(pp=>pp.id===sp.id)&&!pumps.some(pp=>Number(pp.no)===Number(sp.no)))pumps.push(sp);
+    });
+    x.pumps=pumps.sort((a,b)=>(Number(a.no)||0)-(Number(b.no)||0));
+    return x;
+  });
+  list.filter(s=>s&&s.id&&!used.has(s.id)&&!result.some(r=>r.id===s.id)).forEach(s=>result.push(s));
+  return result;
+}
 function load(){try{const raw=localStorage.getItem(STORE);if(raw){const x=JSON.parse(raw);if(Array.isArray(x)&&x.length)return normalize(x)}}catch(e){}return makeDB()}
-function save(){localStorage.setItem(STORE,JSON.stringify(db));toast("Kayıt kaydedildi.")}
+function save(silent=false){
+  try{localStorage.setItem(STORE,JSON.stringify(db));}
+  catch(e){console.error("LOCAL STORAGE SAVE",e);toast("Kayıt cihazda saklanamadı. JSON Yedek alın.");return false}
+  if(!silent)toast("Kayıt kaydedildi.");
+  return true;
+}
 function station(){return db.find(s=>s.id===stationId)||null}
 function pump(){const s=station();return s?.pumps.find(p=>p.id===pumpId)||null}
 function needAdmin(){if(admin)return true;adminLogin();return false}
@@ -236,7 +266,7 @@ function openStation(id){const s=db.find(x=>x.id===id);if(!s)return;view="statio
 function selectPump(id){const s=station();if(!s?.pumps.some(p=>p.id===id))return;pumpId=id;tab="genel";hmiPage=1;render()}
 function setTab(t){tab=t;render()}
 function setHmiPage(n){syncCurrentHMIFromDOM();save();hmiPage=n;render()}
-function resetAll(){if(!needAdmin())return;if(!confirm("Tüm bu cihazdaki arşiv silinip 42 terfi / 109 pompa başlangıç yapısına dönsün mü?"))return;db=makeDB();save();home();toast("Başlangıç yapısı yenilendi.")}
+function resetAll(){if(!needAdmin())return;if(!confirm("Tüm bu cihazdaki arşiv silinip başlangıç terfi yapısına dönsün mü? Bu işlem kullanıcı tarafından eklenen kayıtları da siler."))return;db=makeDB();save();home();toast("Başlangıç yapısı yenilendi.")}
 function setPath(o,path,v){const k=path.split(".").filter(Boolean);let x=o;for(let i=0;i<k.length-1;i++)x=x[k[i]]||(x[k[i]]={});if(k.length)x[k[k.length-1]]=v}
 function inp(label,path,value,type="text"){return'<div class="field"><label>'+esc(label)+'</label><input data-path="'+esc(path)+'" value="'+esc(value??"")+'" type="'+type+'" '+(admin?"":"readonly")+'></div>'}
 function txt(label,path,value){return'<div class="field"><label>'+esc(label)+'</label><textarea data-path="'+esc(path)+'" '+(admin?"":"readonly")+'>'+esc(value??"")+'</textarea></div>'}
@@ -530,6 +560,33 @@ window.addEventListener("afterprint",()=>{const e=document.getElementById("print
 
 function render(){const root=document.getElementById("app");root.innerHTML='<div class="shell">'+sidebar()+'<main class="main">'+topbar()+(view==="home"?homeView():stationView())+'<div class="footer">MESKİ TERFİ ARŞİVİM · '+db.length+' TERFİ · '+db.reduce((n,x)=>n+x.pumps.length,0)+' POMPA · TEK DOSYA</div></main></div>';document.querySelectorAll(".adminbar").forEach(x=>x.remove());if(admin){const a=document.createElement("div");a.className="adminbar";a.textContent="● YÖNETİCİ MODU AKTİF · KİLİT";a.onclick=adminLogin;document.body.appendChild(a)}}
 db=load();loadLibraries();render();
+
+/* KALICI KAYIT KORUMASI: her giriş değişikliğini otomatik sakla.
+   Böylece sayfa yenilense bile yeni terfiler, pompa bilgileri ve HMI değerleri kaybolmaz. */
+let __autosaveTimer=null;
+function syncVisibleFields(){
+  const p=pump(),s=station();
+  if(!p)return;
+  document.querySelectorAll('[data-hmi]').length&&syncCurrentHMIFromDOM();
+  document.querySelectorAll('[data-path]').forEach(e=>{
+    const path=e.dataset.path||"";
+    if(!path||path.startsWith('n.')||path.startsWith('x.'))return;
+    if(path.startsWith('s.')&&s)setPath(s,path.slice(2),e.value);
+    else if(path.startsWith('p.'))setPath(p,path.slice(2),e.value);
+    else if(path.startsWith('pump.'))setPath(p,path,e.value);
+    else if(path.startsWith('motor.'))setPath(p,path,e.value);
+    else if(path.startsWith('driver.'))setPath(p,path,e.value);
+    else if(path.startsWith('work.current.'))setPath(p,path,e.value);
+  });
+}
+function queueAutosave(){
+  clearTimeout(__autosaveTimer);
+  __autosaveTimer=setTimeout(()=>{try{syncVisibleFields();save(true)}catch(e){console.error('AUTOSAVE',e)}},180);
+}
+document.addEventListener('input',e=>{if(e.target.matches('input[data-hmi],input[data-path],textarea[data-path],select[data-path]'))queueAutosave()});
+document.addEventListener('change',e=>{if(e.target.matches('input[data-hmi],input[data-path],textarea[data-path],select[data-path]'))queueAutosave()});
+window.addEventListener('pagehide',()=>{try{syncVisibleFields();save(true)}catch(e){}});
+window.addEventListener('beforeunload',()=>{try{syncVisibleFields();save(true)}catch(e){}});
 </script>
 </body>
 </html>
