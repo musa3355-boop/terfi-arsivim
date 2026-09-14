@@ -636,7 +636,33 @@ function deleteStation(){
 
   toast("“"+stationName+"” terfisi silindi.");
 }
+/* TERFİ SİLME BUTONU */
+function showDeleteStationButton(){
+  const s=station();
+  if(!s || !admin) return;
 
+  const actions=document.querySelector(".top .actions");
+  if(!actions) return;
+
+  if(document.getElementById("deleteStationBtn")) return;
+
+  const btn=document.createElement("button");
+  btn.id="deleteStationBtn";
+  btn.className="btn bad";
+  btn.textContent="🗑️ TERFİYİ SİL";
+  btn.onclick=deleteStation;
+
+  const editBtn=[...actions.querySelectorAll("button")]
+    .find(b=>b.textContent.includes("DÜZENLE"));
+
+  if(editBtn){
+    editBtn.insertAdjacentElement("afterend",btn);
+  }else{
+    actions.appendChild(btn);
+  }
+}
+
+setInterval(showDeleteStationButton,500);
 </script>
 </body>
 </html>
