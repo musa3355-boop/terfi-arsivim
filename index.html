@@ -587,10 +587,10 @@ document.addEventListener('input',e=>{if(e.target.matches('input[data-hmi],input
 document.addEventListener('change',e=>{if(e.target.matches('input[data-hmi],input[data-path],textarea[data-path],select[data-path]'))queueAutosave()});
 window.addEventListener('pagehide',()=>{try{syncVisibleFields();save(true)}catch(e){}});
 window.addEventListener('beforeunload',()=>{try{syncVisibleFields();save(true)}catch(e){}});
-</script>
-</body>
-</html>
-/* TERFİ SİLME BUTONU - EK MODÜL */
+ window.addEventListener('beforeunload',()=>{try{syncVisibleFields();save(true)}catch(e){}});
+
+
+/* TERFİ SİLME */
 function deleteStation(){
   if(!needAdmin()) return;
 
@@ -605,13 +605,12 @@ function deleteStation(){
   if(!confirm(
     "DİKKAT!\n\n"+
     "“"+stationName+"” TERFİSİNİ SİLMEK ÜZERESİN.\n\n"+
-    "Bu terfinin içindeki tüm pompa blokları ve kayıtları da bu cihazdaki arşivden kaldırılacaktır.\n\n"+
+    "Bu terfinin içindeki tüm pompa ve kayıtlar silinecektir.\n\n"+
     "Devam etmek istiyor musun?"
   )) return;
 
   const kontrol=prompt(
-    "Güvenlik için terfi adını aynen yaz:\n\n"+
-    stationName
+    "Güvenlik için terfi adını aynen yaz:\n\n"+stationName
   );
 
   if(kontrol!==stationName){
@@ -619,11 +618,10 @@ function deleteStation(){
     return;
   }
 
-  /* SİLMEDEN ÖNCE YEDEK AL */
   try{
     backup();
   }catch(e){
-    console.warn("Yedek alınamadı:",e);
+    console.warn(e);
   }
 
   db=db.filter(x=>x.id!==s.id);
@@ -639,35 +637,9 @@ function deleteStation(){
   toast("“"+stationName+"” terfisi silindi.");
 }
 
-
-/* BUTONU OTOMATİK OLARAK DÜZENLE'NİN YANINA EKLE */
-function addDeleteStationButton(){
-  const s=station();
-  const actions=document.querySelector(".top .actions");
-
-  if(!actions || !s || !admin) return;
-
-  if(document.getElementById("deleteStationBtn")) return;
-
-  const btn=document.createElement("button");
-
-  btn.id="deleteStationBtn";
-  btn.className="btn bad";
-  btn.textContent="🗑️ TERFİYİ SİL";
-  btn.onclick=deleteStation;
-
-  actions.insertBefore(btn,actions.lastElementChild);
-}
-
-
-/* SAYFA HER YENİLENDİĞİNDE / RENDER OLDUĞUNDA BUTONU GERİ GETİR */
-const __deleteStationObserver=new MutationObserver(()=>{
-  addDeleteStationButton();
-});
-
-__deleteStationObserver.observe(document.getElementById("app"),{
-  childList:true,
-  subtree:true
-});
-
-setTimeout(addDeleteStationButton,100);
+</script>
+</body>
+</html>
+</script>
+</body>
+</html>
