@@ -590,3 +590,84 @@ window.addEventListener('beforeunload',()=>{try{syncVisibleFields();save(true)}c
 </script>
 </body>
 </html>
+/* TERFİ SİLME BUTONU - EK MODÜL */
+function deleteStation(){
+  if(!needAdmin()) return;
+
+  const s=station();
+  if(!s){
+    toast("Önce bir terfi seç.");
+    return;
+  }
+
+  const stationName=s.ad||"TERFİ";
+
+  if(!confirm(
+    "DİKKAT!\n\n"+
+    "“"+stationName+"” TERFİSİNİ SİLMEK ÜZERESİN.\n\n"+
+    "Bu terfinin içindeki tüm pompa blokları ve kayıtları da bu cihazdaki arşivden kaldırılacaktır.\n\n"+
+    "Devam etmek istiyor musun?"
+  )) return;
+
+  const kontrol=prompt(
+    "Güvenlik için terfi adını aynen yaz:\n\n"+
+    stationName
+  );
+
+  if(kontrol!==stationName){
+    toast("Terfi silinmedi. Terfi adı eşleşmedi.");
+    return;
+  }
+
+  /* SİLMEDEN ÖNCE YEDEK AL */
+  try{
+    backup();
+  }catch(e){
+    console.warn("Yedek alınamadı:",e);
+  }
+
+  db=db.filter(x=>x.id!==s.id);
+
+  stationId=null;
+  pumpId=null;
+  view="home";
+  tab="genel";
+
+  save();
+  render();
+
+  toast("“"+stationName+"” terfisi silindi.");
+}
+
+
+/* BUTONU OTOMATİK OLARAK DÜZENLE'NİN YANINA EKLE */
+function addDeleteStationButton(){
+  const s=station();
+  const actions=document.querySelector(".top .actions");
+
+  if(!actions || !s || !admin) return;
+
+  if(document.getElementById("deleteStationBtn")) return;
+
+  const btn=document.createElement("button");
+
+  btn.id="deleteStationBtn";
+  btn.className="btn bad";
+  btn.textContent="🗑️ TERFİYİ SİL";
+  btn.onclick=deleteStation;
+
+  actions.insertBefore(btn,actions.lastElementChild);
+}
+
+
+/* SAYFA HER YENİLENDİĞİNDE / RENDER OLDUĞUNDA BUTONU GERİ GETİR */
+const __deleteStationObserver=new MutationObserver(()=>{
+  addDeleteStationButton();
+});
+
+__deleteStationObserver.observe(document.getElementById("app"),{
+  childList:true,
+  subtree:true
+});
+
+setTimeout(addDeleteStationButton,100);
