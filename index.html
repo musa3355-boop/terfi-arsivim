@@ -158,7 +158,7 @@ const HMI=[
   "Hızlanma Rampası [sn]","Yavaşlama Rampası [Sn.]","PID Kazanç","Osilasyon","Ters / Düz Çalıştırma"]},
  {no:"5",title:"Röle Yapılandırma / Sistem Ayarları",labels:[
   "Role 1 Yapılandırma","Role 2 Yapılandırma","Role 3 Yapılandırma","Role 4 Yapılandırma",
-  "Kilitleme[DI1-DI5]","Çalışma Süresi[h]","Otomatik Değişim Aralığı","Oto Değişim Seviyesi(%)"]},
+  "Dijital Röle","Kilitleme[DI1-DI5]","Çalışma Süresi[h]","Otomatik Değişim Aralığı","Oto Değişim Seviyesi(%)"]},
  {no:"6",title:"Alçak / Yüksek Basınç Koruma",labels:[
   "Alçak Basınç Koruması Min. Değer(bar)",
   "Alçak Basınç Koruması Pompa Giriş Basıncı:(bar)",
@@ -220,8 +220,8 @@ function now(){return new Date().toLocaleString("tr-TR")}
 function toast(t){const e=document.getElementById("toast");e.textContent=t;e.classList.add("show");clearTimeout(window.__toast);window.__toast=setTimeout(()=>e.classList.remove("show"),1800)}
 function hmiBlank(){return HMI.map(()=>({}))}
 function pumpTemplate(no,ad){return{id:uid(),no,ad,
-pump:{marka:"",model:"",tip:"",seri_no:"",guc_kw:"",guc_hp:"",q_min:"",q_max:"",h_min:"",h_max:"",cikis:"",not:""},
-motor:{marka:"",model:"",seri_no:"",motor_tipi:"",guc_kw:"",guc_hp:"",gerilim_v:"",nominal_akim_a:"",frekans_hz:"50",devir_rpm:"",cos_phi:"",montaj_tarihi:"",degisim_tarihi:"",not:""},
+pump:{marka:"",model:"",tip:"",seri_no:"",guc_kw:"",guc_hp:"",q_min:"",q_max:"",h_min:"",h_max:"",cikis:"",cap_mm:"",kademe:"",verim:"",donus_yonu:"",montaj_tipi:"",not:""},
+motor:{marka:"",model:"",seri_no:"",motor_tipi:"",iec_frame:"",guc_kw:"",guc_hp:"",gerilim_v:"",nominal_akim_a:"",frekans_hz:"50",devir_rpm:"",cos_phi:"",verim:"",izolasyon:"",koruma_sinifi:"",servis_faktoru:"",baglanti:"",montaj_tarihi:"",degisim_tarihi:"",not:""},
 driver:{marka:"ABB",model:"",seri_no:"",surucu_ailesi:"",guc_kw:"",besleme_v:"",firmware:"",kontrol:"",not:""},
 box:{motor:{U:{renk:"",etiket:"U",detay:""},V:{renk:"",etiket:"V",detay:""},W:{renk:"",etiket:"W",detay:""}},out:{U:{renk:"",etiket:"U",detay:""},V:{renk:"",etiket:"V",detay:""},W:{renk:"",etiket:"W",detay:""}},driver:{U:{renk:"",etiket:"U",detay:""},V:{renk:"",etiket:"V",detay:""},W:{renk:"",etiket:"W",detay:""}}},
 hmi:hmiBlank(),work:{current:{frekans_hz:"",akim_a:"",devir_rpm:"",guc_kw:"",gerilim_v:"",surucu_sicaklik_c:"",set_basinci_bar:"",calisma_basinci_bar:"",tasarruf_kwh:"",durum:"Sistem Normal",notlar:""},history:[]},
@@ -383,8 +383,8 @@ function stationView(){const s=station(),p=pump();if(!p)return'<div class="hero"
 function formCard(title,obj,root,fields,saveFn){return'<div class="card"><div class="section-head"><div><h3>'+title+'</h3><div class="muted">Yalnızca seçili P'+pump().no+' için.</div></div>'+(admin?'<button class="btn ok" onclick="'+saveFn+'()">KAYDET</button>':"")+'</div><div class="grid3" style="margin-top:9px">'+fields.map(f=>inp(f[0],root+"."+f[1],obj[f[1]],f[2]||"text")).join("")+'</div></div>'}
 function tabBody(){const p=pump(),s=station();
 if(tab==="genel")return'<div class="grid3" style="margin-top:10px">'+kv("💧 POMPA",{"Ad":p.ad,"Marka":p.pump.marka,"Model":p.pump.model,"Tip":p.pump.tip,"Q min/max":(p.pump.q_min||p.pump.q_max)?(p.pump.q_min||"—")+" / "+(p.pump.q_max||"—")+" m³/h":"—"})+kv("⚙ MOTOR",{"Marka":p.motor.marka,"Model":p.motor.model,"Güç":p.motor.guc_kw?p.motor.guc_kw+" kW":"—","Akım":p.motor.nominal_akim_a?p.motor.nominal_akim_a+" A":"—","Devir":p.motor.devir_rpm?p.motor.devir_rpm+" rpm":"—"})+kv("🔌 SÜRÜCÜ",{"Marka":p.driver.marka,"Model":p.driver.model,"Seri":p.driver.seri_no,"Aile":p.driver.surucu_ailesi})+kv("🟢 SSR",{"Seviye":p.ssr.level,"Alt":p.ssr.low,"Üst":p.ssr.high,"Basınç Giriş":p.ssr.pump_in})+kv("🖥 HMI / PLC",{"Ekran":"6 adet","Kayıtlı":p.hmi.filter(x=>Object.keys(x).length).length,"Seçili":hmiPage})+kv("▶ ANLIK ÇALIŞMA",{"Frekans":p.work.current.frekans_hz?p.work.current.frekans_hz+" Hz":"—","Akım":p.work.current.akim_a?p.work.current.akim_a+" A":"—","Güç":p.work.current.guc_kw?p.work.current.guc_kw+" kW":"—","Durum":p.work.current.durum})+'</div><div class="card"><div class="section-head"><b>TERFİ SAHA BİLGİLERİ</b>'+(admin?'<button class="btn" onclick="editStation()">DÜZENLE</button>':"")+'</div><div class="grid3" style="margin-top:8px">'+kv("KAYNAK / ÇIKIŞ",{"Kaynak":s.source,"Basma / Çıkış":s.outlet,"Adres":s.address})+kv("SAHA",{"Kuyu":s.depth?s.depth+" m":"—","GPS":s.gps,"Tip":s.tip})+kv("NOT",{"Açıklama":s.note})+'</div></div>';
-if(tab==="pompa")return formCard("💧 POMPA ETİKETİ",p.pump,"pump",[["Pompa Adı","ad"],["Marka","marka"],["Model","model"],["Tip","tip"],["Seri No","seri_no"],["Güç kW","guc_kw","number"],["Güç HP","guc_hp","number"],["Q Min","q_min","number"],["Q Max","q_max","number"],["H Min","h_min","number"],["H Max","h_max","number"],["Basma / Çıkış","cikis"]],"savePump");
-if(tab==="motor")return formCard("⚙ MOTOR ETİKETİ",p.motor,"motor",[["Marka","marka"],["Model","model"],["Seri No","seri_no"],["Motor Tipi","motor_tipi"],["Güç kW","guc_kw","number"],["Güç HP","guc_hp","number"],["Gerilim V","gerilim_v","number"],["Nominal Akım A","nominal_akim_a","number"],["Frekans Hz","frekans_hz","number"],["Devir RPM","devir_rpm","number"],["Cos φ","cos_phi"],["Montaj Tarihi","montaj_tarihi"],["Değişim Tarihi","degisim_tarihi"]],"saveMotor");
+if(tab==="pompa")return formCard("💧 POMPA ETİKETİ / HIDROLİK",p.pump,"pump",[["Pompa Adı","ad"],["Marka","marka"],["Model","model"],["Pompa Tipi","tip"],["Seri No","seri_no"],["Güç kW","guc_kw","number"],["Güç HP","guc_hp","number"],["Q Min [m³/h]","q_min","number"],["Q Max [m³/h]","q_max","number"],["H Min [m]","h_min","number"],["H Max [m]","h_max","number"],["Çıkış / DN","cikis"],["Çap [mm]","cap_mm","number"],["Kademe","kademe","number"],["Verim [%]","verim","number"],["Dönüş Yönü","donus_yonu"],["Montaj Tipi","montaj_tipi"]],"savePump");
+if(tab==="motor")return formCard("⚙ MOTOR ETİKETİ / ELEKTRİK",p.motor,"motor",[["Marka","marka"],["Model","model"],["Seri No","seri_no"],["Motor Tipi","motor_tipi"],["IEC Gövde / Frame","iec_frame"],["Güç kW","guc_kw","number"],["Güç HP","guc_hp","number"],["Gerilim V","gerilim_v","number"],["Nominal Akım A","nominal_akim_a","number"],["Frekans Hz","frekans_hz","number"],["Devir RPM","devir_rpm","number"],["Cos φ","cos_phi"],["Verim [%]","verim","number"],["İzolasyon Sınıfı","izolasyon"],["Koruma Sınıfı IP","koruma_sinifi"],["Servis Faktörü","servis_faktoru"],["Bağlantı","baglanti"],["Montaj Tarihi","montaj_tarihi"],["Değişim Tarihi","degisim_tarihi"]],"saveMotor");
 if(tab==="surucu")return formCard("🔌 SÜRÜCÜ",p.driver,"driver",[["Marka","marka"],["Model","model"],["Seri No","seri_no"],["Sürücü Ailesi","surucu_ailesi"],["Güç kW","guc_kw","number"],["Besleme V","besleme_v","number"],["Firmware","firmware"],["Kontrol","kontrol"]],"saveDriver");
 if(tab==="box")return boxTab(p);if(tab==="ssr")return ssrTab(p);if(tab==="hmi")return hmiTab(p);if(tab==="calisma")return workTab(p);if(tab==="param")return paramTab(p);if(tab==="ariza")return faultTab(p);if(tab==="photo")return photoTab(p);return historyTab(s,p)}
 function savePump(){if(!needAdmin())return;const p=pump();document.querySelectorAll('[data-path^="pump."]').forEach(e=>setPath(p.pump,e.dataset.path.slice(5),e.value));p.ad=p.pump.ad||p.ad;save();render()}
@@ -423,8 +423,9 @@ function hmiPreview(p,page,vals){
  }
  if(page.no==="5"){
   const L=[["Röle 1 Yapılandırma",0],["Röle 2 Yapılandırma",1],["Röle 3 Yapılandırma",2],["Röle 4 Yapılandırma",3]];
-  const M=[["Kilitleme [DI1-DI5]",4],["Çalışma Süresi [h]",5],["Otomatik Değişim Aralığı",6],["Oto Değişim Seviyesi (%)",7]];
-  return '<div class="hmi-screen dark-real hmi-source-layout"><div class="hmi-title">Röle Yapılandırma / Sistem Ayarları</div><div class="hmi-real-grid hmi-two-col">'+[L,M].map(col=>'<div>'+col.map(x=>row(x[0],x[1])).join('')+'</div>').join('')+'</div></div>';
+  const L2=[["Dijital Röle",4]];
+  const M=[["Kilitleme [DI1-DI5]",5],["Çalışma Süresi [h]",6],["Otomatik Değişim Aralığı",7],["Oto Değişim Seviyesi (%)",8]];
+  return '<div class="hmi-screen dark-real hmi-source-layout"><div class="hmi-title">Röle Yapılandırma / Sistem Ayarları</div><div class="hmi-real-grid hmi-two-col">'+[L.concat(L2),M].map(col=>'<div>'+col.map(x=>row(x[0],x[1])).join('')+'</div>').join('')+'</div></div>';
  }
  if(page.no==="6"){
   const left=[["Alçak Basınç Koruması Min. Değer (bar)",0],["Alçak Basınç Koruması Pompa Giriş Basıncı (bar)",1],["Yüksek Basınç Koruması Max. Değer (Bar.)",2]];
