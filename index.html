@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#06131f">
 <title>MESKİ TERFİ ARŞİVİM</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
 :root{--bg:#06131f;--panel:#0b1f31;--panel2:#0e2940;--line:#20516b;--text:#edf8ff;--muted:#8eacbd;--cyan:#18b7ef;--green:#16c883;--red:#ec4352;--yellow:#dfa72f;--shadow:0 14px 35px rgba(0,0,0,.3)}
 *{box-sizing:border-box}html,body{margin:0;min-height:100%;background:radial-gradient(circle at 80% 0,#123b55 0,#06131f 38%,#040d16 100%);color:var(--text);font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
@@ -198,7 +199,16 @@ const DEFAULT_HYD=[{name:"KIRSAL AKDENİZ",bolge:"AKDENİZ",source:"Saha hidroli
 const LIB_STORE="MESKI_TEKNIK_KUTUPHANE_2026";
 let PARAMS=[],FAULTS=[],DRIVER_SERIES=[],HYD=[];
 function loadLibraries(){try{const x=JSON.parse(localStorage.getItem(LIB_STORE)||"null");PARAMS=Array.isArray(x?.params)?x.params:clone(DEFAULT_PARAMS);FAULTS=Array.isArray(x?.faults)?x.faults:clone(DEFAULT_FAULTS);DRIVER_SERIES=Array.isArray(x?.drivers)?x.drivers:clone(DEFAULT_DRIVER_SERIES);HYD=Array.isArray(x?.hyd)?x.hyd:clone(DEFAULT_HYD)}catch(e){PARAMS=clone(DEFAULT_PARAMS);FAULTS=clone(DEFAULT_FAULTS);DRIVER_SERIES=clone(DEFAULT_DRIVER_SERIES);HYD=clone(DEFAULT_HYD)}}
-function saveLibraries(){localStorage.setItem(LIB_STORE,JSON.stringify({params:PARAMS,faults:FAULTS,drivers:DRIVER_SERIES,hyd:HYD}))}
+function saveLibraries(){
+  try{
+    localStorage.setItem(LIB_STORE,JSON.stringify({params:PARAMS,faults:FAULTS,drivers:DRIVER_SERIES,hyd:HYD}));
+    return true;
+  }catch(e){
+    console.error("LIBRARY SAVE",e);
+    toast("Teknik kütüphane cihazda saklanamadı. JSON yedek alın.");
+    return false;
+  }
+}
 
 let db=[],view="home",stationId=null,pumpId=null,tab="genel",hmiPage=1,district="TÜMÜ",search="",admin=false,libraryMode="all";
 
@@ -248,8 +258,84 @@ function save(silent=false){
   try{localStorage.setItem(STORE,JSON.stringify(db));}
   catch(e){console.error("LOCAL STORAGE SAVE",e);toast("Kayıt cihazda saklanamadı. JSON Yedek alın.");return false}
   if(!silent)toast("Kayıt kaydedildi.");
+  queueCloudSync();
   return true;
 }
+
+/* ====================== MERKEZİ BULUT KAYDI ======================
+   PC'deki mevcut localStorage verisini ilk çalıştırmada merkeze taşır.
+   Diğer telefon/tablet/PC'ler aynı kaydı Supabase'den indirir.
+   Mevcut STORE anahtarı korunur; yerel kayıt hiçbir zaman silinmez. */
+const SUPABASE_URL="https://vthjqdlsijdvvlegpqrg.supabase.co";
+const SUPABASE_KEY="sb_publishable_pJrgD6-8p-SOxTu8bP02Ag_Cv5InPtB";
+const CLOUD_KEY="TERFI_ARSIVIM_DB_V1";
+const CLOUD_META="MESKI_TERFI_ARSIVIM_CLOUD_META_V1";
+let supabaseClient=null,cloudReady=false,cloudTimer=null,cloudBusy=false;
+try{if(window.supabase?.createClient){supabaseClient=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);cloudReady=true}}catch(e){console.error("SUPABASE INIT",e)}
+function localRawDB(){try{const x=JSON.parse(localStorage.getItem(STORE)||"null");return Array.isArray(x)?x:null}catch(e){return null}}
+function seedIds(){try{return new Set(makeDB().map(x=>x.id))}catch(e){return new Set()}}
+function hasCustomLocalData(list){if(!Array.isArray(list)||!list.length)return false;const ids=seedIds();return list.some(x=>x&&x.id&&!ids.has(x.id)) || list.length>makeDB().length}
+function cloudFingerprint(list){try{const s=JSON.stringify(list||[]);let h=2166136261;for(let i=0;i<s.length;i++){h^=s.charCodeAt(i);h=Math.imul(h,16777619)}return (h>>>0).toString(16)}catch(e){return ""}}
+function setCloudMeta(hash){try{localStorage.setItem(CLOUD_META,JSON.stringify({hash,at:new Date().toISOString()}))}catch(e){}}
+function getCloudMeta(){try{return JSON.parse(localStorage.getItem(CLOUD_META)||"null")}catch(e){return null}}
+async function fetchCloudDB(){
+  if(!cloudReady)return null;
+  try{
+    const {data,error}=await supabaseClient.from("uygulama_icerik").select("icerik,updated_at").eq("anahtar",CLOUD_KEY).maybeSingle();
+    if(error)throw error;
+    const c=data?.icerik;
+    if(c&&Array.isArray(c.db)&&c.db.length)return {db:c.db,hash:String(c.hash||cloudFingerprint(c.db)),updatedAt:data.updated_at||c.savedAt||""};
+  }catch(e){console.warn("CLOUD READ",e)}
+  return null;
+}
+async function uploadCloudDB(reason="auto"){
+  if(!cloudReady||cloudBusy)return false;
+  cloudBusy=true;
+  try{
+    const snapshot=clone(db);
+    const hash=cloudFingerprint(snapshot);
+    const payload={version:1,hash,savedAt:new Date().toISOString(),reason,db:snapshot};
+    const {error}=await supabaseClient.from("uygulama_icerik").upsert({anahtar:CLOUD_KEY,baslik:"Terfi Arşivi Merkezi Kayıt",aciklama:"MESKİ TERFİ ARŞİVİM cihazlar arası merkezi veri",icerik:payload,kaynak:"MESKİ TERFİ ARŞİVİM",aktif:true,sira:999},{onConflict:"anahtar"});
+    if(error)throw error;
+    setCloudMeta(hash);
+    return true;
+  }catch(e){console.warn("CLOUD WRITE",e);return false}
+  finally{cloudBusy=false}
+}
+function queueCloudSync(){
+  if(!cloudReady)return;
+  clearTimeout(cloudTimer);
+  cloudTimer=setTimeout(()=>uploadCloudDB("save"),700);
+}
+async function cloudBoot(){
+  if(!cloudReady)return;
+  const local=localRawDB();
+  const cloud=await fetchCloudDB();
+  if(!cloud){
+    if(hasCustomLocalData(local)){
+      const ok=await uploadCloudDB("pc-local-ilk-yukleme");
+      if(ok)toast("PC'deki mevcut terfi kayıtları merkeze aktarıldı.");
+    }
+    return;
+  }
+  const localCustom=hasCustomLocalData(local);
+  const meta=getCloudMeta();
+  const localHash=local?cloudFingerprint(local):"";
+  if(localCustom && (!meta || meta.hash!==cloud.hash)){
+    const ok=await uploadCloudDB("mevcut-cihaz-verisi-korundu");
+    if(ok)toast("Bu cihazdaki mevcut kayıtlar merkeze aktarıldı.");
+    return;
+  }
+  if(!localCustom || (meta&&meta.hash===cloud.hash) || localHash===cloud.hash){
+    db=normalize(cloud.db);
+    try{localStorage.setItem(STORE,JSON.stringify(db))}catch(e){}
+    setCloudMeta(cloud.hash);
+    if(stationId&&!db.some(x=>x.id===stationId)){stationId=null;pumpId=null;view="home";tab="genel"}
+    render();
+    toast("Merkezi kayıt yüklendi.");
+  }
+}
+
 function station(){return db.find(s=>s.id===stationId)||null}
 function pump(){const s=station();return s?.pumps.find(p=>p.id===pumpId)||null}
 function needAdmin(){if(admin)return true;adminLogin();return false}
@@ -464,8 +550,61 @@ function editHyd(i){if(!needAdmin())return;const x=HYD[i];openModal('HİDROLİK 
 function saveHyd(i){if(!needAdmin())return;const x=HYD[i];document.querySelectorAll('[data-path^="x."]').forEach(e=>setPath(x,e.dataset.path.slice(2),e.value));saveLibraries();closeModal();openLibrary('hyd')}
 function deleteHyd(i){if(!needAdmin())return;if(confirm('Silinsin mi?')){HYD.splice(i,1);saveLibraries();openLibrary('hyd')}}
 
-function backup(){const blob=new Blob([JSON.stringify(db,null,2)],{type:"application/json"}),a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download="meski-terfi-arsiv-yedek.json";a.click();setTimeout(()=>URL.revokeObjectURL(a.href),500)}
-function restore(e){const f=e.target.files?.[0];if(!f)return;const r=new FileReader();r.onload=()=>{try{const x=JSON.parse(r.result);if(!Array.isArray(x))throw Error("Geçersiz JSON");db=normalize(x);save();home();toast("Yedek geri yüklendi.")}catch(err){toast(err.message)}};r.readAsText(f);e.target.value=""}
+function backup(){
+  const payload={
+    format:"MESKI_TERFI_ARSIVI_BACKUP",
+    version:2,
+    exportedAt:new Date().toISOString(),
+    db:clone(db),
+    libraries:{
+      params:clone(PARAMS),
+      faults:clone(FAULTS),
+      drivers:clone(DRIVER_SERIES),
+      hyd:clone(HYD)
+    }
+  };
+  const blob=new Blob([JSON.stringify(payload,null,2)],{type:"application/json;charset=utf-8"});
+  const a=document.createElement("a");
+  const url=URL.createObjectURL(blob);
+  a.href=url;
+  a.download="meski-terfi-arsiv-tam-yedek.json";
+  a.click();
+  setTimeout(()=>URL.revokeObjectURL(url),500);
+  toast("Terfi, pompa ve teknik kütüphane kayıtları yedeklendi.");
+}
+function restore(e){
+  const f=e.target.files?.[0];
+  if(!f)return;
+  const r=new FileReader();
+  r.onload=()=>{
+    try{
+      const payload=JSON.parse(r.result);
+      const isFullBackup=payload&&payload.format==="MESKI_TERFI_ARSIVI_BACKUP"&&Array.isArray(payload.db);
+      const source=isFullBackup?payload.db:payload;
+      if(!Array.isArray(source))throw Error("Geçersiz JSON yedeği");
+      if(!confirm("Bu yedek mevcut cihaz kayıtlarının üzerine yazılacak. Devam edilsin mi?"))return;
+      db=normalize(source);
+      if(isFullBackup&&payload.libraries&&typeof payload.libraries==="object"){
+        const libs=payload.libraries;
+        PARAMS=Array.isArray(libs.params)?libs.params:clone(DEFAULT_PARAMS);
+        FAULTS=Array.isArray(libs.faults)?libs.faults:clone(DEFAULT_FAULTS);
+        DRIVER_SERIES=Array.isArray(libs.drivers)?libs.drivers:clone(DEFAULT_DRIVER_SERIES);
+        HYD=Array.isArray(libs.hyd)?libs.hyd:clone(DEFAULT_HYD);
+        if(!saveLibraries())throw Error("Teknik kütüphane yedeği kaydedilemedi");
+      }
+      if(!save())throw Error("Terfi yedeği kaydedilemedi");
+      home();
+      toast(isFullBackup?"Tam yedek geri yüklendi.":"Eski JSON terfi yedeği geri yüklendi.");
+    }catch(err){
+      console.error("RESTORE",err);
+      toast("Yedek geri yüklenemedi: "+(err.message||"Bilinmeyen hata"));
+    }finally{
+      e.target.value="";
+    }
+  };
+  r.onerror=()=>{e.target.value="";toast("Yedek dosyası okunamadı.")};
+  r.readAsText(f);
+}
 
 function editStation(){if(!needAdmin())return;const s=station();openModal("TERFİ BİLGİLERİ",'<div class="grid2">'+inp("Terfi Adı","s.ad",s.ad)+inp("RTU / Terfi No","s.rtu",s.rtu)+inp("Bölge","s.bolge",s.bolge)+inp("Terfi Tipi","s.tip",s.tip)+inp("Adres","s.address",s.address)+inp("Kaynak / Emiş","s.source",s.source)+inp("Basma / Çıkış","s.outlet",s.outlet)+inp("Kuyu Derinliği [m]","s.depth",s.depth,"number")+inp("GPS","s.gps",s.gps)+'</div>'+txt("Açıklama","s.note",s.note)+'<div class="actions"><button class="btn ok" onclick="saveStation()">KAYDET</button></div>')}
 function openModal(title,body){document.getElementById("modalRoot").innerHTML='<div class="modal-back" onclick="if(event.target===this)closeModal()"><div class="modal"><div class="modal-head"><h2>'+esc(title)+'</h2><button class="btn" onclick="closeModal()">✕</button></div>'+body+'</div></div>'}
@@ -559,7 +698,7 @@ function pdfAll(){
 window.addEventListener("afterprint",()=>{const e=document.getElementById("printRoot");if(e)e.innerHTML=""})
 
 function render(){const root=document.getElementById("app");root.innerHTML='<div class="shell">'+sidebar()+'<main class="main">'+topbar()+(view==="home"?homeView():stationView())+'<div class="footer">MESKİ TERFİ ARŞİVİM · '+db.length+' TERFİ · '+db.reduce((n,x)=>n+x.pumps.length,0)+' POMPA · TEK DOSYA</div></main></div>';document.querySelectorAll(".adminbar").forEach(x=>x.remove());if(admin){const a=document.createElement("div");a.className="adminbar";a.textContent="● YÖNETİCİ MODU AKTİF · KİLİT";a.onclick=adminLogin;document.body.appendChild(a)}}
-db=load();loadLibraries();render();
+db=load();loadLibraries();render();cloudBoot();
 
 /* KALICI KAYIT KORUMASI: her giriş değişikliğini otomatik sakla.
    Böylece sayfa yenilense bile yeni terfiler, pompa bilgileri ve HMI değerleri kaybolmaz. */
@@ -587,82 +726,6 @@ document.addEventListener('input',e=>{if(e.target.matches('input[data-hmi],input
 document.addEventListener('change',e=>{if(e.target.matches('input[data-hmi],input[data-path],textarea[data-path],select[data-path]'))queueAutosave()});
 window.addEventListener('pagehide',()=>{try{syncVisibleFields();save(true)}catch(e){}});
 window.addEventListener('beforeunload',()=>{try{syncVisibleFields();save(true)}catch(e){}});
- window.addEventListener('beforeunload',()=>{try{syncVisibleFields();save(true)}catch(e){}});
-
-
-/* TERFİ SİLME */
-function deleteStation(){
-  if(!needAdmin()) return;
-
-  const s=station();
-  if(!s){
-    toast("Önce bir terfi seç.");
-    return;
-  }
-
-  const stationName=s.ad||"TERFİ";
-
-  if(!confirm(
-    "DİKKAT!\n\n"+
-    "“"+stationName+"” TERFİSİNİ SİLMEK ÜZERESİN.\n\n"+
-    "Bu terfinin içindeki tüm pompa ve kayıtlar silinecektir.\n\n"+
-    "Devam etmek istiyor musun?"
-  )) return;
-
-  const kontrol=prompt(
-    "Güvenlik için terfi adını aynen yaz:\n\n"+stationName
-  );
-
-  if(kontrol!==stationName){
-    toast("Terfi silinmedi. Terfi adı eşleşmedi.");
-    return;
-  }
-
-  try{
-    backup();
-  }catch(e){
-    console.warn(e);
-  }
-
-  db=db.filter(x=>x.id!==s.id);
-
-  stationId=null;
-  pumpId=null;
-  view="home";
-  tab="genel";
-
-  save();
-  render();
-
-  toast("“"+stationName+"” terfisi silindi.");
-}
-/* TERFİ SİLME BUTONU */
-function showDeleteStationButton(){
-  const s=station();
-  if(!s || !admin) return;
-
-  const actions=document.querySelector(".top .actions");
-  if(!actions) return;
-
-  if(document.getElementById("deleteStationBtn")) return;
-
-  const btn=document.createElement("button");
-  btn.id="deleteStationBtn";
-  btn.className="btn bad";
-  btn.textContent="🗑️ TERFİYİ SİL";
-  btn.onclick=deleteStation;
-
-  const editBtn=[...actions.querySelectorAll("button")]
-    .find(b=>b.textContent.includes("DÜZENLE"));
-
-  if(editBtn){
-    editBtn.insertAdjacentElement("afterend",btn);
-  }else{
-    actions.appendChild(btn);
-  }
-}
-
-setInterval(showDeleteStationButton,500);
 </script>
 </body>
 </html>
