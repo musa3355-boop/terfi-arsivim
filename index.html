@@ -63,6 +63,32 @@ button,input,textarea,select{font:inherit}button{cursor:pointer}input,textarea,s
 #printRoot{display:none}
 
 .hmi-direct-input{display:inline-block;min-width:72px;max-width:145px;padding:5px 7px!important;border:1px solid #b9c5ce!important;border-radius:4px!important;background:#f7f9fb!important;color:#17364d!important;font-weight:900!important;text-align:center;box-shadow:inset 0 1px 2px #0001!important}.hmi-direct-input:focus{border-color:#18b7ef!important;outline:2px solid #18b7ef55!important}.hmi-real-row .hmi-direct-input{width:92px;margin-left:6px}.pressure-main .hmi-direct-input{font-size:16px;min-width:110px}.pressure-io .hmi-direct-input{min-width:55px}.hmi-screen-item .hmi-direct-input{width:100%}
+/* Saha işletme görünümü: referans ekranındaki yoğun, gerçek SCADA düzeni */
+:root{--ui-bg:#071522;--ui-panel:#0d2131;--ui-panel-2:#102a3d;--ui-line:#244a64;--ui-blue:#1284d5;--ui-cyan:#16bce8;--ui-green:#13c987;--ui-red:#ed3e4a}
+body{background:radial-gradient(circle at 78% -10%,#173f5a 0,#0a1c2b 30%,#06111b 76%);background-attachment:fixed}
+.shell{grid-template-columns:242px minmax(0,1fr);gap:0}
+.side{background:linear-gradient(180deg,#0d2130 0%,#081723 55%,#06111b 100%);border-right:1px solid #2a5068;padding:14px 11px;box-shadow:12px 0 30px #0004}
+.brand{padding:8px 9px 16px;border-bottom-color:#24445a}
+.logo{width:43px;height:43px;border-radius:50% 50% 50% 12px;background:linear-gradient(145deg,#35c9ff,#07588f);box-shadow:0 0 22px #159fe866}
+.brand b{font-size:15px;letter-spacing:.3px}.brand small{font-size:9px;color:#19b8ef;font-weight:900}
+.side-title{font-size:9px;color:#7ca7bc;margin:20px 9px 8px;letter-spacing:1.2px}
+.side button{color:#c1d7e3;border-radius:7px;padding:11px 10px;font-size:12px;margin:2px 0;border-color:transparent}
+.side button:hover,.side button.active{background:linear-gradient(90deg,#145b92,#0c3b5c);border-color:#197dbc;color:#fff;box-shadow:inset 3px 0 #27b7f2}
+.main{padding:0 16px 65px;background:linear-gradient(90deg,#07152188,transparent 20%,transparent 80%,#07152166)}
+.top{min-height:67px;padding:10px 2px;border-bottom:1px solid #24455d;margin-bottom:12px}
+.crumb{font-size:12px;color:#b5cbd7}.btn{border-radius:7px;padding:10px 14px;font-size:10px;letter-spacing:.1px}
+.btn.primary{background:linear-gradient(#1b98e7,#0864a2)}.btn.ok{background:linear-gradient(#18cb82,#078c5c)}.btn.warn{background:linear-gradient(#f1b52b,#b67807)}.btn.bad{background:linear-gradient(#ee5260,#a7202e)}
+.hero{background:linear-gradient(100deg,#102d42 0%,#0b2234 68%,#0d2538 100%);border-color:#2b5873;border-radius:12px;padding:16px;box-shadow:0 8px 22px #0004}
+.hero h1{font-size:25px;letter-spacing:.1px}.hero-sub{font-size:12px;color:#b1cbd7}.hero-icon{width:78px;height:78px;border-radius:8px;background:linear-gradient(145deg,#247ab2,#0a365c);font-size:35px}
+.hero .meta{grid-template-columns:repeat(6,1fr);gap:0;margin-top:14px}.hero .meta .cell{border:0;border-right:1px solid #21465d;border-radius:0;background:transparent;padding:7px 13px}.hero .meta .cell:first-child{padding-left:0}.hero .meta .cell:last-child{border-right:0}.hero .meta span{font-size:9px;color:#9bb9c8}.hero .meta b{font-size:12px;margin-top:5px}
+.card{background:linear-gradient(145deg,#102b3ddd,#0b1d2bdd);border-color:#274e67;border-radius:12px;box-shadow:0 8px 20px #0003}
+.stats{gap:10px}.stat{background:#0d2131;border-color:#244b64}.stat strong{font-size:25px}
+.pumps{gap:11px}.pump{min-width:190px;border-radius:9px;padding:14px 16px;background:linear-gradient(135deg,#10446a,#0c2940);border-color:#1a80bd}.pump b{font-size:22px}.pump small{font-size:11px}.pump.active{box-shadow:0 0 0 2px #32bdf2;background:linear-gradient(135deg,#145e8c,#103b5a)}.pump.c2{background:linear-gradient(135deg,#0b513d,#10362f)}.pump.c3{background:linear-gradient(135deg,#6b1e2c,#421925)}
+.system{border-radius:12px}.system-head{background:linear-gradient(90deg,#8f2233,#511c2b 78%,#351a28);padding:16px}.system-head h2{font-size:25px}.system-nav{padding:9px 12px;gap:3px}.system-nav button{padding:10px 11px;font-size:10px;border-radius:6px}.system-nav button.active{background:#ed3c49}
+.content{padding:0 12px 14px}.data{background:#0d2131;border-color:#244b64;border-radius:10px}.data h3{font-size:13px}.kv{font-size:10px;padding:7px 0}.kv span:first-child{color:#9cb7c5}
+.footer{font-size:9px}
+@media(max-width:1050px){.hero .meta{grid-template-columns:repeat(3,1fr)}.hero .meta .cell:nth-child(3){border-right:0}}
+@media(max-width:800px){.main{padding:8px}.hero .meta{grid-template-columns:repeat(2,1fr)}.hero .meta .cell{border-right:0}.hero h1{font-size:19px}.pump{min-width:145px}.system-head h2{font-size:19px}}
 @media print{
  @page{size:A3 landscape;margin:6mm}
  html,body{margin:0!important;padding:0!important;background:#fff!important}
@@ -361,8 +387,8 @@ function inp(label,path,value,type="text"){return'<div class="field"><label>'+es
 function txt(label,path,value){return'<div class="field"><label>'+esc(label)+'</label><textarea data-path="'+esc(path)+'" '+(admin?"":"readonly")+'>'+esc(value??"")+'</textarea></div>'}
 function kv(title,obj){return'<div class="data"><h3>'+title+'</h3>'+Object.entries(obj).map(([k,v])=>'<div class="kv"><span>'+esc(k)+'</span><span>'+esc(v||"—")+'</span></div>').join("")+'</div>'}
 
-function sidebar(){return'<aside class="side"><div class="brand"><div class="logo">M</div><div><b>MESKİ TERFİ ARŞİVİM</b><small>SAHA · POMPA · MOTOR · HMI</small></div></div><div class="side-title">ANA MENÜ</div><button onclick="home()">⌂ Ana Sayfa</button>'+["AKDENİZ","MEZİTLİ","TOROSLAR","YENİŞEHİR","MERKEZ"].map(d=>'<button class="'+(district===d?"active":"")+'" onclick="setDistrict(\''+d+'\')">● '+d+'</button>').join("")+'<div class="side-title">TEKNİK KÜTÜPHANE</div><button onclick="openLibrary(\'all\')">🧰 Teknik Kütüphane</button><div class="side-title">VERİ</div><button onclick="backup()">⇩ JSON Yedek</button><button onclick="document.getElementById(\'restore\').click()">⇧ JSON Geri Yükle</button><button onclick="resetAll()">↻ Başlangıç Verilerine Dön</button><button onclick="adminLogin()">⚙ '+(admin?"Yönetici Kilitle":"Yönetici")+'</button><input id="restore" type="file" accept=".json" hidden onchange="restore(event)"><div style="margin-top:20px;color:#587f93;font-size:8px;line-height:1.6">'+db.length+' TERFİ<br>'+db.reduce((n,x)=>n+x.pumps.length,0)+' POMPA<br>5 BÖLGE</div></aside>'}
-function topbar(){return'<div class="top"><div style="min-width:0;display:flex;align-items:center;gap:7px">'+(station()?'<button class="btn" onclick="back()">← GERİ</button>':'<button class="btn mobile" onclick="home()">☰</button>')+'<div class="crumb">ANA SAYFA / '+(station()?esc(station().ad):"TERFİ LİSTESİ")+(station()?" / P"+(pump()?.no||1):"")+'</div></div><div class="actions">'+(station()?'<button class="btn primary" onclick="pdfSelected()">PDF · P'+(pump()?.no||1)+'</button><button class="btn" onclick="pdfAll()">PDF · TÜM POMPALAR</button><button class="btn" onclick="editStation()">DÜZENLE</button>':'<button class="btn ok" onclick="newStation()">+ YENİ TESİS</button>')+'<button class="btn '+(admin?"warn":"primary")+'" onclick="adminLogin()">'+(admin?"🔒 KİLİT":"🔐 YÖNETİCİ")+'</button></div></div>'}
+function sidebar(){return'<aside class="side"><div class="brand"><div class="logo">💧</div><div><b>MESKİ</b><small>TERFİ TEKNİK ARŞİVİ</small></div></div><div class="side-title">ANA MENÜ</div><button onclick="home()">⌂ &nbsp; Ana Sayfa</button><div class="side-title">BÖLGELER</div>'+["AKDENİZ","MEZİTLİ","TOROSLAR","YENİŞEHİR","MERKEZ"].map(d=>'<button class="'+(district===d?"active":"")+'" onclick="setDistrict(\''+d+'\')">⌂ &nbsp; '+d+'</button>').join("")+'<div class="side-title">TEKNİK MODÜLLER</div><button onclick="openLibrary(\'all\')">⚠ &nbsp; Arıza Kütüphanesi</button><button onclick="openLibrary(\'params\')">⚙ &nbsp; ACS Parametreleri</button><button onclick="openLibrary(\'params\')">⚙ &nbsp; ACQ Parametreleri</button><button onclick="openLibrary(\'hyd\')">♧ &nbsp; Hidrolik Diyagramlar</button><button onclick="home()">▤ &nbsp; Raporlar</button><div class="side-title">VERİ YÖNETİMİ</div><button onclick="backup()">⇩ &nbsp; JSON Yedek</button><button onclick="document.getElementById(\'restore\').click()">⇧ &nbsp; JSON Geri Yükle</button><button onclick="resetAll()">↻ &nbsp; Başlangıç Verilerine Dön</button><button onclick="adminLogin()">⚙ &nbsp; '+(admin?"Yönetici Kilitle":"Yönetici")+'</button><input id="restore" type="file" accept=".json" hidden onchange="restore(event)"><div style="margin-top:24px;padding:12px 8px;border-top:1px solid #24445a;color:#7396a8;font-size:9px;line-height:1.8">'+db.length+' TESİS<br>'+db.reduce((n,x)=>n+x.pumps.length,0)+' POMPA<br>5 BÖLGE</div></aside>'}
+function topbar(){return'<div class="top"><div style="min-width:0;display:flex;align-items:center;gap:7px">'+(station()?'<button class="btn bad" onclick="back()">← GERİ DÖN</button>':'<button class="btn mobile" onclick="home()">☰</button>')+'<div class="crumb">ANA SAYFA &nbsp;›&nbsp; '+(station()?esc(station().ad):"TESİS LİSTESİ")+(station()?" &nbsp;›&nbsp; P"+(pump()?.no||1):"")+'</div></div><div class="actions">'+(station()?'<button class="btn primary" onclick="pdfSelected()">▣ PDF OLUŞTUR</button><button class="btn" onclick="editStation()">✎ DÜZENLE</button><button class="btn warn" onclick="syncVisibleFields();save();toast(\'Kayıt kaydedildi.\')">▣ KAYDET</button>':'<button class="btn ok" onclick="newStation()">+ YENİ TESİS</button>')+'<button class="btn '+(admin?"warn":"primary")+'" onclick="adminLogin()">'+(admin?"🔒 YÖNETİCİ":"🔐 YÖNETİCİ")+'</button></div></div>'}
 
 function stationLocationHome(s){
   if(!s.gps){
@@ -733,3 +759,6 @@ window.addEventListener('beforeunload',()=>{try{syncVisibleFields();save(true)}c
 </script>
 </body>
 </html>
+
+
+
