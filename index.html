@@ -249,6 +249,7 @@ function loadLibraries(){try{const x=JSON.parse(localStorage.getItem(LIB_STORE)|
 function saveLibraries(){
   try{
     localStorage.setItem(LIB_STORE,JSON.stringify({params:PARAMS,faults:FAULTS,drivers:DRIVER_SERIES,hyd:HYD,districts:DISTRICTS}));
+    queueCloudSync();
     return true;
   }catch(e){
     console.error("LIBRARY SAVE",e);
@@ -320,9 +321,10 @@ const CLOUD_META="MESKI_TERFI_ARSIVIM_CLOUD_META_V1";
 let supabaseClient=null,cloudReady=false,cloudTimer=null,cloudBusy=false;
 try{if(window.supabase?.createClient){supabaseClient=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);cloudReady=true}}catch(e){console.error("SUPABASE INIT",e)}
 function localRawDB(){try{const x=JSON.parse(localStorage.getItem(STORE)||"null");return Array.isArray(x)?x:null}catch(e){return null}}
+function localRawLibraries(){try{const x=JSON.parse(localStorage.getItem(LIB_STORE)||"null");return x&&typeof x==="object"?x:null}catch(e){return null}}
 function seedIds(){try{return new Set(makeDB().map(x=>x.id))}catch(e){return new Set()}}
 function hasCustomLocalData(list){if(!Array.isArray(list)||!list.length)return false;const ids=seedIds();return list.some(x=>x&&x.id&&!ids.has(x.id)) || list.length>makeDB().length}
-function cloudFingerprint(list){try{const s=JSON.stringify(list||[]);let h=2166136261;for(let i=0;i<s.length;i++){h^=s.charCodeAt(i);h=Math.imul(h,16777619)}return (h>>>0).toString(16)}catch(e){return ""}}
+function cloudFingerprint(value){try{const s=JSON.stringify(value||{});let h=2166136261;for(let i=0;i<s.length;i++){h^=s.charCodeAt(i);h=Math.imul(h,16777619)}return (h>>>0).toString(16)}catch(e){return ""}}
 function setCloudMeta(hash){try{localStorage.setItem(CLOUD_META,JSON.stringify({hash,at:new Date().toISOString()}))}catch(e){}}
 function getCloudMeta(){try{return JSON.parse(localStorage.getItem(CLOUD_META)||"null")}catch(e){return null}}
 async function fetchCloudDB(){
@@ -331,7 +333,7 @@ async function fetchCloudDB(){
     const {data,error}=await supabaseClient.from("uygulama_icerik").select("icerik,updated_at").eq("anahtar",CLOUD_KEY).maybeSingle();
     if(error)throw error;
     const c=data?.icerik;
-    if(c&&Array.isArray(c.db)&&c.db.length)return {db:c.db,hash:String(c.hash||cloudFingerprint(c.db)),updatedAt:data.updated_at||c.savedAt||""};
+    if(c&&Array.isArray(c.db)&&c.db.length)return {db:c.db,libraries:c.libraries||null,hash:String(c.hash||cloudFingerprint({db:c.db,libraries:c.libraries||{}})),updatedAt:data.updated_at||c.savedAt||""};
   }catch(e){console.warn("CLOUD READ",e)}
   return null;
 }
@@ -340,8 +342,9 @@ async function uploadCloudDB(reason="auto"){
   cloudBusy=true;
   try{
     const snapshot=clone(db);
-    const hash=cloudFingerprint(snapshot);
-    const payload={version:1,hash,savedAt:new Date().toISOString(),reason,db:snapshot};
+    const libraries={params:clone(PARAMS),faults:clone(FAULTS),drivers:clone(DRIVER_SERIES),hyd:clone(HYD),districts:clone(DISTRICTS)};
+    const hash=cloudFingerprint({db:snapshot,libraries});
+    const payload={version:2,hash,savedAt:new Date().toISOString(),reason,db:snapshot,libraries};
     const {error}=await supabaseClient.from("uygulama_icerik").upsert({anahtar:CLOUD_KEY,baslik:"Terfi Arşivi Merkezi Kayıt",aciklama:"MESKİ TERFİ ARŞİVİM cihazlar arası merkezi veri",icerik:payload,kaynak:"MESKİ TERFİ ARŞİVİM",aktif:true,sira:999},{onConflict:"anahtar"});
     if(error)throw error;
     setCloudMeta(hash);
@@ -358,6 +361,42 @@ function mergeCloudLocal(cloudList,localList){
   });
   return merged;
 }
+function applyCloudLibraries(libraries){
+  if(!libraries||typeof libraries!=="object")return;
+  if(Array.isArray(libraries.params))PARAMS=clone(libraries.params);
+  if(Array.isArray(libraries.faults))FAULTS=clone(libraries.faults);
+  if(Array.isArray(libraries.drivers))DRIVER_SERIES=clone(libraries.drivers);
+  if(Array.isArray(libraries.hyd))HYD=clone(libraries.hyd);
+  if(Array.isArray(libraries.districts)&&libraries.districts.length)DISTRICTS=clone(libraries.districts);
+  try{localStorage.setItem(LIB_STORE,JSON.stringify({params:PARAMS,faults:FAULTS,drivers:DRIVER_SERIES,hyd:HYD,districts:DISTRICTS}))}catch(e){console.warn("LIBRARY CLOUD SAVE",e)}
+}
+function hasCustomLibraries(libraries){
+  if(!libraries)return false;
+  return JSON.stringify(libraries.params||[])!==JSON.stringify(DEFAULT_PARAMS) ||
+    JSON.stringify(libraries.faults||[])!==JSON.stringify(DEFAULT_FAULTS) ||
+    JSON.stringify(libraries.drivers||[])!==JSON.stringify(DEFAULT_DRIVER_SERIES) ||
+    JSON.stringify(libraries.hyd||[])!==JSON.stringify(DEFAULT_HYD) ||
+    JSON.stringify(libraries.districts||[])!==JSON.stringify(DEFAULT_DISTRICTS);
+}
+function mergeLibraryLists(cloudList,localList,keyFn){
+  const result=Array.isArray(cloudList)?clone(cloudList):[];
+  const keys=new Set(result.map(keyFn).filter(Boolean));
+  (Array.isArray(localList)?localList:[]).forEach(item=>{
+    const key=keyFn(item);
+    if(key&&!keys.has(key)){result.push(clone(item));keys.add(key)}
+  });
+  return result;
+}
+function mergeCloudLibraries(cloudLibraries,localLibraries){
+  const cloud=cloudLibraries||{},local=localLibraries||{};
+  return {
+    params:mergeLibraryLists(cloud.params,local.params,x=>String(x?.code||x?.name||"").trim().toLocaleLowerCase("tr-TR")),
+    faults:mergeLibraryLists(cloud.faults,local.faults,x=>String(x?.code||x?.name||"").trim().toLocaleLowerCase("tr-TR")),
+    drivers:mergeLibraryLists(cloud.drivers,local.drivers,x=>String(x?.name||"").trim().toLocaleLowerCase("tr-TR")),
+    hyd:mergeLibraryLists(cloud.hyd,local.hyd,x=>String(x?.name||"").trim().toLocaleLowerCase("tr-TR")),
+    districts:mergeLibraryLists(cloud.districts,local.districts,x=>String(x||"").trim().toLocaleLowerCase("tr-TR"))
+  };
+}
 function queueCloudSync(){
   if(!cloudReady)return;
   clearTimeout(cloudTimer);
@@ -366,6 +405,7 @@ function queueCloudSync(){
 async function cloudBoot(){
   if(!cloudReady){toast("Merkezi kayıt bağlantısı kurulamadı. Bu cihaz yalnızca yerel kayıt yapıyor.");return}
   const local=localRawDB();
+  const localLibraries=localRawLibraries();
   const cloud=await fetchCloudDB();
   if(!cloud){
     if(hasCustomLocalData(local)){
@@ -377,21 +417,27 @@ async function cloudBoot(){
   }
   const localCustom=hasCustomLocalData(local);
   const meta=getCloudMeta();
-  const localHash=local?cloudFingerprint(local):"";
-  if(localCustom && localHash!==cloud.hash){
+  const localHash=cloudFingerprint({db:local||[],libraries:localLibraries||{}});
+  if((localCustom||hasCustomLibraries(localLibraries)) && localHash!==cloud.hash){
     const merged=mergeCloudLocal(cloud.db,local);
     db=normalize(merged);
+    applyCloudLibraries(mergeCloudLibraries(cloud.libraries,localLibraries));
     const ok=await uploadCloudDB("cihazlar-birlestirildi");
     if(ok)toast("Merkezi kayıt yüklendi; bu cihazdaki yeni terfiler de birleştirildi.");
     else toast("Merkezi kayıt birleştirilemedi. İnternet bağlantısını kontrol edin.");
     return;
   }
   db=normalize(cloud.db);
+  applyCloudLibraries(cloud.libraries);
   try{localStorage.setItem(STORE,JSON.stringify(db))}catch(e){}
   setCloudMeta(cloud.hash);
   if(stationId&&!db.some(x=>x.id===stationId)){stationId=null;pumpId=null;view="home";tab="genel"}
   render();
   toast("Merkezi kayıt yüklendi.");
+  if(!cloud.libraries){
+    const ok=await uploadCloudDB("merkezi-kayit-yapisi-guncellendi");
+    if(!ok)toast("Terfiler yüklendi ancak teknik kütüphane merkezi kayda aktarılamadı.");
+  }
 }
 
 function station(){return db.find(s=>s.id===stationId)||null}
