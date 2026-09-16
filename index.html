@@ -349,38 +349,49 @@ async function uploadCloudDB(reason="auto"){
   }catch(e){console.warn("CLOUD WRITE",e);return false}
   finally{cloudBusy=false}
 }
+function mergeCloudLocal(cloudList,localList){
+  const merged=Array.isArray(cloudList)?clone(cloudList):[];
+  const keys=new Set(merged.map(x=>String(x?.id||x?.ad||"").trim().toLocaleLowerCase("tr-TR")).filter(Boolean));
+  (Array.isArray(localList)?localList:[]).forEach(item=>{
+    const key=String(item?.id||item?.ad||"").trim().toLocaleLowerCase("tr-TR");
+    if(key&&!keys.has(key)){merged.push(clone(item));keys.add(key)}
+  });
+  return merged;
+}
 function queueCloudSync(){
   if(!cloudReady)return;
   clearTimeout(cloudTimer);
   cloudTimer=setTimeout(()=>uploadCloudDB("save"),700);
 }
 async function cloudBoot(){
-  if(!cloudReady)return;
+  if(!cloudReady){toast("Merkezi kayıt bağlantısı kurulamadı. Bu cihaz yalnızca yerel kayıt yapıyor.");return}
   const local=localRawDB();
   const cloud=await fetchCloudDB();
   if(!cloud){
     if(hasCustomLocalData(local)){
       const ok=await uploadCloudDB("pc-local-ilk-yukleme");
       if(ok)toast("PC'deki mevcut terfi kayıtları merkeze aktarıldı.");
+      else toast("Merkezi kayıt yüklenemedi. İnternet ve Supabase ayarlarını kontrol edin.");
     }
     return;
   }
   const localCustom=hasCustomLocalData(local);
   const meta=getCloudMeta();
   const localHash=local?cloudFingerprint(local):"";
-  if(localCustom && (!meta || meta.hash!==cloud.hash)){
-    const ok=await uploadCloudDB("mevcut-cihaz-verisi-korundu");
-    if(ok)toast("Bu cihazdaki mevcut kayıtlar merkeze aktarıldı.");
+  if(localCustom && localHash!==cloud.hash){
+    const merged=mergeCloudLocal(cloud.db,local);
+    db=normalize(merged);
+    const ok=await uploadCloudDB("cihazlar-birlestirildi");
+    if(ok)toast("Merkezi kayıt yüklendi; bu cihazdaki yeni terfiler de birleştirildi.");
+    else toast("Merkezi kayıt birleştirilemedi. İnternet bağlantısını kontrol edin.");
     return;
   }
-  if(!localCustom || (meta&&meta.hash===cloud.hash) || localHash===cloud.hash){
-    db=normalize(cloud.db);
-    try{localStorage.setItem(STORE,JSON.stringify(db))}catch(e){}
-    setCloudMeta(cloud.hash);
-    if(stationId&&!db.some(x=>x.id===stationId)){stationId=null;pumpId=null;view="home";tab="genel"}
-    render();
-    toast("Merkezi kayıt yüklendi.");
-  }
+  db=normalize(cloud.db);
+  try{localStorage.setItem(STORE,JSON.stringify(db))}catch(e){}
+  setCloudMeta(cloud.hash);
+  if(stationId&&!db.some(x=>x.id===stationId)){stationId=null;pumpId=null;view="home";tab="genel"}
+  render();
+  toast("Merkezi kayıt yüklendi.");
 }
 
 function station(){return db.find(s=>s.id===stationId)||null}
@@ -795,4 +806,3 @@ window.addEventListener('beforeunload',()=>{try{syncVisibleFields();save(true)}c
 </script>
 </body>
 </html>
-
